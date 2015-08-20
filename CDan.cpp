@@ -13,6 +13,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+struct TACinfo {
+	int min;
+	int max;
+};
+
+TACinfo	TACinfoGate(int,int,int);
+
 /////////////////////////////////////////////////////////////////////////////
 // CCDanApp
 
@@ -151,7 +158,7 @@ void CorrectEventDataPosistion(CDoubleArray *pEventData,int iIndexOffset, int iE
 // returns the corrected 
 double CorrectGP1NDL(double dChannel, double dCorrectionValue)
 {
-	extern dpDnlCorrection;
+	extern double dpDnlCorrection;
 	double dChStart = dChannel;
 	double dOldChannel = dChannel;
 	int iRand;
