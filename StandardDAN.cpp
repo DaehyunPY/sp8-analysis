@@ -204,8 +204,8 @@ double EventCounter;				// EventCounter for the data in LM-file
 // AnalysisGetInformationString
 ///////////////////////////////
 // is called during startup procedure of CoboldPC
-// 
-// return value is a string that will be displayed in 
+//
+// return value is a string that will be displayed in
 // the splash box and the about box
 
 CDAN_API LPCTSTR AnalysisGetInformationString()
@@ -219,7 +219,7 @@ CDAN_API LPCTSTR AnalysisGetInformationString()
 // is called when new command is executed
 //
 // return value is false -> error during initialize
-//                 true  -> initialize ok 
+//                 true  -> initialize ok
 
 CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter)
 {
@@ -293,7 +293,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
 	// set EventCounter to zero at start of new command
 	EventCounter = 0;
 
-	// get information about time-info 
+	// get information about time-info
 	iDataOffset = 0;
 	iIndexDataOffset = 2;
 
@@ -414,12 +414,12 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
 	}
 
 	// ConsistensIndicator
-	ConsistensIndicator = 
-		(n1>=ipUseHit ? 0x0001 : 0x0000) + 
-		(n2>=ipUseHit ? 0x0002 : 0x0000) + 
-		(n3>=ipUseHit ? 0x0004 : 0x0000) + 
-		(n4>=ipUseHit ? 0x0008 : 0x0000) + 
-		(n5>=ipUseHit ? 0x0010 : 0x0000) + 
+	ConsistensIndicator =
+		(n1>=ipUseHit ? 0x0001 : 0x0000) +
+		(n2>=ipUseHit ? 0x0002 : 0x0000) +
+		(n3>=ipUseHit ? 0x0004 : 0x0000) +
+		(n4>=ipUseHit ? 0x0008 : 0x0000) +
+		(n5>=ipUseHit ? 0x0010 : 0x0000) +
 		(n6>=ipUseHit ? 0x0020 : 0x0000);
 
 	// Get Raw-Data
@@ -512,7 +512,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
 		PosX = x + dpOPx;
 		PosY = y + dpOPy;
 	}
-	
+
 	// do rotation
 	if(dpRotA)
 		RotateXY(PosX, PosY, dpRotA, ipPhiConversion, dpCOx, dpCOy, xRot, yRot);
