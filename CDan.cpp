@@ -101,7 +101,7 @@ double GetDeltaEventTime(CDoubleArray *pEventData,CDoubleArray *pParameters)
 	dEventTime /= dTimeScaling;
 	double dDeltaEventTime = _dOldEventTime != 0.0 ? dEventTime - _dOldEventTime : 0.0;
 	_dOldEventTime = dEventTime;
-	
+
 	return dDeltaEventTime;
 }
 
@@ -133,7 +133,7 @@ void CorrectEventDataPosistion(CDoubleArray *pEventData,int iIndexOffset, int iE
 	if(iIndexOffset)
 		for(int iCount=iEndCounter;iCount>3;iCount--)
 			pEventData->SetAt(iCount,pEventData->GetAt(iCount-iIndexOffset));
-	
+
 	// no Time-Information so set coordinate 1..4 to 0
 	if(iIndexOffset == 4)
 	{
@@ -155,7 +155,7 @@ void CorrectEventDataPosistion(CDoubleArray *pEventData,int iIndexOffset, int iE
 // CorrectGP1NDL
 // -------------
 // corrects the differential nonlinearity of the GP1/HM1 module
-// returns the corrected 
+// returns the corrected
 double CorrectGP1NDL(double dChannel, double dCorrectionValue)
 {
 	extern double dpDnlCorrection;
