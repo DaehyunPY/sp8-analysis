@@ -1,3 +1,13 @@
 Debug
 Release
-CDan.*.suo
+Doxygen
+.vs
+/*.sln
+/*.vcsproj*
+/*.dsp
+/*.dsw
+*.aps
+*.suo
+*.fd
+*.userprefs
+*log* 
