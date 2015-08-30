@@ -1,9 +1,9 @@
-Debug
-Release
-Doxygen
-.vs
+/Debug
+/Release
+/Doxygen
+/.vs
 /*.sln
-/*.vcsproj*
+/*.vcxproj*
 /*.dsp
 /*.dsw
 *.aps

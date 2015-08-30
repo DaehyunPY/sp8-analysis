@@ -1,10 +1,29 @@
 CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter){
     using namespace std;
 
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳
+// ╳                                                                                                  ╳
+// ╳         `8.`888b           ,8'                    .8.                    8 8888                  ╳██
+// ╳          `8.`888b         ,8'                    .888.                   8 8888                  ╳██
+// ╳           `8.`888b       ,8'                    :88888.                  8 8888                  ╳██
+// ╳            `8.`888b     ,8'                    . `88888.                 8 8888                  ╳██
+// ╳             `8.`888b   ,8'                    .8. `88888.                8 8888                  ╳██
+// ╳              `8.`888b ,8'                    .8`8. `88888.               8 8888                  ╳██
+// ╳               `8.`888b8'                    .8' `8. `88888.              8 8888                  ╳██
+// ╳                `8.`888'                    .8'   `8. `88888.             8 8888                  ╳██
+// ╳                 `8.`8'                    .888888888. `88888.            8 8888                  ╳██
+// ╳                  `8.`                    .8'       `8. `88888.           8 888888888888          ╳██
+// ╳                                                                                                  ╳██
+// ╳                                                                                                  ╳██
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳███
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
+
     // delate in the future
-    int iHit, jjj, jn;
+    int iHit, jjj;
     int iHitsTDC1 = nHit;          // for electron
     int iHitsTDC2 = nHit;          // for ion
+    int isellect;
 
     // for Hexagonal anode
     double xhex[nHit], yhex[nHit];
@@ -12,42 +31,36 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     double dtElectron[nHit];
 
     // for Square anode
-    double dxSq[nHit], dySq[nHit], dxSqN[2][nHit], dySqN[2][nHit];
+    double dxSq[nHit], dySq[nHit];
     double dx0, dy0;
-    double dtIon[nHit], dtIonN[2][nHit];//dOriginIon
+    double dtIon[nHit];//dOriginIon
 
     // for hitpattern
-    int nHexX1, nHexX2, nHexY1, nHexY2, nHexZ1, nHexZ2, nMCPele, nMCPion;
+    int nHexX1, nHexX2, nHexY1, nHexY2, nHexZ1, nHexZ2;
     int nSqX1, nSqX2, nSqY1, nSqY2, nBunch;
 
     int e_mcp = 6, i_mcp = 4;      // NEW
-    int flagmatrix;
-    int iMaster_Flag;           //set the credibility of the event
+    int flagmatrix=0;
+    int iMaster_Flag=0;           //set the credibility of the event
     int e_region =0;                        // cut out detecter
     int iSTOP = 6;              // address for STOP signal of Hoshin-TDC
     int iCount;
     int iangle_cor;
-    int isellect=-1;    //1:first ion is N+, 2: first ion is O+,
-    //3:difficult to determine(N+), 4:difficult to determine(O+)
 
     double a[8][8];             // for electron
     double b[8][8];             // for ion
 
-    double dSum_Of_mt;
-    double dSum_Of_mxt;
-    double dSum_Of_myt;
-    double dCOM_x[nHit], dCOM_y[nHit], dCOM_z[nHit];
-    double square_P = -1000;
-    double dIonPx[2][nHit], dIonPy[2][nHit], dIonPz[2][nHit], dIonP[nHit];      // Components of momentum of Ion
+    double dCOM_x, dCOM_y, dCOM_z;
+    double dIonPx[nHit], dIonPy[nHit], dIonPz[nHit], dIonP[nHit];      // Components of momentum of Ion
     double dIonPx_norm[nHit], dIonPy_norm[nHit], dIonPz_norm[nHit];             // Normalized momentum of Ion
     double dElectronPx[nHit], dElectronPy[nHit], dElectronPz[nHit], dElectronP[nHit]; // Components of momentum of Electron
     double dElectronPx_norm[nHit], dElectronPy_norm[nHit], dElectronPz_norm[nHit];    // Normalized momenta
-    double dIon_Total_Energy = -10000;
+    double dIon_Total_Energy;
     double dIonEnergy[nHit];
     double dElectronEnergy[nHit];
     double dElectronEnergyHigher = -10000, dElectronEnergyLower = -10000;
     double dIon_theta = -10000, dIon_psai_xy = -10000, dIon_psai_zy = -10000, dIon_psai_zx = -10000;
-    double dSum_of_momenta_X[nHit], dSum_of_momenta_Y[nHit], dSum_of_momenta_Z[nHit], dSum_of_momenta[nHit];
+    double dSum_of_momenta_X, dSum_of_momenta_Y, dSum_of_momenta_Z;
     double dIon_nPx = -10000, dIon_nPy = -10000, dIon_nPz = -10000;
     double dElectron_theta[nHit], dElectron_psai[nHit];
     double dEX = -1000, dEY = -1000, dalpha = -1000, dphai = -1000, dConst = -1000, dTcyc = -1000, dalpha1 = -1000;
@@ -85,8 +98,6 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
         }
     }
 
-
-    jn = 0;
     for(int iHit=0;iHit<nHit;iHit++){
         xhex[iHit] = -10000;
         yhex[iHit] = -10000;
@@ -109,30 +120,37 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
         dElectron_psai[iHit] = -10000;
         dElectron_psai_position[iHit] = -10000;
         dtElectron[iHit] = -1000;
-        for(int i=0; i<7; i++){
-            a[i][iHit] = -10000;
-        }
-    }
-    for(jjj=0;jjj<3;jjj++){
-        for(int iHit=0;iHit<4;iHit++){
-            dIonPx[jjj][iHit] = -10000;
-            dIonPy[jjj][iHit] = -10000;
-            dIonPz[jjj][iHit] = -10000;
-            dxSqN[jjj][iHit] = -10000;
-            dySqN[jjj][iHit] = -10000;
-            dtIonN[jjj][iHit] = -10000;
-            }
-        dCOM_x[jjj] = -10000;
-        dCOM_y[jjj] = -10000;
-        //dCOM_z[jjj] = -10000;
-        dSum_of_momenta_X[jjj] = -10000;
-        dSum_of_momenta_Y[jjj] = -10000;
-        dSum_of_momenta_Z[jjj] = -10000;
-        dSum_of_momenta[jjj] = -10000;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+
+
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳
+// ╳                                                                                                  ╳
+// ╳           8888888 8888888888           8 888888888o.                    ,o888888o.               ╳██
+// ╳                 8 8888                 8 8888    `^888.                8888     `88.             ╳██
+// ╳                 8 8888                 8 8888        `88.           ,8 8888       `8.            ╳██
+// ╳                 8 8888                 8 8888         `88           88 8888                      ╳██
+// ╳                 8 8888                 8 8888          88           88 8888                      ╳██
+// ╳                 8 8888                 8 8888          88           88 8888                      ╳██
+// ╳                 8 8888                 8 8888         ,88           88 8888                      ╳██
+// ╳                 8 8888                 8 8888        ,88'           `8 8888       .8'            ╳██
+// ╳                 8 8888                 8 8888    ,o88P'                8888     ,88'             ╳██
+// ╳                 8 8888                 8 888888888P'                    `8888888P'               ╳██
+// ╳                                                                                                  ╳██
+// ╳                                                                                                  ╳██
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳███
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Make sure how many hits come to each channeles of each TDCs (if TAC Rawdata
+    // values are not equal to 2048 , it means there is signal)
+    /////////////////////////////////////////////////////////////////////////////
     for(int iTDC=0; iTDC<nTDC; iTDC++){
         for(int iCH=0; iCH<nCH; iCH++){
             for(int iHit=0; iHit<nHit+1; iHit++){
@@ -141,48 +159,71 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
         }
     }
 
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Make sure how many hits come to each channeles of each TDCs (if TAC Rawdata
-    // values are not equal to 2048 , it means there is signal)
-    /////////////////////////////////////////////////////////////////////////////
-    for(int iHit=0; iHit<nHit; iHit++){
-        if(TDC[1][0][iHit]<15000) nMCPele += 1;
-        if(TDC[2][1][iHit]<15000) nMCPion += 1;
+    ////////////////////////////////////////////////////////////////////////////
+    // electron TDC, ion TDC
+    for(int iHit=0;iHit<nHit;iHit++){ // elec
+        a[0][iHit] = TDC[0][0][iHit]; // x1 (ns)
+        a[1][iHit] = TDC[0][1][iHit]; // x2 (ns)
+        a[6][iHit] = TDC[1][0][iHit]; // MCP (ns)
     }
-    iHitsTDC1 = (nMCPele <= iHitsTDC1) ? nMCPele : iHitsTDC1;
-    iHitsTDC2 = (nMCPion <= iHitsTDC2) ? nMCPion : iHitsTDC2;
-
-
-    if((nMCPele==0) || (nMCPion==0))  //If the number of electrons and ions is not within requirement
-    {
-        iMaster_Flag = -16;
-        flagmatrix = 16;
-        goto hell_2;
-    }
-
-
-
-
-    /////////////////////////////////////////////////////////////////
-    //////////////////////  Analysis  for ION ///////////////////////
-    /////////////////////////////////////////////////////////////////
-
-    //dOriginIon = TDC[6][0][0]+dBunch;     // Interval of bunch -> 57 ns //114 is just only trial
-
-    // Inversion of time direction
-    // First ion defines time-axis-origin in time
-    // nHit+1->nHit
-    for(int iHit=0;iHit<nHit;iHit++){
-        b[0][iHit] = TDC[1][1][iHit];       // x mm
-        b[1][iHit] = TDC[2][0][iHit];       // y mm
-        b[4][iHit] = TDC[2][1][iHit];       // MCP (ns)
+    for(int iHit=0;iHit<nHit;iHit++){ // ion
+        b[0][iHit] = TDC[1][1][iHit]; // x mm
+        b[1][iHit] = TDC[2][0][iHit]; // y mm
+        b[4][iHit] = TDC[2][1][iHit]; // MCP (ns)
     }  //because the logic of read data is different from data be stored in resort, some strange sentences are used
 
+    ////////////////////////////////////////////////////////////////////////////
+    // TDC time limit
+    // {
+        int nMCPele=0, nMCPion=0;
+        for(int iHit=0; iHit<nHit; iHit++){
+            if(TDC[1][0][iHit]<15000) nMCPele += 1; // elec time
+            if(TDC[2][1][iHit]<15000) nMCPion += 1; // ion time
+        }
+        iHitsTDC1 = min(nMCPele,iHitsTDC1);
+        iHitsTDC2 = min(nMCPion,iHitsTDC2);
+
+        if((nMCPele==0) || (nMCPion==0)){  //If the number of electrons and ions is not within requirement
+            iMaster_Flag = -10;
+            flagmatrix = -10;
+            if(nMCPion==0){iMaster_Flag = -11;}
+            if(nMCPele==0){flagmatrix = -11;}
+            goto out;
+        }
+    // }
+
+
+
+
+
+
+
+
+
+// ion:   //this is just a label
+
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳
+// ╳                                                                                                  ╳
+// ╳                  8 8888               ,o888888o.               b.             8                  ╳██
+// ╳                  8 8888            . 8888     `88.             888o.          8                  ╳██
+// ╳                  8 8888           ,8 8888       `8b            Y88888o.       8                  ╳██
+// ╳                  8 8888           88 8888        `8b           .`Y888888o.    8                  ╳██
+// ╳                  8 8888           88 8888         88           8o. `Y888888o. 8                  ╳██
+// ╳                  8 8888           88 8888         88           8`Y8o. `Y88888o8                  ╳██
+// ╳                  8 8888           88 8888        ,8P           8   `Y8o. `Y8888                  ╳██
+// ╳                  8 8888           `8 8888       ,8P            8      `Y8o. `Y8                  ╳██
+// ╳                  8 8888            ` 8888     ,88'             8         `Y8o.`                  ╳██
+// ╳                  8 8888               `8888888P'               8            `Yo                  ╳██
+// ╳                                                                                                  ╳██
+// ╳                                                                                                  ╳██
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳███
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
+
+    ////////////////////////////////////////////////////////////////////////////
     //ion TOF
     for(int iHit=0;iHit<nIonHit;iHit++){
-        dtIon[iHit] = (b[4][iHit]-2000)*(1.0E-9) - dDelay;  // unit sec
+        dtIon[iHit] = (b[4][iHit]-2000.0)*unit_nano - dDelay;  // unit sec
     }
     dtN=dtIon[0];
     dtO=dtIon[1];
@@ -191,186 +232,171 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     for(int iHit=0;iHit<nIonHit;iHit++){
         dx0 = b[0][iHit]-100;
         dy0 = b[1][iHit]-100;
-        dxSq[iHit] = 1.0E-3*((dx0+dCorX*dy0)*dPixelSizeX);          // Unit Meter
-        dySq[iHit] = 1.0E-3*((dy0+dCorY*dx0)*dPixelSizeY + dJet*dtIon[iHit]/1.0E-9);    // Unit Meter
+        dxSq[iHit] = ((dx0+dCorX*dy0)*dPixelSizeX)*unit_milli;          // Unit Meter
+        // dySq[iHit] = 1.0E-3*((dy0+dCorY*dx0)*dPixelSizeY + dJet*dtIon[iHit]/1.0E-9);    // Unit Meter
+        dySq[iHit] = ((dy0+dCorY*dx0)*dPixelSizeY)*unit_milli;    // Unit Meter
         //dXion = dxSq[0];
         //dYion = dySq[0];
     }
-
 
     // Calculation of ion time ordered as y
     // Require 2 hits for ion
     //--------------------------------------------------------------------------
     if(iHitsTDC2<nIonHit){ // make sure the number of ions is larger than required
         iMaster_Flag = -20;
-        flagmatrix = 20;
-        goto hell; //
+        goto elec; //
     }
 
-    for(int iHit=0;iHit<nIonHit;iHit++){
-        if(dtIon[iHit]<dMin_TOF[iHit]){
-            iMaster_Flag = -21;
-            flagmatrix = 21;
-        }
-        if(dtIon[iHit]>dMax_TOF[iHit]){
-            iMaster_Flag = -22;
-            flagmatrix = 22;
+    for(int iHit=0; iHit<nIonHit; iHit++){
+        if(dtIon[iHit]<dMin_TOF[iHit] || dtIon[iHit]>dMax_TOF[iHit]){
+            iMaster_Flag = -20 -(iHit+1); // 21, 22, 23
+            if(iMaster_Flag == -21){
+                // file_log.setf(fstream::scientific);
+                // file_log.precision(6);
+                // file_log.width(14);
+                // file_log << dtIon[iHit] << ", ";
+                // file_log.width(14);
+                // file_log << dMin_TOF[iHit] << ", ";
+                // file_log.width(14);
+                // file_log << dMax_TOF[iHit] << ", ";
+                // file_log << endl;
+            }
+            goto elec;
         }
     }
-    //////////11/20 榊原がPIPICOのおかしな部分を消去するために追加
-
-
-    // if((dtIon[0]+Del_PIPICOline_posi12+Del_PIPICOline_width12>=dtIon[1])&(dtIon[1]>=dtIon[0]+Del_PIPICOline_posi12)){
-    //     iMaster_Flag = -23;
-    //     flagmatrix = 23;
-    // }
-    // if((dtIon[1]+Del_PIPICOline_posi23+Del_PIPICOline_width23>=dtIon[2])&(dtIon[2]>=dtIon[1]+Del_PIPICOline_posi23)){
-    //     iMaster_Flag = -24;
-    //     flagmatrix = 24;
-    // }
-    // if((dtIon[2]+Del_PIPICOline_posi34+Del_PIPICOline_width34>=dtIon[3])&(dtIon[3]>=dtIon[2]+Del_PIPICOline_posi34)){
-    //     iMaster_Flag = -25;
-    //     flagmatrix = 25;
-    // }
-    if(iMaster_Flag<0) goto hell; // select the ion from Time of Flight.
-
-    isellect=0;
-
 
     // Calculation of ion momenta
     // --------------------------------------------------------
     //-----------------------------------------------------mistake iHitTDC2
-    for(int iHit=0;iHit<nIonHit;iHit++){
-        dtIonN[0][iHit] = dtIon[iHit];
-        dxSqN[0][iHit] = dxSq[iHit];
-        dySqN[0][iHit] = dySq[iHit];
-    }
-    //dtIonN[1][0] = dtIon[1];
-    //dxSqN[1][0] = dxSq[1];
-    //dySqN[1][0] = dySq[1];
-    //dtIonN[1][1] = dtIon[0];
-    //dxSqN[1][1] = dxSq[0];
-    //dySqN[1][1] = dySq[0];
+    // for(int iHit=0;iHit<nIonHit;iHit++){
+    //     dtIon[iHit] = dtIon[iHit];
+    //     dxSq[iHit] = dxSq[iHit];
+    //     dySq[iHit] = dySq[iHit];
+    // }
+    //dtIon[1][0] = dtIon[1];
+    //dxSq[0] = dxSq[1];
+    //dySq[0] = dySq[1];
+    //dtIon[1][1] = dtIon[0];
+    //dxSq[1] = dxSq[0];
+    //dySq[1] = dySq[0];
 
-    double TOF0[2];   //get calculated p0z0 tof
-    TOF0[0] = tof(0, 0, dMass[0], dCharge[0]);
-    TOF0[1] = tof(0, 0, dMass[1], dCharge[1]);
-    if ( (fabs(dtIon[0] - TOF0[0]) < AtomTOFWidth/2
-    && fabs(dxSq[0] - dCOM_x0) < AtomXwidth/2
-    && fabs(dySq[0] - dCOM_y0) < AtomYwidth/2)
-    || (fabs(dtIon[1] - TOF0[1]) < AtomTOFWidth/2
-    && fabs(dxSq[1] - dCOM_x0) < AtomXwidth/2
-    && fabs(dySq[1] - dCOM_y0) < AtomYwidth/2 )) {
-        iMaster_Flag = -26;
-        goto hell;
-    }
+    // {
+    //     double TOF0[2];   //get calculated p0z0 tof
+    //     TOF0[0] = tof(0.0, 0.0, dMass[0], dCharge[0]);
+    //     TOF0[1] = tof(0.0, 0.0, dMass[1], dCharge[1]);
+
+    //     if((fabs(dtIon[0] - TOF0[0]) < AtomTOFWidth/2 && fabs(dxSq[0] - dCOM_x0) < AtomXwidth/2 && fabs(dySq[0] - dCOM_y0) < AtomYwidth/2)
+    //         || (fabs(dtIon[1] - TOF0[1]) < AtomTOFWidth/2 && fabs(dxSq[1] - dCOM_x0) < AtomXwidth/2 && fabs(dySq[1] - dCOM_y0) < AtomYwidth/2)){
+    //         iMaster_Flag = -26;
+    //         goto elec;
+    //     }
+    // }
+
     // if 1or2hit ion is within Hotspot of the detector & 1or2hit ionTOF is within RandomCoincidenceLine
-    if (
-    ( (dxSqN[jn][0]*1000 > xSq0_HotspotMin && dxSqN[jn][0]*1000 < xSq0_HotspotMax && dySqN[jn][0]*1000 > ySq0_HotspotMin && dySqN[jn][0]*1000 < ySq0_HotspotMax) || (dxSqN[jn][1]*1000 > xSq1_HotspotMin && dxSqN[jn][1]*1000 < xSq1_HotspotMax && dySqN[jn][1]*1000 > ySq1_HotspotMin && dySqN[jn][1]*1000 < ySq1_HotspotMax) )
-    && ( (dtIon[0]*1.0E9 > tIon0_RandCoinMin && dtIon[0]*1.0E9 < tIon0_RandCoinMax) || (dtIon[1]*1.0E9 > tIon1_RandCoinMin && dtIon[1]*1.0E9 < tIon1_RandCoinMax) )
-    ) {
-    iMaster_Flag = -27;
-    goto hell;
-    }
+    // if(((dxSq[0]*1000 > xSq0_HotspotMin && dxSq[0]*1000 < xSq0_HotspotMax
+    //             && dySq[0]*1000 > ySq0_HotspotMin && dySq[0]*1000 < ySq0_HotspotMax)
+    //         || (dxSq[1]*1000 > xSq1_HotspotMin && dxSq[1]*1000 < xSq1_HotspotMax
+    //             && dySq[1]*1000 > ySq1_HotspotMin && dySq[1]*1000 < ySq1_HotspotMax))
+    //     && ((dtIon[0]/unit_nano > tIon0_RandCoinMin && dtIon[0]/unit_nano < tIon0_RandCoinMax)
+    //         || (dtIon[1]/unit_nano > tIon1_RandCoinMin && dtIon[1]/unit_nano < tIon1_RandCoinMax))){
+    //     iMaster_Flag = -27;
+    //     goto elec;
+    // }
 
     //for(jjj=0;jjj<2;jjj++)
-    for(jjj=0;jjj<1;jjj++){
+    ////////////////////////////////////////////////////////////////////////////
+    // calculate COM
+    {
+        double dSum_Of_mt=0.0, dSum_Of_mxt=0.0, dSum_Of_myt=0.0;
+        for(int iHit=0; iHit<nIonHit; iHit++){
+            dSum_Of_mt  += dMass[iHit]/dtIon[iHit];
+            dSum_Of_mxt += dxSq[iHit]*dMass[iHit]/dtIon[iHit];
+            dSum_Of_myt += dySq[iHit]*dMass[iHit]/dtIon[iHit];
+        } // end for(int iHit)
+        dCOM_x = dSum_Of_mxt/dSum_Of_mt;       // Position of Center_of_Mass of the molecule
+        dCOM_y = dSum_Of_myt/dSum_Of_mt;       // (or you can call it  <Point of Production>)
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    // calculate sum of momenta
+    {
+        // Calculation of Px, Py
+        dSum_of_momenta_X=0.0; dSum_of_momenta_Y=0.0;
+        for(int iHit=0; iHit<nIonHit; iHit++){
+            dIonPx[iHit] = dMass[iHit]/dtIon[iHit]*(dxSq[iHit]-dCOM_x0);
+            dIonPy[iHit] = dMass[iHit]/dtIon[iHit]*(dySq[iHit]-dCOM_y0);
+            dSum_of_momenta_X += dIonPx[iHit];
+            dSum_of_momenta_Y += dIonPy[iHit];
+            //dIonPx[iHit] = dMass[iHit]/dtIon[iHit]*(dxSq[iHit]-dCOM_x);
+            //dIonPy[iHit] = dMass[iHit]/dtIon[iHit]*(dySq[iHit]-dCOM_y);
+        } // end for(int iHit)
+
         // Calculation of Pz
-        dSum_of_momenta_Z[jjj] = 0;
-        for(int iHit=0;iHit<nIonHit;iHit++){
-            //double dTT0 = dtIonN[jjj][iHit]-dT0[iHit];
+        dSum_of_momenta_Z = 0;
+        for(int iHit=0; iHit<nIonHit; iHit++){
+            //double dTT0 = dtIon[iHit]-dT0[iHit];
             //double sqmd = sqrt(2.0*dMass[iHit]*dL1/dCharge[iHit]/dElectric_Field1);
             //tempsqmd[i] = sqmd;
-            //dIonPz[jjj][iHit] = -dCharge[iHit]*dElectric_Field1*dTT0*(dTT0+2.0*sqmd)/2.0/(dTT0+sqmd);
-            find_pz(dMass[iHit], dCharge[iHit], dtIonN[jjj][iHit], dIonPz[jjj][iHit]);
-            dSum_of_momenta_Z[jjj] = dSum_of_momenta_Z[jjj]+dIonPz[jjj][iHit];
+            //dIonPz[iHit] = -dCharge[iHit]*dElectric_Field1*dTT0*(dTT0+2.0*sqmd)/2.0/(dTT0+sqmd);
+            find_pz(dMass[iHit], dCharge[iHit], dtIon[iHit], dIonPz[iHit]);
+            dSum_of_momenta_Z += dIonPz[iHit];
         } // end for(int iHit)
 
         //      c0 = dT0[0]-sqrt(2.0*dMass[0]*dL1/dCharge[0]/dElectric_Field1);
         //      c1 = dT0[1]-sqrt(2.0*dMass[1]*dL1/dCharge[1]/dElectric_Field1);
-        //      tc0 = dtIonN[jjj][0]-c0;
-        //      tc1 = dtIonN[jjj][1]-c1;
+        //      tc0 = dtIon[0]-c0;
+        //      tc1 = dtIon[1]-c1;
         //      sqrtA = fabs(dElectric_Field1/sqrt(8.0)*(dCharge[0]*tc0*tc0/dMass[0]-dCharge[1]*tc1*tc1/dMass[1])
         //          /(tc0/dMass[0]+tc1/dMass[1]));
         //      an = 1.0;
-        //      if(dtIonN[jjj][0]>dT0[0]) an = -1.0;
-        //      dIonPz[jjj][0] = an*sqrt(2.0) * sqrtA;
-        //      dIonPz[jjj][1] = -dIonPz[jjj][0];
+        //      if(dtIon[0]>dT0[0]) an = -1.0;
+        //      dIonPz[0] = an*sqrt(2.0) * sqrtA;
+        //      dIonPz[1] = -dIonPz[0];
         //      dCOM_z[jjj] = tc0/2.0/dMass[0]*(dCharge[0]*dElectric_Field1*tc0+an*sqrt(8.0)*sqrtA)-dL1;
 
-        //find_pz_z(dMass, dCharge, dtIonN[jjj], dCOM_z[jjj], dIonPz[jjj], nIonHit);
-
-        dSum_Of_mt  = 0;
-        dSum_Of_mxt = 0;
-        dSum_Of_myt = 0;
-
-        for(int iHit=0; iHit<nIonHit; iHit++){
-            dSum_Of_mt = dSum_Of_mt+dMass[iHit]/dtIonN[jjj][iHit];
-            dSum_Of_mxt = dSum_Of_mxt+dxSqN[jjj][iHit]*dMass[iHit]/dtIonN[jjj][iHit];
-            dSum_Of_myt = dSum_Of_myt+dySqN[jjj][iHit]*dMass[iHit]/dtIonN[jjj][iHit];
-        } // end for(int iHit)
-
-        dCOM_x[jjj] = dSum_Of_mxt/dSum_Of_mt;       // Position of Center_of_Mass of the molecule
-        dCOM_y[jjj] = dSum_Of_myt/dSum_Of_mt;       // (or you can call it  <Point of Production>)
-
-        dSum_of_momenta_X[jjj] = 0;
-        dSum_of_momenta_Y[jjj] = 0;
-        for(int iHit=0; iHit<nIonHit; iHit++){
-            dIonPx[jjj][iHit] = dMass[iHit]/dtIonN[jjj][iHit]*(dxSqN[jjj][iHit]-dCOM_x0);
-            dIonPy[jjj][iHit] = dMass[iHit]/dtIonN[jjj][iHit]*(dySqN[jjj][iHit]-dCOM_y0);
-            dSum_of_momenta_X[jjj] = dSum_of_momenta_X[jjj]+dIonPx[jjj][iHit];
-            dSum_of_momenta_Y[jjj] = dSum_of_momenta_Y[jjj]+dIonPy[jjj][iHit];
-            //dIonPx[jjj][iHit] = dMass[iHit]/dtIonN[jjj][iHit]*(dxSqN[jjj][iHit]-dCOM_x[jjj]);
-            //dIonPy[jjj][iHit] = dMass[iHit]/dtIonN[jjj][iHit]*(dySqN[jjj][iHit]-dCOM_y[jjj]);
-        } // end for(int iHit)
+        //find_pz_z(dMass, dCharge, dtIon, dCOM_z[jjj], dIonPz, nIonHit);
     }  // end for(jjj)
 
-
-    jn = 0;
-    // end of check ion
+    ////////////////////////////////////////////////////////////////////////////
+    // calculate momentum numalized vector
     for(int iHit=0; iHit<nIonHit; iHit++){
-        square_P = dIonPx[jn][iHit]*dIonPx[jn][iHit]+dIonPy[jn][iHit]*dIonPy[jn][iHit]+dIonPz[jn][iHit]*dIonPz[jn][iHit];
-        dIonP[iHit]= sqrt(square_P);      // Total Momentum of Ion
-        dIonPx_norm[iHit] = dIonPx[jn][iHit]/dIonP[iHit];   // Normalized
-        dIonPy_norm[iHit] = dIonPy[jn][iHit]/dIonP[iHit];   // momentum-vectors
-        dIonPz_norm[iHit] = dIonPz[jn][iHit]/dIonP[iHit];
+        dIonP[iHit] = sqrt(pow(dIonPx[iHit], 2.0)+pow(dIonPy[iHit], 2.0)+pow(dIonPz[iHit], 2.0));
+        dIonPx_norm[iHit] = dIonPx[iHit]/dIonP[iHit];   // Normalized
+        dIonPy_norm[iHit] = dIonPy[iHit]/dIonP[iHit];   // momentum-vectors
+        dIonPz_norm[iHit] = dIonPz[iHit]/dIonP[iHit];
     } // END for(int iHit=0; iHit < nIonHit; iHit++)
 
-    if(iMaster_Flag < 0) goto hell;
-
+    ////////////////////////////////////////////////////////////////////////////
     // Calculation of ion kinetic energies
-    // -------------------------------------------------------------------------------
-    dIon_Total_Energy = 0;
+	dIon_Total_Energy = 0.0;
     for(int iHit=0; iHit<nIonHit; iHit++){
-    dIonEnergy[iHit] = 0.5*dIonP[iHit]*dIonP[iHit]/dMass[iHit];
-    dIon_Total_Energy = dIon_Total_Energy+dIonEnergy[iHit];
+        dIonEnergy[iHit] = 0.5*pow(dIonP[iHit], 2.0)/dMass[iHit];
+        dIon_Total_Energy += dIonEnergy[iHit];
     }
 
+    ////////////////////////////////////////////////////////////////////////////
     // Calculation of molecular direction
-    // ------------------------------------
     random_number = (double)(rand())/RAND_MAX;
     if (random_number < 0.5) {
-    dIon_nPx = dIonPx[jn][0];
-    dIon_nPy = dIonPy[jn][0];
-    dIon_nPz = dIonPz[jn][0];
+        dIon_nPx = dIonPx[0];
+        dIon_nPy = dIonPy[0];
+        dIon_nPz = dIonPz[0];
     }
     else {
-    dIon_nPx = dIonPx[jn][1];
-    dIon_nPy = dIonPy[jn][1];
-    dIon_nPz = dIonPz[jn][1];
+        dIon_nPx = dIonPx[1];
+        dIon_nPy = dIonPy[1];
+        dIon_nPz = dIonPz[1];
     }
-    square_P = dIon_nPx*dIon_nPx+dIon_nPy*dIon_nPy+dIon_nPz*dIon_nPz;
+    double square_P = dIon_nPx*dIon_nPx+dIon_nPy*dIon_nPy+dIon_nPz*dIon_nPz;
     if(square_P > 0){
-    square_P = sqrt(square_P);          // Total Momentum of Ion
-    dIon_nPx = dIon_nPx/square_P ;      // Normalized
-    dIon_nPy = dIon_nPy/square_P ;      // Normalized
-    dIon_nPz = dIon_nPz/square_P ;      // Normalized
+        square_P = sqrt(square_P);          // Total Momentum of Ion
+        dIon_nPx = dIon_nPx/square_P ;      // Normalized
+        dIon_nPy = dIon_nPy/square_P ;      // Normalized
+        dIon_nPz = dIon_nPz/square_P ;      // Normalized
     } else {
         iMaster_Flag = -36; // square_P must not be zero !! kill this event !
         flagmatrix = 36;
+        goto elec;
     }
-
-    if(iMaster_Flag < 0) goto hell;
 
     //  Horizonatal polarization
     if(polarization_is_horizontal){
@@ -399,7 +425,35 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     dIon_psai_zy= atan2(dIon_nPy ,dIon_nPz);
     }
 
-    hell:   //this is just a label
+
+
+
+
+
+
+
+
+
+    elec:   //this is just a label
+
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳
+// ╳                                                                                                  ╳
+// ╳   8 8888888888             8 8888                   8 8888888888                 ,o888888o.      ╳██
+// ╳   8 8888                   8 8888                   8 8888                      8888     `88.    ╳██
+// ╳   8 8888                   8 8888                   8 8888                   ,8 8888       `8.   ╳██
+// ╳   8 8888                   8 8888                   8 8888                   88 8888             ╳██
+// ╳   8 888888888888           8 8888                   8 888888888888           88 8888             ╳██
+// ╳   8 8888                   8 8888                   8 8888                   88 8888             ╳██
+// ╳   8 8888                   8 8888                   8 8888                   88 8888             ╳██
+// ╳   8 8888                   8 8888                   8 8888                   `8 8888       .8'   ╳██
+// ╳   8 8888                   8 8888                   8 8888                      8888     ,88'    ╳██
+// ╳   8 888888888888           8 888888888888           8 888888888888               `8888888P'      ╳██
+// ╳                                                                                                  ╳██
+// ╳                                                                                                  ╳██
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳███
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
+
     //////////////////////////////////////////////////////////////////////////////////
     //////////// Analysis for electron ///////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////
@@ -407,11 +461,6 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     // Deduce the origin of ion by checking the bunch marker
     //  dOriginElectron = dOriginIon;
 
-    for(int iHit=0;iHit<nHit;iHit++){
-        a[0][iHit] = TDC[0][0][iHit];       // x1 (ns)
-        a[1][iHit] = TDC[0][1][iHit];       // x2 (ns)
-        a[6][iHit] = TDC[1][0][iHit];       // MCP (ns)
-    }
 
 
     //electron TOF
@@ -459,9 +508,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     // selection of electron TOF, the first electron
     for(int iHit=0; iHit < nElectronHit; iHit++){
         if((dtElectron[iHit]< dMin_eTOF) || (dtElectron[iHit]> dMax_eTOF)){
-            iMaster_Flag = -46;
-            flagmatrix = 46;
-            goto hell_2;
+            // iMaster_Flag = -46;
+            flagmatrix = -46;
+            goto out;
         }
     }
     ////  Calculation of Electron momenta
@@ -473,11 +522,12 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     for(iCount=0; iCount < nElectronHit; iCount++){
         //   calculation of Pz
         dDelta_T = dtElectron[iCount] - dElectron_T0 + dtElectron0;
-        //find_elec_pz(dDelta_T, -dCOM_z[jn], dElectronPz[iCount]);
+        //find_elec_pz(dDelta_T, -dCOM_z, dElectronPz[iCount]);
         find_elec_pz(dDelta_T, 0, dElectronPz[iCount]);
         if (dElectronPz[iCount] < -9900){
-            iMaster_Flag = -47;
-            goto hell_2;
+            // iMaster_Flag = -47;
+            flagmatrix = -47;
+            goto out;
         } // end if
 
         // calculation of Px, Py
@@ -526,7 +576,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
             dElectronPy[iCount] = dElectronMass * dEY / dDelta_T;
         } // end for
 
-        square_P = dElectronPx[iCount]*dElectronPx[iCount] + dElectronPy[iCount]*dElectronPy[iCount] + dElectronPz[iCount]*dElectronPz[iCount];
+        double square_P = dElectronPx[iCount]*dElectronPx[iCount] + dElectronPy[iCount]*dElectronPy[iCount] + dElectronPz[iCount]*dElectronPz[iCount];
 
         if(square_P > 0){
             dElectronP[iCount]= sqrt(square_P);    // Total Momentum of Electron
@@ -534,9 +584,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
             dElectronPy_norm[iCount]    = dElectronPy[iCount] / dElectronP[iCount]; // momentum-vectors
             dElectronPz_norm[iCount]    = dElectronPz[iCount] / dElectronP[iCount];
         } else{
-            iMaster_Flag = -53; // square_P must not be zero !! kill this event !
+            // iMaster_Flag = -53; // square_P must not be zero !! kill this event !
             flagmatrix = 53;
-            goto hell_2;
+            goto out;
         } // end for
     } // END for(iCount=0; iCount < iHItsTDC1; iCount++)
 
@@ -680,28 +730,12 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
 
     //Export valid data
 
-    file_electron.setf(fstream::scientific);
-    file_electron.precision(6);
-    if(iMaster_Flag >= 0){
-        for(int iHit=0; iHit<nHit; iHit++){
-            file_electron.width(14);
-            file_electron << dIonPx[0][iHit]/dMomentum_au << ", ";
-            file_electron.width(14);
-            file_electron << dIonPy[0][iHit]/dMomentum_au << ", ";
-            file_electron.width(14);
-            file_electron << dIonPz[0][iHit]/dMomentum_au << ", ";
-            file_electron.width(14);
-            file_electron << dElectronEnergy[iHit]/dElectron << ", ";
-        }
-        file_electron << endl;
-    }
-
     ////////// select sigma or pi symmetry  ////////modified by macchi    2003.10.2
     ///////////////////////////////////////////////////////////////////////////////
     ////////// using these caluculated momentum ///////////////////////////////////
-    ////        dIonPx_norm[iHit] = dIonPx[jn][iHit]/dIonP[iHit];  ////////////////
-    ////        dIonPy_norm[iHit] = dIonPy[jn][iHit]/dIonP[iHit];  ////////////////
-    ////        dIonPz_norm[iHit] = dIonPz[jn][iHit]/dIonP[iHit];  ////////////////
+    ////        dIonPx_norm[iHit] = dIonPx[iHit]/dIonP[iHit];  ////////////////
+    ////        dIonPy_norm[iHit] = dIonPy[iHit]/dIonP[iHit];  ////////////////
+    ////        dIonPz_norm[iHit] = dIonPz[iHit]/dIonP[iHit];  ////////////////
     ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -714,11 +748,55 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
         flagmatrix = 73;
     } // end for
 
-    hell_2: //this is just a label
+
+
+
+
+
+
+
+
+
+    out: //this is just a label
+
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳
+// ╳                                                                                                  ╳
+// ╳                 ,o888888o.               8 8888      88           8888888 8888888888             ╳██
+// ╳              . 8888     `88.             8 8888      88                 8 8888                   ╳██
+// ╳             ,8 8888       `8b            8 8888      88                 8 8888                   ╳██
+// ╳             88 8888        `8b           8 8888      88                 8 8888                   ╳██
+// ╳             88 8888         88           8 8888      88                 8 8888                   ╳██
+// ╳             88 8888         88           8 8888      88                 8 8888                   ╳██
+// ╳             88 8888        ,8P           8 8888      88                 8 8888                   ╳██
+// ╳             `8 8888       ,8P            ` 8888     ,8P                 8 8888                   ╳██
+// ╳              ` 8888     ,88'               8888   ,d8P                  8 8888                   ╳██
+// ╳                 `8888888P'                  `Y88888P'                   8 8888                   ╳██
+// ╳                                                                                                  ╳██
+// ╳                                                                                                  ╳██
+//  ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳███
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
+//   ████████████████████████████████████████████████████████████████████████████████████████████████████
 
     /////////////////////////////////////////////////////////////////////////////
     ///                       calculated data output
     /////////////////////////////////////////////////////////////////////////////
+
+    file_electron.setf(fstream::scientific);
+    file_electron.precision(6);
+    if(iMaster_Flag == 0){
+        for(int iHit=0; iHit<nHit; iHit++){
+            file_electron.width(14);
+            file_electron << dIonPx[iHit]/dMomentum_au << ", ";
+            file_electron.width(14);
+            file_electron << dIonPy[iHit]/dMomentum_au << ", ";
+            file_electron.width(14);
+            file_electron << dIonPz[iHit]/dMomentum_au << ", ";
+            file_electron.width(14);
+            file_electron << dElectronEnergy[iHit]/dElectron << ", ";
+        }
+        file_electron << endl;
+    }
+
     pEventData->SetAt(18,nHexX1);  // 18+0
     pEventData->SetAt(19,nHexX2);  // 18+1
     pEventData->SetAt(20,nHexY1);  // 18+2
@@ -738,9 +816,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
         pEventData->SetAt(31+4+iHit,yhex[iHit]*1000);               // Hex_Y
         //pEventData->SetAt(31+28+iHit,dxSq[iHit]*1000);                // SQ_x (mm)
         //pEventData->SetAt(31+32+iHit,dySq[iHit]*1000);                // SQ_y (mm)
-        pEventData->SetAt(31+28+iHit,dxSqN[jn][iHit]*1000);             // SQ_x (mm)
-        pEventData->SetAt(31+32+iHit,dySqN[jn][iHit]*1000);             // SQ_y (mm)
-        pEventData->SetAt(67+iHit,dtIon[iHit]*1.0E9);               // Ion TOF (ns)
+        pEventData->SetAt(31+28+iHit,dxSq[iHit]*1000);             // SQ_x (mm)
+        pEventData->SetAt(31+32+iHit,dySq[iHit]*1000);             // SQ_y (mm)
+        pEventData->SetAt(67+iHit,dtIon[iHit]/unit_nano);               // Ion TOF (ns)
         pEventData->SetAt(67+4+iHit,dIonEnergy[iHit]/dElectron);    // Ion Kinetic Energy
     } // end for
 
@@ -748,14 +826,14 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     //  pEventData->SetAt(75,(dIonEnergy[0]*14/16)/dElectron);              // Ion Total Kinetic Energy
 
     for(int iHit=0; iHit<4; iHit++){
-        pEventData->SetAt(76+iHit,dIonPx[jn][iHit]/dMomentum_au);       // Ion Px
-        pEventData->SetAt(80+iHit,dIonPy[jn][iHit]/dMomentum_au);       // Ion Py
-        pEventData->SetAt(84+iHit,dIonPz[jn][iHit]/dMomentum_au);       // Ion Pz
+        pEventData->SetAt(76+iHit,dIonPx[iHit]/dMomentum_au);       // Ion Px
+        pEventData->SetAt(80+iHit,dIonPy[iHit]/dMomentum_au);       // Ion Py
+        pEventData->SetAt(84+iHit,dIonPz[iHit]/dMomentum_au);       // Ion Pz
     } // end for
 
-    pEventData->SetAt(88,dSum_of_momenta_X[jn]/dMomentum_au);       // Sum_px
-    pEventData->SetAt(89,dSum_of_momenta_Y[jn]/dMomentum_au);       // Sum_py
-    pEventData->SetAt(90,dSum_of_momenta_Z[jn]/dMomentum_au);       // Sum_pz
+    pEventData->SetAt(88,dSum_of_momenta_X/dMomentum_au);       // Sum_px
+    pEventData->SetAt(89,dSum_of_momenta_Y/dMomentum_au);       // Sum_py
+    pEventData->SetAt(90,dSum_of_momenta_Z/dMomentum_au);       // Sum_pz
 
 
     pEventData->SetAt(91,dIon_theta*180.0/pi);                      //
@@ -771,7 +849,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     //chek OK
     pEventData->SetAt(102,dElectronEnergyXY/dElectron);         // Electron Kinetic Energy
     for(int iHit=0; iHit<4; iHit++){
-        pEventData->SetAt(98+iHit,dtElectron[iHit]*1.0E9);              // Electron TOF
+        pEventData->SetAt(98+iHit,dtElectron[iHit]/unit_nano);              // Electron TOF
         pEventData->SetAt(103+iHit,dElectronEnergy[iHit]/dElectron);    // Electron Kinetic Energy
         pEventData->SetAt(107+iHit,dElectronPx[iHit]/dMomentum_au);     // Electron Px
         pEventData->SetAt(111+iHit,dElectronPy[iHit]/dMomentum_au);     // Electron Py
@@ -803,9 +881,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     pEventData->SetAt(126,iMaster_Flag);
     pEventData->SetAt(127,flagmatrix);
 
-    pEventData->SetAt(128,dCOM_x[jn]/unit_milli);                             // COM_x  mm
-    pEventData->SetAt(129,dCOM_y[jn]/unit_milli);                             // COM_y  mm
-    pEventData->SetAt(130,dCOM_z[jn]/unit_milli);                             // COM_z  mm
+    pEventData->SetAt(128,dCOM_x/unit_milli);                             // COM_x  mm
+    pEventData->SetAt(129,dCOM_y/unit_milli);                             // COM_y  mm
+    pEventData->SetAt(130,dCOM_z/unit_milli);                             // COM_z  mm
 
 
 
@@ -815,9 +893,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
 
 
 
-    pEventData->SetAt(133,dphai/pi*180);
-    pEventData->SetAt(134,dEX*1000);
-    pEventData->SetAt(135,dEY*1000);
+    pEventData->SetAt(133,dphai*180.0/pi);
+    pEventData->SetAt(134,dEX/unit_milli);
+    pEventData->SetAt(135,dEY/unit_milli);
 
     pEventData->SetAt(136,dElectron_theta0[0]*180.0/pi);
 
@@ -825,23 +903,23 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
 
     pEventData->SetAt(138,dIon_Electron_Angle0*180.0/pi);
     pEventData->SetAt(139,isellect);                                // COM_e_y
-    pEventData->SetAt(140,dtN*1.0E9);                               // COM_e_y
-    pEventData->SetAt(141,dtO*1.0E9);                               // COM_e_y
+    pEventData->SetAt(140,dtN/unit_nano);                               // COM_e_y
+    pEventData->SetAt(141,dtO/unit_nano);                               // COM_e_y
 
     for(int ii=0; ii<int(180/dAngle_Width+0.1); ii++){
-        pEventData->SetAt(142+ii*3,dIon_Angle[ii]/pi*180);
-        pEventData->SetAt(142+ii*3+1,dElectron_Angle[ii]/pi*180);
-        pEventData->SetAt(142+ii*3+2,dIon_Electron_Angle[ii]/pi*180);
+        pEventData->SetAt(142+ii*3,dIon_Angle[ii]*180.0/pi);
+        pEventData->SetAt(142+ii*3+1,dElectron_Angle[ii]*180.0/pi);
+        pEventData->SetAt(142+ii*3+2,dIon_Electron_Angle[ii]*180.0/pi);
     }
     pEventData->SetAt(196,d_I_Angle*180.0/pi);
     pEventData->SetAt(197,d_e_I_Angle*180.0/pi);
-    pEventData->SetAt(198,distancexy*1000);
+    pEventData->SetAt(198,distancexy/unit_milli);
 
-    pEventData->SetAt(205,(dtIon[0]+dtIon[1])*1.0E9);
-    pEventData->SetAt(206,(dtIon[0]+dtIon[2])*1.0E9);
-    pEventData->SetAt(207,(dtIon[0]+dtIon[3])*1.0E9);
-    pEventData->SetAt(208,(dtIon[1]+dtIon[2])*1.0E9);
-    pEventData->SetAt(209,(dtIon[1]+dtIon[3])*1.0E9);
-    pEventData->SetAt(210,(dtIon[2]+dtIon[3])*1.0E9);
+    pEventData->SetAt(205,(dtIon[0]+dtIon[1])/unit_nano);
+    pEventData->SetAt(206,(dtIon[0]+dtIon[2])/unit_nano);
+    pEventData->SetAt(207,(dtIon[0]+dtIon[3])/unit_nano);
+    pEventData->SetAt(208,(dtIon[1]+dtIon[2])/unit_nano);
+    pEventData->SetAt(209,(dtIon[1]+dtIon[3])/unit_nano);
+    pEventData->SetAt(210,(dtIon[2]+dtIon[3])/unit_nano);
     return;
 } // end CDAN_API
