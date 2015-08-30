@@ -29,4 +29,4 @@ static char THIS_FILE[] = __FILE__;
 //  RoentDek Standard DAN
 //
 ////////////////////////////////////////
-#include "CamacDAN_4hit_analysis_posi.cpp"				// Standard DAN Module
+#include "StandardDAN.cpp"				// Standard DAN Module

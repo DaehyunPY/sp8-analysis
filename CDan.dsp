@@ -1,24 +1,24 @@
 # Microsoft Developer Studio Project File - Name="CDan" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
-# ** 編集しないでください **
+# ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 
 CFG=CDan - Win32 Release
-!MESSAGE これは有効なﾒｲｸﾌｧｲﾙではありません。 このﾌﾟﾛｼﾞｪｸﾄをﾋﾞﾙﾄﾞするためには NMAKE を使用してください。
-!MESSAGE [ﾒｲｸﾌｧｲﾙのｴｸｽﾎﾟｰﾄ] ｺﾏﾝﾄﾞを使用して実行してください
+!MESSAGE This is not a valid makefile. To build this project using NMAKE,
+!MESSAGE use the Export Makefile command and run
 !MESSAGE 
 !MESSAGE NMAKE /f "CDan.mak".
 !MESSAGE 
-!MESSAGE NMAKE の実行時に構成を指定できます
-!MESSAGE ｺﾏﾝﾄﾞ ﾗｲﾝ上でﾏｸﾛの設定を定義します。例:
+!MESSAGE You can specify a configuration when running NMAKE
+!MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
 !MESSAGE NMAKE /f "CDan.mak" CFG="CDan - Win32 Release"
 !MESSAGE 
-!MESSAGE 選択可能なﾋﾞﾙﾄﾞ ﾓｰﾄﾞ:
+!MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "CDan - Win32 Release" ("Win32 (x86) Dynamic-Link Library" 用)
-!MESSAGE "CDan - Win32 Debug" ("Win32 (x86) Dynamic-Link Library" 用)
+!MESSAGE "CDan - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "CDan - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -26,6 +26,7 @@ CFG=CDan - Win32 Release
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 CPP=cl.exe
+F90=df.exe
 MTL=midl.exe
 RSC=rc.exe
 
@@ -42,7 +43,6 @@ RSC=rc.exe
 # PROP Intermediate_Dir ".\Release"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir "."
-F90=df.exe
 # ADD BASE F90 /compile_only /include:".\Release/" /nologo /threads /I "CDan\Release/"
 # ADD F90 /compile_only /include:".\Release/" /nologo /threads /I "CDan\Release/"
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /Yu"stdafx.h" /c
@@ -56,7 +56,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 Cobold.lib /nologo /subsystem:windows /dll /machine:I386 /out:"DAn.dll"
+# ADD LINK32 Cobold.lib /nologo /subsystem:windows /dll /machine:I386 /out:".\Release\DAn.dll"
 
 !ELSEIF  "$(CFG)" == "CDan - Win32 Debug"
 
@@ -71,7 +71,6 @@ LINK32=link.exe
 # PROP Intermediate_Dir ".\Debug"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir "."
-F90=df.exe
 # ADD BASE F90 /compile_only /debug:full /include:".\Debug/" /nologo /threads /I "CDan\Debug/"
 # ADD F90 /compile_only /debug:full /include:".\Debug/" /nologo /threads /I "CDan\Debug/"
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /Yu"stdafx.h" /c
