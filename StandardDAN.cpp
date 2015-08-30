@@ -1456,8 +1456,8 @@ CDAN_API void AnalysisFinalize(CDoubleArray *pEventData,CDoubleArray *pParameter
     fprintf(fp1, "Tion2(z0) = %12.10f ns\n", tof(0, 0.0000354, dMass[1], dCharge[1])*1.0E9);
     fprintf(fp1, "Telec = %12.10f ns\n", tctemp[2]*1.0E9);
     fprintf(fp1, "dTcyc = %12.10f ns \n", dTcyc*1.0E9);
-    fprintf(fp1, "atan2(1,0) = %f\n", atan2(1,0));
-    fprintf(fp1, "atan2(0,1) = %f\n", atan2(0,1));
+    // fprintf(fp1, "atan2(1,0) = %f\n", atan2(1,0));
+    // fprintf(fp1, "atan2(0,1) = %f\n", atan2(0,1));
     fprintf(fp1, "lEventCounter = %u\n", lEventCounter);
    fclose(fp1);
 }
