@@ -192,10 +192,10 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
         dElectric_Field2 = (dVion1st-dVion2nd)/dL2;
         dElectric_Field3 = (dVion2nd-dViondet)/dL3;
     }
-    file_log << json["ion"]["1st_hit"]["minimum_of_TOF"].GetDouble() << " " << json["ion"]["1st_hit"]["maximum_of_TOF"].GetDouble() << endl;
-    file_log << json["ion"]["2nd_hit"]["minimum_of_TOF"].GetDouble() << " " << json["ion"]["2nd_hit"]["maximum_of_TOF"].GetDouble() << endl;
-    file_log << json["ion"]["3rd_hit"]["minimum_of_TOF"].GetDouble() << " " << json["ion"]["3rd_hit"]["maximum_of_TOF"].GetDouble() << endl;
-    file_log << json["ion"]["4th_hit"]["minimum_of_TOF"].GetDouble() << " " << json["ion"]["4th_hit"]["maximum_of_TOF"].GetDouble() << endl;
+    // file_log << json["ion"]["1st_hit"]["minimum_of_TOF"].GetDouble() << " " << json["ion"]["1st_hit"]["maximum_of_TOF"].GetDouble() << endl;
+    // file_log << json["ion"]["2nd_hit"]["minimum_of_TOF"].GetDouble() << " " << json["ion"]["2nd_hit"]["maximum_of_TOF"].GetDouble() << endl;
+    // file_log << json["ion"]["3rd_hit"]["minimum_of_TOF"].GetDouble() << " " << json["ion"]["3rd_hit"]["maximum_of_TOF"].GetDouble() << endl;
+    // file_log << json["ion"]["4th_hit"]["minimum_of_TOF"].GetDouble() << " " << json["ion"]["4th_hit"]["maximum_of_TOF"].GetDouble() << endl;
     // for(int ith=0; ith<nIonHit; ith++){
     //     file_log << dMin_TOF[ith] << " " << dMax_TOF[ith] << endl;
     // }

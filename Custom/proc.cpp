@@ -249,8 +249,8 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
 
     for(int iHit=0; iHit<nIonHit; iHit++){
         if(dtIon[iHit]<dMin_TOF[iHit] || dtIon[iHit]>dMax_TOF[iHit]){
-            iMaster_Flag = -20 -(iHit+1); // 21, 22, 23
-            if(iMaster_Flag == -21){
+            iMaster_Flag = -20 -(iHit+1); // 21, 22, 23, 24
+            // if(iMaster_Flag == -21){
                 // file_log.setf(fstream::scientific);
                 // file_log.precision(6);
                 // file_log.width(14);
@@ -260,7 +260,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
                 // file_log.width(14);
                 // file_log << dMax_TOF[iHit] << ", ";
                 // file_log << endl;
-            }
+            // }
             goto elec;
         }
     }
@@ -393,8 +393,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
         dIon_nPy = dIon_nPy/square_P ;      // Normalized
         dIon_nPz = dIon_nPz/square_P ;      // Normalized
     } else {
-        iMaster_Flag = -36; // square_P must not be zero !! kill this event !
-        flagmatrix = 36;
+        iMaster_Flag = -30; // square_P must not be zero !! kill this event !
         goto elec;
     }
 
@@ -424,6 +423,15 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     } else {
     dIon_psai_zy= atan2(dIon_nPy ,dIon_nPz);
     }
+
+    for(int iHit=0; iHit<1; iHit++){
+        // for pi transition
+        if ((dIonPz_norm[iHit]<0.34) && (dIonPz_norm[iHit]>-0.34))
+        flagmatrix = 11;
+        //for sigma transition
+        if ((dIonPz_norm[iHit]>0.94) || (dIonPz_norm[iHit]<-0.94))
+        flagmatrix = 12;
+    } // end for
 
 
 
@@ -482,21 +490,19 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     //}
 
     //rotation due to BIGHEX configuration
-    for(iCount=0;iCount<nHit;iCount++)
-    {
-    double ang_shift;
-    double xhextemp, yhextemp;
-    ang_shift = 30.0/180.0*3.1415926;
-    xhextemp = xhex[iCount];
-    yhextemp = yhex[iCount];
-    xhex[iCount] =  xhextemp*cos(ang_shift) + yhextemp*sin(ang_shift);
-    yhex[iCount] = -xhextemp*sin(ang_shift) + yhextemp*cos(ang_shift);
+    for(iCount=0;iCount<nHit;iCount++){
+        double ang_shift;
+        double xhextemp, yhextemp;
+        ang_shift = 30.0*pi/180.0;
+        xhextemp = xhex[iCount];
+        yhextemp = yhex[iCount];
+        xhex[iCount] =  xhextemp*cos(ang_shift) + yhextemp*sin(ang_shift);
+        yhex[iCount] = -xhextemp*sin(ang_shift) + yhextemp*cos(ang_shift);
     }
 
-    for(iCount=0;iCount<nHit;iCount++)
-    {
-    xhex[iCount]    = xhex[iCount] * dX_cor;
-    yhex[iCount]    = yhex[iCount] * dY_cor;
+    for(iCount=0;iCount<nHit;iCount++){
+        xhex[iCount] = xhex[iCount] * dX_cor;
+        yhex[iCount] = yhex[iCount] * dY_cor;
     }
 
     // selectrion of valid delay line pair
@@ -509,7 +515,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     for(int iHit=0; iHit < nElectronHit; iHit++){
         if((dtElectron[iHit]< dMin_eTOF) || (dtElectron[iHit]> dMax_eTOF)){
             // iMaster_Flag = -46;
-            flagmatrix = -46;
+            flagmatrix = -20-(iHit+1);
             goto out;
         }
     }
@@ -526,7 +532,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
         find_elec_pz(dDelta_T, 0, dElectronPz[iCount]);
         if (dElectronPz[iCount] < -9900){
             // iMaster_Flag = -47;
-            flagmatrix = -47;
+            flagmatrix = -30;
             goto out;
         } // end if
 
@@ -585,12 +591,12 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
             dElectronPz_norm[iCount]    = dElectronPz[iCount] / dElectronP[iCount];
         } else{
             // iMaster_Flag = -53; // square_P must not be zero !! kill this event !
-            flagmatrix = 53;
+            flagmatrix = -40;
             goto out;
         } // end for
     } // END for(iCount=0; iCount < iHItsTDC1; iCount++)
 
-    flagmatrix = 54;
+    // flagmatrix = -54;
     // Calculation of electron kinetic energies
     //  for(int iHit=0; iHit<iHitsTDC1; iHit++){
 
@@ -737,16 +743,6 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
     ////        dIonPy_norm[iHit] = dIonPy[iHit]/dIonP[iHit];  ////////////////
     ////        dIonPz_norm[iHit] = dIonPz[iHit]/dIonP[iHit];  ////////////////
     ///////////////////////////////////////////////////////////////////////////////
-
-
-    for(int iHit=0; iHit<1; iHit++){
-        //for sigma transition
-        if ((dIonPz_norm[iHit]>0.94) || (dIonPz_norm[iHit]<-0.94))
-        flagmatrix = 72;
-        // for pi transition
-        if ((dIonPz_norm[iHit]<0.34) && (dIonPz_norm[iHit]>-0.34))
-        flagmatrix = 73;
-    } // end for
 
 
 
