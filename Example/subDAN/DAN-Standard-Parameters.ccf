@@ -1,0 +1,182 @@
+;/////////////////////////////////////////////////////////////////////////////
+;// Parameter description used in this insert dependent part!
+;// ---------------------------------------------------------
+;//
+;// Used from DAQ
+;// -------------
+;// Parameter  2 = Save TimeStamp
+;//                0 = no Timestamp,
+;//                1 = 32Bit Timestamp	(Low.Low, Low.high)
+;//                2 = 64Bit Timestamp	(Low.Low, Low.high, High.Low, High.high)
+;// Parameter  5 = TimeScaling (Internally set, tics per second)
+;// Parameter  6 = DAQ Version # (Internally set)
+;// Parameter  7 = Time Reference of DAQ Initialize (Start time of LMF) (Internally set)
+;// Parameter  8 = DAQ_ID
+;//					DAQ_ID_RAW			0x000000		// for RAW (no Data)
+;//					DAQ_ID_HM1			0x000001		// for HM1 (single)
+;//					DAQ_ID_TDC8			0x000002		// for TDC8/ISA/PCI
+;//					DAQ_ID_CAMAC		0x000003		// for CAMAC
+;//					DAQ_ID_2HM1			0x000004		// for 2 HM1
+;//					DAQ_ID_2TDC8		0x000005		// for 2 TDC8
+;//
+;// Parameter 20 = Resolution of TDC in ns (internally set)
+;// Parameter 21 = TDC data type information (internally set)
+;//			0 = Not defined
+;//			1 = Channel information
+;//			2 = Time information (in ns)
+;//
+;// Parameter 32 = number of Channels (reread during offline)
+;//				1..
+;// Parameter 33 = number of hits (reread during offline)
+;//              1..
+;//
+;// Parameter 40 = DataFormat (Internally set)
+;//
+;// Needed by DAN
+;// -------------
+;// Parameter 100 = Conversion Parameter for RAW data
+;//			0 = Counts (no conversion)
+;//			1 = Time (ns)
+;//			2 = Point (mm)
+;// Parameter 102 = Hex-Anode calculations
+;//			0 = no Hex-Anode
+;//			1 = Hex-Anode
+;// Parameter 103 = PHI conversion
+;//			0 = RAD [-pi..pi]
+;//			1 = RAD [0..2pi]
+;//			2 = DEG [-180..180]
+;//			3 = DEG [0..360]
+;// Parameter 104 = DNL correction (GP1/HM1 only)
+;//			0 = no DNL correction
+;//			1 = Correction value (typically 0.31)
+;// Parameter 105 = Start of DAQ Data for DAN (Start Coordinate)
+;//			0 = automatic
+;// Parameter 106 = Start of DAN Data (Start Coordinate)
+;//			0 = automatic
+;// Parameter 107 = Analyze hit #
+;//
+;// Parameter 110 = pTPCalX = Time to Point calibration factor for x (mm/ns)
+;// Parameter 111 = pTPCalY = Time to Point calibration factor for y (mm/ns)
+;// Parameter 112 = pTPCalZ = Time to Point calibration factor for z (mm/ns)
+;//
+;// Parameter 120 = pCOx = Rotation Offset Center for x
+;// Parameter 121 = pCOy = Rotation Offset Center for y
+;// Parameter 122 = pRotA = Rotation Angle mathematical direction
+;// 		      		value in RAD if Parameter 103 = 0 or 1
+;//		      		value in DEG if Parameter 103 = 2 or 3
+;//
+;// Parameter 135 = pOPx = Offset for x Point
+;// Parameter 136 = pOPy = Offset for y Point
+;// Parameter 137 = pOPw = Offset for w Point
+;// Parameter 138 = pOSum = Offset for Sum/Diff calculations
+;//
+;/////////////////////////////////////////////////////////////////////////////
+;// Raw data
+;/////////////////////////////////////////////////////////////////////////////
+;// TimeStamp
+;// n1,x1 = channel 1 (hit 1..)
+;// n2,x2 = channel 2 (hit 1..)
+;// n3,y1 = channel 3 (hit 1..)
+;// n4,y2 = channel 4 (hit 1..)
+;// n5,z1 = channel 5 (hit 1..)
+;// n6,z2 = channel 6 (hit 1..)
+
+;/////////////////////////////////////////////////////////////////////////////
+;// Conversions
+;/////////////////////////////////////////////////////////////////////////////
+;// to time
+;//	time = TDCR / channel					(ns)
+;//		TDCR = TDCResolution from DAQ Parameter 
+;//  point = time / pTPCal
+;//		pTPCal = time (ns)/mm
+;// ROT = (cos   -sin)
+;//		 (sin   -cos)
+
+;/////////////////////////////////////////////////////////////////////////////
+;// coordinates calculated by this DAN
+;// ------------------------------------------------
+;//
+;// AbsoluteEventTime
+;// AbsoluteDeltaEventTime
+;// EventCounter
+;// True
+;// ConsistensIndicator
+;// PLLStatusLocked
+;//
+;// n1,n2,n3,n4,n5,n6							number of hits for channel (i)
+;// x1,x2								counts, time(ns) or point(mm)
+;// y1,y2								counts, time(ns) or point(mm)
+;// z1,z2	(not used here, always 0, hex anode)			counts, time(ns) or point(mm)
+;//
+;// x									counts, time(ns) or point(mm)
+;//		x	  = (x1 - x2)
+;// y									counts, time(ns) or point(mm)
+;//		y     = (y1 - y2)
+;// w(mm)								counts, time(ns) or point(mm)
+;//		w     = 0						(if hex flag not set)
+;//		w(mm) = (z1 - z2) + pOPw				(if hex flag set)
+;//
+;// sumx		(x1 + x2) + pOSum				counts, time(ns) or point(mm)
+;// sumy		(y1 + y2) + pOSum				counts, time(ns) or point(mm)
+;// sumw		(z1 + z2) + pOSum				counts, time(ns) or point(mm)
+;// sumxyw	(x1 + x2) + (y1 + y2) + (z1 + z2) + pOSum		counts, time(ns) or point(mm)
+;// diffxy	(sumx - sumy) + pOSum					counts, time(ns) or point(mm)
+;//
+;// PosX
+;//		= x + pOPx						(if hex flag not set)
+;//		= -x + pOPx						(if hex flag set)
+;// PosY
+;//		= y + pOPy						(if hex flag not set)
+;//		= 1/sqrt(3) * (2y+x) + pOPy				(if hex flag set)
+;//
+;// r		sqrt((PosX-pCOx)^2 + (PosY-pCOy)^2)			counts, time(ns) or point(mm)
+;// phi		acos((PosX-pCOx) / r) / pi * 180. * (PosY-pCOy)/fabs((PosY-pCOy))		RAD or DEG
+;// xRot		(PosX-pCOx) * ROT + pCOx			counts, time(ns) or point(mm)
+;// yRot		(PosY-pCOy) * ROT + pCOy			counts, time(ns) or point(mm)
+;//
+;// Xuv		-x + pOPx
+;// Yuv		1/sqrt(3) * (2y+x) + pOPy
+;// Xuw		Xuv
+;// Yuw		1/sqrt(3) * (-2w-x) + pOPy
+;// Xvw		(y+w) + pOPx
+;// Yvw		1/sqrt(3) * (y-w) + pOPy
+;// dX		Xuv - Xvw
+;// dY		Yuv - Yvw
+;// 
+;/////////////////////////////////////////////////////////////////////////////
+
+Parameter 100,0;	// Parameter 100 = Conversion Parameter for RAW data
+;//			0 = Counts (no conversion)
+;//			1 = Time (ns)
+;//			2 = Point (mm)
+Parameter 102,0;	// Parameter 102 = Hex-Anode calculations
+;//			0 = no Hex-Anode
+;//			1 = Hex-Anode
+Parameter 103,3;	// Parameter 103 = PHI conversion
+;//			0 = RAD [-pi..pi]
+;//			1 = RAD [0..2pi]
+;//			2 = DEG [-180..180]
+;//			3 = DEG [0..360]
+Parameter 104,0; //0.31;	// Parameter 104 = DNL correction (GP1/HM1 only)
+;//			0 = no DNL correction
+;//			1 = Correction value (typically 0.31)
+Parameter 105,0;	// Parameter 105 = Start of DAQ Data for DAN (Start Coordinate)
+;//			0 = automatic
+Parameter 106,0;	// Parameter 106 = Start of DAN Data (Start Coordinate)
+;//			0 = automatic
+Parameter 107,1;	// Parameter 107 = Analyze hit #
+;//
+Parameter 110,0;	// Parameter 110 = pTPCalX = Time to Point calibration factor for x (mm/ns)
+Parameter 111,0;	// Parameter 111 = pTPCalY = Time to Point calibration factor for y (mm/ns)
+Parameter 112,0;	// Parameter 112 = pTPCalZ = Time to Point calibration factor for z (mm/ns)
+;//
+Parameter 120,0;	// Parameter 120 = pCOx = Rotation Offset Center for x
+Parameter 121,0;	// Parameter 121 = pCOy = Rotation Offset Center for y
+Parameter 122,45;	// Parameter 122 = pRotA = Rotation Angle mathematical direction
+;// 		      		value in RAD if Parameter 103 = 0 or 1
+;//		      		value in DEG if Parameter 103 = 2 or 3
+;//
+Parameter 135,0;	// Parameter 135 = pOPx = Offset for x Point
+Parameter 136,0;	// Parameter 136 = pOPy = Offset for y Point
+Parameter 137,0;	// Parameter 137 = pOPw = Offset for w Point
+Parameter 138,0;	// Parameter 138 = pOSum = Offset for Sum/Diff calculations

@@ -1,0 +1,81 @@
+;/////////////////////////////////////////////////////////////////////////////
+;// Parameter description used in this hardware dependent part!
+;// -----------------------------------------------------------
+;//
+;// Parameter  1 = io-hardwareaddress of the ATMD-Board
+;//                0 Auto Detect
+;// Parameter  2 = Save TimeStamp
+;//                0 = no Timestamp,
+;//                1 = 32Bit Timestamp	(Low.Low, Low.high)
+;//                2 = 64Bit Timestamp	(Low.Low, Low.high, High.Low, High.high)
+;// Parameter  3 = System Timeout Time in s
+;//				  (after this time with no event the system will be resetted)
+;// Parameter  5 = TimeScaling (Internally set, tics per second)
+;// Parameter  6 = DAQ Version # (Internally set)
+;// Parameter  7 = Time Reference of DAQ Initialize (Start time of LMF) (Internally set)
+;// Parameter  8 = DAQ_ID
+;//					DAQ_ID_RAW			0x000000		// for RAW (no Data)
+;//					DAQ_ID_HM1			0x000001		// for HM1 (single)
+;//					DAQ_ID_TDC8			0x000002		// for TDC8/ISA/PCI
+;//					DAQ_ID_CAMAC			0x000003		// for CAMAC
+;//					DAQ_ID_2HM1			0x000004		// for 2 HM1
+;//					DAQ_ID_2TDC8			0x000005		// for 2 TDC8
+
+;//
+;// Parameter 10 FAK_DLL Value (good start value is 50)
+;//			Resolution in ns is calculated by the following formula
+;//			if parameter 11 is 0 then resolution is 
+;//					(1600)) / (60 * FAK_DLL)
+;//			if parameter 11 is 1 then resolution is 
+;//					(1600)) / (120 * FAK_DLL)
+;//			if parameter 11 is 2 then resolution is 
+;//					(1600)) / (240 * FAK_DLL)
+;// Parameter 11 = Resolution Flag (reread during offline)
+;//				0 = low res mode
+;//				1 = high res mode + half res mode = normal mode
+;//				2 = high res mode
+;// Parameter 12 = trigger mode for Start
+;//			    0 = trigger at rize
+;//				1 = trigger at fall
+;// Parameter 13 = trigger mode for Stop
+;//			    0 = trigger at rize
+;//				1 = trigger at fall
+;// Parameter 20 = Resolution of TDC in ns (internally set)
+;// Parameter 21 = TDC data type information (internally set)
+;//			0 = Not defined
+;//			1 = Channel information
+;//			2 = Time information (in ns)
+;//
+;// Parameter 30 = Event Open Time in us for detecting an event.
+;// Parameter 31 = Auto Trigger (Any channel triggers, overwrites parameter 34)
+;//			    0 = off
+;//              1 = on
+;// Parameter 32 = number of Channels (reread during offline)
+;//				1..4
+;// Parameter 33 = number of hits (reread during offline)
+;//              1..3 (first hit is the start) if HighRes is on
+;//              1..4 (first hit is the start) if HighRes is off
+;// Parameter 34 = set bits for Gp1 to be tested for valid event (reread during offline)
+;//              ( x x x x)
+;//			      T T T T
+;//			      D D D D
+;//			      C C C C
+;//			      3 2 1 0
+;// Parameter 40 = DataFormat (Internally set)
+
+
+Parameter 1,0		;io-hardwareaddress of the ATMD-Boards
+Parameter 2,2		;Save TimeStamp
+Parameter 3,5		;System Timeout Time in s
+
+Parameter 10,50		;FAK_DLL Value -> 0.1333333 ns/Channel
+Parameter 11,2		;Resolution Flag (reread during offline)
+Parameter 12,0		;trigger mode for Start
+Parameter 13,0		;trigger mode for Stop
+
+Parameter 30,30		;Event Open Time in us for detecting an event.
+Parameter 31,0		;Auto Trigger (Any channel triggers, overwrites parameter 34)
+Parameter 32,4		;number of Channels (reread during offline)
+Parameter 33,1		;number of hits (reread during offline)
+Parameter 34,0x0011	;set bits for Gp1 to be tested for valid event (reread during offline)
+

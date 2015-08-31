@@ -1,0 +1,113 @@
+// --------------------------------------
+// Standard HM1 Cobold Coordinate File
+// --------------------------------------
+// written by Klaus Ullmann-Pfleger
+//           RoentDek Handels GmbH
+//
+//  Version 1   03.10.2001
+//
+// --------------------------------------
+
+// --------
+// DAN data
+// --------
+//
+Coordinate AbsoluteEventTime;
+Coordinate DeltaEventTime;
+Coordinate EventCounter;
+Coordinate True;
+Coordinate ConsistensIndicator;
+Coordinate PLLStatusLocked;
+
+// iHitPattern = 18
+// Hit pattern (18-30) /////////////////////////////////////////////////////////
+Coordinate nHexX1,nHexX2,nHexY1,nHexY2,nHexZ1,nHexZ2;
+Coordinate nMCPele,nMCPion;
+Coordinate nSqX1,nSqX2,nSqY1,nSqY2;
+Coordinate nBunch;
+
+// iPos = 31
+// calculated data (31-66) /////////////////////////////////////////////////////
+Coordinate xhexh1,xhexh2,xhexh3,xhexh4;             // 31-34
+Coordinate yhexh1,yhexh2,yhexh3,yhexh4;             // 35-38
+Coordinate sumhexXh1,sumhexXh2,sumhexXh3,sumhexXh4; // 39-42
+Coordinate sumhexYh1,sumhexYh2,sumhexYh3,sumhexYh4; // 43-46
+Coordinate sumhexZh1,sumhexZh2,sumhexZh3,sumhexZh4; // 47-50
+Coordinate sumsqxh1,sumsqxh2,sumsqxh3,sumsqxh4;     // 51-54
+Coordinate sumsqyh1,sumsqyh2,sumsqyh3,sumsqyh4;     // 55-58
+Coordinate xsqh1,xsqh2,xsqh3,xsqh4;                 // 59-62
+Coordinate ysqh1,ysqh2,ysqh3,ysqh4;                 // 63-66
+
+// itIon=67
+// Ion results (67-97) /////////////////////////////////////////////////////////
+Coordinate tIonh1,tIonh2,tIonh3,tIonh4;                         // 67-70
+Coordinate ion_energyh1,ion_energyh2,ion_energyh3,ion_energyh4; // 71-74
+Coordinate ion_total_energy;                                    // 75
+Coordinate ion_pxh1,ion_pxh2,ion_pxh3,ion_pxh4;                 // 76-79
+Coordinate ion_pyh1,ion_pyh2,ion_pyh3,ion_pyh4;                 // 80-83
+Coordinate ion_pzh1,ion_pzh2,ion_pzh3,ion_pzh4;                 // 84-87
+Coordinate sum_Px,sum_Py,sum_Pz;                                // 88-90
+Coordinate ion_theta;                                           // 91
+Coordinate ion_psai_xy,ion_psai_yz,ion_psai_zx;                 // 92-94
+Coordinate ion_npx,ion_npy,ion_npz;                             // 95-97
+
+// itElectron=98
+// Electron results (87-125) ///////////////////////////////////////////////////
+Coordinate tElectronh1,tElectronh2,tElectronh3,tElectronh4;                             // 98-101
+Coordinate electron_total_energy_xy;                                                    // 102
+Coordinate electron_energy_h1,electron_energy_h2,electron_energy_h3,electron_energy_h4; // 103-106
+Coordinate electron_pxh1,electron_pxh2,electron_pxh3,electron_pxh4;                     // 107-110
+Coordinate electron_pyh1,electron_pyh2,electron_pyh3,electron_pyh4;                     // 111-114
+Coordinate electron_pzh1,electron_pzh2,electron_pzh3,electron_pzh4;                     // 115-118
+Coordinate electron_nPx,electron_nPy,electron_nPz;                                      // 119-121
+Coordinate electron_Total_p;                                                            // 122
+Coordinate electron_psai_xy,electron_psai_yz,electron_psai_zx;                          // 123-125
+
+// imaster=126
+// flags ///////////////////////////////////////////////////////////////////////
+Coordinate IonFlag,ElecFlag; // 126-127
+
+// icom=128
+// position of center of mass (128-131) ////////////////////////////////////////
+Coordinate COM_x,COM_y,COM_z; // 128-130
+Coordinate COM_e_x,COM_e_y;   // 131-132
+
+////////////////////////// Correlation Angles ////////////////////////////////// 133-136
+Coordinate phai;                           // 133
+Coordinate dEX,dEY;                        // 134-135
+Coordinate electron_theta;                 // 136
+Coordinate posi_xy,ion_electron_angle_all; // 137-138
+Coordinate isellect,dtN,dtO;               // 139-141
+
+
+
+//////////////////////////////////139
+Coordinate ion_angle1,electron_angle1,ion_electron_angle1; // 142-144
+Coordinate ion_angle2,electron_angle2,ion_electron_angle2; // 145
+Coordinate ion_angle3,electron_angle3,ion_electron_angle3; // 148
+Coordinate ion_angle4,electron_angle4,ion_electron_angle4; // 151
+Coordinate ion_angle5,electron_angle5,ion_electron_angle5; // 154
+Coordinate ion_angle6,electron_angle6,ion_electron_angle6; // 157
+Coordinate ion_angle7,electron_angle7,ion_electron_angle7; // 160
+Coordinate ion_angle8,electron_angle8,ion_electron_angle8; // 163
+Coordinate ion_angle9,electron_angle9,ion_electron_angle9; // 166
+Coordinate ion_angle10,electron_angle10,ion_electron_angle10; // 169
+Coordinate ion_angle11,electron_angle11,ion_electron_angle11; // 172
+Coordinate ion_angle12,electron_angle12,ion_electron_angle12; // 175
+Coordinate ion_angle13,electron_angle13,ion_electron_angle13; // 178
+Coordinate ion_angle14,electron_angle14,ion_electron_angle14; // 181
+Coordinate ion_angle15,electron_angle15,ion_electron_angle15; // 184
+Coordinate ion_angle16,electron_angle16,ion_electron_angle16; // 187
+Coordinate ion_angle17,electron_angle17,ion_electron_angle17; // 190
+Coordinate ion_angle18,electron_angle18,ion_electron_angle18; // 193
+
+Coordinate dIon_AngleAll,dIon_Electron_AngleAll,distancexy; // 196-198
+
+Coordinate KER_electron_energy_h1,KER_electron_energy_h2,KER_electron_energy_h3,KER_electron_energy_h4; // 199-202
+    // 10/16Ne_clusterÇÃç∑ï™Ç©ÇÁí«â¡ÅBÇ±ÇÍÇ™Ç»Ç¢Ç∆âêÕâÒÇÁÇ»Ç¢ÇÊÇ§Çæ
+Coordinate dElectronEnergyHigher,dElectronEnergyLower; // 203-204
+    // 10/16Ne_clusterÇÃç∑ï™Ç©ÇÁí«â¡ÅBÇ±ÇÍÇ™Ç»Ç¢Ç∆âêÕâÒÇÁÇ»Ç¢ÇÊÇ§Çæ
+
+//////Sakakibara added for ion hit1+hit2
+Coordinate TOF1p2,TOF1p3,TOF1p4; // 205-207
+Coordinate TOF2p3,TOF2p4,TOF3p4; // 208-210

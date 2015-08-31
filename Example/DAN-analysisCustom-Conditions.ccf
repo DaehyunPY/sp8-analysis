@@ -1,0 +1,350 @@
+Condition IonFlag,-1,100,IonMaster;
+Condition ElecFlag,-1,100,ElecMaster;
+Condition IonMaster,and,ElecMaster,master;
+
+Condition ion_total_energy,0.1,50,ion2;
+Condition master,and,ion2,master2;
+Condition electron_energy_h1,0.1,1000,ele2;
+Condition master2,and,ele2,master_ion_ele;
+
+Condition xsqh1,-2.8,5.2,BGx1;
+Condition ysqh1,0.4,6.0,BGy1;
+Condition BGx1,and,BGy1,BGxy1;
+Condition xsqh2,-3.6,6.0,BGx2;
+Condition ysqh2,-0.4,8.4,BGy2;
+Condition BGx2,and,BGy2,BGxy2;
+Condition BGxy1,or,BGxy2,BGxy12;
+Condition not,BGxy12,NotBGxy12;
+Condition tIonh1,0,0,BGt1;
+Condition tIonh2,0,0,BGt2;
+Condition BGt1,and,BGt2,BGt12;
+Condition not,BGt12,NotBGt12;
+Condition NotBGxy12,and,NotBGt12,NotBGxyt12;
+
+Condition master,and,NotBGxy12,master_NotBGxy12;
+Condition master2,and,NotBGxy12,master2_NotBGxy12;
+
+Condition master,and,NotBGxyt12,master_NotBGxyt12;
+Condition master2,and,NotBGxyt12,master2_NotBGxyt12;
+
+/// Ne++
+Condition tIonh1,1800,2400,ion_tof0;
+Condition master,and,ion_tof0,ion_tofmaster;
+Condition xsqh1,-35,35,ionx;
+Condition ysqh1,-25,35,iony;
+Condition ionx,and,iony,ionxy;
+Condition ionxy,and,master,ionxymaster;
+
+Condition ion_npx,-0.1,0.1,ionx01;
+Condition ion_npy,-0.1,0.1,iony01;
+Condition ion_npz,-0.1,0.1,ionz01;
+Condition ionx01,and,master,ionx01_master;
+Condition iony01,and,master,iony01_master;
+Condition ionz01,and,master,ionz01_master;
+Condition ionx01_master,and,iony01_master,ionxy01_master;
+Condition ion_npx,-0.2,0.2,ionx02;
+Condition ion_npy,-0.2,0.2,iony02;
+Condition ion_npz,-0.2,0.2,ionz02;
+Condition ionx02,and,master,ionx02_master;
+Condition iony02,and,master,iony02_master;
+Condition ionz02,and,master,ionz02_master;
+Condition ionx02_master,and,iony02_master,ionxy02_master;
+Condition ion_npx,-0.3,0.3,ionx03;
+Condition ion_npy,-0.3,0.3,iony03;
+Condition ion_npz,-0.3,0.3,ionz03;
+Condition ionx03,and,master,ionx03_master;
+Condition iony03,and,master,iony03_master;
+Condition ionz03,and,master,ionz03_master;
+Condition ionx03_master,and,iony03_master,ionxy03_master;
+Condition ion_npx,-0.4,0.4,ionx04;
+Condition ion_npy,-0.4,0.4,iony04;
+Condition ion_npz,-0.4,0.4,ionz04;
+Condition ionx04,and,master,ionx04_master;
+Condition iony04,and,master,iony04_master;
+Condition ionz04,and,master,ionz04_master;
+Condition ionx04_master,and,iony04_master,ionxy04_master;
+Condition ion_npy,-1,-0.94,sig1;
+Condition ion_npy,0.94,1,sig2;
+Condition sig1,or,sig2,sigma;
+Condition ion_npx,-1,-0.94,pi1;
+Condition ion_npx,0.94,1,pi2;
+Condition pi1,or,pi2,pi;
+
+Condition ionx02_master,and,NotBGxy12,ionx02_master_NotBGxy12;
+Condition iony02_master,and,NotBGxy12,iony02_master_NotBGxy12;
+Condition ionz02_master,and,NotBGxy12,ionz02_master_NotBGxy12;
+
+
+Condition nMCPion,1.5,2.5,2hit;
+
+Condition electron_nPz,-0.05,0.05,pz005;
+Condition electron_nPz,0.0,0.1,pz01;
+Condition electron_nPz,-0.1,0.1,pz02;
+Condition electron_nPz,-0.15,0.15,pz03;
+Condition electron_nPz,-0.20,0.20,pz04;
+Condition electron_nPz,-0.3,0.3,pz05;
+Condition electron_nPz,-1,1,pz1;
+Condition electron_nPz,-0.1,0.1,pz02Liu;
+Condition electron_nPz,-0.2,0.20,pz04Liu;
+Condition electron_nPx,-0.15,0.15,px03;
+Condition electron_nPy,-0.15,0.15,py03;
+
+Condition electron_psai_xy,-90,90,psai_good;
+Condition psai_good,and,master2,psai_master2;
+Condition electron_nPz,-0.05,0.05,pzm;
+Condition master2,and,pzm,master_pz;
+Condition psai_good,and,master_pz,psai_master;
+
+
+Condition psai_master2,and,pz005,master005;
+Condition psai_master2,and,pz01,master01;
+Condition psai_master2,and,pz02,master02;
+Condition psai_master2,and,pz03,master03;
+Condition psai_master2,and,pz04,master04;
+Condition psai_master2,and,pz05,master05;
+
+Condition master2,and,pz005,master005z;
+Condition master2,and,pz01,master01z;
+Condition master2,and,pz02,master02z;
+Condition master2,and,pz03,master03z;
+Condition master2,and,pz04,master04z;
+Condition master2,and,pz05,master05z;
+Condition master2,and,pz1,master1z;
+Condition master2,and,px03,master03x;
+Condition master2,and,py03,master03y;
+
+Condition master005z,and,sigma,master_sigma005;
+Condition master005z,and,pi,master_pi005;
+Condition master01z,and,sigma,master_sigma01;
+Condition master01z,and,pi,master_pi01;
+Condition master02z,and,sigma,master_sigma02;
+Condition master02z,and,pi,master_pi02;
+Condition master03z,and,sigma,master_sigma03;
+Condition master03z,and,pi,master_pi03;
+Condition master04z,and,sigma,master_sigma04;
+Condition master04z,and,pi,master_pi04;
+Condition master05z,and,sigma,master_sigma05;
+Condition master05z,and,pi,master_pi05;
+
+Condition psai_good,and,master_pz,psai_master;
+
+Condition tElectronh1,-115,-100,e_tof;
+
+Condition e_tof,and,master2,e_tof_master2;
+
+Condition e_tof,and,NotBGxy12,e_tof_NotBGxy12;
+
+Condition master03x,and,NotBGxy12,master03x_NotBGxy12;
+Condition master04z,and,NotBGxy12,master04z_NotBGxy12;
+
+
+Condition posi_xy,0,40,psai1;
+Condition posi_xy,40,80,psai2;
+Condition posi_xy,80,120,psai3;
+Condition posi_xy,120,140,psai4;
+Condition posi_xy,140,180,psai51;
+Condition posi_xy,-180,-160,psai52;
+Condition psai51,or,psai52,psai5;
+Condition posi_xy,-160,-120,psai6;
+Condition posi_xy,-120,-80,psai7;
+Condition posi_xy,-80,-40,psai8;
+Condition posi_xy,-40,0,psai9;
+Condition psai1,and,master_pz,psai_master01;
+Condition psai2,and,master_pz,psai_master02;
+Condition psai3,and,master_pz,psai_master03;
+Condition psai4,and,master_pz,psai_master04;
+Condition psai5,and,master_pz,psai_master05;
+Condition psai6,and,master_pz,psai_master06;
+Condition psai7,and,master_pz,psai_master07;
+Condition psai8,and,master_pz,psai_master08;
+Condition psai9,and,master_pz,psai_master09;
+
+Condition electron_nPz,-1.0,-0.9,pz_neg;
+Condition electron_nPz,0.9,1.0,pz_pos;
+Condition master2,and,pz_neg,master_pz_neg;
+Condition master2,and,pz_pos,master_pz_pos;
+
+// 13 is the highest kinetic energy 4 pi ly collected, 6-13
+Condition ion_total_energy,4,14,ialla;
+Condition ion_psai_zx,-90,90,IonFoward;
+Condition ialla,and,IonFoward,iall;
+Condition master,and,iall,masteriall;
+Condition electron_energy_h1,0.2,8.5,e_en;
+Condition e_en,and,masteriall,mastereiall;
+Condition electron_energy_h1,10.8,15.8,e_en1;
+Condition e_en1,and,masteriall,mastereiall1;
+Condition electron_energy_h1,15.8,20.8,e_en2;
+Condition e_en2,and,masteriall,mastereiall2;
+Condition electron_energy_h1,0.4,1.16,e_en3;
+Condition e_en3,and,masteriall,mastereiall3;
+
+Condition e_en,and,master_sigma04,sigma_all;
+Condition e_en,and,master_pi04,pi_all;
+Condition e_en1,and,master_sigma04,sigma_all0;
+Condition e_en1,and,master_pi04,pi_all0;
+Condition e_en1,and,master_sigma04,sigma_all1;
+Condition e_en2,and,master_pi04,pi_all1;
+Condition e_en3,and,master_sigma04,sigma_all2;
+Condition e_en3,and,master_pi04,pi_all2;
+
+//////////////////////////////////////////////
+
+Condition ion_electron_angle_all,0,15,ang0;
+Condition ion_electron_angle_all,15,30,ang1;
+Condition ion_electron_angle_all,30,45,ang2;
+Condition ion_electron_angle_all,45,60,ang3;
+Condition ion_electron_angle_all,60,75,ang4;
+Condition ion_electron_angle_all,75,90,ang5;
+Condition ion_electron_angle_all,90,105,ang6;
+Condition ion_electron_angle_all,105,120,ang7;
+Condition ion_electron_angle_all,120,135,ang8;
+Condition ion_electron_angle_all,135,150,ang9;
+Condition ion_electron_angle_all,150,165,ang10;
+Condition ion_electron_angle_all,165,180,ang11;
+Condition ion_electron_angle_all,-180,-165,angn11;
+Condition ion_electron_angle_all,-165,-150,angn10;
+Condition ion_electron_angle_all,-150,-135,angn9;
+Condition ion_electron_angle_all,-135,-120,angn8;
+Condition ion_electron_angle_all,-120,-105,angn7;
+Condition ion_electron_angle_all,-105,-90,angn6;
+Condition ion_electron_angle_all,-90,-75,angn5;
+Condition ion_electron_angle_all,-75,-60,angn4;
+Condition ion_electron_angle_all,-60,-45,angn3;
+Condition ion_electron_angle_all,-45,-30,angn2;
+Condition ion_electron_angle_all,-30,-15,angn1;
+Condition ion_electron_angle_all,-15,0,angn0;
+
+
+Condition ang0,or,angn0,angor0;
+Condition ang1,or,angn1,angor1;
+Condition ang2,or,angn2,angor2;
+Condition ang3,or,angn3,angor3;
+Condition ang4,or,angn4,angor4;
+Condition ang5,or,angn5,angor5;
+Condition ang6,or,angn6,angor6;
+Condition ang7,or,angn7,angor7;
+Condition ang8,or,angn8,angor8;
+Condition ang9,or,angn9,angor9;
+Condition ang10,or,angn10,angor10;
+Condition ang11,or,angn11,angor11;
+
+Condition angor0,or,angor11,angall0;
+Condition angor1,or,angor10,angall1;
+Condition angor2,or,angor9,angall2;
+Condition angor3,or,angor8,angall3;
+Condition angor4,or,angor7,angall4;
+Condition angor5,or,angor6,angall5;
+
+
+
+Condition angall0,and,master_sigma02,sigma_ang0;
+Condition angall1,and,master_sigma02,sigma_ang1;
+Condition angall2,and,master_sigma02,sigma_ang2;
+Condition angall3,and,master_sigma02,sigma_ang3;
+Condition angall4,and,master_sigma02,sigma_ang4;
+Condition angall5,and,master_sigma02,sigma_ang5;
+Condition angall0,and,master_pi02,pi_ang0;
+Condition angall1,and,master_pi02,pi_ang1;
+Condition angall2,and,master_pi02,pi_ang2;
+Condition angall3,and,master_pi02,pi_ang3;
+Condition angall4,and,master_pi02,pi_ang4;
+Condition angall5,and,master_pi02,pi_ang5;
+
+Condition tIonh1,2450,2550,i2500;
+Condition tIonh1,2950,3050,i3000;
+Condition tIonh1,3450,3550,i3500;
+Condition tIonh2,3950,4050,i4000;
+Condition tIonh2,4450,4550,i4500;
+Condition tIonh2,4950,5050,i5000;
+Condition tIonh2,5450,5550,i5500;
+Condition tIonh2,5950,6050,i6000;
+Condition tIonh2,6450,6550,i6500;
+
+Condition isellect,0.5,1.5,N;
+Condition isellect,1.5,2.5,O;
+Condition isellect,2.5,3.5,N1;
+Condition isellect,3.5,4.5,O1;
+
+Condition ionxy03_master,and,pz02Liu,ixy3ez2;
+Condition ionxy04_master,and,pz04Liu,ixy4ez4;
+
+//-----sakai edit--------------
+Condition electron_energy_h1,12,24,eEngPhotoelectron_h1
+Condition electron_energy_h2,12,24,eEngPhotoelectron_h2
+Condition electron_energy_h1,0,5,eEngICD_h1
+Condition electron_energy_h2,0,5,eEngICD_h2
+
+Condition eEngICD_h1,and,eEngPhotoelectron_h2,eEngICD_h1_and_Photoelectron_h2
+Condition eEngICD_h2,and,eEngPhotoelectron_h1,eEngICD_h2_and_Photoelectron_h1
+Condition eEngICD_h1_and_Photoelectron_h2,or,eEngICD_h2_and_Photoelectron_h1,eEngICD_and_Photoelectron
+
+Condition eEngPhotoelectron_h1,or,eEngPhotoelectron_h2,eEngPhotoelectron
+
+Condition eEngPhotoelectron,and,master2,Photoelectron_and_master2
+
+/////   Ne+_Ne+
+// Condition ion_total_energy,3.57,5.49,IonLowPeak
+// Condition ion_total_energy,6.3,8.13,IonHighPeak
+
+/////   Ar++_Ne+
+Condition ion_total_energy,6.78,8.01,IonLowPeak
+Condition ion_total_energy,8.55,9.57,IonHighPeak
+Condition ion_total_energy,10.5,13.44,IonbroadPeak
+// Condition ion_total_energy,3.25,3.9,IonLowPeak
+// Condition ion_total_energy,4.0,4.4,IonHighPeak
+// Condition ion_total_energy,4.45,5.3,IonbroadPeak
+// Condition ion_total_energy,5.4,6.2,IonbroadPeak2
+
+/////   Ar+_Ne+
+// Condition ion_total_energy,3.12,4.25,IonLowPeak
+// Condition ion_total_energy,4.38,6.36,IonHighPeak
+
+/////   Ne+_Ne+
+// Condition electron_energy_h1,0.01,5.0,eleLowPeak
+// Condition electron_energy_h1,13,20,eleHighPeak
+
+/////   Ne++Ar+
+// Condition ion_total_energy,6.72,8.04,IonLowPeak
+// Condition ion_total_energy,8.1,9.84,IonHighPeak
+// Condition ion_total_energy,10.56,15.0,IonbroadPeak
+Condition electron_energy_h1,0.01,3.0,eleLowPeak
+Condition electron_energy_h1,4,21,eleHighPeak
+
+
+Condition master,and,IonLowPeak,master_IonLowPeak
+Condition e_tof,and,IonLowPeak,e_tof_IonLowPeak
+Condition master2_NotBGxy12,and,IonLowPeak,master2_NotBGxy12_IonLowPeak
+Condition master,and,IonHighPeak,master_IonHighPeak
+Condition e_tof,and,IonHighPeak,e_tof_IonHighPeak
+Condition master2_NotBGxy12,and,IonHighPeak,master2_NotBGxy12_IonHighPeak
+Condition master,and,IonbroadPeak,master_IonbroadPeak
+Condition e_tof,and,IonbroadPeak,e_tof_IonbroadPeak
+Condition master2_NotBGxy12,and,IonbroadPeak,master2_NotBGxy12_IonbroadPeak
+
+Condition master,and,eleLowPeak,master_eleLowPeak
+Condition e_tof,and,eleLowPeak,e_tof_eleLowPeak
+Condition master2_NotBGxy12,and,eleLowPeak,master2_NotBGxy12_eleLowPeak
+Condition master,and,eleHighPeak,master_eleHighPeak
+Condition e_tof,and,eleHighPeak,e_tof_eleHighPeak
+Condition master2_NotBGxy12,and,eleHighPeak,master2_NotBGxy12_eleHighPeak
+
+/////10/05 TOF3,4Q[g
+Condition tIonh3,3600,6000,Ar_h3
+Condition Ar_h3,and,master,master_Ar_h3
+Condition Ar_h3,and,master2,master2_Ar_h3
+Condition Ar_h3,and,e_tof,Ar_h3_e_tof
+Condition master2_Ar_h3,and,Ar_h3_e_tof,Ar_h3_complete
+
+//////Sakakibara added 20150716 for Ne 1s photoele
+Condition electron_energy_h1,11.4,23.5,eleh1_photoele
+Condition electron_energy_h2,12,24.3,eleh2_photoele
+Condition eleh1_photoele,and,master2,master_1h_photoele
+Condition eleh2_photoele,and,master2,master_2h_photoele
+
+//////Sakakibara added 20150717 for Ne+Kr+Kr+
+Condition tIonh1,2245,4205,Ne+_h1
+Condition Ne+_h1,and,master2,master2_Ne+_h1
+Condition tIonh2,5190,7565,Kr+_h2
+Condition tIonh3,5770,8330,Kr+_h3
+Condition Ne+_h1,and,Kr+_h2,Ne+Kr+
+Condition Ne+Kr+,and,Kr+_h3,Ne+Kr+Kr+

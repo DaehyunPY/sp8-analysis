@@ -1,0 +1,37 @@
+{
+  "ion": {
+    "x_pixel_size": 0.927,
+    "y_pixel_size": 0.927,
+    "x_cor": 0,
+    "y_cor": 0,
+    "time_delay": -427,
+    "x_base_of_COM": 0.1495,
+    "y_base_of_COM": 1.7920
+  },
+  "electron": {
+    "number_of_hits": 1,
+    "minimum_of_TOF": -424,
+    "maximum_of_TOF": -404,
+    "x_cor": 0.925,
+    "y_cor": 0.925,
+    "time_delay": -414.65,
+    "x_base_of_COM": -1.00,
+    "y_base_of_COM": -1.55,
+    "x_tangent_of_COM": 0,
+    "y_tangent_of_COM": 0
+  },
+  "equipment": {
+    "is_polarization_horizontal?": true,
+    "length_of_L1": 16.50,
+    "length_of_L2": 84.00,
+    "length_of_L3": 10.00,
+    "length_of_D1": 33.70,
+    "length_of_D2": 67.35,
+    "electric_potential_of_electron_detector": -198,
+    "electric_potential_of_1st": -285,
+    "electric_potential_of_2nd": -2000,
+    "electric_potential_of_ion_detector": -3200,
+    "magnetic_filed": 6.74,
+    "angle_width": 10
+  }
+}

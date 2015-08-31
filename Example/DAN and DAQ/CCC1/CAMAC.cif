@@ -1,0 +1,45 @@
+// Camac Information File
+// ======================
+//
+// You must give at least 4 colon separated Numbers in a row
+// 1st  N       Module Position
+// 2nd  A       Module Subaddress
+// 3ed  F       Function code for Module
+// 4th  #       positive number = number of 24BitValues to write to the Module
+//                      0                               = no additional IO to the Module
+//                      negative number = number of Bytes to read from the Module
+//              for the moment only -1, 0 and 1 are valid numbers
+// 5th..        24-Bit Values for writing...
+//
+// F = 30, A = 15, N = 31 (all count start from 0) are used for wait command
+// 
+// commands only for Initialization start with capital I
+//                   Aquisition-Loop start with capital L
+//                   Finalization start with capital F
+// hex numbers a possible and must be entered as "0x" e.g. 0x10 = 16
+
+
+//////////////////////////////
+// Initial camac sequences
+I 32, 2, 0, 0                                   // disable I (inhibit) line
+//I Wait,10					// wait 10us
+
+
+
+//////////////////////////////
+// Loop camac sequences
+
+// Phillips-TDC:
+L 06, 00, 00, -1                                // read channel 1 on pos 6
+L 06, 01, 00, -1                                // read channel 2 on pos 6
+L 06, 02, 00, -1                                // read channel 3 on pos 6
+L 06, 03, 00, -1                                // read channel 4 on pos 6
+//L 06, 04, 00, -1                              // read channel 5 on pos 6
+//L 06, 05, 00, -1                              // read channel 6 on pos 6
+L 06, 00, 09,  0                                // reset TDC pos 6
+
+
+//////////////////////////////
+// Final camac sequences
+F 32, 3, 0, 0                                   // enable I (inhibit) line
+

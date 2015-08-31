@@ -1,0 +1,17 @@
+restart
+
+// setpath C:\path;
+// execute ..\DAQ-CamacStandard-Parameters.ccf;
+// execute ..\DAQ-HM1Standard-Parameters.ccf;
+execute ..\DAQ-HM1Standard-Coordinates.ccf;
+execute ..\DAN-analysisCustom-Coordinates.ccf;
+execute ..\DAN-analysisCustom-Conditions.ccf;
+execute ..\DAN-analysisCustom-Spectra.ccf;
+
+// new file-name.lmf;
+start;
+view 1;
+update 30s;
+show stat;
+
+// save example.dcf;

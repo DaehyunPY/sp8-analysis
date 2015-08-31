@@ -1,0 +1,78 @@
+;
+; definition of usefull spectra for
+; DAN-Standard Analysis
+;
+
+; information spectra
+;define1 0,300,1,AbsoluteEventTime,AbsoluteEventTime [s],none,always,Time since Start
+;define1 0,0.0015,0.00001,DeltaEventTime,DeltaEventTime [s],none,always,Time between Events
+;define1 0,65000,1,EventCounter,EventCounter [#],none,always,EventCounter
+;define1 -2,66,1,ConsistensIndicator,,none,always,ConsistensIndicator
+
+; hit register spectra
+;define1 0,32,1,n1,,none,always,n1
+;define1 0,32,1,n2,,none,always,n2
+;define1 0,32,1,n3,,none,always,n3
+;define1 0,32,1,n4,,none,always,n4
+;define1 0,32,1,n5,,none,always,n5
+;define1 0,32,1,n6,,none,always,n6
+
+; raw tdc data spectra
+;define1 0,2500,1,TDC1DataHit1,,none,always,TDC1 Hit1
+;define1 0,2500,1,TDC2DataHit1,,none,always,TDC2 Hit1
+;define1 0,2500,1,TDC3DataHit1,,none,always,TDC3 Hit1
+;define1 0,2500,1,TDC4DataHit1,,none,always,TDC4 Hit1
+;define1 0,2500,1,TDC5DataHit1,,none,always,TDC5 Hit1
+;define1 0,2500,1,TDC6DataHit1,,none,always,TDC6 Hit1
+
+; spectra for parameter 100 = 0
+define1 0,2500,1,x1,,none,always,x1
+define1 0,2500,1,x2,,none,always,x2
+define1 0,2500,1,y1,,none,always,y1
+define1 0,2500,1,y2,,none,always,y2
+;define1 0,2500,1,z1,,none,always,z1
+;define1 0,2500,1,z2,,none,always,z2
+define1 -2500,2500,1,PosX,,none,always,PosX
+define1 -2500,2500,1,PosY,,none,always,PosY
+;define1 -2500,2500,1,w,,none,always,w
+define2 -300,300,1,PosX,,-300,300,1,PosY,,none,always,PosX/PosY (Binsize 1)
+define2 -600,600,2,PosX,,-600,600,2,PosY,,none,always,PosX/PosY (Binsize 2)
+define2 -1200,1200,4,PosX,,-1200,1200,4,PosY,,none,always,PosX/PosY (Binsize 4)
+;define2 -1200,1200,4,xRot,,-1200,1200,4,yRot,,none,always,Rotated xy (Binsize 4)
+
+; spectra for parameter 100 = 1
+;define1 0,300,p20,x1,x1 [ns],none,always,x1
+;define1 0,300,p20,x2,x2 [ns],none,always,x2
+;define1 0,300,p20,y1,y1 [ns],none,always,y1
+;define1 0,300,p20,y2,y2 [ns],none,always,y2
+;define1 0,300,p20,z1,z1 [ns],none,always,z1
+;define1 0,300,p20,z2,z2 [ns],none,always,z2
+;define1 -300,300,p20,PosX,PosX [ns],none,always,PosX
+;define1 -300,300,p20,PosY,PosY [ns],none,always,PosY
+;define1 -300,300,p20,w,w [ns],none,always,w
+;define2 -50,50,p20,PosX,PosX [ns],-50,50,p20,PosY,PosY [ns],none,always,PosX/PosY
+;define2 -50,50,p20,xRot,xRot [ns],-50,50,p20,yRot,yRot [ns],none,always,Rotated xy
+
+; spectra for parameter 100 = 2
+;define1 0,120,1,x1,x1 [mm],none,always,x1
+;define1 0,120,1,x2,x2 [mm],none,always,x2
+;define1 0,120,1,y1,y1 [mm],none,always,y1
+;define1 0,120,1,y2,y2 [mm],none,always,y2
+;define1 0,120,1,z1,z1 [mm],none,always,z1
+;define1 0,120,1,z2,z2 [mm],none,always,z2
+;define1 -120,120,1,PosX,PosX [mm],none,always,PosX
+;define1 -120,120,1,PosY,PosY [mm],none,always,PosY
+;define1 -120,120,1,w,w [mm],none,always,w
+;define2 -120,120,1,PosX,PosX [mm],-150,150,1,PosY,y [mm],none,always,PosX/PosY
+;define2 -120,120,1,xRot,xRot[mm],-150,150,1,yRot,yRot [mm],none,always,Rotated xy
+
+; spectra for sums and differences
+define1 0,5000,1,sumx,,none,always,sumx
+define1 0,5000,1,sumy,,none,always,sumy
+;define1 0,5000,1,sumw,,none,always,sumw
+;define1 0,7500,1,sumxyw,,none,always,sumxyw
+;
+define1 -5000,5000,1,diffxy,,none,always,diffxy
+
+; define overview spectra
+definemulti Overview,PosY,PosX/PosY (Binsize 2),,PosX

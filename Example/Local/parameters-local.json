@@ -1,0 +1,33 @@
+{
+  "ion": {
+    "number_of_hits": 4,
+    "1st_hit": {
+      "__comment__": "Ne+",
+      "mass": 20,
+      "charge": 1,
+      "minimum_of_TOF": 2310,
+      "maximum_of_TOF": 4500
+    },
+    "2nd_hit": {
+      "__comment__": "(Kr+)~",
+      "mass": 84,
+      "charge": 1,
+      "minimum_of_TOF": 4800,
+      "maximum_of_TOF": 13800
+    },
+    "3rd_hit": {
+      "__comment__": "(Kr+)~",
+      "mass": 84,
+      "charge": 1,
+      "minimum_of_TOF": 4800,
+      "maximum_of_TOF": 13800
+    },
+    "4th_hit": {
+      "__comment__": "(Kr+)~",
+      "mass": 84,
+      "charge": 1,
+      "minimum_of_TOF": 4800,
+      "maximum_of_TOF": 13800
+    }
+  }
+}
