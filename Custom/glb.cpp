@@ -75,6 +75,7 @@ const double unit_nano = 1.e-9;
 const double unit_milli = 1.e-3;
 const double unit_gauss = 1.e-4;
 
+int counter = 0;
 std::fstream file_electron, file_log;
 
 // Analysis global variable definitions
@@ -109,16 +110,14 @@ double xSq1_HotspotMin, xSq1_HotspotMax, ySq1_HotspotMin, ySq1_HotspotMax;
 double tIon0_RandCoinMin, tIon0_RandCoinMax, tIon1_RandCoinMin, tIon1_RandCoinMax;
 
 // to calculate time of flight
-double tof(double p0, double xx, double mass, double charge){
-    double p1, p2, p3, t1, t2, t3, tt;
-    p1=sqrt(p0*p0+2*mass*charge*dElectric_Field1*(dL1-xx));
-    p2=sqrt(p1*p1+2*mass*charge*dElectric_Field2*dL2);
-    p3=sqrt(p2*p2+2*mass*charge*dElectric_Field3*dL3);
-    t1=(p1-p0)/charge/dElectric_Field1;
-    t2=(p2-p1)/charge/dElectric_Field2;
-    t3=(p3-p2)/charge/dElectric_Field3;
-    tt=t1+t2+t3;
-    return tt;
+double tof(const double p0, const double xx, const double mass, const double charge){
+    const double p1=sqrt(pow(p0,2.0)+2.0*mass*charge*dElectric_Field1*(dL1-xx));
+    const double p2=sqrt(pow(p1,2.0)+2.0*mass*charge*dElectric_Field2*dL2);
+    const double p3=sqrt(pow(p2,2.0)+2.0*mass*charge*dElectric_Field3*dL3);
+    const double t1=(p1-p0)/charge/dElectric_Field1;
+    const double t2=(p2-p1)/charge/dElectric_Field2;
+    const double t3=(p3-p2)/charge/dElectric_Field3;
+    return t1+t2+t3;
 } // end tof
 
 // to find the pz from zero z coordinate

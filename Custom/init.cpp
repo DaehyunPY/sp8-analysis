@@ -1,29 +1,26 @@
 ////////////////////////////////////////////////////////////////////////////////
 // sub init functions
-void InputBool(rapidjson::Value& json, bool& val, bool& info){
-    using namespace rapidjson;
+void InputBool(rapidjson::Value& json, bool& val, bool& info) {
     if(!json.IsBool()){info=false;}
     val = json.GetBool();
     info=true;
     return;
 }
-void InputInt(rapidjson::Value& json, int& val, bool& info){
-    using namespace rapidjson;
+void InputInt(rapidjson::Value& json, int& val, bool& info) {
     if(!json.IsNumber()){info=false;}
     if(!json.IsInt()){info=false;}
     val = json.GetInt();
-    info=true;
+    info = true;
     return;
 }
-void InputDouble(rapidjson::Value& json, double& val, const double unit, bool& info){
-    using namespace rapidjson;
+void InputDouble(rapidjson::Value& json, double& val, double const unit, bool& info) {
     if(!json.IsNumber()){info=false;}
     val = json.GetDouble() * unit;
-    info=true;
+    info = true;
     return;
 }
-void OverWrite(rapidjson::Value& w, rapidjson::Value& r){
-    using namespace rapidjson;
+void OverWrite(rapidjson::Value& w, rapidjson::Value& r) {
+	using rapidjson::Value;
     if(!w.IsObject()){return;}
     if(!r.IsObject()){return;}
     for(Value::ConstMemberIterator itr_list = w.MemberBegin(); itr_list != w.MemberEnd(); itr_list++){
@@ -43,15 +40,21 @@ void OverWrite(rapidjson::Value& w, rapidjson::Value& r){
 ////////////////////////////////////////////////////////////////////////////////
 // init function
 CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter){
-    using namespace std;
-    using namespace rapidjson;
+	using std::endl;
+	using std::fstream;
+	using std::stringstream;
+	using rapidjson::Document;
+	using rapidjson::Value;
+	using rapidjson::StringBuffer;
+	using rapidjson::PrettyWriter;
+
     Document json;
 
 
 
     ////////////////////////////////////////////////////////////////////////////
     // input from "angle_cor.dat"
-    file_log.open("init_log.dat", fstream::out);
+    file_log.open("init.log", fstream::out);
 
 
 
@@ -124,7 +127,8 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
         Value& val = json["ion"]["number_of_hits"];
         if(!val.IsInt()){return false;}
         int n = json["ion"]["number_of_hits"].GetInt();
-        if(n<1 || n>nHit){return false;}
+        // if(n<1 || n>nHit){return false;}
+        if(n<0 || n>nHit){return false;}
         if(n<nHit){
             for(int ith=n; ith<nHit; ith++){
                 json["ion"].RemoveMember(hits[ith]);
@@ -135,7 +139,8 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
         Value& val = json["electron"]["number_of_hits"];
         if(!val.IsInt()){return false;}
         int n = json["electron"]["number_of_hits"].GetInt();
-        if(n<1 || n>nHit){return false;}
+        // if(n<1 || n>nHit){return false;}
+        if(n<0 || n>nHit){return false;}
     }
 
 
@@ -149,7 +154,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
         // ion parameters
         InputInt(json["ion"]["number_of_hits"], nIonHit, info); if(info==false){return false;} // 189
         const char* hits[nHit] = {"1st_hit", "2nd_hit", "3rd_hit", "4th_hit"};
-        for(int ith=0; ith<nIonHit; ith++){
+        for(int ith; ith<nIonHit; ith++){
             InputDouble(json["ion"][hits[ith]]["mass"],           dMass[ith],    dMassUnit, info); if(info==false){return false;} // 186, 187, 188, 264
             InputDouble(json["ion"][hits[ith]]["charge"],         dCharge[ith],  dElectron, info); if(info==false){return false;} // 183, 184, 185, 270
             InputDouble(json["ion"][hits[ith]]["minimum_of_TOF"], dMin_TOF[ith], unit_nano, info); if(info==false){return false;} // 190, 192, 194, 265
@@ -247,8 +252,16 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
     file_electron << "\"ion4 E\"" << ", ";
     file_electron << endl;
 
+    const char* order[nHit] = {"1st", "2nd", "3rd", "4th"};
+    for(int ith=0; ith<nIonHit; ith++){
+        file_log.width(25-15); file_log << "Ion " << order[ith] << " hit's TOF: " << tof(0.0,0.0,dMass[ith],dCharge[ith])/unit_nano << endl;
+    }
+    file_log.width(25); file_log << "electron's TOF: " << electof(0.0)/unit_nano << endl;
+    file_log.width(25); file_log << "electron's cycle time: " << 2.0*pi*dElectronMass/dMagnetic_Field/dElectron << endl;
+    file_log << endl;
+
     file_log.close();
-    file_log.open("proc_log.dat", fstream::out);
+    file_log.open("proc.log", fstream::out);
 
     return true;
 } // end AnalysisInitialize
