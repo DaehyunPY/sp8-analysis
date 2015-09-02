@@ -1,4 +1,4 @@
-restart
+restart;
 
 // setpath C:\path;
 // execute ..\DAQ-CamacStandard-Parameters.ccf;
@@ -8,10 +8,11 @@ execute ..\DAN-analysisCustom-Coordinates.ccf;
 execute ..\DAN-analysisCustom-Conditions.ccf;
 execute ..\DAN-analysisCustom-Spectra.ccf;
 
-// new file-name.lmf;
+// setpath C:\path;
+// new example.lmf;
 start;
 view 1;
 update 30s;
 show stat;
-
+wait;
 // save example.dcf;

@@ -72,16 +72,16 @@ Coordinate IonFlag,ElecFlag; // 126-127
 Coordinate COM_x,COM_y,COM_z; // 128-130
 Coordinate COM_e_x,COM_e_y;   // 131-132
 
-////////////////////////// Correlation Angles ////////////////////////////////// 133-136
+// 133
+// Correlation Angles (133-141) ////////////////////////////////////////////////
 Coordinate phai;                           // 133
 Coordinate dEX,dEY;                        // 134-135
 Coordinate electron_theta;                 // 136
 Coordinate posi_xy,ion_electron_angle_all; // 137-138
 Coordinate isellect,dtN,dtO;               // 139-141
 
-
-
-//////////////////////////////////139
+// 142
+////////////////////////////////////////////////////////////////////////////////
 Coordinate ion_angle1,electron_angle1,ion_electron_angle1; // 142-144
 Coordinate ion_angle2,electron_angle2,ion_electron_angle2; // 145
 Coordinate ion_angle3,electron_angle3,ion_electron_angle3; // 148
@@ -104,10 +104,7 @@ Coordinate ion_angle18,electron_angle18,ion_electron_angle18; // 193
 Coordinate dIon_AngleAll,dIon_Electron_AngleAll,distancexy; // 196-198
 
 Coordinate KER_electron_energy_h1,KER_electron_energy_h2,KER_electron_energy_h3,KER_electron_energy_h4; // 199-202
-    // 10/16Ne_clusterÇÃç∑ï™Ç©ÇÁí«â¡ÅBÇ±ÇÍÇ™Ç»Ç¢Ç∆âêÕâÒÇÁÇ»Ç¢ÇÊÇ§Çæ
 Coordinate dElectronEnergyHigher,dElectronEnergyLower; // 203-204
-    // 10/16Ne_clusterÇÃç∑ï™Ç©ÇÁí«â¡ÅBÇ±ÇÍÇ™Ç»Ç¢Ç∆âêÕâÒÇÁÇ»Ç¢ÇÊÇ§Çæ
 
-//////Sakakibara added for ion hit1+hit2
 Coordinate TOF1p2,TOF1p3,TOF1p4; // 205-207
 Coordinate TOF2p3,TOF2p4,TOF3p4; // 208-210
