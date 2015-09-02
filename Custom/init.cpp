@@ -60,6 +60,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
 
     ////////////////////////////////////////////////////////////////////////////
     // specify output files
+    specified_file = "";
     specified_file += random_ch();  // 1
     specified_file += random_ch();  // 2
     specified_file += random_ch();  // 3
