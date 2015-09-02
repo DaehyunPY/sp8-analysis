@@ -1,9 +1,10 @@
 CDAN_API void AnalysisFinalize(CDoubleArray *pEventData, CDoubleArray *pParameters, CDoubleArray *pWeighParameter) {
     using std::fstream;
-	using std::endl;
+	using std::string;
+    using std::endl;
 
     file_log.close();
-    file_log.open("fin.log", fstream::out);
+    file_log.open(specified_file+"_fin.log", fstream::out);
 
     file_log.width(25); file_log << "counter: " << counter << endl;
     file_log << endl;

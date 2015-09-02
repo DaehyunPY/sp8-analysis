@@ -75,10 +75,11 @@ const double unit_nano = 1.e-9;
 const double unit_milli = 1.e-3;
 const double unit_gauss = 1.e-4;
 
-int counter = 0;
 std::fstream file_electron, file_log;
+std::string specified_file;
 
 // Analysis global variable definitions
+int counter = 0;
 bool polarization_is_horizontal;
 int nIonHit, nElectronHit;
 double dDelay;

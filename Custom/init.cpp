@@ -32,6 +32,11 @@ void OverWrite(rapidjson::Value& w, rapidjson::Value& r) {
     } // end for
     return;
 }
+char random_ch() {
+    char const alphabet[] = "0123456789" "abcdefghijklmnopqrstuvwxyz";
+    int const n = 10+26;
+    return alphabet[rand()%n];
+}
 
 
 
@@ -42,6 +47,7 @@ void OverWrite(rapidjson::Value& w, rapidjson::Value& r) {
 CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter){
 	using std::endl;
 	using std::fstream;
+	using std::string;
 	using std::stringstream;
 	using rapidjson::Document;
 	using rapidjson::Value;
@@ -53,8 +59,19 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
 
 
     ////////////////////////////////////////////////////////////////////////////
+    // specify output files
+    specified_file += random_ch();  // 1
+    specified_file += random_ch();  // 2
+    specified_file += random_ch();  // 3
+    specified_file += random_ch();  // 4
+    specified_file += random_ch();  // 5
+    specified_file += random_ch();  // 6
+    specified_file += random_ch();  // 7
+    specified_file += random_ch();  // 8
+
+    ////////////////////////////////////////////////////////////////////////////
     // input from "angle_cor.dat"
-    file_log.open("init.log", fstream::out);
+    file_log.open(specified_file+"_init.log", fstream::out);
 
 
 
@@ -209,7 +226,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
         PrettyWriter<StringBuffer> writer(buf);
         json.Accept(writer);
         fstream fstr;
-        fstr.open("parameters-loaded.json", fstream::out);
+        fstr.open(specified_file+"_parameters-loaded.json", fstream::out);
         fstr << buf.GetString() << endl;
     }
 
@@ -217,7 +234,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
 
     ////////////////////////////////////////////////////////////////////////////
     // output
-    file_electron.open("electron.csv", fstream::out);
+    file_electron.open(specified_file+"_electron.csv", fstream::out);
     file_electron.width(14);
     file_electron << "\"ion1 px\"" << ", ";
     file_electron.width(14);
@@ -267,7 +284,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
     file_log << endl;
 
     file_log.close();
-    file_log.open("proc.log", fstream::out);
+    file_log.open(specified_file+"_proc.log", fstream::out);
 
     return true;
 } // end AnalysisInitialize
