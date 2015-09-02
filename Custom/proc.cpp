@@ -521,38 +521,38 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     //**************************************これより上*********************************************************************
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // ////////////////////////////////////////////////////////////////////////////
-    // // selection of electron TOF, the first electron
-    // for(int iHit=0; iHit<nElectronHit; iHit++){
-    //     if((dtElectron[iHit] < dMin_eTOF) || (dtElectron[iHit] > dMax_eTOF)) {
-    //         // Ion_MasterFlag = -46;
-    //         Electron_MasterFlag = -20-(iHit+1);
-    //         goto out;
-    //     }
-    // }
-
     ////////////////////////////////////////////////////////////////////////////
-    // for test
-    if((dtElectron[0] < dMin_eTOF) || (dtElectron[0] > dMax_eTOF)) {
-        Electron_MasterFlag = -21;
-        goto out;
+    // selection of electron TOF, the first electron
+    for(int iHit=0; iHit<nElectronHit; iHit++){
+        if((dtElectron[iHit] < dMin_eTOF) || (dtElectron[iHit] > dMax_eTOF)) {
+            // Ion_MasterFlag = -46;
+            Electron_MasterFlag = -20-(iHit+1);
+            goto out;
+        }
     }
-    // if(dtElectron[1] > dMin_eTOF) {
+
+    // ////////////////////////////////////////////////////////////////////////////
+    // // for test
+    // if((dtElectron[0] < dMin_eTOF) || (dtElectron[0] > dMax_eTOF)) {
+    //     Electron_MasterFlag = -21;
+    //     goto out;
+    // }
+    // // if(dtElectron[1] > dMin_eTOF) {
+    // //     Electron_MasterFlag = -22;
+    // //     goto out;
+    // // }
+    // if((dtElectron[1] < dMin_eTOF) || (dtElectron[1] > dMax_eTOF)) {
     //     Electron_MasterFlag = -22;
     //     goto out;
     // }
-    if((dtElectron[1] < dMin_eTOF) || (dtElectron[1] > dMax_eTOF)) {
-        Electron_MasterFlag = -22;
-        goto out;
-    }
-    // if(dtElectron[1] < dMax_eTOF) {
-    //     Electron_MasterFlag = -22;
-    //     goto out;
-    // }
-    // if(dtElectron[1] < 15000.0*unit_nano) {
-    //     Electron_MasterFlag = -22;
-    //     goto out;
-    // }
+    // // if(dtElectron[1] < dMax_eTOF) {
+    // //     Electron_MasterFlag = -22;
+    // //     goto out;
+    // // }
+    // // if(dtElectron[1] < 15000.0*unit_nano) {
+    // //     Electron_MasterFlag = -22;
+    // //     goto out;
+    // // }
 
 
 
