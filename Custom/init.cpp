@@ -20,7 +20,7 @@ void InputDouble(rapidjson::Value& json, double& val, double const unit, bool& i
     return;
 }
 void OverWrite(rapidjson::Value& w, rapidjson::Value& r) {
-	using rapidjson::Value;
+    using rapidjson::Value;
     if(!w.IsObject()){return;}
     if(!r.IsObject()){return;}
     for(Value::ConstMemberIterator itr_list = w.MemberBegin(); itr_list != w.MemberEnd(); itr_list++){
@@ -45,14 +45,14 @@ char random_ch() {
 ////////////////////////////////////////////////////////////////////////////////
 // init function
 CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter){
-	using std::endl;
-	using std::fstream;
-	using std::string;
-	using std::stringstream;
-	using rapidjson::Document;
-	using rapidjson::Value;
-	using rapidjson::StringBuffer;
-	using rapidjson::PrettyWriter;
+    using std::endl;
+    using std::fstream;
+    using std::string;
+    using std::stringstream;
+    using rapidjson::Document;
+    using rapidjson::Value;
+    using rapidjson::StringBuffer;
+    using rapidjson::PrettyWriter;
 
     Document json;
 
@@ -236,38 +236,22 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
     ////////////////////////////////////////////////////////////////////////////
     // output
     file_electron.open(specified_file+"_electron.csv", fstream::out);
-    file_electron.width(14);
-    file_electron << "\"ion1 px\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion1 py\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion1 pz\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion1 E\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion2 px\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion2 py\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion2 pz\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion2 E\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion3 px\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion3 py\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion3 pz\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion3 E\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion4 px\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion4 py\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion4 pz\"" << ", ";
-    file_electron.width(14);
-    file_electron << "\"ion4 E\"" << ", ";
+    file_electron << "elec1 px" << ",";
+    file_electron << "elec1 py" << ",";
+    file_electron << "elec1 pz" << ",";
+    file_electron << "elec1 E"  << ",";
+    file_electron << "elec2 px" << ",";
+    file_electron << "elec2 py" << ",";
+    file_electron << "elec2 pz" << ",";
+    file_electron << "elec2 E"  << ",";
+    file_electron << "elec3 px" << ",";
+    file_electron << "elec3 py" << ",";
+    file_electron << "elec3 pz" << ",";
+    file_electron << "elec3 E"  << ",";
+    file_electron << "elec4 px" << ",";
+    file_electron << "elec4 py" << ",";
+    file_electron << "elec4 pz" << ",";
+    file_electron << "elec4 E"  << ",";
     file_electron << endl;
 
     const char* order[nHit] = {"1st", "2nd", "3rd", "4th"};

@@ -807,18 +807,12 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     ///                       calculated data output
     /////////////////////////////////////////////////////////////////////////////
 
-    file_electron.setf(fstream::scientific);
-    file_electron.precision(6);
     if(Ion_MasterFlag == 0){
         for(int iHit=0; iHit<nHit; iHit++){
-            file_electron.width(14);
-            file_electron << dIonPx[iHit]/dMomentum_au << ", ";
-            file_electron.width(14);
-            file_electron << dIonPy[iHit]/dMomentum_au << ", ";
-            file_electron.width(14);
-            file_electron << dIonPz[iHit]/dMomentum_au << ", ";
-            file_electron.width(14);
-            file_electron << dElectronEnergy[iHit]/dElectron << ", ";
+            file_electron << dElectronPx[iHit]/dMomentum_au  << ",";
+            file_electron << dElectronPy[iHit]/dMomentum_au  << ",";
+            file_electron << dElectronPz[iHit]/dMomentum_au  << ",";
+            file_electron << dElectronEnergy[iHit]/dElectron << ",";
         }
         file_electron << endl;
     }
