@@ -154,7 +154,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
         // ion parameters
         InputInt(json["ion"]["number_of_hits"], nIonHit, info); if(info==false){return false;} // 189
         const char* hits[nHit] = {"1st_hit", "2nd_hit", "3rd_hit", "4th_hit"};
-        for(int ith; ith<nIonHit; ith++){
+        for(int ith=0; ith<nIonHit; ith++){
             InputDouble(json["ion"][hits[ith]]["mass"],           dMass[ith],    dMassUnit, info); if(info==false){return false;} // 186, 187, 188, 264
             InputDouble(json["ion"][hits[ith]]["charge"],         dCharge[ith],  dElectron, info); if(info==false){return false;} // 183, 184, 185, 270
             InputDouble(json["ion"][hits[ith]]["minimum_of_TOF"], dMin_TOF[ith], unit_nano, info); if(info==false){return false;} // 190, 192, 194, 265
@@ -217,7 +217,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
 
     ////////////////////////////////////////////////////////////////////////////
     // output
-    file_electron.open("Electron_Energy.csv", fstream::out);
+    file_electron.open("electron.csv", fstream::out);
     file_electron.width(14);
     file_electron << "\"ion1 px\"" << ", ";
     file_electron.width(14);
@@ -254,10 +254,16 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
 
     const char* order[nHit] = {"1st", "2nd", "3rd", "4th"};
     for(int ith=0; ith<nIonHit; ith++){
-        file_log.width(25-15); file_log << "Ion " << order[ith] << " hit's TOF: " << tof(0.0,0.0,dMass[ith],dCharge[ith])/unit_nano << endl;
+        file_log.width(25-15); file_log << "Ion " << order[ith] << " hit's TOF: "
+                                        << tof(0.0,0.0,dMass[ith],dCharge[ith])/unit_nano
+                                        << " [ns]" << endl;
     }
-    file_log.width(25); file_log << "electron's TOF: " << electof(0.0)/unit_nano << endl;
-    file_log.width(25); file_log << "electron's cycle time: " << 2.0*pi*dElectronMass/dMagnetic_Field/dElectron << endl;
+    file_log.width(25); file_log << "electron's TOF: "
+                                 << electof(0.0)/unit_nano
+                                 << " [ns]" << endl;
+    file_log.width(25); file_log << "electron's cycle time: "
+                                 << 2.0*pi*dElectronMass/dMagnetic_Field/dElectron/unit_nano
+                                 << " [ns]" << endl;
     file_log << endl;
 
     file_log.close();

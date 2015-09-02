@@ -23,7 +23,6 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
 //   ████████████████████████████████████████████████████████████████████████████████████████████████████
 
     // delate in the future
-    int iHit, jjj;
     int iHitsTDC1 = nHit;  // for electron
     int iHitsTDC2 = nHit;  // for ion
     int isellect;
@@ -84,16 +83,16 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     double random_number;
 
     // Initialize variables
-    for(int jjj=0; jjj<100; jjj++){
+    for(int jjj=0; jjj<100; jjj++) {
         dIon_Angle[jjj] = -1000;
         dElectron_Angle[jjj] = -2000;
         dIon_Electron_Angle[jjj] = -10000;
     }
 
 
-    for(int iTDC; iTDC<nTDC; iTDC++){
-        for(int iCH; iCH<nCH; iCH++){
-            for(int iHit=0; iHit<nHit+1; iHit++){
+    for(int iTDC=0; iTDC<nTDC; iTDC++) {
+        for(int iCH=0; iCH<nCH; iCH++) {
+            for(int iHit=0; iHit<nHit+1; iHit++) {
                 TDC[iTDC][iCH][iHit] = -10000;
             }
         }
@@ -222,12 +221,18 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     // for(int iHit=0; iHit<nIonHit; iHit++){
     for(int iHit=0; iHit<nHit; iHit++){
         dtIon[iHit] = (b[4][iHit]-2000.0)*unit_nano -dDelay;  // unit sec
+
+        // file_log.setf(fstream::scientific);
+        // file_log.precision(6);
+        // file_log.width(14);
+        // file_log << dtIon[iHit] << ", ";
     }
+    // file_log << endl;
     dtN=dtIon[0];
     dtO=dtIon[1];
 
     // Now do calculates for the ion's position of all hits
-    for(int iHit=0; iHit<nIonHit; iHit++){
+    for(int iHit=0; iHit<nIonHit; iHit++) {
         dx0 = b[0][iHit]-100;
         dy0 = b[1][iHit]-100;
         dxSq[iHit] = ((dx0+dCorX*dy0)*dPixelSizeX)*unit_milli;          // Unit Meter
@@ -245,8 +250,8 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
         goto elec; //
     }
 
-    for(int iHit=0; iHit<nIonHit; iHit++){
-        if(dtIon[iHit]<dMin_TOF[iHit] || dtIon[iHit]>dMax_TOF[iHit]){
+    for(int iHit=0; iHit<nIonHit; iHit++) {
+        if(dtIon[iHit]<dMin_TOF[iHit] || dtIon[iHit]>dMax_TOF[iHit]) {
             Ion_MasterFlag = -20 -(iHit+1); // 21, 22, 23, 24
             // if(Ion_MasterFlag == -21){
                 // file_log.setf(fstream::scientific);
@@ -291,10 +296,10 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     // }
 
     // if 1or2hit ion is within Hotspot of the detector & 1or2hit ionTOF is within RandomCoincidenceLine
-    // if(((dxSq[0]*1000 > xSq0_HotspotMin && dxSq[0]*1000 < xSq0_HotspotMax
-    //             && dySq[0]*1000 > ySq0_HotspotMin && dySq[0]*1000 < ySq0_HotspotMax)
-    //         || (dxSq[1]*1000 > xSq1_HotspotMin && dxSq[1]*1000 < xSq1_HotspotMax
-    //             && dySq[1]*1000 > ySq1_HotspotMin && dySq[1]*1000 < ySq1_HotspotMax))
+    // if(((dxSq[0]/unit_milli > xSq0_HotspotMin && dxSq[0]/unit_milli < xSq0_HotspotMax
+    //             && dySq[0]/unit_milli > ySq0_HotspotMin && dySq[0]/unit_milli < ySq0_HotspotMax)
+    //         || (dxSq[1]/unit_milli > xSq1_HotspotMin && dxSq[1]/unit_milli < xSq1_HotspotMax
+    //             && dySq[1]/unit_milli > ySq1_HotspotMin && dySq[1]/unit_milli < ySq1_HotspotMax))
     //     && ((dtIon[0]/unit_nano > tIon0_RandCoinMin && dtIon[0]/unit_nano < tIon0_RandCoinMax)
     //         || (dtIon[1]/unit_nano > tIon1_RandCoinMin && dtIon[1]/unit_nano < tIon1_RandCoinMax))){
     //     Ion_MasterFlag = -27;
@@ -474,7 +479,13 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     for(int iHit=0; iHit<nHit; iHit++){
         dtElectron[iHit] = (a[6][iHit]-1980)*(1.0E-9) ; // unit sec
         //dtElectron[iHit] = dtElectron[iHit] - dDelay;
+
+        // file_log.setf(fstream::scientific);
+        // file_log.precision(6);
+        // file_log.width(14);
+        // file_log << dtIon[iHit] << ", ";
     }
+    // file_log << endl;
     // Calculation of POSITIONS in meters via old method (just for checks):
     // ------------------------------------------------------------------------
     //for(int iHit=0; iHit<nHit; iHit++)
@@ -510,14 +521,40 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     //**************************************これより上*********************************************************************
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // selection of electron TOF, the first electron
-    for(int iHit=0; iHit<nElectronHit; iHit++){
-        if((dtElectron[iHit] < dMin_eTOF) || (dtElectron[iHit] > dMax_eTOF)){
-            // Ion_MasterFlag = -46;
-            Electron_MasterFlag = -20-(iHit+1);
-            goto out;
-        }
+    // ////////////////////////////////////////////////////////////////////////////
+    // // selection of electron TOF, the first electron
+    // for(int iHit=0; iHit<nElectronHit; iHit++){
+    //     if((dtElectron[iHit] < dMin_eTOF) || (dtElectron[iHit] > dMax_eTOF)) {
+    //         // Ion_MasterFlag = -46;
+    //         Electron_MasterFlag = -20-(iHit+1);
+    //         goto out;
+    //     }
+    // }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // for test
+    if((dtElectron[0] < dMin_eTOF) || (dtElectron[0] > dMax_eTOF)) {
+        Electron_MasterFlag = -21;
+        goto out;
     }
+    // if(dtElectron[1] > dMin_eTOF) {
+    //     Electron_MasterFlag = -22;
+    //     goto out;
+    // }
+    if((dtElectron[1] < dMin_eTOF) || (dtElectron[1] > dMax_eTOF)) {
+        Electron_MasterFlag = -22;
+        goto out;
+    }
+    // if(dtElectron[1] < dMax_eTOF) {
+    //     Electron_MasterFlag = -22;
+    //     goto out;
+    // }
+    // if(dtElectron[1] < 15000.0*unit_nano) {
+    //     Electron_MasterFlag = -22;
+    //     goto out;
+    // }
+
+
 
     ////////////////////////////////////////////////////////////////////////////
     ////  Calculation of Electron momenta
@@ -801,12 +838,12 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     pEventData->SetAt(30,nBunch);  // 18+12
 
     for(int iHit=0; iHit<nHit; iHit++){
-        pEventData->SetAt(31+iHit,xhex[iHit]*1000);                 // Hex_X
-        pEventData->SetAt(31+4+iHit,yhex[iHit]*1000);               // Hex_Y
-        //pEventData->SetAt(31+28+iHit,dxSq[iHit]*1000);                // SQ_x (mm)
-        //pEventData->SetAt(31+32+iHit,dySq[iHit]*1000);                // SQ_y (mm)
-        pEventData->SetAt(31+28+iHit,dxSq[iHit]*1000);             // SQ_x (mm)
-        pEventData->SetAt(31+32+iHit,dySq[iHit]*1000);             // SQ_y (mm)
+        pEventData->SetAt(31+iHit,xhex[iHit]/unit_milli);                 // Hex_X
+        pEventData->SetAt(31+4+iHit,yhex[iHit]/unit_milli);               // Hex_Y
+        //pEventData->SetAt(31+28+iHit,dxSq[iHit]/unit_milli);                // SQ_x (mm)
+        //pEventData->SetAt(31+32+iHit,dySq[iHit]/unit_milli);                // SQ_y (mm)
+        pEventData->SetAt(31+28+iHit,dxSq[iHit]/unit_milli);             // SQ_x (mm)
+        pEventData->SetAt(31+32+iHit,dySq[iHit]/unit_milli);             // SQ_y (mm)
         pEventData->SetAt(67+iHit,dtIon[iHit]/unit_nano);               // Ion TOF (ns)
         pEventData->SetAt(67+4+iHit,dIonEnergy[iHit]/dElectron);    // Ion Kinetic Energy
     } // end for
@@ -838,7 +875,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     //chek OK
     pEventData->SetAt(102,dElectronEnergyXY/dElectron);         // Electron Kinetic Energy
     for(int iHit=0; iHit<nHit; iHit++){
-        pEventData->SetAt(98+iHit,dtElectron[iHit]/unit_nano);              // Electron TOF
+        pEventData->SetAt(98+iHit,dtElectron[iHit]/unit_nano);          // Electron TOF
         pEventData->SetAt(103+iHit,dElectronEnergy[iHit]/dElectron);    // Electron Kinetic Energy
         pEventData->SetAt(107+iHit,dElectronPx[iHit]/dMomentum_au);     // Electron Px
         pEventData->SetAt(111+iHit,dElectronPy[iHit]/dMomentum_au);     // Electron Py
@@ -852,13 +889,13 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
         dElectronEnergyHigher = dElectronEnergy[1];
         dElectronEnergyLower = dElectronEnergy[0];
     } // end if
-    pEventData->SetAt(203,dElectronEnergyHigher/dElectron); // Electron Kinetic Energy Higher
-    pEventData->SetAt(204,dElectronEnergyLower/dElectron);  // Electron Kinetic Energy Lower
+    pEventData->SetAt(203,dElectronEnergyHigher/dElectron);  // Electron Kinetic Energy Higher
+    pEventData->SetAt(204,dElectronEnergyLower/dElectron);   // Electron Kinetic Energy Lower
 
-    pEventData->SetAt(119,dElectronPx_norm[0]);                     // Normalized electron Px
-    pEventData->SetAt(120,dElectronPy_norm[0]);                     // Normalized electron Py
-    pEventData->SetAt(121,dElectronPz_norm[0]);                     // Normalized electron Pz
-    pEventData->SetAt(122,dElectronP[0]/dMomentum_au);              // Sum_P_Electron
+    pEventData->SetAt(119,dElectronPx_norm[0]);         // Normalized electron Px
+    pEventData->SetAt(120,dElectronPy_norm[0]);         // Normalized electron Py
+    pEventData->SetAt(121,dElectronPz_norm[0]);         // Normalized electron Pz
+    pEventData->SetAt(122,dElectronP[0]/dMomentum_au);  // Sum_P_Electron
 
     //  pEventData->SetAt(123,dElectron_theta[0]*180.0/pi);
     //  pEventData->SetAt(124,dElectron_psai[0]*180.0/pi);
@@ -870,15 +907,15 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     pEventData->SetAt(126,Ion_MasterFlag);
     pEventData->SetAt(127,Electron_MasterFlag);
 
-    pEventData->SetAt(128,dCOM_x/unit_milli);                             // COM_x  mm
-    pEventData->SetAt(129,dCOM_y/unit_milli);                             // COM_y  mm
-    pEventData->SetAt(130,dCOM_z/unit_milli);                             // COM_z  mm
+    pEventData->SetAt(128,dCOM_x/unit_milli);  // COM_x  mm
+    pEventData->SetAt(129,dCOM_y/unit_milli);  // COM_y  mm
+    pEventData->SetAt(130,dCOM_z/unit_milli);  // COM_z  mm
 
 
 
 
-    pEventData->SetAt(131,dCOM_x_e);                                // COM_e_x
-    pEventData->SetAt(132,dCOM_y_e);                                // COM_e_y
+    pEventData->SetAt(131,dCOM_x_e);  // COM_e_x
+    pEventData->SetAt(132,dCOM_y_e);  // COM_e_y
 
 
 
@@ -891,9 +928,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     pEventData->SetAt(137,dElectron_posi_xy*180.0/pi);
 
     pEventData->SetAt(138,dIon_Electron_Angle0*180.0/pi);
-    pEventData->SetAt(139,isellect);                                // COM_e_y
-    pEventData->SetAt(140,dtN/unit_nano);                               // COM_e_y
-    pEventData->SetAt(141,dtO/unit_nano);                               // COM_e_y
+    pEventData->SetAt(139,isellect);       // COM_e_y
+    pEventData->SetAt(140,dtN/unit_nano);  // COM_e_y
+    pEventData->SetAt(141,dtO/unit_nano);  // COM_e_y
 
     for(int ii=0; ii<int(180/dAngle_Width+0.1); ii++){
         pEventData->SetAt(142+ii*3,dIon_Angle[ii]*180.0/pi);
