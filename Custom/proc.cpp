@@ -439,7 +439,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
 
 
 
-
+    file_log << a[0][0]*1000 << "," << a[1][0]*1000 << "," << a[6][0]*1000 << ",";
+    file_log << dxSq[0] << "," << dySq[0] << "," << dtIon[0] << "," ;
+    file_log << dIonPx[0] << "," << dIonPy[0] << "," << dIonPz[0] << endl;
 
 
 
