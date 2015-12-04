@@ -12,7 +12,7 @@
 namespace Analysis {
 class Ions : public Objects {
  private:
-  Ion *pIon[maximumOfHits];
+  Ion *pIon[MAXIMUM_OF_HITS];
   Ions(const Unit &unit, const JSONReader &reader, const int &n);
 
  public:

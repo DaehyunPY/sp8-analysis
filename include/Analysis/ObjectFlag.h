@@ -10,12 +10,12 @@
 namespace Analysis {
 class ObjectFlag: public Flag {
  private:
-  int _flag;
-  const int _initialFlagForSign = 0;
-  const int _validOnFlagForSign = 1;
-  const int _validOffFlagForSign = -1;
-  const int _masterOnFlagFor1stDigit = 2;
-  const int _masterOffFlagFor1stDigit = 1;
+  int flag;
+  const int initialFlagForSign = 0;
+  const int validOnFlagForSign = 1;
+  const int validOffFlagForSign = -1;
+  const int masterOnFlagFor1stDigit = 2;
+  const int masterOffFlagFor1stDigit = 1;
 
  public:
   ObjectFlag();

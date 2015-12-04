@@ -20,41 +20,41 @@ Analysis::ObjectFlag::~ObjectFlag() {
 // LOAD
 
 const int Analysis::ObjectFlag::getFlag() const {
-  return this->_flag;
+  return this->flag;
 }
 
 void Analysis::ObjectFlag::loadInitialFlager() {
-  setSign(this->_flag, _initialFlagForSign);
+  setSign(this->flag, initialFlagForSign);
 }
 
 const bool Analysis::ObjectFlag::isInitialFlag() const {
-  return getSign(this->_flag) == _initialFlagForSign;
+  return getSign(this->flag) == initialFlagForSign;
 }
 
 void Analysis::ObjectFlag::loadValidOnFlager() {
-  setSign(this->_flag, _validOnFlagForSign);
+  setSign(this->flag, validOnFlagForSign);
   return;
 }
 
 void Analysis::ObjectFlag::loadValidOffFlager() {
-  setSign(this->_flag, _validOffFlagForSign);
+  setSign(this->flag, validOffFlagForSign);
   return;
 }
 
 const bool Analysis::ObjectFlag::isValidOnFlag() const {
-  return getSign(this->_flag) == _validOnFlagForSign;
+  return getSign(this->flag) == validOnFlagForSign;
 }
 
 void Analysis::ObjectFlag::loadMasterOnFlager() {
-  set1stDigit(this->_flag, _masterOnFlagFor1stDigit);
+  set1stDigit(this->flag, masterOnFlagFor1stDigit);
   return;
 }
 
 void Analysis::ObjectFlag::loadMasterOffFlager() {
-  set1stDigit(this->_flag, _masterOffFlagFor1stDigit);
+  set1stDigit(this->flag, masterOffFlagFor1stDigit);
   return;
 }
 
 const bool Analysis::ObjectFlag::isMasterOnFlag() const {
-  return get1stDigit(this->_flag) == _masterOnFlagFor1stDigit;
+  return get1stDigit(this->flag) == masterOnFlagFor1stDigit;
 }

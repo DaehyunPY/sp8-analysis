@@ -5,7 +5,7 @@
 #include "Objects.h"
 
 Analysis::Objects::Objects(const int &n) : numberOfHits(n) {
-  assert(n > 0 && n < maximumOfHits+1);
+  assert(n > 0 && n <= this->maximumOfHits);
   return;
 }
 Analysis::Objects::~Objects() {
@@ -39,7 +39,7 @@ const double Analysis::Objects::getLocationYOfCOM() const {
   }
   return double(sumOfMassLocation / sumOfMass);
 }
-const double Analysis::Objects::getMomentumXOfCOM() const {
+const double Analysis::Objects::getTotalMomentumX() const {
   const int &n = this->getNumberOfHits();
   long double sumOfMomentum = 0e0;
   for (int i = 0; i < n; i++) {
@@ -47,7 +47,7 @@ const double Analysis::Objects::getMomentumXOfCOM() const {
   }
   return double(sumOfMomentum);
 }
-const double Analysis::Objects::getMomentumYOfCOM() const {
+const double Analysis::Objects::getTotalMomentumY() const {
   const int &n = this->getNumberOfHits();
   long double sumOfMomentum = 0e0;
   for (int i = 0; i < n; i++) {
@@ -55,7 +55,7 @@ const double Analysis::Objects::getMomentumYOfCOM() const {
   }
   return double(sumOfMomentum);
 }
-const double Analysis::Objects::getMomentumZOfCOM() const {
+const double Analysis::Objects::getTotalMomentumZ() const {
   const int &n = this->getNumberOfHits();
   long double sumOfMomentum = 0e0;
   for (int i = 0; i < n; i++) {
@@ -63,7 +63,7 @@ const double Analysis::Objects::getMomentumZOfCOM() const {
   }
   return double(sumOfMomentum);
 }
-const double Analysis::Objects::getEnergyOfCOM() const {
+const double Analysis::Objects::getTotalEnergy() const {
   const int &n = this->getNumberOfHits();
   long double sumOfEnergy = 0e0;
   for (int i = 0; i < n; i++) {
@@ -75,17 +75,48 @@ const Analysis::Object &Analysis::Objects::getObject(const int &i) const {
   assert(i < this->getNumberOfHits());
   return *(this->pObject[i]);
 }
-const double Analysis::Objects::getMomentumOfCOM() const {
-  return pow(pow(this->getMomentumXOfCOM(), 2e0)
-                 + pow(this->getMomentumYOfCOM(), 2e0)
-                 + pow(this->getMomentumZOfCOM(), 2e0), 0.5e0);
+const double Analysis::Objects::getTotalAbsoluteMomentum() const {
+  return pow(pow(this->getTotalMomentumX(), 2e0)
+                 + pow(this->getTotalMomentumY(), 2e0)
+                 + pow(this->getTotalMomentumZ(), 2e0), 0.5e0);
 }
 const double Analysis::Objects::getDirectionXOfCOM() const {
-  return this->getMomentumXOfCOM() / this->getMomentumOfCOM();
+  return this->getTotalMomentumX() / this->getTotalAbsoluteMomentum();
 }
 const double Analysis::Objects::getDirectionYOfCOM() const {
-  return this->getMomentumYOfCOM() / this->getMomentumOfCOM();
+  return this->getTotalMomentumY() / this->getTotalAbsoluteMomentum();
 }
 const double Analysis::Objects::getDirectionZOfCOM() const {
-  return this->getMomentumZOfCOM() / this->getMomentumOfCOM();
+  return this->getTotalMomentumZ() / this->getTotalAbsoluteMomentum();
+}
+void Analysis::Objects::resetEventData() {
+  const int &n = this->getNumberOfHits();
+  for (int i = 0; i < n; i++) {
+    this->setObjectMembers(i).resetEventData();
+  }
+  return;
+}
+Analysis::Object &Analysis::Objects::setObjectMembers(const int &i) {
+  return *(this->pObject[i]);
+}
+const double Analysis::Objects::getLocationXOfCOM(Analysis::Unit &unit) const {
+  return unit.writeLength(this->getLocationXOfCOM());
+}
+const double Analysis::Objects::getLocationYOfCOM(Analysis::Unit &unit) const {
+  return unit.writeLength(this->getLocationYOfCOM());
+}
+const double Analysis::Objects::getTotalMomentumX(Analysis::Unit &unit) const {
+  return unit.writeMomentum(this->getTotalMomentumX());
+}
+const double Analysis::Objects::getTotalMomentumY(Analysis::Unit &unit) const {
+  return unit.writeMomentum(this->getTotalMomentumY());
+}
+const double Analysis::Objects::getTotalMomentumZ(Analysis::Unit &unit) const {
+  return unit.writeMomentum(this->getTotalMomentumZ());
+}
+const double Analysis::Objects::getTotalAbsoluteMomentum(Analysis::Unit &unit) const {
+  return unit.writeMomentum(this->getTotalAbsoluteMomentum());
+}
+const double Analysis::Objects::getTotalEnergy(Analysis::Unit &unit) const {
+  return unit.writeEnergy(this->getTotalEnergy());
 }

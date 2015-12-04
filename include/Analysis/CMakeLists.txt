@@ -19,8 +19,8 @@ set(SOURCE_FILES
     Electron.cpp Electron.h
     Electrons.cpp Electrons.h
 
-    ObjectParameters.cpp ObjectParameters.h
     EquipmentParameters.cpp EquipmentParameters.h
+    ObjectParameters.cpp ObjectParameters.h
     IonParameters.cpp IonParameters.h
     ElectronParameters.cpp ElectronParameters.h
     AnalysisTools.cpp AnalysisTools.h

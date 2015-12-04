@@ -1,6 +1,7 @@
 #ifndef ANALYSIS_OBJECT_H
 #define ANALYSIS_OBJECT_H
 
+
 #include "Unit.h"
 #include "ObjectFlag.h"
 #include "JSONReader.h"
@@ -19,7 +20,6 @@ class Object {
   double momentumY;
   double momentumZ;
   ObjectFlag objectFlag;
-
   const double &getMinOfTOF() const;
   const double &getMaxOfTOF() const;
 
@@ -34,6 +34,7 @@ class Object {
   void setMomentumY(const double &);
   void setMomentumZ(const double &);
   ObjectFlag &setObjectFlagMembers();
+  const bool isWithinTheMasterRegion() const;
   const double &getMass() const;
   const double &getCharge() const;
   const double &getLocationX() const;
@@ -42,13 +43,20 @@ class Object {
   const double &getMomentumX() const;
   const double &getMomentumY() const;
   const double &getMomentumZ() const;
-  const double getMomentum() const;
+  const double getAbsoluteMomentum() const;
   const double getDirectionX() const;
   const double getDirectionY() const;
   const double getDirectionZ() const;
   const double getEnergy() const;
   const ObjectFlag &getObjectFlag() const;
-  const bool isWithinTheMasterRegion() const;
+  const double getLocationX(const Unit &) const;
+  const double getLocationY(const Unit &) const;
+  const double getTOF(const Unit &) const;
+  const double getMomentumX(const Unit &) const;
+  const double getMomentumY(const Unit &) const;
+  const double getMomentumZ(const Unit &) const;
+  const double getMomentum(const Unit &) const;
+  const double getEnergy(const Unit &) const;
 };
 }
 

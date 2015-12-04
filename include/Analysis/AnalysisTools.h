@@ -6,6 +6,7 @@
 #include "ElectronParameters.h"
 #include "Ions.h"
 #include "Electrons.h"
+#include "LMFReader.h"
 
 
 namespace Analysis {
@@ -52,10 +53,19 @@ class AnalysisTools {
       Ion &ion, Unit &unit,
       const double &x, const double &y, const double &t, const int &f) const;
   void loadEventDataInputer(
-      Electron &elec, Unit &unit,
+      Ion &ion, Unit &unit, LMFReader &reader, const int &iHit) const;
+  void loadEventDataInputer(Ions &ions, Unit &unit, LMFReader &reader) const;
+  void loadEventDataInputer(
+      Electron &electron, Unit &unit,
       const double &x, const double &y, const double &t, const int &f) const;
+  void loadEventDataInputer(
+      Electron &electron, Unit &unit, LMFReader &reader, const int &iHit) const;
+  void loadEventDataInputer(
+      Electrons &electrons, Unit &unit, LMFReader &reader) const;
   void loadMomentumCalculator(Ion &ion) const;
   void loadMomentumCalculator(Electron &elec) const;
+  void loadMomentumCalculator(Ions &ions) const;
+  void loadMomentumCalculator(Electrons &elecs) const;
 };
 }
 #endif

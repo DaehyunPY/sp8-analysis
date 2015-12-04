@@ -4,8 +4,6 @@
 #include "Unit.h"
 #include "JSONReader.h"
 
-////////////////////////////////////////////////////////////////////////////////
-// HEADER
 namespace Analysis {
 class ObjectParameters {
  private:

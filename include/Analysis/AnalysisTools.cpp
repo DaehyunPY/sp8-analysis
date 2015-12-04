@@ -268,16 +268,75 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                              f);
   return;
 }
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &elec,
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    Analysis::Unit &unit,
                                                    const double &x,
                                                    const double &y,
                                                    const double &t,
                                                    const int &f) const {
-  this->loadEventDataInputer(elec,
+  this->loadEventDataInputer(electron,
                              unit.readLength(x),
                              unit.readLength(y),
                              unit.readTime(t),
                              f);
+  return;
+}
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
+                                                   Analysis::Unit &unit,
+                                                   Analysis::LMFReader &reader,
+                                                   const int &iHit) const {
+  this->loadEventDataInputer(ion,
+                             unit,
+                             reader.getAt(1, 1, iHit)/1000e0,
+                             reader.getAt(2, 0, iHit)/1000e0,
+                             reader.getAt(2, 1, iHit)/1000e0,
+                             0);
+  return;
+}
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
+                                                   Analysis::Unit &unit,
+                                                   Analysis::LMFReader &reader,
+                                                   const int &iHit) const {
+  this->loadEventDataInputer(electron,
+                             unit,
+                             reader.getAt(0, 0, iHit)/1000e0,
+                             reader.getAt(0, 1, iHit)/1000e0,
+                             reader.getAt(1, 0, iHit)/1000e0,
+                             0);
+  return;
+}
+void Analysis::AnalysisTools::loadEventDataInputer(
+    Analysis::Ions &ions,
+    Analysis::Unit &unit,
+    Analysis::LMFReader &reader) const {
+  const int &n = ions.getNumberOfHits();
+  for(int i = 0; i < n; i++) {
+    loadEventDataInputer(ions.setIonMembers(i), unit, reader, i);
+  }
+  return;
+}
+void Analysis::AnalysisTools::loadEventDataInputer(
+    Analysis::Electrons &electrons,
+    Analysis::Unit &unit,
+    Analysis::LMFReader &reader) const {
+  const int &n = electrons.getNumberOfHits();
+  for(int i = 0; i < n; i++) {
+    loadEventDataInputer(electrons.setElectronMembers(i), unit, reader, i);
+  }
+  return;
+}
+void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ions &ions) const {
+  const int &n = ions.getNumberOfHits();
+  for(int i = 0; i < n; i++) {
+    loadMomentumCalculator(ions.setIonMembers(i));
+  }
+  return;
+}
+void Analysis::AnalysisTools::loadMomentumCalculator(
+    Analysis::Electrons &elecs) const {
+  const int &n = elecs.getNumberOfHits();
+  for(int i = 0; i < n; i++) {
+    loadMomentumCalculator(elecs.setElectronMembers(i));
+  }
   return;
 }
