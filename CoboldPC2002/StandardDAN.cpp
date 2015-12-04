@@ -1,5 +1,5 @@
 #include "../include/Analysis/AnalysisTools.h"
-#include "CDan.h"
+// #include "CDan.h"
 
 Analysis::Unit *pUnit;
 Analysis::JSONReader *pJSONReader;
@@ -12,7 +12,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
 	pUnit = new Analysis::Unit;
 	pJSONReader = new Analysis::JSONReader("parameters.json");
 	pLMFReader = NULL;
-	pAnalysisTools(*pUnit, *pJSONReader);
+	pAnalysisTools = new Analysis::AnalysisTools(*pUnit, *pJSONReader);
 	pIons = new Analysis::Ions(*pUnit, *pJSONReader);
 	pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader);
 	return true;
@@ -21,15 +21,13 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
 CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pParameters, CDoubleArray *pWeighParameter) {
 	pLMFReader = NULL;
 	pLMFReader = new Analysis::LMFReader(*pParameters);
-	pIons->setObjectMembers().resetEventData();
-	pElectrons->setObjectMembers().resetEventData();
+	pIons->resetEventData();
+	pElectrons->resetEventData();
 	pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
 	pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);
 	pAnalysisTools->loadMomentumCalculator(*pIons);
 	pAnalysisTools->loadMomentumCalculator(*pElectrons);
 
-	const int nTDC = 3;
-	const int nCH = 2;
 	const int nHit = 4;
 
     for(int iHit=0; iHit<nHit; iHit++){
@@ -40,7 +38,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
         pEventData->SetAt(67+iHit,pIons->getIon(iHit).getTOF(*pUnit));
         pEventData->SetAt(67+4+iHit,pIons->getIon(iHit).getEnergy(*pUnit));
     }
-    pEventData->SetAt(75, pIons->getTotalEnergy(*pUnit);
+    pEventData->SetAt(75, pIons->getTotalEnergy(*pUnit));
     for(int iHit=0; iHit<nHit; iHit++){
         pEventData->SetAt(76+iHit,pIons->getIon(iHit).getMomentumX(*pUnit));
         pEventData->SetAt(80+iHit,pIons->getIon(iHit).getMomentumY(*pUnit));
@@ -78,9 +76,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData, CDoubleArray *pPara
     // pEventData->SetAt(203,dElectronEnergyHigher/dElectron);
     // pEventData->SetAt(204,dElectronEnergyLower/dElectron);
 
-    pEventData->SetAt(119,pElectrons->getElectron(iHit).getDirectionX());
-    pEventData->SetAt(120,pElectrons->getElectron(iHit).getDirectionY());
-    pEventData->SetAt(121,pElectrons->getElectron(iHit).getDirectionZ());
+    pEventData->SetAt(119,pElectrons->getElectron(0).getDirectionX());
+    pEventData->SetAt(120,pElectrons->getElectron(0).getDirectionY());
+    pEventData->SetAt(121,pElectrons->getElectron(0).getDirectionZ());
     pEventData->SetAt(122,pElectrons->getTotalAbsoluteMomentum(*pUnit));
 
     //  pEventData->SetAt(123,dElectron_theta[0]*180.0/pi);
