@@ -1,0 +1,48 @@
+{
+  "equipment_parameters": {
+    "angle_width": 10,
+    "electric_potential_of_electron_region": -200,
+    "electric_potential_of_ion_1st": -285,
+    "electric_potential_of_ion_2nd": -2000,
+    "electric_potential_of_ion_MCP": -3585,
+    "length_of_D2": 67.4,
+    "length_of_D1": 33.0,
+    "length_of_L1": 16.5,
+    "length_of_L2": 82.5,
+    "length_of_L3": 10.0,
+    "is_polarization_horizontal?": true,
+    "magnetic_filed": 6.843
+  },
+  "ion_parameters": {
+    "angle_of_detector": 0,
+    "pixel_size_of_x": 0.927,
+    "pixel_size_of_y": 0.927,
+    "dead_time": 100000,
+    "x_zero_of_COM": 93.239,
+    "y_zero_of_COM": 94.953,
+    "time_zero_of_TOF": 1840.9
+  },
+  "electron_parameters": {
+    "angle_of_detector": -30,
+    "pixel_size_of_x": 0.925,
+    "pixel_size_of_y": 0.925,
+    "dead_time": 100000,
+    "x_zero_of_COM": 94.77824985,
+    "y_zero_of_COM": 2.978249852,
+    "time_zero_of_TOF": 1805.39
+  },
+  "electrons": {
+    "number_of_hits": 1,
+    "maximum_of_TOF": -128.0,
+    "minimum_of_TOF": -180.0
+  },
+  "ions": {
+    "number_of_hits": 1,
+    "1st_hit": {
+      "charge": 1,
+      "mass": 20,
+      "maximum_of_TOF": 4900,
+      "minimum_of_TOF": 2500
+    }
+  }
+}
