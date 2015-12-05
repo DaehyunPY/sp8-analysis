@@ -5,3 +5,5 @@ Release
 /CoboldPC2002/CDan.sln
 /CoboldPC2002/CDan.vcxproj
 ipch
+Debug
+.vs
