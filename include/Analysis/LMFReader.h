@@ -8,7 +8,6 @@
 //#define FOR_COBOLDPC2002
 #ifdef FOR_COBOLDPC2002
 
-
 #define NUMBER_OF_TDC_USED 3
 #define NUMBER_OF_CHANNELS_USED 2
 #define NUMBER_OF_HITS_USED 4
@@ -26,11 +25,10 @@ class LMFReader {
  public:
   LMFReader(const CDoubleArray &array);
   const CDoubleArray &getParameters() const;
-  const double &getAt(const int &iTDC, const int &iCH, const int &iHit) const;
+  const double getAt(const int &iTDC, const int &iCH, const int &iHit) const;
   ~LMFReader();
 };
 }
-
 
 #endif //FOR_COBOLDPC2002
 
