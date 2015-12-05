@@ -2,7 +2,6 @@
 #define ANALYSIS_UNIT_H
 
 #include <math.h>
-#include <string>
 
 namespace Analysis {
 class Unit {
@@ -16,11 +15,11 @@ class Unit {
   const double fineStructureConstant = 7.297352566417e-3;
   const double bohrRadius = 5.291772109217e-11;
   const double hartreeEnergy = 4.35974465054e-18;
-  const double auMomentum = reducedPlanckConstant/bohrRadius;
+  const double auMomentum = this->reducedPlanckConstant/this->bohrRadius;
   const double gauss = 1.e-4;
   const double nano = 1.e-9;
   const double milli = 1.e-3;
-  const double degree = pi / 180e0;
+  const double degree = this->pi / 180e0;
 
  public:
   Unit();
