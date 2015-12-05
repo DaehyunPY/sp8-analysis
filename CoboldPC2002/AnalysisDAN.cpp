@@ -26,6 +26,7 @@ Analysis::LMFReader *pLMFReader;
 Analysis::AnalysisTools *pAnalysisTools;
 Analysis::Ions *pIons;
 Analysis::Electrons *pElectrons;
+std::fstream logFile; 
 
 /////////////////////////////////////////////////////////////////////////////
 // Parameter description used in this insert dependent part!
@@ -44,7 +45,7 @@ Analysis::Electrons *pElectrons;
 
 CDAN_API LPCTSTR AnalysisGetInformationString()
 {
-    return LPCTSTR("Dummy for CoboldPC 6.2.0.81");
+    return LPCTSTR("");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,12 +53,13 @@ CDAN_API LPCTSTR AnalysisGetInformationString()
 
 CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter)
 {
-	pUnit = new Analysis::Unit;
-	pJSONReader = new Analysis::JSONReader("parameters.json");
+	logFile.open("logFile.txt", std::fstream::out); 
+	pUnit = new Analysis::Unit; logFile << "make Unit class. " << std::endl; 
+	pJSONReader = new Analysis::JSONReader("parameters.json"); logFile << "make JSONReader class. " << std::endl; 
 	pLMFReader = NULL;
-	pAnalysisTools = new Analysis::AnalysisTools(*pUnit, *pJSONReader);
-	pIons = new Analysis::Ions(*pUnit, *pJSONReader);
-	pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader);
+	pAnalysisTools = new Analysis::AnalysisTools(*pUnit, *pJSONReader); logFile << "make AnalysisTools class. " << std::endl; 
+	pIons = new Analysis::Ions(*pUnit, *pJSONReader); logFile << "make Ions class. " << std::endl; 
+	pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader); logFile << "make Electrons class. " << std::endl; 
 	return TRUE;
 }
 

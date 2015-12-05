@@ -23,7 +23,7 @@ class LMFReader {
  public:
   LMFReader(const CDoubleArray &array);
   const CDoubleArray &getParameters() const;
-  const double &getAt(const int &iTDC, const int &iCH, const int &iHit) const;
+  const double getAt(const int &iTDC, const int &iCH, const int &iHit) const;
   ~LMFReader();
 };
 }
