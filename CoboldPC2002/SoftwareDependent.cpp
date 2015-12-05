@@ -31,4 +31,5 @@ static char THIS_FILE[] = __FILE__;
 ////////////////////////////////////////
 // #include "EmptyDAN.cpp"
 // #include "StandardDAN.cpp"
+#define COBOLDPC2002_CDAN_H
 #include "AnalysisDAN.cpp"

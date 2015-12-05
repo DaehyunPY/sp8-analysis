@@ -158,7 +158,7 @@ const Analysis::XY Analysis::AnalysisTools::calculateMomentumXY(
     return {m * x / t, m * y / t};
   } else {
     const double period
-        = this->calculatePeriodOfCycleInMagneticFiled(obj);
+        = this->calculatePeriodOfCycle(obj);
     double theta = t / period;
     theta = theta - floor(theta);
     theta = 2e0 * pi * theta;
@@ -248,7 +248,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
 const int &Analysis::AnalysisTools::getEventNumber() const {
   return this->eventNumber;
 }
-const double Analysis::AnalysisTools::calculatePeriodOfCycleInMagneticFiled(
+const double Analysis::AnalysisTools::calculatePeriodOfCycle(
     const Object &object) const {
   const double pi = atan2(0e0, -1e0);
   const double &m = object.getMass();
@@ -298,7 +298,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   return;
 }
 
-#ifdef FOR_COBOLDPC2002
+#ifndef NOTFOR_COBOLDPC2002
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                                                    Analysis::Unit &unit,
                                                    Analysis::LMFReader &reader,
@@ -342,3 +342,18 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electron
   return;
 }
 #endif
+const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
+                                                   const Analysis::Ion &ion,
+                                                   const double &d) const {
+  return unit.writeTime(this->calculateTOF(ion, d));
+}
+const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
+                                                   const Analysis::Electron &electron,
+                                                   const double &d) const {
+  return unit.writeTime(this->calculateTOF(electron, d));
+}
+const double Analysis::AnalysisTools::calculatePeriodOfCycle(
+    const Analysis::Unit &unit,
+    const Analysis::Object &object) const {
+  return unit.writeTime(this->calculatePeriodOfCycle(object));
+}

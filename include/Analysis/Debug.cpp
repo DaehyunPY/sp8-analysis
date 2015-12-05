@@ -2,6 +2,7 @@
 // Created by Daehyun You on 11/29/15.
 //
 
+#define NOTFOR_COBOLDPC2002
 #include <iostream>
 #include "AnalysisTools.h"
 

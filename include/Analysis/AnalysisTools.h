@@ -7,8 +7,7 @@
 #include "Ions.h"
 #include "Electrons.h"
 
-//#define FOR_COBOLDPC2002
-#ifdef FOR_COBOLDPC2002
+#ifndef NOTFOR_COBOLDPC2002
 #include "LMFReader.h"
 #endif
 
@@ -49,10 +48,15 @@ class AnalysisTools {
   ~AnalysisTools();
   const int &getEventNumber() const;
   void loadEventCounter();
-  const double calculateTOF(const Ion &ion, const double &p0) const;
-  const double calculateTOF(const Electron &electron, const double &p0) const;
-  const double
-      calculatePeriodOfCycleInMagneticFiled(const Object &object) const;
+  const double calculateTOF(const Ion &, const double &) const;
+  const double calculateTOF(const Unit &, const Ion &, const double &) const;
+  const double calculateTOF(const Electron &, const double &) const;
+  const double calculateTOF(const Unit &,
+                            const Electron &,
+                            const double &) const;
+  const double calculatePeriodOfCycle(const Object &) const;
+  const double calculatePeriodOfCycle(const Unit &,
+                                      const Object &) const;
   void loadEventDataInputer(Ion &ion,
                             Unit &unit,
                             const double &x,
@@ -70,7 +74,7 @@ class AnalysisTools {
   void loadMomentumCalculator(Ions &ions) const;
   void loadMomentumCalculator(Electrons &elecs) const;
 
-#ifdef FOR_COBOLDPC2002
+#ifndef NOTFOR_COBOLDPC2002
   public:
    void loadEventDataInputer(Ion &ion,
                              Unit &unit,

@@ -2,7 +2,9 @@
 // Created by Daehyun You on 12/1/15.
 //
 
-#ifdef FOR_COBOLDPC2002
+#include "LMFReader.h"
+
+#ifdef NOTFOR_COBOLDPC2002
 Analysis::LMFReader::LMFReader(const CDoubleArray &array) :pParameters(&array) {
   return;
 }
