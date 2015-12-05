@@ -2,7 +2,7 @@
 //  User defined analysis part called from cobold main program
 ///////////////////////////////////////////////////////////////////////////
 
-// #define COBOLDPC2002_CDAN_H
+#define COBOLDPC2002_CDAN_H
 #define FOR_COBOLDPC2002
 #include "../include/Analysis/JSONReader.cpp"
 #include "../include/Analysis/LMFReader.cpp"
@@ -57,7 +57,7 @@ CDAN_API LPCTSTR AnalysisGetInformationString()
 CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter)
 {
     logFile.open("log.txt", std::fstream::out);
-    logFile << "the path is setted here. " << endl;
+    logFile << "The path is setted here. " << std::endl;
 
 	pUnit = new Analysis::Unit;
 	pJSONReader = new Analysis::JSONReader("parameters.json");
@@ -65,6 +65,14 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParamet
 	pAnalysisTools = new Analysis::AnalysisTools(*pUnit, *pJSONReader);
 	pIons = new Analysis::Ions(*pUnit, *pJSONReader);
 	pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader);
+	logFile << "Initialization is successed. " << std::endl; 
+
+	const double TOFOf1stHitIon = pAnalysisTools->calculateTOF(pIons->getIon(0), 0e0);
+	const double TOFOf1stHitElectron = pAnalysisTools->calculateTOF(pElectrons->getElectron(0), 0e0); 
+	const double PeriodOfCycleOfElectron = pAnalysisTools->calculatePeriodOfCycleInMagneticFiled(pElectrons->getElectron(0)); 
+	logFile << "TOF of 1st Hit ion: " << TOFOf1stHitIon << std::endl; 
+	logFile << "TOF of 1st Hit electron: " << TOFOf1stHitElectron << std::endl; 
+	logFile << "Period of cycle of electron: " << PeriodOfCycleOfElectron << std::endl; 
 	return TRUE;
 }
 
@@ -191,6 +199,6 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
 
 CDAN_API void AnalysisFinalize(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter)
 {
-    logFile.close()
+	logFile.close();
     return;
 }
