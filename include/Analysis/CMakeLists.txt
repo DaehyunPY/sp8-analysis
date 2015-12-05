@@ -26,6 +26,6 @@ set(SOURCE_FILES
     AnalysisTools.cpp AnalysisTools.h
     )
 
-set(DEBUG_FILES Debug.cpp Debug.h)
+set(DEBUG_FILES Debug.cpp Debug.h CDan2002.h)
 
 add_executable(Debug ${SOURCE_FILES} ${DEBUG_FILES})

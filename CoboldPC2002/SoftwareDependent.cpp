@@ -29,6 +29,8 @@ static char THIS_FILE[] = __FILE__;
 //  RoentDek Standard DAN
 //
 ////////////////////////////////////////
-//#include "EmptyDAN.cpp"             // Standard DAN Module
-//#include "StandardDAN.cpp"
+// #include "EmptyDAN.cpp"
+// #include "StandardDAN.cpp"
+
+#define ANALYSIS_CDAN2002_H
 #include "AnalysisDAN.cpp"
