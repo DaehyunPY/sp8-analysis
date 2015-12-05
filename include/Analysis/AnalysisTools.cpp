@@ -194,7 +194,8 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   if (ion.getTOF() < deadTime) {
     ion.setObjectFlagMembers().loadValidOnFlager();
   } else {
-    ion.setObjectFlagMembers().loadMasterOffFlager();
+    ion.setObjectFlagMembers().loadValidOffFlager();
+    ion.setTOF(deadTime); 
   }
   return;
 }
@@ -225,6 +226,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &elec,
     elec.setObjectFlagMembers().loadValidOnFlager();
   } else {
     elec.setObjectFlagMembers().loadValidOffFlager();
+    elec.setTOF(deadTime);
   }
   return;
 }
