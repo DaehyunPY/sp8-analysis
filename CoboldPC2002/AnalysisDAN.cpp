@@ -66,15 +66,15 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,
   logFile << "Initialization is successed. " << std::endl;
 
   const double TOFOf1stHitIon =
-      pAnalysisTools->calculateTOF(unit,
+      pAnalysisTools->calculateTOF(*pUnit,
                                    pIons->getIon(0),
                                    0e0);
   const double TOFOf1stHitElectron =
-      pAnalysisTools->calculateTOF(unit,
+      pAnalysisTools->calculateTOF(*pUnit,
                                    pElectrons->getElectron(0),
                                    0e0);
   const double PeriodOfCycleOfElectron =
-      pAnalysisTools->calculatePeriodOfCycle(unit,
+      pAnalysisTools->calculatePeriodOfCycle(*pUnit,
                                              pElectrons->getElectron(0));
   logFile << "TOF of 1st Hit ion: " << TOFOf1stHitIon << std::endl;
   logFile << "TOF of 1st Hit electron: " << TOFOf1stHitElectron << std::endl;

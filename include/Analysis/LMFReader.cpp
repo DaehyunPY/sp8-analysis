@@ -4,7 +4,7 @@
 
 #include "LMFReader.h"
 
-#ifdef NOTFOR_COBOLDPC2002
+#ifndef NOTFOR_COBOLDPC2002
 Analysis::LMFReader::LMFReader(const CDoubleArray &array) :pParameters(&array) {
   return;
 }
