@@ -5,11 +5,14 @@
 #ifndef ANALYSIS_LMFREADER_H
 #define ANALYSIS_LMFREADER_H
 
+//#define FOR_COBOLDPC2002
+#ifdef FOR_COBOLDPC2002
+
 
 #define NUMBER_OF_TDC_USED 3
 #define NUMBER_OF_CHANNELS_USED 2
 #define NUMBER_OF_HITS_USED 4
-#include "CDan2002.h"
+#include "CDan.h"
 #include <assert.h>
 
 namespace Analysis {
@@ -28,5 +31,7 @@ class LMFReader {
 };
 }
 
+
+#endif //FOR_COBOLDPC2002
 
 #endif //ANALYSIS_LMFREADER_H

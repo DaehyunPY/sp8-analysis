@@ -2,8 +2,7 @@
 // Created by Daehyun You on 12/1/15.
 //
 
-#include "LMFReader.h"
-
+#ifdef FOR_COBOLDPC2002
 Analysis::LMFReader::LMFReader(const CDoubleArray &array) :pParameters(&array) {
   return;
 }
@@ -22,3 +21,4 @@ const double &Analysis::LMFReader::getAt(const int &iTDC,
 const CDoubleArray &Analysis::LMFReader::getParameters() const {
   return *(this->pParameters);
 }
+#endif

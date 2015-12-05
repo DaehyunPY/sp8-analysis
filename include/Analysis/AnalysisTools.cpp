@@ -1,4 +1,5 @@
 #include "AnalysisTools.h"
+
 Analysis::AnalysisTools::AnalysisTools(const EquipmentParameters &equip,
                                        const IonParameters &ion,
                                        const ElectronParameters &elec)
@@ -281,6 +282,23 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                              f);
   return;
 }
+void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ions &ions) const {
+  const int &n = ions.getNumberOfHits();
+  for (int i = 0; i < n; i++) {
+    loadMomentumCalculator(ions.setIonMembers(i));
+  }
+  return;
+}
+void Analysis::AnalysisTools::loadMomentumCalculator(
+    Analysis::Electrons &elecs) const {
+  const int &n = elecs.getNumberOfHits();
+  for (int i = 0; i < n; i++) {
+    loadMomentumCalculator(elecs.setElectronMembers(i));
+  }
+  return;
+}
+
+#ifdef FOR_COBOLDPC2002
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                                                    Analysis::Unit &unit,
                                                    Analysis::LMFReader &reader,
@@ -305,38 +323,22 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                              0);
   return;
 }
-void Analysis::AnalysisTools::loadEventDataInputer(
-    Analysis::Ions &ions,
-    Analysis::Unit &unit,
-    Analysis::LMFReader &reader) const {
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
+                                                   Analysis::Unit &unit,
+                                                   Analysis::LMFReader &reader) const {
   const int &n = ions.getNumberOfHits();
   for(int i = 0; i < n; i++) {
     loadEventDataInputer(ions.setIonMembers(i), unit, reader, i);
   }
   return;
 }
-void Analysis::AnalysisTools::loadEventDataInputer(
-    Analysis::Electrons &electrons,
-    Analysis::Unit &unit,
-    Analysis::LMFReader &reader) const {
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electrons,
+                                                   Analysis::Unit &unit,
+                                                   Analysis::LMFReader &reader) const {
   const int &n = electrons.getNumberOfHits();
   for(int i = 0; i < n; i++) {
     loadEventDataInputer(electrons.setElectronMembers(i), unit, reader, i);
   }
   return;
 }
-void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ions &ions) const {
-  const int &n = ions.getNumberOfHits();
-  for(int i = 0; i < n; i++) {
-    loadMomentumCalculator(ions.setIonMembers(i));
-  }
-  return;
-}
-void Analysis::AnalysisTools::loadMomentumCalculator(
-    Analysis::Electrons &elecs) const {
-  const int &n = elecs.getNumberOfHits();
-  for(int i = 0; i < n; i++) {
-    loadMomentumCalculator(elecs.setElectronMembers(i));
-  }
-  return;
-}
+#endif

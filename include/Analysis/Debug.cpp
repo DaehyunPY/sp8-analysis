@@ -3,14 +3,7 @@
 //
 
 #include <iostream>
-#include "JSONReader.h"
-#include "IonParameters.h"
-#include "ElectronParameters.h"
-#include "EquipmentParameters.h"
 #include "AnalysisTools.h"
-#include "Ions.h"
-#include "Electrons.h"
-
 
 int main() {
   Analysis::Unit unit;
@@ -31,6 +24,7 @@ int main() {
       ions.setIonMembers(0),
       unit, 97689 / 1000, 102501 / 1000, 4.98977e+006 / 1000, 0);
   analysisTools.loadMomentumCalculator(ions.setIonMembers(0));
+  std::cout << ions.getIon(0).getEnergy(unit) << std::endl;
 
 //  Analysis::Electron electron(unit, reader);
 //  analysisTools.loadEventDataInputer(
@@ -42,6 +36,7 @@ int main() {
       electrons.setElectronMembers(0),
       unit, 130503 / 1000, 129140 / 1000, 1.8279e+006 / 1000, 0);
   analysisTools.loadMomentumCalculator(electrons.setElectronMembers(0));
+  std::cout << electrons.getElectron(0).getEnergy(unit) << std::endl;
 
   std::cout << "hello world!" << std::endl;
   return 0;
