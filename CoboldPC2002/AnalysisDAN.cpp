@@ -2,6 +2,8 @@
 //  User defined analysis part called from cobold main program
 ///////////////////////////////////////////////////////////////////////////
 
+// #define COBOLDPC2002_CDAN_H
+#define FOR_COBOLDPC2002
 #include "../include/Analysis/JSONReader.cpp"
 #include "../include/Analysis/LMFReader.cpp"
 #include "../include/Analysis/Unit.cpp"
@@ -27,6 +29,8 @@ Analysis::AnalysisTools *pAnalysisTools;
 Analysis::Ions *pIons;
 Analysis::Electrons *pElectrons;
 
+std::fstream logFile;
+
 /////////////////////////////////////////////////////////////////////////////
 // Parameter description used in this insert dependent part!
 // ---------------------------------------------------------
@@ -44,7 +48,7 @@ Analysis::Electrons *pElectrons;
 
 CDAN_API LPCTSTR AnalysisGetInformationString()
 {
-    return LPCTSTR("Dummy for CoboldPC 6.2.0.81");
+    return LPCTSTR("Analysis");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,6 +56,9 @@ CDAN_API LPCTSTR AnalysisGetInformationString()
 
 CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter)
 {
+    logFile.open("log.txt", std::fstream::out);
+    logFile << "the path is setted here. " << endl;
+
 	pUnit = new Analysis::Unit;
 	pJSONReader = new Analysis::JSONReader("parameters.json");
 	pLMFReader = NULL;
@@ -184,5 +191,6 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,CDoubleArray *pParam
 
 CDAN_API void AnalysisFinalize(CDoubleArray *pEventData,CDoubleArray *pParameters, CDoubleArray *pWeighParameter)
 {
+    logFile.close()
     return;
 }
