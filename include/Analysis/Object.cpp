@@ -66,7 +66,7 @@ const double Analysis::Object::getEnergy() const {
 const Analysis::ObjectFlag &Analysis::Object::getObjectFlag() const {
   return this->objectFlag;
 }
-const bool Analysis::Object::isWithinTheMasterRegion() const {
+const bool Analysis::Object::isWithinMasterRegion() const {
   return (this->getTOF() < this->getMaxOfTOF())
       && (this->getTOF() > this->getMinOfTOF());
 }

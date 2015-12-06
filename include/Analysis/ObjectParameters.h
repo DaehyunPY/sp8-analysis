@@ -14,19 +14,29 @@ class ObjectParameters {
   const double xZeroOfCOM;
   const double yZeroOfCOM;
   const double timeZeroOfTOF;
-
   ObjectParameters(const double &theta,
-                   const double &dx, const double &dy, const double &t1,
-                   const double &x0, const double &y0, const double &t0);
-  ObjectParameters(const Analysis::Unit &unit, const double &theta,
-                   const double &dx, const double &dy, const double &t1,
-                   const double &x0, const double &y0, const double &t0);
+                   const double &dx,
+                   const double &dy,
+                   const double &t1,
+                   const double &x0,
+                   const double &y0,
+                   const double &t0);
+  ObjectParameters(const Analysis::Unit &unit,
+                   const double &theta,
+                   const double &dx,
+                   const double &dy,
+                   const double &t1,
+                   const double &x0,
+                   const double &y0,
+                   const double &t0);
 
- public:
-  ObjectParameters(const Unit &unit, const JSONReader &reader,
+ protected:
+  ObjectParameters(const Unit &unit,
+                   const JSONReader &reader,
                    const std::string &prefix);
   virtual ~ObjectParameters();
 
+ public:
   const double &getAngleOfDetector() const;
   const double &getPixelSizeOfX() const;
   const double &getPixelSizeOfY() const;

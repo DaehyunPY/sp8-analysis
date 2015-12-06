@@ -186,7 +186,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setLocationX(x);
   ion.setLocationY(y);
   ion.setTOF(t);
-  if (ion.isWithinTheMasterRegion()) {
+  if (ion.isWithinMasterRegion()) {
     ion.setObjectFlagMembers().loadMasterOnFlager();
   } else {
     ion.setObjectFlagMembers().loadMasterOffFlager();
@@ -217,7 +217,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &elec,
   elec.setLocationX(x);
   elec.setLocationY(y);
   elec.setTOF(t);
-  if (elec.isWithinTheMasterRegion()) {
+  if (elec.isWithinMasterRegion()) {
     elec.setObjectFlagMembers().loadMasterOnFlager();
   } else {
     elec.setObjectFlagMembers().loadMasterOffFlager();

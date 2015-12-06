@@ -21,12 +21,12 @@ class Objects {
   Objects(const int &);
   Objects(const int &, const int &);
   virtual ~Objects();
-  void setObject(const int &, Object &);
-  void setDummyObject(const int &, Object &);
 
  public:
   Analysis::Object &setObjectMembers(const int &);
   Analysis::Object &setDummyObjectMembers(const int &);
+  void setObject(const int &, Object &);
+  void setDummyObject(const int &, Object &);
   void resetEventData();
   const int &getNumberOfHits() const;
   const int &getNumberOfHitsUsed() const;

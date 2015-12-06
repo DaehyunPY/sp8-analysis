@@ -6,9 +6,13 @@
 #define ANALYSIS_EVENTDATAFLAG_H
 
 
-class EventDataFlag {
+#include "Flag.h"
+
+namespace Analysis {
+class EventDataFlag: protected Flag {
 
 };
+}
 
 
 #endif //ANALYSIS_EVENTDATAFLAG_H

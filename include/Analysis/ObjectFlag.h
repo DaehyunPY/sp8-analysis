@@ -8,7 +8,7 @@
 #include "Flag.h"
 
 namespace Analysis {
-class ObjectFlag: public Flag {
+class ObjectFlag: protected Flag {
  private:
   int flag;
   const int initialFlagForSign = 0;

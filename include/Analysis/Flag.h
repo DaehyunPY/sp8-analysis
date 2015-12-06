@@ -11,6 +11,8 @@
 namespace Analysis {
 class Flag {
  protected:
+  Flag();
+  virtual ~Flag();
   const int getSign(const int &) const;
   const int get1stDigit(const int &) const;
   const int get2ndDigit(const int &) const;
@@ -19,10 +21,6 @@ class Flag {
   void set1stDigit(int &, const int &) const;
   void set2ndDigit(int &, const int &) const;
   void set3ndDigit(int &, const int &) const;
-
- public:
-  Flag();
-  virtual ~Flag();
 };
 }
 

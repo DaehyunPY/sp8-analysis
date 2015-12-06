@@ -5,7 +5,6 @@
 
 namespace Analysis {
 class IonParameters: public ObjectParameters {
- private:
  public:
   IonParameters(const Unit &unit, const JSONReader &reader);
   ~IonParameters();

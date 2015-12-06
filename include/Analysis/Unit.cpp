@@ -2,7 +2,7 @@
 
 Analysis::Unit::Unit() { return; }
 Analysis::Unit::~Unit() { return; }
-const double Analysis::Unit::readMass(const double d) const {
+const double Analysis::Unit::readAtomicMass(const double d) const {
   return d * this->atomicMass;
 }
 const double Analysis::Unit::readCharge(const double d) const {

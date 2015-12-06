@@ -57,12 +57,12 @@ class EquipmentParameters {
   const double &getElectricPotentialOfIon1st() const;
   const double &getElectricPotentialOfIon2nd() const;
   const double &getElectricPotentialOfIonMCP() const;
+  const double &getMagneticFiled() const;
   const double getElectricFiledOfD2() const;
   const double getElectricFiledOfD1() const;
   const double getElectricFiledOfL1() const;
   const double getElectricFiledOfL2() const;
   const double getElectricFiledOfL3() const;
-  const double &getMagneticFiled() const;
 };
 }
 
