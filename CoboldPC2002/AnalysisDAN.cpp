@@ -29,16 +29,18 @@ Analysis::Electrons *pElectrons;
 const int numberOfHitsUsed = NUMBER_OF_HITS_USED;
 std::fstream logFile;
 
-const std::string getObjectName(const int &i) {
+const std::string getObjectName(int i) {
+  i += 1;
   assert(i > 0);
   const int firstDigit = i % 10;
   const int secondDigit = (i / 10) % 10;
-  if (secondDigit == 1) { return i + "th hit"; }
+  std::string str = std::to_string(i);
+  if (secondDigit == 1) { return str + "th hit"; }
   else {
-    if (firstDigit == 1) { return i + "st hit"; }
-    else if (firstDigit == 2) { return i + "nd hit"; }
-    else if (firstDigit == 3) { return i + "rd hit"; }
-    else { return i + "th hit"; }
+    if (firstDigit == 1) { return str + "st hit"; }
+    else if (firstDigit == 2) { return str + "nd hit"; }
+    else if (firstDigit == 3) { return str + "rd hit"; }
+    else { return str + "th hit"; }
   }
 }
 
@@ -81,7 +83,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,
     {
       const int &n = pIons->getNumberOfHits();
       for (int i = 0; i < n; i++) {
-        const std::string name = getObjectName(i);
+        const std::string name = getObjectName(0);
         const double t = pAnalysisTools->calculateTOF(*pUnit,
                                                       pIons->getIon(i),
                                                       0e0);
