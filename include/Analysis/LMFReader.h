@@ -23,9 +23,12 @@ class LMFReader {
 
  public:
   LMFReader(const CDoubleArray &array);
+  ~LMFReader();
   const CDoubleArray &getParameters() const;
   const double getAt(const int &iTDC, const int &iCH, const int &iHit) const;
-  ~LMFReader();
+  const int getNumberOfTDCUsed() const;
+  const int getNumberOfChannelsUsed() const;
+  const int getNumberOfHitsUsed() const;
 };
 }
 

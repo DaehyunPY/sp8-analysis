@@ -22,3 +22,12 @@ const CDoubleArray &Analysis::LMFReader::getParameters() const {
   return *(this->pParameters);
 }
 #endif
+const int Analysis::LMFReader::getNumberOfTDCUsed() const {
+  return this->numberOfTDCUsed;
+}
+const int Analysis::LMFReader::getNumberOfChannelsUsed() const {
+  return this->numberOfChannelsUsed;
+}
+const int Analysis::LMFReader::getNumberOfHitsUsed() const {
+  return this->numberOfHitsUsed;
+}

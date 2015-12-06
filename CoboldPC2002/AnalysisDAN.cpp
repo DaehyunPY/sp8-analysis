@@ -26,8 +26,21 @@ Analysis::LMFReader *pLMFReader;
 Analysis::AnalysisTools *pAnalysisTools;
 Analysis::Ions *pIons;
 Analysis::Electrons *pElectrons;
-
+const int numberOfHitsUsed = NUMBER_OF_HITS_USED;
 std::fstream logFile;
+
+const std::string getObjectName(const int &i) {
+  assert(i > 0);
+  const int firstDigit = i % 10;
+  const int secondDigit = (i / 10) % 10;
+  if (secondDigit == 1) { return i + "th hit"; }
+  else {
+    if (firstDigit == 1) { return i + "st hit"; }
+    else if (firstDigit == 2) { return i + "nd hit"; }
+    else if (firstDigit == 3) { return i + "rd hit"; }
+    else { return i + "th hit"; }
+  }
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Parameter description used in this insert dependent part!
@@ -59,28 +72,34 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,
 
   pUnit = new Analysis::Unit;
   pJSONReader = new Analysis::JSONReader("parameters.json");
-  pLMFReader = NULL;
   pAnalysisTools = new Analysis::AnalysisTools(*pUnit, *pJSONReader);
-  pIons = new Analysis::Ions(*pUnit, *pJSONReader);
-  pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader);
+  pIons = new Analysis::Ions(*pUnit, *pJSONReader, numberOfHitsUsed);
+  pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader, numberOfHitsUsed);
   logFile << "Initialization is successed. " << std::endl;
 
-  const double TOFOf1stHitIon =
-      pAnalysisTools->calculateTOF(*pUnit,
-                                   pIons->getIon(0),
-                                   0e0);
-  const double TOFOf1stHitElectron =
-      pAnalysisTools->calculateTOF(*pUnit,
-                                   pElectrons->getElectron(0),
-                                   0e0);
-  const double PeriodOfCycleOfElectron =
-      pAnalysisTools->calculatePeriodOfCycle(*pUnit,
-                                             pElectrons->getElectron(0));
-  logFile << "TOF of 1st Hit ion: " << TOFOf1stHitIon << std::endl;
-  logFile << "TOF of 1st Hit electron: " << TOFOf1stHitElectron << std::endl;
-  logFile << "Period of cycle of electron: "
-      << PeriodOfCycleOfElectron
-      << std::endl;
+  {
+    {
+      const int &n = pIons->getNumberOfHits();
+      for (int i = 0; i < n; i++) {
+        const std::string name = getObjectName(i);
+        const double t = pAnalysisTools->calculateTOF(*pUnit,
+                                                      pIons->getIon(i),
+                                                      0e0);
+        logFile << "TOF of " + name + "ion: " << t << std::endl;
+      }
+    }
+    {
+      const double t1
+          = pAnalysisTools->calculateTOF(*pUnit,
+                                         pElectrons->getElectron(0),
+                                         0e0);
+      const double t2
+          = pAnalysisTools->calculatePeriodOfCycle(*pUnit,
+                                                   pElectrons->getElectron(0));
+      logFile << "TOF of electron: " << t1 << std::endl;
+      logFile << "Period of cycle of electron: " << t2 << std::endl;
+    }
+  }
   return TRUE;
 }
 
@@ -94,25 +113,23 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pLMFReader = new Analysis::LMFReader(*pEventData);
   pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
   pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);
-  if (pIons->getIon(0).getObjectFlag().isValidOnFlag()
-      && pElectrons->getElectron(0).getObjectFlag().isValidOnFlag()) { }
-  else { return; }
-
   pAnalysisTools->loadMomentumCalculator(*pIons);
   pAnalysisTools->loadMomentumCalculator(*pElectrons);
-  logFile << "Calculation for one event is done. " << std::endl;
 
 // write ion data
   {
     const int &n = pIons->getNumberOfHits();
-    for (int i = 0; i < n; i++) {
+    const int &m = pIons->getNumberOfHitsUsed();
+    for (int i = 0; i < m; i++) {
       pEventData->SetAt(31 + 28 + i, pIons->getIon(i).getLocationX(*pUnit));
       pEventData->SetAt(31 + 32 + i, pIons->getIon(i).getLocationY(*pUnit));
       pEventData->SetAt(67 + i, pIons->getIon(i).getTOF(*pUnit));
-      pEventData->SetAt(76 + i, pIons->getIon(i).getMomentumX(*pUnit));
-      pEventData->SetAt(80 + i, pIons->getIon(i).getMomentumY(*pUnit));
-      pEventData->SetAt(84 + i, pIons->getIon(i).getMomentumZ(*pUnit));
-      pEventData->SetAt(67 + 4 + i, pIons->getIon(i).getEnergy(*pUnit));
+      if (i < n) {
+        pEventData->SetAt(76 + i, pIons->getIon(i).getMomentumX(*pUnit));
+        pEventData->SetAt(80 + i, pIons->getIon(i).getMomentumY(*pUnit));
+        pEventData->SetAt(84 + i, pIons->getIon(i).getMomentumZ(*pUnit));
+        pEventData->SetAt(67 + 4 + i, pIons->getIon(i).getEnergy(*pUnit));
+      }
     }
   }
   pEventData->SetAt(128, pIons->getLocationXOfCOM(*pUnit));
@@ -139,21 +156,24 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 // write electron data
   {
     const int &n = pElectrons->getNumberOfHits();
-    for (int i = 0; i < n; i++) {
+    const int &m = pElectrons->getNumberOfHitsUsed();
+    for (int i = 0; i < m; i++) {
       pEventData->SetAt(31 + i,
                         pElectrons->getElectron(i).getLocationX(*pUnit));
       pEventData->SetAt(31 + 4 + i,
                         pElectrons->getElectron(i).getLocationY(*pUnit));
       pEventData->SetAt(98 + i,
                         pElectrons->getElectron(i).getTOF(*pUnit));
-      pEventData->SetAt(107 + i,
-                        pElectrons->getElectron(i).getMomentumX(*pUnit));
-      pEventData->SetAt(111 + i,
-                        pElectrons->getElectron(i).getMomentumY(*pUnit));
-      pEventData->SetAt(115 + i,
-                        pElectrons->getElectron(i).getMomentumZ(*pUnit));
-      pEventData->SetAt(103 + i,
-                        pElectrons->getElectron(i).getEnergy(*pUnit));
+      if (i < n) {
+        pEventData->SetAt(107 + i,
+                          pElectrons->getElectron(i).getMomentumX(*pUnit));
+        pEventData->SetAt(111 + i,
+                          pElectrons->getElectron(i).getMomentumY(*pUnit));
+        pEventData->SetAt(115 + i,
+                          pElectrons->getElectron(i).getMomentumZ(*pUnit));
+        pEventData->SetAt(103 + i,
+                          pElectrons->getElectron(i).getEnergy(*pUnit));
+      }
     }
   }
   pEventData->SetAt(131, pElectrons->getLocationXOfCOM(*pUnit));
@@ -181,13 +201,11 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 
 //  write ion & electron data
   {
-    const int &n1 = pIons->getNumberOfHits();
-    const int &n2 = pElectrons->getNumberOfHits();
-    const int &n = n1 <= n2 ? n1 : n2;
+    const int &n = pElectrons->getNumberOfHits();
     for (int i = 0; i < n; i++) {
       pEventData->SetAt(199 + i,
-                        pElectrons->getTotalEnergy(*pUnit)
-                            + pIons->getTotalEnergy(*pUnit));
+                        pIons->getTotalEnergy(*pUnit)
+                            + pElectrons->getElectron(i).getEnergy(*pUnit));
     }
   }
 
@@ -253,3 +271,5 @@ CDAN_API void AnalysisFinalize(CDoubleArray *pEventData,
   logFile.close();
   return;
 }
+
+#pragma clang diagnostic pop

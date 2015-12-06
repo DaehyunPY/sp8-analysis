@@ -24,3 +24,4 @@ Analysis::Ion::Ion(const Analysis::Unit &unit,
   return;
 }
 Analysis::Ion::~Ion() { return; }
+Analysis::Ion::Ion() : Object() { return; }

@@ -5,8 +5,8 @@ Analysis::Object::Object(const double &m,
                          const double &t0,
                          const double &t1)
     : mass(m), charge(q), minOfTOF(t0), maxOfTOF(t1) {
-  assert(this->getMass() > 0e0);
-  assert(this->getMinOfTOF() < this->getMaxOfTOF());
+  assert(this->getMass() >= 0e0);
+  assert(this->getMinOfTOF() <= this->getMaxOfTOF());
   this->resetEventData();
   return;
 };
@@ -103,3 +103,4 @@ const double Analysis::Object::getMomentum(const Analysis::Unit &unit) const {
 const double Analysis::Object::getEnergy(const Analysis::Unit &unit) const {
   return unit.writeEnergy(this->getEnergy());
 }
+Analysis::Object::Object() : Object(0e0, 0e0, 0e0, 0e0) { return; }

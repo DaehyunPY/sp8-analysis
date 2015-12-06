@@ -195,7 +195,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
     ion.setObjectFlagMembers().loadValidOnFlager();
   } else {
     ion.setObjectFlagMembers().loadValidOffFlager();
-    ion.setTOF(deadTime); 
+    ion.setTOF(deadTime);
   }
   return;
 }
@@ -329,8 +329,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
                                                    Analysis::Unit &unit,
                                                    Analysis::LMFReader &reader) const {
   const int &n = ions.getNumberOfHits();
+  const int &m = ions.getNumberOfHits();
   for(int i = 0; i < n; i++) {
     loadEventDataInputer(ions.setIonMembers(i), unit, reader, i);
+  }
+  for(int i = n; i < m; i++) {
+    loadEventDataInputer(ions.setDummyIonMembers(i), unit, reader, i);
   }
   return;
 }
@@ -338,8 +342,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electron
                                                    Analysis::Unit &unit,
                                                    Analysis::LMFReader &reader) const {
   const int &n = electrons.getNumberOfHits();
+  const int &m = electrons.getNumberOfHitsUsed();
   for(int i = 0; i < n; i++) {
     loadEventDataInputer(electrons.setElectronMembers(i), unit, reader, i);
+  }
+  for(int i = n; i < m; i++) {
+    loadEventDataInputer(electrons.setDummyElectronMembers(i), unit, reader, i);
   }
   return;
 }

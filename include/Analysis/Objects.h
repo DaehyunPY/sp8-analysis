@@ -14,16 +14,19 @@ class Objects {
  protected:
   const int maximumOfHits = MAXIMUM_OF_HITS;
   const int numberOfHits;
+  const int numberOfHitsUsed;
   Object *pObject[MAXIMUM_OF_HITS];
 
  public:
-  Objects(const int &n);
+  Objects(const int &);
+  Objects(const int &, const int &);
   virtual ~Objects();
-  void setObject(const int &i, Object &object);
+  void setObject(const int &, Object &);
   void resetEventData();
   const int &getNumberOfHits() const;
-  const Object &getObject(const int &i) const;
-  Analysis::Object &setObjectMembers(const int &i);
+  const int &getNumberOfHitsUsed() const;
+  const Object &getObject(const int &) const;
+  Analysis::Object &setObjectMembers(const int &);
   const double getLocationXOfCOM() const;
   const double getLocationYOfCOM() const;
   const double getTotalMomentumX() const;

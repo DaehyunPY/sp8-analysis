@@ -6,10 +6,10 @@
 namespace Analysis {
 class Ion: public Object {
  private:
-  Ion(const Unit &unit, const double &m, const double &q, const double &t0,
-      const double &t1);
+  Ion(const Unit &, const double &, const double &, const double &, const double &);
  public:
-  Ion(const Unit &unit, const JSONReader &reader, const std::string &prefix);
+  Ion(); // for dummy ion
+  Ion(const Unit &, const JSONReader &, const std::string &);
   ~Ion();
 };
 }

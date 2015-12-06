@@ -4,8 +4,15 @@
 
 #include "Objects.h"
 
-Analysis::Objects::Objects(const int &n) : numberOfHits(n) {
+Analysis::Objects::Objects(const int &n)
+    : numberOfHits(n), numberOfHitsUsed(n) {
   assert(n > 0 && n <= this->maximumOfHits);
+  return;
+}
+Analysis::Objects::Objects(const int &n, const int &m)
+    : numberOfHits(n), numberOfHitsUsed(m) {
+  assert(n <= m);
+  assert(n > 0 && m <= this->maximumOfHits);
   return;
 }
 Analysis::Objects::~Objects() {
@@ -90,8 +97,8 @@ const double Analysis::Objects::getDirectionZOfCOM() const {
   return this->getTotalMomentumZ() / this->getTotalAbsoluteMomentum();
 }
 void Analysis::Objects::resetEventData() {
-  const int &n = this->getNumberOfHits();
-  for (int i = 0; i < n; i++) {
+  const int &m = this->getNumberOfHitsUsed();
+  for (int i = 0; i < m; i++) {
     this->setObjectMembers(i).resetEventData();
   }
   return;
@@ -119,4 +126,7 @@ const double Analysis::Objects::getTotalAbsoluteMomentum(Analysis::Unit &unit) c
 }
 const double Analysis::Objects::getTotalEnergy(Analysis::Unit &unit) const {
   return unit.writeEnergy(this->getTotalEnergy());
+}
+const int &Analysis::Objects::getNumberOfHitsUsed() const {
+  return this->numberOfHitsUsed;
 }

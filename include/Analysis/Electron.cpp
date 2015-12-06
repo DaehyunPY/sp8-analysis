@@ -18,3 +18,4 @@ Analysis::Electron::Electron(const Analysis::Unit &unit,
   return;
 }
 Analysis::Electron::~Electron() { return; }
+Analysis::Electron::Electron() : Object() { return; }

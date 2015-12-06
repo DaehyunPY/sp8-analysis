@@ -24,6 +24,7 @@ class Object {
   const double &getMaxOfTOF() const;
 
  public:
+  Object(); // for dummy object
   Object(const double &m, const double &q, const double &t0, const double &t1);
   virtual ~Object();
   void resetEventData();
