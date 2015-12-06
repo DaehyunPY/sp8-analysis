@@ -329,7 +329,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
                                                    Analysis::Unit &unit,
                                                    Analysis::LMFReader &reader) const {
   const int &n = ions.getNumberOfHits();
-  const int &m = ions.getNumberOfHits();
+  const int &m = ions.getNumberOfHitsUsed();
   for(int i = 0; i < n; i++) {
     loadEventDataInputer(ions.setIonMembers(i), unit, reader, i);
   }
