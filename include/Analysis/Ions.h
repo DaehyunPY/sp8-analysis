@@ -14,7 +14,7 @@ class Ions : public Objects {
  private:
   Ion *pIon[MAXIMUM_OF_HITS];
   Ions(const Unit &unit, const JSONReader &reader, const int &n, const int &m);
-  const std::string getIonName(const int &) const;
+  const std::string getIonName(int i) const;
 
  public:
   Ions(const Unit &, const JSONReader &);

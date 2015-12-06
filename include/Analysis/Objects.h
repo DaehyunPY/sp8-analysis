@@ -11,22 +11,27 @@
 
 namespace Analysis {
 class Objects {
- protected:
+ private:
   const int maximumOfHits = MAXIMUM_OF_HITS;
   const int numberOfHits;
   const int numberOfHitsUsed;
   Object *pObject[MAXIMUM_OF_HITS];
 
- public:
+ protected:
   Objects(const int &);
   Objects(const int &, const int &);
   virtual ~Objects();
   void setObject(const int &, Object &);
+  void setDummyObject(const int &, Object &);
+
+ public:
+  Analysis::Object &setObjectMembers(const int &);
+  Analysis::Object &setDummyObjectMembers(const int &);
   void resetEventData();
   const int &getNumberOfHits() const;
   const int &getNumberOfHitsUsed() const;
   const Object &getObject(const int &) const;
-  Analysis::Object &setObjectMembers(const int &);
+  const Object &getDummyObject(const int &) const;
   const double getLocationXOfCOM() const;
   const double getLocationYOfCOM() const;
   const double getTotalMomentumX() const;
@@ -44,6 +49,8 @@ class Objects {
   const double getTotalMomentumZ(Unit &) const;
   const double getTotalAbsoluteMomentum(Unit &) const;
   const double getTotalEnergy(Unit &) const;
+  const bool isDummyObject(const int &) const;
+  const bool isRealObject(const int &) const;
 };
 }
 

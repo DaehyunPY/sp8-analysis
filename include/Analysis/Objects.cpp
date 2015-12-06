@@ -19,9 +19,13 @@ Analysis::Objects::~Objects() {
   return;
 }
 void Analysis::Objects::setObject(const int &i, Object &object) {
-  assert(i < this->getNumberOfHits());
+  assert(this->isRealObject(i));
   this->pObject[i] = &object;
   return;
+}
+void Analysis::Objects::setDummyObject(const int &i, Analysis::Object &object) {
+  assert(this->isDummyObject(i));
+  this->pObject[i] = &object;
 }
 const int &Analysis::Objects::getNumberOfHits() const {
   return this->numberOfHits;
@@ -79,7 +83,11 @@ const double Analysis::Objects::getTotalEnergy() const {
   return double(sumOfEnergy);
 }
 const Analysis::Object &Analysis::Objects::getObject(const int &i) const {
-  assert(i < this->getNumberOfHits());
+  assert(this->isRealObject(i));
+  return *(this->pObject[i]);
+}
+const Analysis::Object &Analysis::Objects::getDummyObject(const int &i) const {
+  assert(this->isDummyObject(i));
   return *(this->pObject[i]);
 }
 const double Analysis::Objects::getTotalAbsoluteMomentum() const {
@@ -97,13 +105,22 @@ const double Analysis::Objects::getDirectionZOfCOM() const {
   return this->getTotalMomentumZ() / this->getTotalAbsoluteMomentum();
 }
 void Analysis::Objects::resetEventData() {
+  const int &n = this->getNumberOfHits();
   const int &m = this->getNumberOfHitsUsed();
-  for (int i = 0; i < m; i++) {
+  for (int i = 0; i < n; i++) {
     this->setObjectMembers(i).resetEventData();
+  }
+  for (int i = n; i < m; i++) {
+    this->setDummyObjectMembers(i).resetEventData();
   }
   return;
 }
 Analysis::Object &Analysis::Objects::setObjectMembers(const int &i) {
+  assert(this->isRealObject(i));
+  return *(this->pObject[i]);
+}
+Analysis::Object &Analysis::Objects::setDummyObjectMembers(const int &i) {
+  assert(this->isDummyObject(i));
   return *(this->pObject[i]);
 }
 const double Analysis::Objects::getLocationXOfCOM(Analysis::Unit &unit) const {
@@ -129,4 +146,14 @@ const double Analysis::Objects::getTotalEnergy(Analysis::Unit &unit) const {
 }
 const int &Analysis::Objects::getNumberOfHitsUsed() const {
   return this->numberOfHitsUsed;
+}
+const bool Analysis::Objects::isDummyObject(const int &i) const {
+  const int &n = this->getNumberOfHits();
+  const int &m = this->getNumberOfHitsUsed();
+  return (i >= n) && (i < m);
+}
+const bool Analysis::Objects::isRealObject(const int &i) const {
+  const int &n = this->getNumberOfHits();
+  const int &m = this->getNumberOfHitsUsed();
+  return (i >= 0) && (i < n);
 }

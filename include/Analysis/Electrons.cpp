@@ -11,9 +11,9 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
     this->pElectron[i] = new Electron(unit, reader);
     this->setObject(i, *(this->pElectron[i]));
   }
-  for (int i = n; i > m; i++) { // for dummy electrons
+  for (int i = n; i < m; i++) { // for dummy electrons
     this->pElectron[i] = new Electron();
-    this->setObject(i, *(this->pElectron[i]));
+    this->setDummyObject(i, *(this->pElectron[i]));
   }
   return;
 }

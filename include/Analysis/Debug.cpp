@@ -20,7 +20,8 @@ int main() {
 //      ion, unit, 97689 / 1000, 102501 / 1000, 4.98977e+006 / 1000, 0);
 //  analysisTools.loadMomentumCalculator(ion);
 
-  Analysis::Ions ions(unit,reader);
+  Analysis::Ions ions(unit, reader, 4);
+  ions.resetEventData();
   analysisTools.loadEventDataInputer(
       ions.setIonMembers(0),
       unit, 97689 / 1000, 102501 / 1000, 4.98977e+006 / 1000, 0);
@@ -32,7 +33,8 @@ int main() {
 //      electron, unit, 130503 / 1000, 129140 / 1000, 1.8279e+006 / 1000, 0);
 //  analysisTools.loadMomentumCalculator(electron);
 
-  Analysis::Electrons electrons(unit, reader);
+  Analysis::Electrons electrons(unit, reader, 4);
+  electrons.resetEventData();
   analysisTools.loadEventDataInputer(
       electrons.setElectronMembers(0),
       unit, 130503 / 1000, 129140 / 1000, 1.8279e+006 / 1000, 0);

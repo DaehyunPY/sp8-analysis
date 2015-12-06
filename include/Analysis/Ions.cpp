@@ -8,12 +8,12 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
                      const int &n,
                      const int &m) : Objects(n, m) {
   for (int i = 0; i < n; i++) { // for real ions
-    this->pIon[i] = new Ion(unit, reader, this->getIonName(i));
+    this->pIon[i] = new Ion(unit, reader, this->getIonName(0));
     this->setObject(i, *(this->pIon[i]));
   }
   for (int i = n; i < m; i++) { // for dummy ions
     this->pIon[i] = new Ion();
-    this->setObject(i, *(this->pIon[i]));
+    this->setDummyObject(i, *(this->pIon[i]));
   }
   return;
 }
@@ -51,15 +51,17 @@ const Analysis::Ion &Analysis::Ions::getDummyIon(const int &i) const {
   assert(i >= this->getNumberOfHits());
   return *(this->pIon[i]);
 }
-const std::string Analysis::Ions::getIonName(const int &i) const {
+const std::string Analysis::Ions::getIonName(int i) const {
+  i += 1;
   assert(i > 0);
   const int firstDigit = i % 10;
   const int secondDigit = (i / 10) % 10;
-  if (secondDigit == 1) { return i + "th_hit"; }
+  const std::string str = std::to_string(i);
+  if (secondDigit == 1) { return str + "th_hit"; }
   else {
-    if (firstDigit == 1) { return i + "st_hit"; }
-    else if (firstDigit == 2) { return i + "nd_hit"; }
-    else if (firstDigit == 3) { return i + "rd_hit"; }
-    else { return i + "th_hit"; }
+    if (firstDigit == 1) { return str + "st_hit"; }
+    else if (firstDigit == 2) { return str + "nd_hit"; }
+    else if (firstDigit == 3) { return str + "rd_hit"; }
+    else { return str + "th_hit"; }
   }
 }
