@@ -3,6 +3,8 @@
 //
 
 #ifdef FOR_COBOLDPC2002
+#include "LMFReader.h"
+
 Analysis::LMFReader::LMFReader(const CDoubleArray &array) :pParameters(&array) {
   return;
 }
