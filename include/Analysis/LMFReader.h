@@ -10,7 +10,7 @@
 #define NUMBER_OF_TDC_USED 3
 #define NUMBER_OF_CHANNELS_USED 2
 #define NUMBER_OF_HITS_USED 4
-#include "../../CoboldPC2002/CDan.h"
+#include "../../CoboldPC2002/SoftwareDependent.h"
 #include <assert.h>
 
 namespace Analysis {

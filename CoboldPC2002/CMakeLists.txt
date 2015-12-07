@@ -60,6 +60,6 @@ set(SOURCE_FILES_FOR_COBOLD2002
     SoftwareDependent.cpp
     StdAfx.cpp
     StdAfx.h
-    )
+    SoftwareDependent.h)
 
 add_library(CDan SHARED ${SOURCE_FILES_FOR_COBOLD2002} ${SOURCE_FILES_FOR_ANALYSIS_CORE})

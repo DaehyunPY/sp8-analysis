@@ -2,23 +2,8 @@
 //  User defined analysis part called from cobold main program
 ///////////////////////////////////////////////////////////////////////////
 
-#include "../include/Analysis/JSONReader.cpp"
-#include "../include/Analysis/LMFReader.cpp"
-#include "../include/Analysis/Unit.cpp"
-#include "../include/Analysis/Flag.cpp"
-#include "../include/Analysis/ObjectFlag.cpp"
-#include "../include/Analysis/EventDataFlag.cpp"
-#include "../include/Analysis/Object.cpp"
-#include "../include/Analysis/Objects.cpp"
-#include "../include/Analysis/Ion.cpp"
-#include "../include/Analysis/Ions.cpp"
-#include "../include/Analysis/Electron.cpp"
-#include "../include/Analysis/Electrons.cpp"
-#include "../include/Analysis/EquipmentParameters.cpp"
-#include "../include/Analysis/ObjectParameters.cpp"
-#include "../include/Analysis/IonParameters.cpp"
-#include "../include/Analysis/ElectronParameters.cpp"
-#include "../include/Analysis/AnalysisTools.cpp"
+#define FOR_COBOLDPC2002
+#include "../include/Analysis/AnalysisTools.h"
 
 Analysis::Unit *pUnit;
 Analysis::JSONReader *pJSONReader;
@@ -115,6 +100,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pLMFReader = new Analysis::LMFReader(*pEventData);
   pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
   pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);
+  if(pIons->existDeadRealOrDummyObject()) { return; }
+  if(pElectrons->existDeadRealOrDummyObject()) { return; }
+
   pAnalysisTools->loadMomentumCalculator(*pIons);
   pAnalysisTools->loadMomentumCalculator(*pElectrons);
 
@@ -214,13 +202,12 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 // write flag data
   {
     int IonMasterFlag, ElectronMasterFlag;
-    if (pIons->getIon(0).getObjectFlag().isMasterOnFlag()
-        && pIons->getIon(0).getObjectFlag().isValidOnFlag()) {
+    if (pIons->getIon(0).getObjectFlag().isWithinMasterRegion()) {
       IonMasterFlag = 1;
     } else {
       IonMasterFlag = -1;
     }
-    if (pElectrons->getElectron(0).getObjectFlag().isMasterOnFlag()) {
+    if (pElectrons->getElectron(0).getObjectFlag().isWithinMasterRegion()) {
       ElectronMasterFlag = 1;
     } else {
       ElectronMasterFlag = -1;

@@ -157,3 +157,25 @@ const bool Analysis::Objects::isRealObject(const int &i) const {
   const int &m = this->getNumberOfHitsUsed();
   return (i >= 0) && (i < n);
 }
+const bool Analysis::Objects::existDeadRealOrDummyObject() const {
+  bool b = false;
+  b = b || existDeadObject();
+  for(int i = numberOfHits; i < numberOfHitsUsed; i++) {
+    b = b || getDummyObject(i).getObjectFlag().isDead();
+  }
+  return b;
+}
+const bool Analysis::Objects::existDeadObject() const {
+  bool b = false;
+  for(int i = 0; i < numberOfHits; i++) {
+    b = b || getObject(i).getObjectFlag().isDead();
+  }
+  return b;
+}
+const bool Analysis::Objects::isAllWithinMasterRegion() const {
+  bool b = true;
+  for(int i = 0; i < numberOfHits; i++) {
+    b = b && getObject(i).getObjectFlag().isWithinMasterRegion();
+  }
+  return 0;
+}

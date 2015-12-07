@@ -51,6 +51,9 @@ class Objects {
   const double getTotalEnergy(Unit &) const;
   const bool isDummyObject(const int &) const;
   const bool isRealObject(const int &) const;
+  const bool existDeadRealOrDummyObject() const;
+  const bool existDeadObject() const;
+  const bool isAllWithinMasterRegion() const;
 };
 }
 
