@@ -186,16 +186,14 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setLocationX(x);
   ion.setLocationY(y);
   ion.setTOF(t);
-  if (ion.isWithinMasterRegion()) {
-    ion.setObjectFlagMembers().loadMasterOnFlager();
+  if (ion.getTOF() > deadTime) {
+    ion.setObjectFlagMembers().loadDeadFlager();
   } else {
-    ion.setObjectFlagMembers().loadMasterOffFlager();
-  }
-  if (ion.getTOF() < deadTime) {
-    ion.setObjectFlagMembers().loadValidOnFlager();
-  } else {
-    ion.setObjectFlagMembers().loadValidOffFlager();
-    ion.setTOF(deadTime);
+    if (ion.isWithinMasterRegion()) {
+      ion.setObjectFlagMembers().loadWithinMasterRegionFlager();
+    } else {
+      ion.setObjectFlagMembers().loadNotWithinMasterRegionFlager();
+    }
   }
   return;
 }
@@ -218,16 +216,14 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   electron.setLocationX(x);
   electron.setLocationY(y);
   electron.setTOF(t);
-  if (electron.isWithinMasterRegion()) {
-    electron.setObjectFlagMembers().loadMasterOnFlager();
+  if (electron.getTOF() > deadTime) {
+    electron.setObjectFlagMembers().loadDeadFlager();
   } else {
-    electron.setObjectFlagMembers().loadMasterOffFlager();
-  }
-  if (electron.getTOF() < deadTime) {
-    electron.setObjectFlagMembers().loadValidOnFlager();
-  } else {
-    electron.setObjectFlagMembers().loadValidOffFlager();
-    electron.setTOF(deadTime);
+    if (electron.isWithinMasterRegion()) {
+      electron.setObjectFlagMembers().loadWithinMasterRegionFlager();
+    } else {
+      electron.setObjectFlagMembers().loadNotWithinMasterRegionFlager();
+    }
   }
   return;
 }
