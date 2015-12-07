@@ -199,11 +199,11 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   }
   return;
 }
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &elec,
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const double &x1,
                                                    const double &y1,
                                                    const double &t1,
-                                                   const int &f1) const {
+                                                   const int &flag1) const {
   const double &theta = this->getElectronParameters().getAngleOfDetector();
   const double &dx = this->getElectronParameters().getPixelSizeOfX();
   const double &dy = this->getElectronParameters().getPixelSizeOfY();
@@ -215,19 +215,19 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &elec,
   const double x = xy.x - x0;
   const double y = xy.y - y0;
   const double t = t1 - t0;
-  elec.setLocationX(x);
-  elec.setLocationY(y);
-  elec.setTOF(t);
-  if (elec.isWithinMasterRegion()) {
-    elec.setObjectFlagMembers().loadMasterOnFlager();
+  electron.setLocationX(x);
+  electron.setLocationY(y);
+  electron.setTOF(t);
+  if (electron.isWithinMasterRegion()) {
+    electron.setObjectFlagMembers().loadMasterOnFlager();
   } else {
-    elec.setObjectFlagMembers().loadMasterOffFlager();
+    electron.setObjectFlagMembers().loadMasterOffFlager();
   }
-  if (elec.getTOF() < deadTime) {
-    elec.setObjectFlagMembers().loadValidOnFlager();
+  if (electron.getTOF() < deadTime) {
+    electron.setObjectFlagMembers().loadValidOnFlager();
   } else {
-    elec.setObjectFlagMembers().loadValidOffFlager();
-    elec.setTOF(deadTime);
+    electron.setObjectFlagMembers().loadValidOffFlager();
+    electron.setTOF(deadTime);
   }
   return;
 }
