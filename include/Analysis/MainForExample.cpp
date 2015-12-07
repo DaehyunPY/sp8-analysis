@@ -27,6 +27,8 @@ int main() {
   analysisTools.loadMomentumCalculator(ions.setIonMembers(0));
   std::cout << ions.getIon(0).getLocationX(unit) << std::endl;
   std::cout << ions.getIon(0).getLocationY(unit) << std::endl;
+  std::cout << ions.getLocationXOfCOM(unit) << std::endl;
+  std::cout << ions.getLocationYOfCOM(unit) << std::endl;
   std::cout << ions.getIon(0).getEnergy(unit) << std::endl;
 
 //  Analysis::Electron electron(unit, reader);
