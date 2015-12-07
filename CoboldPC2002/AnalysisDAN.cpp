@@ -135,7 +135,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
     }
   }
   pEventData->SetAt(128, pIons->getLocationXOfCOM(*pUnit));
-  pEventData->SetAt(129, pIons->getLocationXOfCOM(*pUnit));
+  pEventData->SetAt(129, pIons->getLocationYOfCOM(*pUnit));
 //  pEventData->SetAt(130, 0e0); //dCOM_z/unit_milli);
   pEventData->SetAt(88, pIons->getTotalMomentumX(*pUnit));
   pEventData->SetAt(89, pIons->getTotalMomentumY(*pUnit));

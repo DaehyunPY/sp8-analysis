@@ -26,8 +26,8 @@
     "pixel_size_of_x": 0.925,
     "pixel_size_of_y": 0.925,
     "dead_time": 100000,
-    "x_zero_of_COM": 160.0,
-    "y_zero_of_COM": 50.0,
+    "x_zero_of_COM": 126.3783,
+    "y_zero_of_COM": 30.0849,
     "time_zero_of_TOF": 1805.39
   },
   "electrons": {
