@@ -145,7 +145,7 @@ Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
     Analysis::ElectronParameters(unit, reader)) {
   return;
 }
-const Analysis::XY Analysis::AnalysisTools::calculateMomentumXY(
+const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateMomentumXY(
     const Object &obj) const {
   const double pi = atan2(0e0, -1e0);
   const double &m = obj.getMass();
@@ -164,8 +164,7 @@ const Analysis::XY Analysis::AnalysisTools::calculateMomentumXY(
     theta = 2e0 * pi * theta;
     theta = 0.5e0 * theta;
     const double p0 = fabs(q * B / sin(theta) / 2e0);
-    return {p0 * (cos(theta) * x - sin(theta) * y),
-            p0 * (sin(theta) * x + cos(theta) * y)};
+    return this->calculateRotation({p0 * x, p0 * y}, theta);
   }
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
@@ -180,8 +179,9 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   const double &x0 = this->getIonParameters().getXZeroOfCOM();
   const double &y0 = this->getIonParameters().getYZeroOfCOM();
   const double &t0 = this->getIonParameters().getTimeZeroOfTOF();
-  const double x = (cos(theta) * x1 - sin(theta) * y1) * dx - x0;
-  const double y = (sin(theta) * y1 + cos(theta) * x1) * dy - y0;
+  const XY xy = this->calculateRotation({x1 * dx, y1 * dy}, theta);
+  const double x = xy.x - x0;
+  const double y = xy.y - y0;
   const double t = t1 - t0;
   ion.setLocationX(x);
   ion.setLocationY(y);
@@ -211,8 +211,9 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &elec,
   const double &x0 = this->getElectronParameters().getXZeroOfCOM();
   const double &y0 = this->getElectronParameters().getYZeroOfCOM();
   const double &t0 = this->getElectronParameters().getTimeZeroOfTOF();
-  const double x = (cos(theta) * x1 - sin(theta) * y1) * dx - x0;
-  const double y = (sin(theta) * y1 - cos(theta) * x1) * dy - y0;
+  const XY xy = this->calculateRotation({x1 * dx, y1 * dy}, theta);
+  const double x = xy.x - x0;
+  const double y = xy.y - y0;
   const double t = t1 - t0;
   elec.setLocationX(x);
   elec.setLocationY(y);
@@ -259,7 +260,7 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(
   return 2e0 * pi * m / B / q;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
-                                                   Analysis::Unit &unit,
+                                                   const Unit &unit,
                                                    const double &x,
                                                    const double &y,
                                                    const double &t,
@@ -272,7 +273,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
-                                                   Analysis::Unit &unit,
+                                                   const Unit &unit,
                                                    const double &x,
                                                    const double &y,
                                                    const double &t,
@@ -300,10 +301,10 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   return;
 }
 
-#ifndef NOTFOR_COBOLDPC2002
+#ifdef FOR_COBOLDPC2002
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
-                                                   Analysis::Unit &unit,
-                                                   Analysis::LMFReader &reader,
+                                                   const Unit &unit,
+                                                   const LMFReader &reader,
                                                    const int &iHit) const {
   this->loadEventDataInputer(ion,
                              unit,
@@ -314,8 +315,8 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
-                                                   Analysis::Unit &unit,
-                                                   Analysis::LMFReader &reader,
+                                                   const Unit &unit,
+                                                   const LMFReader &reader,
                                                    const int &iHit) const {
   this->loadEventDataInputer(electron,
                              unit,
@@ -326,8 +327,8 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
-                                                   Analysis::Unit &unit,
-                                                   Analysis::LMFReader &reader) const {
+                                                   const Unit &unit,
+                                                   const LMFReader &reader) const {
   const int &n = ions.getNumberOfHits();
   const int &m = ions.getNumberOfHitsUsed();
   for(int i = 0; i < n; i++) {
@@ -339,8 +340,8 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electrons,
-                                                   Analysis::Unit &unit,
-                                                   Analysis::LMFReader &reader) const {
+                                                   const Unit &unit,
+                                                   const LMFReader &reader) const {
   const int &n = electrons.getNumberOfHits();
   const int &m = electrons.getNumberOfHitsUsed();
   for(int i = 0; i < n; i++) {
@@ -352,6 +353,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electron
   return;
 }
 #endif
+
 const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
                                                    const Analysis::Ion &ion,
                                                    const double &d) const {
@@ -366,4 +368,10 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(
     const Analysis::Unit &unit,
     const Analysis::Object &object) const {
   return unit.writeTime(this->calculatePeriodOfCycle(object));
+}
+const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateRotation(
+    const XY &xy,
+    const double &theta) const {
+  return {xy.x * cos(theta) - xy.y * sin(theta),
+          xy.x * sin(theta) + xy.y * cos(theta)};
 }

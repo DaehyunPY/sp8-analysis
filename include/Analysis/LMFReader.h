@@ -5,12 +5,12 @@
 #ifndef ANALYSIS_LMFREADER_H
 #define ANALYSIS_LMFREADER_H
 
-#ifndef NOTFOR_COBOLDPC2002
+#ifdef FOR_COBOLDPC2002
 
 #define NUMBER_OF_TDC_USED 3
 #define NUMBER_OF_CHANNELS_USED 2
 #define NUMBER_OF_HITS_USED 4
-#include "CDan.h"
+#include "../../CoboldPC2002/CDan.h"
 #include <assert.h>
 
 namespace Analysis {

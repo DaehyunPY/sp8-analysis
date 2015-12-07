@@ -2,34 +2,56 @@ cmake_minimum_required(VERSION 3.3)
 project(Analysis)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-include_directories("${PROJECT_SOURCE_DIR}/../include")
+#add_definitions(-DFOR_COBOLDPC2002)
 
-set(SOURCE_FILES
+set(SOURCE_FILES_FOR_ANALYSIS_CORE
     # source for reader
-    JSONReader.cpp JSONReader.h
-    LMFReader.cpp LMFReader.h
+    JSONReader.h
+    JSONReader.cpp
+    LMFReader.h
+    LMFReader.cpp
     # source for unit
-    Unit.cpp Unit.h
+    Unit.h
+    Unit.cpp
     # source for flag
-    Flag.cpp Flag.h
-    ObjectFlag.cpp ObjectFlag.h
-    EventDataFlag.cpp EventDataFlag.h
+    Flag.h
+    Flag.cpp
+    ObjectFlag.h
+    ObjectFlag.cpp
+    EventDataFlag.h
+    EventDataFlag.cpp
     # source for object: ion and electron
-    Object.cpp Object.h
-    Objects.cpp Objects.h
-    Ion.cpp Ion.h
-    Ions.cpp Ions.h
-    Electron.cpp Electron.h
-    Electrons.cpp Electrons.h
+    Object.h
+    Object.cpp
+    Objects.h
+    Objects.cpp
+    Ion.h
+    Ion.cpp
+    Ions.h
+    Ions.cpp
+    Electron.h
+    Electron.cpp
+    Electrons.h
+    Electrons.cpp
     # source for analysis
-    EquipmentParameters.cpp EquipmentParameters.h
-    ObjectParameters.cpp ObjectParameters.h
-    IonParameters.cpp IonParameters.h
-    ElectronParameters.cpp ElectronParameters.h
-    AnalysisTools.cpp AnalysisTools.h
+    EquipmentParameters.h
+    EquipmentParameters.cpp
+    ObjectParameters.h
+    ObjectParameters.cpp
+    IonParameters.h
+    IonParameters.cpp
+    ElectronParameters.h
+    ElectronParameters.cpp
+    AnalysisTools.h
+    AnalysisTools.cpp
     # new sources
     )
 
-set(DEBUG_FILES Debug.cpp)
+set(SOURCE_FILES_FOR_ANALYSIS_EXAMPLE
+    MainForExample.cpp
+    )
 
-add_executable(Debug ${SOURCE_FILES} ${DEBUG_FILES})
+add_executable(EXAMPLE
+    ${SOURCE_FILES_FOR_ANALYSIS_EXAMPLE}
+    ${SOURCE_FILES_FOR_ANALYSIS_CORE}
+    )

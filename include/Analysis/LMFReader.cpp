@@ -2,9 +2,7 @@
 // Created by Daehyun You on 12/1/15.
 //
 
-#include "LMFReader.h"
-
-#ifndef NOTFOR_COBOLDPC2002
+#ifdef FOR_COBOLDPC2002
 Analysis::LMFReader::LMFReader(const CDoubleArray &array) :pParameters(&array) {
   return;
 }
@@ -21,7 +19,6 @@ const double Analysis::LMFReader::getAt(const int &iTDC,
 const CDoubleArray &Analysis::LMFReader::getParameters() const {
   return *(this->pParameters);
 }
-#endif
 const int &Analysis::LMFReader::getNumberOfTDCUsed() const {
   return this->numberOfTDCUsed;
 }
@@ -31,3 +28,4 @@ const int &Analysis::LMFReader::getNumberOfChannelsUsed() const {
 const int &Analysis::LMFReader::getNumberOfHitsUsed() const {
   return this->numberOfHitsUsed;
 }
+#endif

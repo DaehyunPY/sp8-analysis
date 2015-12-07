@@ -10,40 +10,40 @@ Analysis::Flag::Flag() {
 Analysis::Flag::~Flag() {
   return;
 }
-const int Analysis::Flag::getSign(const int &_flag) const {
-  if (_flag == 0) { return 0; }
-  else if (_flag > 0) { return 1; }
+const int Analysis::Flag::getSign(const int &flag) const {
+  if (flag == 0) { return 0; }
+  else if (flag > 0) { return 1; }
   else { return -1; }
 }
-const int Analysis::Flag::get1stDigit(const int &_flag) const {
-  const int _abs = abs(_flag);
-  return _abs % 10;
+const int Analysis::Flag::get1stDigit(const int &flag) const {
+  const int unsignedFlag = abs(flag);
+  return unsignedFlag % 10;
 }
-const int Analysis::Flag::get2ndDigit(const int &_flag) const {
-  const int _abs = abs(_flag);
-  return (_abs / 10) % 10;
+const int Analysis::Flag::get2ndDigit(const int &flag) const {
+  const int unsignedFlag = abs(flag);
+  return (unsignedFlag / 10) % 10;
 }
-const int Analysis::Flag::get3rdDigit(const int &_flag) const {
-  const int _abs = abs(_flag);
-  return (_abs / 100) % 10;
+const int Analysis::Flag::get3rdDigit(const int &flag) const {
+  const int unsignedFlag = abs(flag);
+  return (unsignedFlag / 100) % 10;
 }
-void Analysis::Flag::setSign(int &_flag, const int &_f1) const {
-  const int _f0 = this->getSign(_flag);
-  _flag = _flag * _f0 * _f1;
+void Analysis::Flag::setSign(int &flag, const int &f1) const {
+  const int f0 = this->getSign(flag);
+  flag = flag * f0 * f1;
   return;
 }
-void Analysis::Flag::set1stDigit(int &_flag, const int &_f1) const {
-  const int _f0 = this->get1stDigit(_flag);
-  _flag = _flag - _f0 + _f1;
+void Analysis::Flag::set1stDigit(int &flag, const int &f1) const {
+  const int f0 = this->get1stDigit(flag);
+  flag = flag - f0 + f1;
   return;
 }
-void Analysis::Flag::set2ndDigit(int &_flag, const int &_f1) const {
-  const int _f0 = this->get2ndDigit(_flag);
-  _flag = _flag + 10 * (-_f0 + _f1);
+void Analysis::Flag::set2ndDigit(int &flag, const int &f1) const {
+  const int f0 = this->get2ndDigit(flag);
+  flag = flag + 10 * (-f0 + f1);
   return;
 }
-void Analysis::Flag::set3ndDigit(int &_flag, const int &_f1) const {
-  const int _f0 = this->get3rdDigit(_flag);
-  _flag = _flag + 100 * (-_f0 + _f1);
+void Analysis::Flag::set3ndDigit(int &flag, const int &f1) const {
+  const int f0 = this->get3rdDigit(flag);
+  flag = flag + 100 * (-f0 + f1);
   return;
 }

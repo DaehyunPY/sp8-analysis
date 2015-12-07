@@ -1,6 +1,5 @@
 {
   "equipment_parameters": {
-    "angle_width": 10,
     "electric_potential_of_electron_region": -200,
     "electric_potential_of_ion_1st": -285,
     "electric_potential_of_ion_2nd": -2000,
@@ -18,8 +17,8 @@
     "pixel_size_of_x": 0.927,
     "pixel_size_of_y": 0.927,
     "dead_time": 100000,
-    "x_zero_of_COM": 93.239,
-    "y_zero_of_COM": 94.953,
+    "x_zero_of_COM": 0.0,
+    "y_zero_of_COM": 0.0,
     "time_zero_of_TOF": 1840.9
   },
   "electron_parameters": {
@@ -27,8 +26,8 @@
     "pixel_size_of_x": 0.925,
     "pixel_size_of_y": 0.925,
     "dead_time": 100000,
-    "x_zero_of_COM": 94.77824985,
-    "y_zero_of_COM": 2.978249852,
+    "x_zero_of_COM": 0.0,
+    "y_zero_of_COM": 0.0,
     "time_zero_of_TOF": 1805.39
   },
   "electrons": {
