@@ -27,9 +27,6 @@ int main() {
   analysisTools.loadMomentumCalculator(ions.setIonMembers(0));
   std::cout << ions.getIon(0).getLocationX(unit) << std::endl;
   std::cout << ions.getIon(0).getLocationY(unit) << std::endl;
-  std::cout << ions.getIon(0).getMomentumX() << std::endl;
-  std::cout << ions.getIon(0).getMomentumY() << std::endl;
-  std::cout << ions.getIon(0).getMomentumZ() << std::endl;
   std::cout << ions.getIon(0).getEnergy(unit) << std::endl;
 
 //  Analysis::Electron electron(unit, reader);
@@ -45,9 +42,6 @@ int main() {
   analysisTools.loadMomentumCalculator(electrons.setElectronMembers(0));
   std::cout << electrons.getElectron(0).getLocationX(unit) << std::endl;
   std::cout << electrons.getElectron(0).getLocationY(unit) << std::endl;
-  std::cout << electrons.getElectron(0).getMomentumX(unit) << std::endl;
-  std::cout << electrons.getElectron(0).getMomentumY(unit) << std::endl;
-  std::cout << electrons.getElectron(0).getMomentumZ(unit) << std::endl;
   std::cout << electrons.getElectron(0).getEnergy(unit) << std::endl;
 
   std::cout << "hello world!" << std::endl;

@@ -14,14 +14,14 @@ class ObjectParameters {
   const double xZeroOfCOM;
   const double yZeroOfCOM;
   const double timeZeroOfTOF;
-  ObjectParameters(const double &theta,
+  ObjectParameters(const double &theta, // base initialization
                    const double &dx,
                    const double &dy,
                    const double &t1,
                    const double &x0,
                    const double &y0,
                    const double &t0);
-  ObjectParameters(const Analysis::Unit &unit,
+  ObjectParameters(const Analysis::Unit &unit, // for unit
                    const double &theta,
                    const double &dx,
                    const double &dy,
@@ -31,7 +31,7 @@ class ObjectParameters {
                    const double &t0);
 
  protected:
-  ObjectParameters(const Unit &unit,
+  ObjectParameters(const Unit &unit, // for reader, main initialization
                    const JSONReader &reader,
                    const std::string &prefix);
   virtual ~ObjectParameters();
