@@ -17,8 +17,8 @@
     "pixel_size_of_x": 0.927,
     "pixel_size_of_y": 0.927,
     "dead_time": 100000,
-    "x_zero_of_COM": 90.0,
-    "y_zero_of_COM": 100.0,
+    "x_zero_of_COM": 93.256,
+    "y_zero_of_COM": 95.567,
     "time_zero_of_TOF": 1840.9
   },
   "electron_parameters": {
@@ -28,7 +28,7 @@
     "dead_time": 100000,
     "x_zero_of_COM": 126.3783,
     "y_zero_of_COM": 30.0849,
-    "time_zero_of_TOF": 1805.39
+    "time_zero_of_TOF": 1835.39
   },
   "electrons": {
     "number_of_hits": 1,
