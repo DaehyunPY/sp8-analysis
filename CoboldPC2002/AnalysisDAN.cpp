@@ -2,6 +2,8 @@
 //  User defined analysis part called from cobold main program
 ///////////////////////////////////////////////////////////////////////////
 
+#define FOR_COBOLDPC2002
+
 #include "../include/Analysis/JSONReader.cpp"
 #include "../include/Analysis/LMFReader.cpp"
 #include "../include/Analysis/Unit.cpp"
