@@ -100,8 +100,10 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pLMFReader = new Analysis::LMFReader(*pEventData);
   pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
   pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);
-  if(pIons->existDeadRealOrDummyObject()) { return; }
-  if(pElectrons->existDeadRealOrDummyObject()) { return; }
+  if (pIons->isAllDeadRealAndDummyObjects()) { return; } //wried
+  if (pElectrons->isAllDeadRealAndDummyObjects()) { return; } //wried
+  if (pIons->isAllDeadObjects()) { return; }
+  if (pElectrons->isAllDeadObjects()) { return; }
 
   pAnalysisTools->loadMomentumCalculator(*pIons);
   pAnalysisTools->loadMomentumCalculator(*pElectrons);
@@ -171,7 +173,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pEventData->SetAt(119, pElectrons->getElectron(0).getDirectionX());
   pEventData->SetAt(120, pElectrons->getElectron(0).getDirectionY());
   pEventData->SetAt(121, pElectrons->getElectron(0).getDirectionZ());
-  pEventData->SetAt(122, pElectrons->getTotalAbsoluteMomentum(*pUnit));
+  pEventData->SetAt(122, pElectrons->getTotalMomentum(*pUnit));
 //  pEventData->SetAt(123, 0e0); //dElectron_psai_xy*180.0/pi);
 //  pEventData->SetAt(124, 0e0); //dElectron_psai_zy*180.0/pi);
 //  pEventData->SetAt(125, 0e0); //dElectron_psai_zx*180.0/pi);

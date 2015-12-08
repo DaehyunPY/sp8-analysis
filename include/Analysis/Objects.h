@@ -37,8 +37,10 @@ class Objects {
   const double getTotalMomentumX() const;
   const double getTotalMomentumY() const;
   const double getTotalMomentumZ() const;
-  const double getTotalAbsoluteMomentum() const;
+  const double getTotalMomentum() const;
+  const double getTotalMomentumXY() const;
   const double getTotalEnergy() const;
+  const double getTotalEnergyXY() const;
   const double getDirectionXOfCOM() const;
   const double getDirectionYOfCOM() const;
   const double getDirectionZOfCOM() const;
@@ -47,12 +49,21 @@ class Objects {
   const double getTotalMomentumX(Unit &) const;
   const double getTotalMomentumY(Unit &) const;
   const double getTotalMomentumZ(Unit &) const;
-  const double getTotalAbsoluteMomentum(Unit &) const;
+  const double getTotalMomentum(Unit &) const;
+  const double getTotalMomentumXY(Unit &) const;
   const double getTotalEnergy(Unit &) const;
+  const double getTotalEnergyXY(Unit &) const;
+  const int getNumberOfDeadObjects() const;
+  const int getNumberOfDeadDummyObjects() const;
+  const int getNumberOfDeadRealOrDummyObjects() const;
   const bool isDummyObject(const int &) const;
   const bool isRealObject(const int &) const;
-  const bool existDeadRealOrDummyObject() const;
   const bool existDeadObject() const;
+  const bool existDeadDummyObject() const;
+  const bool existDeadRealOrDummyObject() const;
+  const bool isAllDeadObjects() const;
+  const bool isAllDeadDummyObjects() const;
+  const bool isAllDeadRealAndDummyObjects() const;
   const bool isAllWithinMasterRegion() const;
 };
 }
