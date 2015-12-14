@@ -4,57 +4,51 @@
 
 #include "ObjectFlag.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SETUP
-
-Analysis::ObjectFlag::ObjectFlag() {
+Analysis::ObjectFlag::ObjectFlag() : Flag() {
   loadInitialFlager();
   return;
 }
-
 Analysis::ObjectFlag::~ObjectFlag() {
   return;
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LOAD
-
-const int Analysis::ObjectFlag::getFlag() const {
-  return this->flag;
-}
-
 void Analysis::ObjectFlag::loadInitialFlager() {
-  setSign(this->flag, initialFlagForSign);
+  setSign(initialFlagForSign);
 }
-
-const bool Analysis::ObjectFlag::isInitialFlag() const {
-  return getSign(this->flag) == initialFlagForSign;
+const bool Analysis::ObjectFlag::isInitial() const {
+  return getSign() == initialFlagForSign;
 }
-
-void Analysis::ObjectFlag::loadValidOnFlager() {
-  setSign(this->flag, validOnFlagForSign);
+void Analysis::ObjectFlag::loadValidFlager() {
+  setSign(validFlagForSign);
   return;
 }
-
-void Analysis::ObjectFlag::loadValidOffFlager() {
-  setSign(this->flag, validOffFlagForSign);
+void Analysis::ObjectFlag::loadInvalidFlager() {
+  setSign(invalidFlagForSign);
   return;
 }
-
-const bool Analysis::ObjectFlag::isValidOnFlag() const {
-  return getSign(this->flag) == validOnFlagForSign;
+const bool Analysis::ObjectFlag::isValid() const {
+  return getSign() == validFlagForSign;
 }
-
-void Analysis::ObjectFlag::loadMasterOnFlager() {
-  set1stDigit(this->flag, masterOnFlagFor1stDigit);
+void Analysis::ObjectFlag::loadWithinMasterRegionFlager() {
+  set1stDigit(withinMasterRegionFlagFor1stDigit);
   return;
 }
-
-void Analysis::ObjectFlag::loadMasterOffFlager() {
-  set1stDigit(this->flag, masterOffFlagFor1stDigit);
+void Analysis::ObjectFlag::loadNotWithinMasterRegionFlager() {
+  set1stDigit(notWithinMasterRegionFlagFor1stDigit);
   return;
 }
-
-const bool Analysis::ObjectFlag::isMasterOnFlag() const {
-  return get1stDigit(this->flag) == masterOnFlagFor1stDigit;
+const bool Analysis::ObjectFlag::isWithinMasterRegion() const {
+  return get1stDigit() == withinMasterRegionFlagFor1stDigit;
+}
+void Analysis::ObjectFlag::loadDeadFlager() {
+  set1stDigit(deadFlagFor1stDigit);
+  return;
+}
+const bool Analysis::ObjectFlag::isDead() const {
+  return get1stDigit() == deadFlagFor1stDigit;
+}
+const bool Analysis::ObjectFlag::isInvalid() const {
+  return getSign() == invalidFlagForSign;
+}
+const bool Analysis::ObjectFlag::isNotWithinMasterRegion() const {
+  return get1stDigit() == notWithinMasterRegionFlagFor1stDigit;
 }

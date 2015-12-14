@@ -3,24 +3,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #define FOR_COBOLDPC2002
-
-#include "../include/Analysis/JSONReader.cpp"
-#include "../include/Analysis/LMFReader.cpp"
-#include "../include/Analysis/Unit.cpp"
-#include "../include/Analysis/Flag.cpp"
-#include "../include/Analysis/ObjectFlag.cpp"
-#include "../include/Analysis/EventDataFlag.cpp"
-#include "../include/Analysis/Object.cpp"
-#include "../include/Analysis/Objects.cpp"
-#include "../include/Analysis/Ion.cpp"
-#include "../include/Analysis/Ions.cpp"
-#include "../include/Analysis/Electron.cpp"
-#include "../include/Analysis/Electrons.cpp"
-#include "../include/Analysis/EquipmentParameters.cpp"
-#include "../include/Analysis/ObjectParameters.cpp"
-#include "../include/Analysis/IonParameters.cpp"
-#include "../include/Analysis/ElectronParameters.cpp"
-#include "../include/Analysis/AnalysisTools.cpp"
+#include "../include/Analysis/AnalysisTools.h"
 
 Analysis::Unit *pUnit;
 Analysis::JSONReader *pJSONReader;
@@ -117,6 +100,11 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pLMFReader = new Analysis::LMFReader(*pEventData);
   pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
   pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);
+  if (pIons->isAllDeadRealAndDummyObjects()) { return; } //wried
+  if (pElectrons->isAllDeadRealAndDummyObjects()) { return; } //wried
+  if (pIons->isAllDeadObjects()) { return; }
+  if (pElectrons->isAllDeadObjects()) { return; }
+
   pAnalysisTools->loadMomentumCalculator(*pIons);
   pAnalysisTools->loadMomentumCalculator(*pElectrons);
 
@@ -185,7 +173,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pEventData->SetAt(119, pElectrons->getElectron(0).getDirectionX());
   pEventData->SetAt(120, pElectrons->getElectron(0).getDirectionY());
   pEventData->SetAt(121, pElectrons->getElectron(0).getDirectionZ());
-  pEventData->SetAt(122, pElectrons->getTotalAbsoluteMomentum(*pUnit));
+  pEventData->SetAt(122, pElectrons->getTotalMomentum(*pUnit));
 //  pEventData->SetAt(123, 0e0); //dElectron_psai_xy*180.0/pi);
 //  pEventData->SetAt(124, 0e0); //dElectron_psai_zy*180.0/pi);
 //  pEventData->SetAt(125, 0e0); //dElectron_psai_zx*180.0/pi);
@@ -216,13 +204,12 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 // write flag data
   {
     int IonMasterFlag, ElectronMasterFlag;
-    if (pIons->getIon(0).getObjectFlag().isMasterOnFlag()
-        && pIons->getIon(0).getObjectFlag().isValidOnFlag()) {
+    if (pIons->getIon(0).getObjectFlag().isWithinMasterRegion()) {
       IonMasterFlag = 1;
     } else {
       IonMasterFlag = -1;
     }
-    if (pElectrons->getElectron(0).getObjectFlag().isMasterOnFlag()) {
+    if (pElectrons->getElectron(0).getObjectFlag().isWithinMasterRegion()) {
       ElectronMasterFlag = 1;
     } else {
       ElectronMasterFlag = -1;

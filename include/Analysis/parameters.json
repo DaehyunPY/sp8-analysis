@@ -28,7 +28,7 @@
     "dead_time": 100000,
     "x_zero_of_COM": 126.3783,
     "y_zero_of_COM": 30.0849,
-    "time_zero_of_TOF": 1835.39
+    "time_zero_of_TOF": 1783.185
   },
   "electrons": {
     "number_of_hits": 1,

@@ -5,102 +5,113 @@ Analysis::Object::Object(const double &m,
                          const double &t0,
                          const double &t1)
     : mass(m), charge(q), minOfTOF(t0), maxOfTOF(t1) {
-  assert(this->getMass() >= 0e0);
-  assert(this->getMinOfTOF() <= this->getMaxOfTOF());
-  this->resetEventData();
+  assert(getMass() >= 0e0);
+  assert(getMinOfTOF() <= getMaxOfTOF());
+  resetEventData();
   return;
 };
 Analysis::Object::~Object() { return; }
 void Analysis::Object::resetEventData() {
-  this->locationX = 0e0;
-  this->locationY = 0e0;
-  this->TOF = 0e0;
-  this->momentumX = 0e0;
-  this->momentumY = 0e0;
-  this->momentumZ = 0e0;
-  this->objectFlag.loadInitialFlager();
+  locationX = 0e0;
+  locationY = 0e0;
+  TOF = 0e0;
+  momentumX = 0e0;
+  momentumY = 0e0;
+  momentumZ = 0e0;
+  objectFlag.loadInitialFlager();
   return;
 }
 void Analysis::Object::setLocationX(const double &x) {
-  this->locationX = x;
+  locationX = x;
   return;
 }
 void Analysis::Object::setLocationY(const double &y) {
-  this->locationY = y;
+  locationY = y;
   return;
 }
 void Analysis::Object::setTOF(const double &t) { this->TOF = t; }
 void Analysis::Object::setMomentumX(const double &px) {
-  this->momentumX = px;
+  momentumX = px;
   return;
 }
 void Analysis::Object::setMomentumY(const double &py) {
-  this->momentumY = py;
+  momentumY = py;
   return;
 }
 void Analysis::Object::setMomentumZ(const double &pz) {
-  this->momentumZ = pz;
+  momentumZ = pz;
   return;
 }
 Analysis::ObjectFlag &Analysis::Object::setObjectFlagMembers() {
-  return this->objectFlag;
+  return objectFlag;
 }
-const double &Analysis::Object::getMass() const { return this->mass; }
-const double &Analysis::Object::getCharge() const { return this->charge; }
-const double &Analysis::Object::getMinOfTOF() const { return this->minOfTOF; }
-const double &Analysis::Object::getMaxOfTOF() const { return this->maxOfTOF; }
-const double &Analysis::Object::getLocationX() const { return this->locationX; }
-const double &Analysis::Object::getLocationY() const { return this->locationY; }
-const double &Analysis::Object::getTOF() const { return this->TOF; }
-const double &Analysis::Object::getMomentumX() const { return this->momentumX; }
-const double &Analysis::Object::getMomentumY() const { return this->momentumY; }
-const double &Analysis::Object::getMomentumZ() const { return this->momentumZ; }
-const double Analysis::Object::getAbsoluteMomentum() const {
-  return pow(pow(this->getMomentumX(), 2e0)
-                 + pow(this->getMomentumY(), 2e0)
-                 + pow(this->getMomentumZ(), 2e0), 0.5e0);
+const double &Analysis::Object::getMass() const { return mass; }
+const double &Analysis::Object::getCharge() const { return charge; }
+const double &Analysis::Object::getMinOfTOF() const { return minOfTOF; }
+const double &Analysis::Object::getMaxOfTOF() const { return maxOfTOF; }
+const double &Analysis::Object::getLocationX() const { return locationX; }
+const double &Analysis::Object::getLocationY() const { return locationY; }
+const double &Analysis::Object::getTOF() const { return TOF; }
+const double &Analysis::Object::getMomentumX() const { return momentumX; }
+const double &Analysis::Object::getMomentumY() const { return momentumY; }
+const double &Analysis::Object::getMomentumZ() const { return momentumZ; }
+const double Analysis::Object::getMomentum() const {
+  return pow(pow(getMomentumX(), 2e0)
+                 + pow(getMomentumY(), 2e0)
+                 + pow(getMomentumZ(), 2e0), 0.5e0);
 }
 const double Analysis::Object::getEnergy() const {
-  return pow(this->getAbsoluteMomentum(), 2e0) / (2e0 * this->getMass());
+  return pow(getMomentum(), 2e0) / (2e0 * getMass());
 }
 const Analysis::ObjectFlag &Analysis::Object::getObjectFlag() const {
-  return this->objectFlag;
+  return objectFlag;
 }
 const bool Analysis::Object::isWithinMasterRegion() const {
-  return (this->getTOF() < this->getMaxOfTOF())
-      && (this->getTOF() > this->getMinOfTOF());
+  return (getTOF() < getMaxOfTOF()) && (getTOF() > getMinOfTOF());
 }
 const double Analysis::Object::getDirectionX() const {
-  return this->getMomentumX() / this->getAbsoluteMomentum();
+  return getMomentumX() / getMomentum();
 }
 const double Analysis::Object::getDirectionY() const {
-  return this->getMomentumY() / this->getAbsoluteMomentum();
+  return getMomentumY() / getMomentum();
 }
 const double Analysis::Object::getDirectionZ() const {
-  return this->getMomentumZ() / this->getAbsoluteMomentum();
+  return getMomentumZ() / getMomentum();
 }
 const double Analysis::Object::getLocationX(const Analysis::Unit &unit) const {
-  return unit.writeLength(this->getLocationX());
+  return unit.writeLength(getLocationX());
 }
 const double Analysis::Object::getLocationY(const Analysis::Unit &unit) const {
-  return unit.writeLength(this->getLocationY());
+  return unit.writeLength(getLocationY());
 }
 const double Analysis::Object::getTOF(const Analysis::Unit &unit) const {
-  return unit.writeTime(this->getTOF());
+  return unit.writeTime(getTOF());
 }
 const double Analysis::Object::getMomentumX(const Analysis::Unit &unit) const {
-  return unit.writeMomentum(this->getMomentumX());
+  return unit.writeMomentum(getMomentumX());
 }
 const double Analysis::Object::getMomentumY(const Analysis::Unit &unit) const {
-  return unit.writeMomentum(this->getMomentumY());
+  return unit.writeMomentum(getMomentumY());
 }
 const double Analysis::Object::getMomentumZ(const Analysis::Unit &unit) const {
-  return unit.writeMomentum(this->getMomentumZ());
+  return unit.writeMomentum(getMomentumZ());
 }
 const double Analysis::Object::getMomentum(const Analysis::Unit &unit) const {
-  return unit.writeMomentum(this->getAbsoluteMomentum());
+  return unit.writeMomentum(getMomentum());
 }
 const double Analysis::Object::getEnergy(const Analysis::Unit &unit) const {
-  return unit.writeEnergy(this->getEnergy());
+  return unit.writeEnergy(getEnergy());
 }
 Analysis::Object::Object() : Object(0e0, 0e0, 0e0, 0e0) { return; }
+const double Analysis::Object::getMomentumXY() const {
+  return pow(pow(getMomentumX(), 2e0) + pow(getMomentumY(), 2e0), 0.5e0);
+}
+const double Analysis::Object::getEnergyXY() const {
+  return getMomentumXY() / (2e0 * getMass());
+}
+const double Analysis::Object::getMomentumXY(const Analysis::Unit &unit) const {
+  return unit.writeMomentum(getMomentumXY());
+}
+const double Analysis::Object::getEnergyXY(const Analysis::Unit &unit) const {
+  return unit.writeEnergy(getMomentumXY());
+}

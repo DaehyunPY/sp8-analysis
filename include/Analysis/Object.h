@@ -45,12 +45,14 @@ class Object {
   const double &getMomentumX() const;
   const double &getMomentumY() const;
   const double &getMomentumZ() const;
-  const double getAbsoluteMomentum() const;
   const ObjectFlag &getObjectFlag() const;
+  const double getMomentum() const;
+  const double getMomentumXY() const;
   const double getDirectionX() const;
   const double getDirectionY() const;
   const double getDirectionZ() const;
   const double getEnergy() const;
+  const double getEnergyXY() const;
   const double getLocationX(const Unit &) const;
   const double getLocationY(const Unit &) const;
   const double getTOF(const Unit &) const;
@@ -58,7 +60,9 @@ class Object {
   const double getMomentumY(const Unit &) const;
   const double getMomentumZ(const Unit &) const;
   const double getMomentum(const Unit &) const;
+  const double getMomentumXY(const Unit &) const;
   const double getEnergy(const Unit &) const;
+  const double getEnergyXY(const Unit &) const;
   const bool isWithinMasterRegion() const;
 };
 }
