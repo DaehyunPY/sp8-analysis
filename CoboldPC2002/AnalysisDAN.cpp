@@ -96,18 +96,50 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pLMFReader = NULL;
   pIons->resetEventData();
   pElectrons->resetEventData();
+  int ionMasterFlag = 0;
+  int electronMasterFlag = 0;
 
   pLMFReader = new Analysis::LMFReader(*pEventData);
   pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
   pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);
-  if (pIons->isAllDeadRealAndDummyObjects()) { return; } //wried
-  if (pElectrons->isAllDeadRealAndDummyObjects()) { return; } //wried
-  if (pIons->isAllDeadObjects()) { return; }
-  if (pElectrons->isAllDeadObjects()) { return; }
 
+  if (pIons->isAllDeadRealAndDummyObjects()
+      || pElectrons->isAllDeadRealAndDummyObjects()) {
+    ionMasterFlag = -10;
+    electronMasterFlag = -10;
+    if (pIons->isAllDeadRealAndDummyObjects()) { ionMasterFlag = -11; }
+    if (pElectrons->isAllDeadRealAndDummyObjects()) {
+      electronMasterFlag = -11;
+    }
+    goto output;
+  }
+
+
+  ion:
+  if (pIons->existDeadRealOrDummyObject()) {
+    ionMasterFlag = -20;
+    goto electron;
+  }
+  if (pIons->isAllWithinMasterRegion()) {
+    ionMasterFlag = -21;
+    goto electron;
+  }
   pAnalysisTools->loadMomentumCalculator(*pIons);
+
+
+  electron:
+//    if(pElectrons->existDeadRealOrDummyObject()) {
+//      electronMasterFlag = -20;
+//      goto output;
+//    }
+  if (pElectrons->isAllWithinMasterRegion()) {
+    electronMasterFlag = -21;
+    goto output;
+  }
   pAnalysisTools->loadMomentumCalculator(*pElectrons);
 
+
+  output:
 // write ion data
   {
     const int &n = pIons->getNumberOfHits();
@@ -144,7 +176,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 //  pEventData->SetAt(208, 0e0); //(dtIon[1]+dtIon[2])/unit_nano);
 //  pEventData->SetAt(209, 0e0); //(dtIon[1]+dtIon[3])/unit_nano);
 //  pEventData->SetAt(210, 0e0); //(dtIon[2]+dtIon[3])/unit_nano);
-
+//
 // write electron data
   {
     const int &n = pElectrons->getNumberOfHits();
@@ -190,7 +222,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 //    pEventData->SetAt(203, 0e0); //dElectronEnergyHigher/dElectron);
 //    pEventData->SetAt(204, 0e0); //dElectronEnergyLower/dElectron);
 //  }
-
+//
 //  write ion & electron data
   {
     const int &n = pElectrons->getNumberOfHits();
@@ -200,24 +232,11 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
                             + pElectrons->getElectron(i).getEnergy(*pUnit));
     }
   }
-
+//
 // write flag data
-  {
-    int IonMasterFlag, ElectronMasterFlag;
-    if (pIons->getIon(0).getObjectFlag().isWithinMasterRegion()) {
-      IonMasterFlag = 1;
-    } else {
-      IonMasterFlag = -1;
-    }
-    if (pElectrons->getElectron(0).getObjectFlag().isWithinMasterRegion()) {
-      ElectronMasterFlag = 1;
-    } else {
-      ElectronMasterFlag = -1;
-    }
-    pEventData->SetAt(126, IonMasterFlag);
-    pEventData->SetAt(127, ElectronMasterFlag);
-  }
-
+  pEventData->SetAt(126, ionMasterFlag);
+  pEventData->SetAt(127, electronMasterFlag);
+//
 //  what is it?
 //  pEventData->SetAt(18, 0e0); //nHexX1);  // 18+0
 //  pEventData->SetAt(19, 0e0); //nHexX2);  // 18+1
