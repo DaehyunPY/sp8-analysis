@@ -21,20 +21,18 @@ class Objects {
   Objects(const int &);
   Objects(const int &, const int &);
   virtual ~Objects();
+  void setObject(const int &, Object &);
+  void setDummyObject(const int &, Object &);
 
  public:
   Analysis::Object &setObjectMembers(const int &);
   Analysis::Object &setDummyObjectMembers(const int &);
-  void setObject(const int &, Object &);
-  void setDummyObject(const int &, Object &);
   void resetEventData();
-  const int &getNumberOfHits() const;
-  const int &getNumberOfObject() const;
-  const int &getNumberOfHitsUsed() const;
+  const int &getNumberOfObjects() const;
+  const int &getNumberOfRealOrDummyObjects() const;
   const Object &getObject(const int &) const;
   const Object &getDummyObject(const int &) const;
   const int getNumberOfDummyObject() const; 
-  const int getNumberOfRealOrDummyObejct() const; 
   const double getLocationXOfCOM() const;
   const double getLocationYOfCOM() const;
   const double getTotalMomentumX() const;

@@ -3,12 +3,13 @@
 //
 
 #include <iostream>
-#include "AnalysisTools.h"
+#include "../AnalysisTools.h"
 
 int main() {
   Analysis::Unit unit;
   Analysis::JSONReader reader
-      ("/Users/Hyuna917/.local/Celler/ueda-lab/BL17_Analysis/include/Analysis/parameters.json");
+      ("/Users/Hyuna917/.local/Celler/ueda-lab/BL17_Analysis/include/Analysis"
+           "/Example/parameters.json");
   Analysis::AnalysisTools analysisTools(unit, reader);
 
 //  double ionTOF = analysisTools.calculateTOF(ion, 0e0);
@@ -24,9 +25,10 @@ int main() {
   analysisTools.loadEventDataInputer(
       ions.setIonMembers(0),
       unit,
-      97689 / 1000, 102501 / 1000, 4.98977e+006 / 1000, 0);
-//  97689 / 1000, 102501 / 1000, 9000, 0);
+//      97689 / 1000, 102501 / 1000, 4.98977e+006 / 1000, 0);
+  97689 / 1000, 102501 / 1000, 15000, 0);
   analysisTools.loadMomentumCalculator(ions.setIonMembers(0));
+  std::cout << ions.existDeadDummyObject() << std::endl;
   std::cout << ions.getIon(0).getLocationX() << std::endl;
   std::cout << ions.getIon(0).getLocationY() << std::endl;
   std::cout << ions.getIon(0).getTOF() << std::endl;

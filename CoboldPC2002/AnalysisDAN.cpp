@@ -66,7 +66,7 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,
 
   {
     {
-      const int &n = pIons->getNumberOfHits();
+      const int &n = pIons->getNumberOfObjects();
       for (int i = 0; i < n; i++) {
         const std::string name = getObjectName(0);
         const double t = pAnalysisTools->calculateTOF(*pUnit,
@@ -103,6 +103,8 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
   pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);
 
+  logFile << pIons->getNumberOfDeadRealOrDummyObjects() << ", " <<
+      pElectrons->getNumberOfDeadRealOrDummyObjects() << std::endl;
   if (pIons->isAllDeadRealAndDummyObjects()
       || pElectrons->isAllDeadRealAndDummyObjects()) {
     ionMasterFlag = -10;
@@ -142,8 +144,8 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   output:
 // write ion data
   {
-    const int &n = pIons->getNumberOfHits();
-    const int &m = pIons->getNumberOfHitsUsed();
+    const int &n = pIons->getNumberOfObjects();
+    const int &m = pIons->getNumberOfRealOrDummyObjects();
     for (int i = 0; i < m; i++) {
       pEventData->SetAt(31 + 28 + i, pIons->getIon(i).getLocationX(*pUnit));
       pEventData->SetAt(31 + 32 + i, pIons->getIon(i).getLocationY(*pUnit));
@@ -179,8 +181,8 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 //
 // write electron data
   {
-    const int &n = pElectrons->getNumberOfHits();
-    const int &m = pElectrons->getNumberOfHitsUsed();
+    const int &n = pElectrons->getNumberOfObjects();
+    const int &m = pElectrons->getNumberOfRealOrDummyObjects();
     for (int i = 0; i < m; i++) {
       pEventData->SetAt(31 + i,
                         pElectrons->getElectron(i).getLocationX(*pUnit));
@@ -225,7 +227,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 //
 //  write ion & electron data
   {
-    const int &n = pElectrons->getNumberOfHits();
+    const int &n = pElectrons->getNumberOfObjects();
     for (int i = 0; i < n; i++) {
       pEventData->SetAt(199 + i,
                         pIons->getTotalEnergy(*pUnit)

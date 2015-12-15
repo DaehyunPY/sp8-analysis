@@ -27,11 +27,11 @@ void Analysis::Objects::setDummyObject(const int &i, Analysis::Object &object) {
   assert(this->isDummyObject(i));
   this->pObject[i] = &object;
 }
-const int &Analysis::Objects::getNumberOfHits() const {
+const int &Analysis::Objects::getNumberOfObjects() const {
   return this->numberOfHits;
 }
 const double Analysis::Objects::getLocationXOfCOM() const {
-  const int &n = this->getNumberOfHits();
+  const int &n = this->getNumberOfObjects();
   long double sum1 = 0e0, sum2 = 0e0;
   for (int i = 0; i < n; i++) {
     const double tmp = getObject(i).getMass() / getObject(i).getTOF();
@@ -41,7 +41,7 @@ const double Analysis::Objects::getLocationXOfCOM() const {
   return double(sum2 / sum1);
 }
 const double Analysis::Objects::getLocationYOfCOM() const {
-  const int &n = this->getNumberOfHits();
+  const int &n = this->getNumberOfObjects();
   long double sum1 = 0e0, sum2 = 0e0;
   for (int i = 0; i < n; i++) {
     const double tmp = getObject(i).getMass() / getObject(i).getTOF();
@@ -51,7 +51,7 @@ const double Analysis::Objects::getLocationYOfCOM() const {
   return double(sum2 / sum1);
 }
 const double Analysis::Objects::getTotalMomentumX() const {
-  const int &n = this->getNumberOfHits();
+  const int &n = this->getNumberOfObjects();
   long double sumOfMomentum = 0e0;
   for (int i = 0; i < n; i++) {
     sumOfMomentum += this->getObject(i).getMomentumX();
@@ -59,7 +59,7 @@ const double Analysis::Objects::getTotalMomentumX() const {
   return double(sumOfMomentum);
 }
 const double Analysis::Objects::getTotalMomentumY() const {
-  const int &n = this->getNumberOfHits();
+  const int &n = this->getNumberOfObjects();
   long double sumOfMomentum = 0e0;
   for (int i = 0; i < n; i++) {
     sumOfMomentum += this->getObject(i).getMomentumY();
@@ -67,7 +67,7 @@ const double Analysis::Objects::getTotalMomentumY() const {
   return double(sumOfMomentum);
 }
 const double Analysis::Objects::getTotalMomentumZ() const {
-  const int &n = this->getNumberOfHits();
+  const int &n = this->getNumberOfObjects();
   long double sumOfMomentum = 0e0;
   for (int i = 0; i < n; i++) {
     sumOfMomentum += this->getObject(i).getMomentumZ();
@@ -75,7 +75,7 @@ const double Analysis::Objects::getTotalMomentumZ() const {
   return double(sumOfMomentum);
 }
 const double Analysis::Objects::getTotalEnergy() const {
-  const int &n = this->getNumberOfHits();
+  const int &n = this->getNumberOfObjects();
   long double sumOfEnergy = 0e0;
   for (int i = 0; i < n; i++) {
     sumOfEnergy += this->getObject(i).getEnergy();
@@ -89,11 +89,6 @@ const Analysis::Object &Analysis::Objects::getObject(const int &i) const {
 const Analysis::Object &Analysis::Objects::getDummyObject(const int &i) const {
   assert(this->isDummyObject(i));
   return *(this->pObject[i]);
-}
-
-const int Analysis::Objects::getNumberOfObject() const
-{
-	return getNumberOfHits(); 
 }
 
 const double Analysis::Objects::getTotalMomentum() const {
@@ -111,8 +106,8 @@ const double Analysis::Objects::getDirectionZOfCOM() const {
   return this->getTotalMomentumZ() / this->getTotalMomentum();
 }
 void Analysis::Objects::resetEventData() {
-  const int &n = this->getNumberOfHits();
-  const int &m = this->getNumberOfHitsUsed();
+  const int &n = this->getNumberOfObjects();
+  const int &m = this->getNumberOfRealOrDummyObjects();
   for (int i = 0; i < n; i++) {
     this->setObjectMembers(i).resetEventData();
   }
@@ -150,17 +145,17 @@ const double Analysis::Objects::getTotalMomentum(Analysis::Unit &unit) const {
 const double Analysis::Objects::getTotalEnergy(Analysis::Unit &unit) const {
   return unit.writeEnergy(this->getTotalEnergy());
 }
-const int &Analysis::Objects::getNumberOfHitsUsed() const {
+const int &Analysis::Objects::getNumberOfRealOrDummyObjects() const {
   return this->numberOfHitsUsed;
 }
 const bool Analysis::Objects::isDummyObject(const int &i) const {
-  const int &n = this->getNumberOfHits();
-  const int &m = this->getNumberOfHitsUsed();
+  const int &n = this->getNumberOfObjects();
+  const int &m = this->getNumberOfRealOrDummyObjects();
   return (i >= n) && (i < m);
 }
 const bool Analysis::Objects::isRealObject(const int &i) const {
-  const int &n = this->getNumberOfHits();
-  const int &m = this->getNumberOfHitsUsed();
+  const int &n = this->getNumberOfObjects();
+  const int &m = this->getNumberOfRealOrDummyObjects();
   return (i >= 0) && (i < n);
 }
 const bool Analysis::Objects::existDeadRealOrDummyObject() const {
@@ -201,13 +196,13 @@ const bool Analysis::Objects::existDeadDummyObject() const {
   return getNumberOfDeadDummyObjects() != 0;
 }
 const bool Analysis::Objects::isAllDeadObjects() const {
-  return getNumberOfDeadObjects() == numberOfHits;
+  return getNumberOfDeadObjects() == getNumberOfObjects();
 }
 const bool Analysis::Objects::isAllDeadDummyObjects() const {
-  return getNumberOfDeadDummyObjects() == numberOfHitsUsed - numberOfHits;
+  return getNumberOfDeadDummyObjects() == getNumberOfDeadObjects();
 }
 const bool Analysis::Objects::isAllDeadRealAndDummyObjects() const {
-  return getNumberOfDeadRealOrDummyObjects() == numberOfHitsUsed;
+  return getNumberOfDeadRealOrDummyObjects() == getNumberOfRealOrDummyObjects();
 }
 const double Analysis::Objects::getTotalMomentumXY() const {
   return pow(pow(getTotalMomentumX(), 2e0)
@@ -225,4 +220,7 @@ const double Analysis::Objects::getTotalEnergyXY() const {
 }
 const double Analysis::Objects::getTotalEnergyXY(Analysis::Unit &unit) const {
   return unit.writeEnergy(getTotalEnergyXY());
+}
+const int Analysis::Objects::getNumberOfDummyObject() const {
+  return getNumberOfRealOrDummyObjects()-getNumberOfObjects();
 }

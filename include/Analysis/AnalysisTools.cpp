@@ -187,6 +187,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setLocationY(y);
   ion.setTOF(t);
   if (ion.getTOF() > deadTime) {
+    ion.setTOF(deadTime);
     ion.setObjectFlagMembers().loadDeadFlager();
   } else {
     if (ion.isWithinMasterRegion()) {
@@ -217,6 +218,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   electron.setLocationY(y);
   electron.setTOF(t);
   if (electron.getTOF() > deadTime) {
+    electron.setTOF(deadTime);
     electron.setObjectFlagMembers().loadDeadFlager();
   } else {
     if (electron.isWithinMasterRegion()) {
@@ -282,7 +284,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   return;
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ions &ions) const {
-  const int &n = ions.getNumberOfHits();
+  const int &n = ions.getNumberOfObjects();
   for (int i = 0; i < n; i++) {
     loadMomentumCalculator(ions.setIonMembers(i));
   }
@@ -290,7 +292,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ions &ions) const
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(
     Analysis::Electrons &elecs) const {
-  const int &n = elecs.getNumberOfHits();
+  const int &n = elecs.getNumberOfObjects();
   for (int i = 0; i < n; i++) {
     loadMomentumCalculator(elecs.setElectronMembers(i));
   }
@@ -325,8 +327,8 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
                                                    const Unit &unit,
                                                    const LMFReader &reader) const {
-  const int &n = ions.getNumberOfHits();
-  const int &m = ions.getNumberOfHitsUsed();
+  const int &n = ions.getNumberOfObjects();
+  const int &m = ions.getNumberOfRealOrDummyObjects();
   for(int i = 0; i < n; i++) {
     loadEventDataInputer(ions.setIonMembers(i), unit, reader, i);
   }
@@ -338,8 +340,8 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electrons,
                                                    const Unit &unit,
                                                    const LMFReader &reader) const {
-  const int &n = electrons.getNumberOfHits();
-  const int &m = electrons.getNumberOfHitsUsed();
+  const int &n = electrons.getNumberOfObjects();
+  const int &m = electrons.getNumberOfRealOrDummyObjects();
   for(int i = 0; i < n; i++) {
     loadEventDataInputer(electrons.setElectronMembers(i), unit, reader, i);
   }

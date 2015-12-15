@@ -36,19 +36,19 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
 }
 Analysis::Ions::~Ions() { return; }
 Analysis::Ion &Analysis::Ions::setIonMembers(const int &i) {
-  assert(i < this->getNumberOfHits());
+  assert(i < this->getNumberOfObjects());
   return *(this->pIon[i]);
 }
 Analysis::Ion &Analysis::Ions::setDummyIonMembers(const int &i) {
-  assert(i >= this->getNumberOfHits());
+  assert(i >= this->getNumberOfObjects());
   return *(this->pIon[i]);
 }
 const Analysis::Ion &Analysis::Ions::getIon(const int &i) const {
-  assert(i < this->getNumberOfHits());
+  assert(i < this->getNumberOfObjects());
   return *(this->pIon[i]);
 }
 const Analysis::Ion &Analysis::Ions::getDummyIon(const int &i) const {
-  assert(i >= this->getNumberOfHits());
+  assert(i >= this->getNumberOfObjects());
   return *(this->pIon[i]);
 }
 const std::string Analysis::Ions::getIonName(int i) const {
