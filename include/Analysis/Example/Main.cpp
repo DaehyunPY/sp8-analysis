@@ -23,7 +23,9 @@ int main() {
   ions.resetEventData();
   analysisTools.loadEventDataInputer(
       ions.setIonMembers(0),
-      unit, 97689 / 1000, 102501 / 1000, 4.98977e+006 / 1000, 0);
+      unit,
+      97689 / 1000, 102501 / 1000, 4.98977e+006 / 1000, 0);
+//  97689 / 1000, 102501 / 1000, 9000, 0);
   analysisTools.loadMomentumCalculator(ions.setIonMembers(0));
   std::cout << ions.getIon(0).getLocationX() << std::endl;
   std::cout << ions.getIon(0).getLocationY() << std::endl;
@@ -32,6 +34,8 @@ int main() {
   std::cout << ions.getIon(0).getMomentumY() << std::endl;
   std::cout << ions.getIon(0).getMomentumZ() << std::endl;
   std::cout << ions.getIon(0).getEnergy() << std::endl;
+  std::cout << ions.getIon(0).isWithinMasterRegion() << std::endl;
+  std::cout << ions.getIon(0).isDead() << std::endl;
 
 //  Analysis::Electron electron(unit, reader);
 //  analysisTools.loadEventDataInputer(

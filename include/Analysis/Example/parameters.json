@@ -16,7 +16,7 @@
     "angle_of_detector": 0,
     "pixel_size_of_x": 0.927,
     "pixel_size_of_y": 0.927,
-    "dead_time": 100000,
+    "dead_time": 10000,
     "x_zero_of_COM": 93.256,
     "y_zero_of_COM": 95.567,
     "time_zero_of_TOF": 1840.9
@@ -25,7 +25,7 @@
     "angle_of_detector": -30,
     "pixel_size_of_x": 0.925,
     "pixel_size_of_y": 0.925,
-    "dead_time": 100000,
+    "dead_time": 10000,
     "x_zero_of_COM": 126.3783,
     "y_zero_of_COM": 30.0849,
     "time_zero_of_TOF": 1783.185

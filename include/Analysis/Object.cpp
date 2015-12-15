@@ -115,3 +115,6 @@ const double Analysis::Object::getMomentumXY(const Analysis::Unit &unit) const {
 const double Analysis::Object::getEnergyXY(const Analysis::Unit &unit) const {
   return unit.writeEnergy(getMomentumXY());
 }
+const bool Analysis::Object::isDead() const {
+  return getObjectFlag().isDead();
+}

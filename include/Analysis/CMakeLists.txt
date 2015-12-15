@@ -48,7 +48,7 @@ set(SOURCE_FILES_FOR_ANALYSIS_CORE
     )
 
 set(SOURCE_FILES_FOR_ANALYSIS_EXAMPLE
-    MainForExample.cpp
+    Example/Main.cpp
     )
 
 add_executable(EXAMPLE

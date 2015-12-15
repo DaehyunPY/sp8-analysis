@@ -8,3 +8,6 @@ Backup
 /CoboldPC2002/CDan.sdf
 /CoboldPC2002/CDan.sln
 /CoboldPC2002/CDan.vcxproj
+CoboldPC2002/Build
+include/Analysis/MainForExample.cpp
+include/Analysis/parameters.json

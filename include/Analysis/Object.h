@@ -64,6 +64,7 @@ class Object {
   const double getEnergy(const Unit &) const;
   const double getEnergyXY(const Unit &) const;
   const bool isWithinMasterRegion() const;
+  const bool isDead() const;
 };
 }
 
