@@ -33,12 +33,12 @@ class AnalysisTools {
   const XY calculateMomentumXY(const Object &) const;
   const double calculateMomentumZ(const Ion &) const;
   const double calculateMomentumZ(const Electron &) const;
-  void loadEventDataInputer(Ion &,
+  void loadEventDataInputer(Ion &, // main inputer for ion 
                             const double &,
                             const double &,
                             const double &,
                             const int &) const;
-  void loadEventDataInputer(Electron &,
+  void loadEventDataInputer(Electron &, // main inputer for electron 
                             const double &,
                             const double &,
                             const double &,

@@ -103,8 +103,8 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
   pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);
 
-  logFile << pIons->getNumberOfDeadRealOrDummyObjects() << ", " <<
-      pElectrons->getNumberOfDeadRealOrDummyObjects() << std::endl;
+//  logFile << pIons->getNumberOfDeadRealOrDummyObjects() << ", " <<
+//      pElectrons->getNumberOfDeadRealOrDummyObjects() << std::endl;
   if (pIons->isAllDeadRealAndDummyObjects()
       || pElectrons->isAllDeadRealAndDummyObjects()) {
     ionMasterFlag = -10;
@@ -127,6 +127,10 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
     goto electron;
   }
   pAnalysisTools->loadMomentumCalculator(*pIons);
+//  if (pIons->getIon(0).getMomentum() == 0e0) {
+//	  ionMasterFlag = -40; 
+//	  goto electron; 
+//  }
 
 
   electron:
