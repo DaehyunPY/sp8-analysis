@@ -90,6 +90,12 @@ const Analysis::Object &Analysis::Objects::getDummyObject(const int &i) const {
   assert(this->isDummyObject(i));
   return *(this->pObject[i]);
 }
+
+const int Analysis::Objects::getNumberOfObject() const
+{
+	return getNumberOfHits(); 
+}
+
 const double Analysis::Objects::getTotalMomentum() const {
   return pow(pow(this->getTotalMomentumX(), 2e0)
                  + pow(this->getTotalMomentumY(), 2e0)

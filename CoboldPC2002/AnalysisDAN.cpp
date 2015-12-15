@@ -115,7 +115,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   }
 
 
-  ion:
+//  ion:
   if (pIons->existDeadRealOrDummyObject()) {
     ionMasterFlag = -20;
     goto electron;

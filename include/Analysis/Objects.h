@@ -29,9 +29,12 @@ class Objects {
   void setDummyObject(const int &, Object &);
   void resetEventData();
   const int &getNumberOfHits() const;
+  const int &getNumberOfObject() const;
   const int &getNumberOfHitsUsed() const;
   const Object &getObject(const int &) const;
   const Object &getDummyObject(const int &) const;
+  const int getNumberOfDummyObject() const; 
+  const int getNumberOfRealOrDummyObejct() const; 
   const double getLocationXOfCOM() const;
   const double getLocationYOfCOM() const;
   const double getTotalMomentumX() const;
