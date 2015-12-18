@@ -63,11 +63,11 @@ const double Analysis::AnalysisTools::calculateDiffTOF(const Ion &ion,
               * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -0.5)
               / (E1 * q) - 1 / (E1 * q);
 }
-const double Analysis::AnalysisTools::calculateMomentumZ(const Ion &ion)
-const {
+const double Analysis::AnalysisTools::calculateMomentumZ(const Ion &ion, bool& info) const {
   double x0, x1, dx, f, df;
   const double &f0 = ion.getTOF();
   x1 = 0e0;
+  info = false; 
   for (int i = 0; i < 100; i++) {
     x0 = x1;
     f = calculateTOF(ion, x0) - f0;
@@ -75,10 +75,11 @@ const {
     dx = -f / df;
     x1 = x0 + dx;
     if (x0 == x1) {
-      break;
+		info = true; 
+		return x1; 
     }
   }
-  return x1;
+  return 0e0;
 }
 const double Analysis::AnalysisTools::calculateTOF(
     const Analysis::Electron &electron, const double &p0) const {
@@ -106,10 +107,11 @@ const double Analysis::AnalysisTools::calculateDiffTOF
       - 1 / (E1 * q);
 }
 const double Analysis::AnalysisTools::calculateMomentumZ
-    (const Electron &elec) const {
+    (const Electron &elec, bool& info) const {
   double x0, x1, dx, f, df;
   const double &f0 = elec.getTOF();
-  x1 = 0.e0;
+  x1 = 0e0;
+  info = false; 
   for (int i = 0; i < 100; i++) {
     x0 = x1;
     f = calculateTOF(elec, x0) - f0;
@@ -117,10 +119,11 @@ const double Analysis::AnalysisTools::calculateMomentumZ
     dx = -f / df;
     x1 = x0 + dx;
     if (x0 == x1) {
-      break;
+		info = true; 
+		return x1; 
     }
   }
-  return x1;
+  return 0e0;
 }
 const Analysis::EquipmentParameters
 &Analysis::AnalysisTools::getEquipmentParameters() const {
@@ -230,20 +233,35 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   return;
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
+	bool info; 
   const XY &pxy = this->calculateMomentumXY(ion);
-  const double &pz = this->calculateMomentumZ(ion);
+  const double &pz = this->calculateMomentumZ(ion, info);
   ion.setMomentumX(pxy.x);
   ion.setMomentumY(pxy.y);
-  ion.setMomentumZ(pz);
+  if(info == true) 
+  {
+      ion.setMomentumZ(pz);
+  } else
+  {
+	  ion.setObjectFlagMembers().loadDeadFlager(); 
+  }
   return;
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(
-    Analysis::Electron &elec) const {
-  const XY &pxy = this->calculateMomentumXY(elec);
-  const double &pz = this->calculateMomentumZ(elec);
-  elec.setMomentumX(pxy.x);
-  elec.setMomentumY(pxy.y);
-  elec.setMomentumZ(pz);
+    Analysis::Electron &electron) const {
+	bool info; 
+  const XY &pxy = this->calculateMomentumXY(electron);
+  const double &pz = this->calculateMomentumZ(electron, info);
+  electron.setMomentumX(pxy.x);
+  electron.setMomentumY(pxy.y);
+  electron.setMomentumZ(pz);  
+  if(info == true) 
+  {
+      electron.setMomentumZ(pz);
+  } else
+  {
+	  electron.setObjectFlagMembers().loadDeadFlager(); 
+  }
   return;
 }
 const int &Analysis::AnalysisTools::getEventNumber() const {
@@ -355,12 +373,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electron
 const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
                                                    const Analysis::Ion &ion,
                                                    const double &d) const {
-  return unit.writeTime(this->calculateTOF(ion, d));
+  return unit.writeTime(this->calculateTOF(ion, unit.readMomentum(d)));
 }
 const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
                                                    const Analysis::Electron &electron,
                                                    const double &d) const {
-  return unit.writeTime(this->calculateTOF(electron, d));
+  return unit.writeTime(this->calculateTOF(electron, unit.readMomentum(d)));
 }
 const double Analysis::AnalysisTools::calculatePeriodOfCycle(
     const Analysis::Unit &unit,

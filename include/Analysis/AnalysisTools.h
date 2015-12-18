@@ -31,8 +31,8 @@ class AnalysisTools {
   const double calculateDiffTOF(const Ion &, const double &) const;
   const double calculateDiffTOF(const Electron &, const double &) const;
   const XY calculateMomentumXY(const Object &) const;
-  const double calculateMomentumZ(const Ion &) const;
-  const double calculateMomentumZ(const Electron &) const;
+  const double calculateMomentumZ(const Ion &, bool &info) const;
+  const double calculateMomentumZ(const Electron &, bool &info) const;
   void loadEventDataInputer(Ion &, // main inputer for ion 
                             const double &,
                             const double &,

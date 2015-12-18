@@ -27,6 +27,7 @@ class Unit {
   const double readCharge(const double) const;
   const double readTime(const double) const;
   const double readLength(const double) const;
+  const double readMomentum(const double) const; 
   const double readElectricPotential(const double) const;
   const double readMagnaticField(const double) const;
   const double readDegree(const double) const;
