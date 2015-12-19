@@ -4,7 +4,6 @@
 
 #include "Unit.h"
 #include "ObjectFlag.h"
-#include "JSONReader.h"
 
 namespace Analysis {
 class Object {

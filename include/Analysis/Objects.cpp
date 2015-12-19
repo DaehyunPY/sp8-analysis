@@ -31,7 +31,7 @@ const int &Analysis::Objects::getNumberOfObjects() const {
   return this->numberOfHits;
 }
 const double Analysis::Objects::getLocationXOfCOM() const {
-  const int &n = this->getNumberOfObjects();
+  const int &n = getNumberOfObjects();
   long double sum1 = 0e0, sum2 = 0e0;
   for (int i = 0; i < n; i++) {
     const double tmp = getObject(i).getMass() / getObject(i).getTOF();
@@ -41,7 +41,7 @@ const double Analysis::Objects::getLocationXOfCOM() const {
   return double(sum2 / sum1);
 }
 const double Analysis::Objects::getLocationYOfCOM() const {
-  const int &n = this->getNumberOfObjects();
+  const int &n = getNumberOfObjects();
   long double sum1 = 0e0, sum2 = 0e0;
   for (int i = 0; i < n; i++) {
     const double tmp = getObject(i).getMass() / getObject(i).getTOF();

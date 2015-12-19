@@ -26,9 +26,9 @@
     "pixel_size_of_x": 0.925,
     "pixel_size_of_y": 0.925,
     "dead_time": 10000,
-    "x_zero_of_COM": 126.3783,
-    "y_zero_of_COM": 30.0849,
-    "time_zero_of_TOF": 1783.185
+    "x_zero_of_COM": 126.364,
+    "y_zero_of_COM": 39.805,
+    "time_zero_of_TOF": 1805.941
   },
   "electrons": {
     "number_of_hits": 1,

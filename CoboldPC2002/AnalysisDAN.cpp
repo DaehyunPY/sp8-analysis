@@ -127,10 +127,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
     goto electron;
   }
   pAnalysisTools->loadMomentumCalculator(*pIons);
-//  if (pIons->getIon(0).getMomentum() == 0e0) {
-//	  ionMasterFlag = -40; 
-//	  goto electron; 
-//  }
+  ionMasterFlag = 1; 
 
 
   electron:
@@ -143,6 +140,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
     goto output;
   }
   pAnalysisTools->loadMomentumCalculator(*pElectrons);
+  electronMasterFlag = 1; 
 
 
   output:
