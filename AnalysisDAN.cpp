@@ -3,7 +3,8 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #define FOR_COBOLDPC2002
-#include "../include/Analysis/AnalysisTools.h"
+#include "SoftwareDependent.h"
+#include "Analysis/AnalysisTools.h"
 
 Analysis::Unit *pUnit;
 Analysis::JSONReader *pJSONReader;
@@ -285,5 +286,3 @@ CDAN_API void AnalysisFinalize(CDoubleArray *pEventData,
   logFile.close();
   return;
 }
-
-#pragma clang diagnostic pop
