@@ -122,7 +122,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
     ionMasterFlag = -20;
     goto electron;
   }
-  if (pIons->isAllWithinMasterRegion()) {
+  if (!pIons->isAllWithinMasterRegion()) {
     ionMasterFlag = -21;
     goto electron;
   }
@@ -135,7 +135,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 //      electronMasterFlag = -20;
 //      goto output;
 //    }
-  if (pElectrons->isAllWithinMasterRegion()) {
+  if (!pElectrons->isAllWithinMasterRegion()) {
     electronMasterFlag = -21;
     goto output;
   }
