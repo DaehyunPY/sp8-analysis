@@ -2,17 +2,13 @@ cmake_minimum_required(VERSION 3.3)
 project(BL17_Analysis)
 
 ### analysis library 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  include_directories("${PROJECT_SOURCE_DIR}")
-  add_definitions(-DFOR_COBOLDPC2002)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 add_subdirectory(Analysis)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   ### core setting
   add_definitions(-D_AFXDLL)
-  add_definitions(-DCDAN_EXPORTS)
   add_definitions(-D_USRDLL)
+  add_definitions(-DCDAN_EXPORTS)
   set(CMAKE_MFC_FLAG 2)
   set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}")
   set(SOURCE_FILES
@@ -29,7 +25,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       LMInfo.h
       Resource.h
       SoftwareDependent.cpp
-      SoftwareDependent.h
       StdAfx.cpp
       StdAfx.h
       )

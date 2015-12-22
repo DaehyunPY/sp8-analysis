@@ -32,8 +32,6 @@ static char THIS_FILE[] = __FILE__;
 // #include "EmptyDAN.cpp"
 // #include "StandardDAN.cpp"
 
-#define COBOLDPC2002_SOFTWAREDEPENDENT_H
-#define FOR_COBOLDPC2002
 #include "Analysis/JSONReader.cpp"
 #include "Analysis/EventDataReader.cpp"
 #include "Analysis/Unit.cpp"

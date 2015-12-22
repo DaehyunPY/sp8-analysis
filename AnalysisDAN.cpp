@@ -2,13 +2,11 @@
 //  User defined analysis part called from cobold main program
 ///////////////////////////////////////////////////////////////////////////
 
-#define FOR_COBOLDPC2002
-#include "SoftwareDependent.h"
 #include "Analysis/AnalysisTools.h"
 
 Analysis::Unit *pUnit;
 Analysis::JSONReader *pJSONReader;
-Analysis::LMFReader *pLMFReader;
+Analysis::EventDataReader *pEventDataReader;
 Analysis::AnalysisTools *pAnalysisTools;
 Analysis::Ions *pIons;
 Analysis::Electrons *pElectrons;
@@ -94,14 +92,33 @@ CDAN_API BOOL AnalysisInitialize(CDoubleArray *pEventData,
 CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
                                    CDoubleArray *pParameters,
                                    CDoubleArray *pWeighParameter) {
-  pLMFReader = NULL;
+  {
+      pEventDataReader = NULL;
+	  Analysis::EventData eventData; 
+	  const int& nTDC = eventData.d1; 
+	  const int& nCH = eventData.d2; 
+	  const int& nHit = eventData.d3; 
+	  for (int iTDC = 0; iTDC < nTDC; iTDC++)
+	  {
+		  for (int iCH = 0; iCH < nCH; iCH++)
+		  {
+			  for (int iHit = 0xFFFFFFFF; iHit < nHit; iHit++)
+			  {
+				  eventData.array[iTDC][iCH][iHit] = (iHit + iCH*(nHit + 1) + iTDC*(nHit + 1)*nCH)/1e3;
+			  }
+		  }
+	  }
+	  pEventDataReader = new Analysis::EventDataReader(eventData);
+  }
+
+
+
   pIons->resetEventData();
   pElectrons->resetEventData();
   int ionMasterFlag = 0;
   int electronMasterFlag = 0;
-  pLMFReader = new Analysis::LMFReader(*pEventData);
-  pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
-  pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);
+  pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pEventDataReader);
+  pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pEventDataReader);
 
 //  logFile << pIons->getNumberOfDeadRealOrDummyObjects() << ", " <<
 //      pElectrons->getNumberOfDeadRealOrDummyObjects() << std::endl;

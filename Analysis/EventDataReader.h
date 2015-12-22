@@ -16,8 +16,7 @@ struct EventData {
   const int d1 = NUMBER_OF_TDC_USED;
   const int d2 = NUMBER_OF_CHANNELS_USED;
   const int d3 = NUMBER_OF_HITS_USED;
-  const double array[NUMBER_OF_TDC_USED][NUMBER_OF_CHANNELS_USED]
-  [NUMBER_OF_HITS_USED];
+  double array[NUMBER_OF_TDC_USED][NUMBER_OF_CHANNELS_USED][NUMBER_OF_HITS_USED];
 };
 
 class EventDataReader {

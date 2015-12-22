@@ -8,11 +8,6 @@
 #include "Electrons.h"
 #include "EventDataReader.h"
 
-#ifdef FOR_COBOLDPC2002
-#include "LMFReader.h"
-#endif
-
-
 namespace Analysis {
 struct XY { const double x; const double y; };
 
