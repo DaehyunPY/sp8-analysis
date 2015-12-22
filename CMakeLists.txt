@@ -13,7 +13,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}")
   set(SOURCE_FILES
       Res/CDan.rc2
-      AnalysisDAN.cpp
       CDan.cpp
       CDan.h
       CDan.rc
