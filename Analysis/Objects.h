@@ -32,7 +32,7 @@ class Objects {
   const int &getNumberOfRealOrDummyObjects() const;
   const Object &getObject(const int &) const;
   const Object &getDummyObject(const int &) const;
-  const int __unused getNumberOfDummyObject() const;
+  const int getNumberOfDummyObject() const;
   const double getLocationXOfCOM() const;
   const double getLocationYOfCOM() const;
   const double getTotalMomentumX() const;
@@ -42,18 +42,18 @@ class Objects {
   const double getTotalMomentumXY() const;
   const double getTotalEnergy() const;
   const double getTotalEnergyXY() const;
-  const double __unused getDirectionXOfCOM() const;
-  const double __unused getDirectionYOfCOM() const;
-  const double __unused getDirectionZOfCOM() const;
-  const double __unused getLocationXOfCOM(Unit &) const;
-  const double __unused getLocationYOfCOM(Unit &) const;
-  const double __unused getTotalMomentumX(Unit &) const;
-  const double __unused getTotalMomentumY(Unit &) const;
-  const double __unused getTotalMomentumZ(Unit &) const;
-  const double __unused getTotalMomentum(Unit &) const;
-  const double __unused getTotalMomentumXY(Unit &) const;
-  const double __unused getTotalEnergy(Unit &) const;
-  const double __unused getTotalEnergyXY(Unit &) const;
+  const double getDirectionXOfCOM() const;
+  const double getDirectionYOfCOM() const;
+  const double getDirectionZOfCOM() const;
+  const double getLocationXOfCOM(Unit &) const;
+  const double getLocationYOfCOM(Unit &) const;
+  const double getTotalMomentumX(Unit &) const;
+  const double getTotalMomentumY(Unit &) const;
+  const double getTotalMomentumZ(Unit &) const;
+  const double getTotalMomentum(Unit &) const;
+  const double getTotalMomentumXY(Unit &) const;
+  const double getTotalEnergy(Unit &) const;
+  const double getTotalEnergyXY(Unit &) const;
   const int getNumberOfDeadObjects() const;
   const int getNumberOfDeadDummyObjects() const;
   const int getNumberOfDeadRealOrDummyObjects() const;
@@ -61,11 +61,11 @@ class Objects {
   const bool isRealObject(const int &) const;
   const bool existDeadObject() const;
   const bool existDeadDummyObject() const;
-  const bool __unused existDeadRealOrDummyObject() const;
-  const bool __unused isAllDeadObjects() const;
-  const bool __unused isAllDeadDummyObjects() const;
-  const bool __unused isAllDeadRealAndDummyObjects() const;
-  const bool __unused isAllWithinMasterRegion() const;
+  const bool existDeadRealOrDummyObject() const;
+  const bool isAllDeadObjects() const;
+  const bool isAllDeadDummyObjects() const;
+  const bool isAllDeadRealAndDummyObjects() const;
+  const bool isAllWithinMasterRegion() const;
 };
 }
 

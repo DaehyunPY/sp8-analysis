@@ -1,4 +1,3 @@
-#include <sys/cdefs.h>
 #include "Electrons.h"
 Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                                const Analysis::JSONReader &reader,
@@ -44,7 +43,7 @@ const Analysis::Electron &Analysis::Electrons::getElectron(const int &i) const {
   assert(isRealObject(i));
   return *pElectron[i];
 }
-const Analysis::Electron  __unused &Analysis::Electrons::getDummyElectron(const int &i) const {
+const Analysis::Electron &Analysis::Electrons::getDummyElectron(const int &i) const {
   assert(isDummyObject(i));
   return *pElectron[i];
 }

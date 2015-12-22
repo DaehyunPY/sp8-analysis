@@ -1,4 +1,3 @@
-#include <sys/cdefs.h>
 #ifndef ANALYSIS_ANALYSISTOOLS_H
 #define ANALYSIS_ANALYSISTOOLS_H
 
@@ -48,8 +47,8 @@ class AnalysisTools {
  public:
   AnalysisTools(const Unit &, const JSONReader &);
   ~AnalysisTools();
-  const int __unused &getEventNumber() const;
-  void __unused loadEventCounter();
+  const int &getEventNumber() const;
+  void loadEventCounter();
   const double calculateTOF(const Ion &,
                             const double &) const;
   const double calculateTOF(const Unit &,
@@ -57,11 +56,11 @@ class AnalysisTools {
                             const double &) const;
   const double calculateTOF(const Electron &,
                             const double &) const;
-  const double __unused calculateTOF(const Unit &,
+  const double calculateTOF(const Unit &,
                             const Electron &,
                             const double &) const;
   const double calculatePeriodOfCycle(const Object &) const;
-  const double __unused calculatePeriodOfCycle(const Unit &,
+  const double calculatePeriodOfCycle(const Unit &,
                                       const Object &) const;
   void loadEventDataInputer(Ion &,
                             const Unit &,
@@ -77,8 +76,8 @@ class AnalysisTools {
                             const int &) const;
   void loadMomentumCalculator(Ion &) const;
   void loadMomentumCalculator(Electron &) const;
-  void __unused loadMomentumCalculator(Ions &) const;
-  void __unused loadMomentumCalculator(Electrons &) const;
+  void loadMomentumCalculator(Ions &) const;
+  void loadMomentumCalculator(Electrons &) const;
 
 #ifdef FOR_COBOLDPC2002
   public:

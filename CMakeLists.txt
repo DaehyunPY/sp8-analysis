@@ -1,20 +1,18 @@
 cmake_minimum_required(VERSION 3.3)
 project(BL17_Analysis)
 
-### sub directory
+### analysis library 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  include_directories("${PROJECT_SOURCE_DIR}")
   add_definitions(-DFOR_COBOLDPC2002)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 add_subdirectory(Analysis)
 
-### for windows
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   ### core setting
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  add_definitions(-D_AFXDLL)
   set(CMAKE_MFC_FLAG 2)
   set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}")
-  add_definitions(-D_AFXDLL)
-  include_directories("${PROJECT_SOURCE_DIR}")
   set(SOURCE_FILES
       Res/CDan.rc2
       AnalysisDAN.cpp
@@ -35,7 +33,11 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       )
 
   ### install library
-  add_library(CDan SHARED WIN32 ${SOURCE_FILES})
-  install(TAGETS CDan LIBRARY DESTINATION "lib")
-  target_link_libraries(CDan AnalysisSharedLib)
+  add_library(CDan SHARED ${SOURCE_FILES})
+  install(TARGETS CDan 
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+    )
+  # target_link_libraries(CDan AnalysisSharedLib)
+  target_link_libraries(CDan AnalysisStaticLib)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")

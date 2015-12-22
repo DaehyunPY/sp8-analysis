@@ -56,12 +56,12 @@ const double &Analysis::Object::getTOF() const { return TOF; }
 const double &Analysis::Object::getMomentumX() const { return momentumX; }
 const double &Analysis::Object::getMomentumY() const { return momentumY; }
 const double &Analysis::Object::getMomentumZ() const { return momentumZ; }
-const double __unused Analysis::Object::getMomentum() const {
+const double Analysis::Object::getMomentum() const {
   return pow(pow(getMomentumX(), 2e0)
                  + pow(getMomentumY(), 2e0)
                  + pow(getMomentumZ(), 2e0), 0.5e0);
 }
-const double __unused Analysis::Object::getEnergy() const {
+const double Analysis::Object::getEnergy() const {
   return pow(getMomentum(), 2e0) / (2e0 * getMass());
 }
 const Analysis::ObjectFlag &Analysis::Object::getObjectFlag() const {
@@ -70,58 +70,58 @@ const Analysis::ObjectFlag &Analysis::Object::getObjectFlag() const {
 const bool Analysis::Object::isWithinMasterRegion() const {
   return (getTOF() < getMaxOfTOF()) && (getTOF() > getMinOfTOF());
 }
-const double __unused  __unused Analysis::Object::getDirectionX() const {
+const double Analysis::Object::getDirectionX() const {
   return getMomentumX() / getMomentum();
 }
-const double __unused  __unused Analysis::Object::getDirectionY() const {
+const double Analysis::Object::getDirectionY() const {
   return getMomentumY() / getMomentum();
 }
-const double __unused  __unused Analysis::Object::getDirectionZ() const {
+const double Analysis::Object::getDirectionZ() const {
   return getMomentumZ() / getMomentum();
 }
-const double __unused  __unused Analysis::Object::getLocationX(const Analysis::Unit &unit) const {
+const double Analysis::Object::getLocationX(const Analysis::Unit &unit) const {
   return unit.writeLength(getLocationX());
 }
-const double __unused  __unused Analysis::Object::getLocationY(const Analysis::Unit &unit) const {
+const double Analysis::Object::getLocationY(const Analysis::Unit &unit) const {
   return unit.writeLength(getLocationY());
 }
-const double __unused  __unused Analysis::Object::getTOF(const Analysis::Unit &unit) const {
+const double Analysis::Object::getTOF(const Analysis::Unit &unit) const {
   return unit.writeTime(getTOF());
 }
-const double __unused  __unused Analysis::Object::getMomentumX(const Analysis::Unit &unit) const {
+const double Analysis::Object::getMomentumX(const Analysis::Unit &unit) const {
   return unit.writeMomentum(getMomentumX());
 }
-const double __unused  __unused Analysis::Object::getMomentumY(const Analysis::Unit
+const double Analysis::Object::getMomentumY(const Analysis::Unit
                                                                &unit) const {
   return unit.writeMomentum(getMomentumY());
 }
-const double __unused  __unused Analysis::Object::getMomentumZ(const Analysis::Unit
+const double Analysis::Object::getMomentumZ(const Analysis::Unit
                                                                &unit) const {
   return unit.writeMomentum(getMomentumZ());
 }
-const double __unused  __unused Analysis::Object::getMomentum(const Analysis::Unit
+const double Analysis::Object::getMomentum(const Analysis::Unit
                                                               &unit) const {
   return unit.writeMomentum(getMomentum());
 }
-const double __unused  __unused Analysis::Object::getEnergy(const Analysis::Unit &unit)
+const double Analysis::Object::getEnergy(const Analysis::Unit &unit)
 const {
   return unit.writeEnergy(getEnergy());
 }
 Analysis::Object::Object() : Object(0e0, 0e0, 0e0, 0e0) { return; }
-const double __unused Analysis::Object::getMomentumXY() const {
+const double Analysis::Object::getMomentumXY() const {
   return pow(pow(getMomentumX(), 2e0) + pow(getMomentumY(), 2e0), 0.5e0);
 }
-const double __unused Analysis::Object::getEnergyXY() const {
+const double Analysis::Object::getEnergyXY() const {
   return getMomentumXY() / (2e0 * getMass());
 }
-const double __unused  __unused Analysis::Object::getMomentumXY(const Analysis::Unit
+const double Analysis::Object::getMomentumXY(const Analysis::Unit
                                                                 &unit) const {
   return unit.writeMomentum(getMomentumXY());
 }
-const double __unused  __unused Analysis::Object::getEnergyXY(const Analysis::Unit
+const double Analysis::Object::getEnergyXY(const Analysis::Unit
                                                               &unit) const {
   return unit.writeEnergy(getMomentumXY());
 }
-const bool __unused Analysis::Object::isDead() const {
+const bool Analysis::Object::isDead() const {
   return getObjectFlag().isDead();
 }

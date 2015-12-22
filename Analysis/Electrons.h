@@ -22,7 +22,7 @@ class Electrons : public Objects {
   Electron &setElectronMembers(const int &i);
   Electron &setDummyElectronMembers(const int &i);
   const Electron &getElectron(const int &i) const;
-  const Electron  __unused &getDummyElectron(const int &i) const;
+  const Electron &getDummyElectron(const int &i) const;
 };
 }
 

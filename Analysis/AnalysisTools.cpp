@@ -139,7 +139,7 @@ const Analysis::ElectronParameters
 &Analysis::AnalysisTools::getElectronParameters() const {
   return this->electronParameters;
 }
-void __unused Analysis::AnalysisTools::loadEventCounter() { this->eventNumber += 1; }
+void Analysis::AnalysisTools::loadEventCounter() { this->eventNumber += 1; }
 Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
                                        const Analysis::JSONReader &reader)
     : AnalysisTools(
@@ -264,7 +264,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   }
   return;
 }
-const int __unused &Analysis::AnalysisTools::getEventNumber() const {
+const int &Analysis::AnalysisTools::getEventNumber() const {
   return this->eventNumber;
 }
 const double Analysis::AnalysisTools::calculatePeriodOfCycle(
@@ -301,14 +301,14 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                              f);
   return;
 }
-void __unused Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ions &ions) const {
+void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ions &ions) const {
   const int &n = ions.getNumberOfObjects();
   for (int i = 0; i < n; i++) {
     loadMomentumCalculator(ions.setIonMembers(i));
   }
   return;
 }
-void __unused Analysis::AnalysisTools::loadMomentumCalculator(
+void Analysis::AnalysisTools::loadMomentumCalculator(
     Analysis::Electrons &elecs) const {
   const int &n = elecs.getNumberOfObjects();
   for (int i = 0; i < n; i++) {
@@ -375,12 +375,12 @@ const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
                                                    const double &d) const {
   return unit.writeTime(this->calculateTOF(ion, unit.readMomentum(d)));
 }
-const double __unused Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
+const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
                                                    const Analysis::Electron &electron,
                                                    const double &d) const {
   return unit.writeTime(this->calculateTOF(electron, unit.readMomentum(d)));
 }
-const double __unused Analysis::AnalysisTools::calculatePeriodOfCycle(
+const double Analysis::AnalysisTools::calculatePeriodOfCycle(
     const Analysis::Unit &unit,
     const Analysis::Object &object) const {
   return unit.writeTime(this->calculatePeriodOfCycle(object));

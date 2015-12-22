@@ -35,7 +35,7 @@ const double Analysis::Unit::readMagnaticField(const double d) const {
 const double Analysis::Unit::readDegree(const double d) const {
   return d * degree;
 }
-const double __unused Analysis::Unit::writeDegree(const double d) const {
+const double Analysis::Unit::writeDegree(const double d) const {
   return d / degree;
 }
 const double Analysis::Unit::readElectronRestMass(const double d) const {

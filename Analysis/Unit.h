@@ -1,4 +1,3 @@
-#include <sys/cdefs.h>
 #ifndef ANALYSIS_UNIT_H
 #define ANALYSIS_UNIT_H
 
@@ -12,10 +11,10 @@ class Unit {
   const double electronRestMass = 9.1093829140e-31;
   const double elementaryCharge = 1.60217656535e-19;
   const double reducedPlanckConstant = 1.05457172647e-34;
-  const double __unused coulombForceConstant = 8.9875517873681e9;
-  const double __unused fineStructureConstant = 7.297352566417e-3;
+  const double coulombForceConstant = 8.9875517873681e9;
+  const double fineStructureConstant = 7.297352566417e-3;
   const double bohrRadius = 5.291772109217e-11;
-  const double __unused hartreeEnergy = 4.35974465054e-18;
+  const double hartreeEnergy = 4.35974465054e-18;
   const double auMomentum = reducedPlanckConstant / bohrRadius;
   const double gauss = 1.e-4;
   const double nano = 1.e-9;
@@ -36,7 +35,7 @@ class Unit {
   const double writeTime(const double) const;
   const double writeMomentum(const double) const;
   const double writeEnergy(const double) const;
-  const double __unused writeDegree(const double) const;
+  const double writeDegree(const double) const;
 
  public:
   Unit();
