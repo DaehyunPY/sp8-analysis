@@ -11,6 +11,8 @@ add_subdirectory(Analysis)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   ### core setting
   add_definitions(-D_AFXDLL)
+  add_definitions(-DCDAN_EXPORTS)
+  add_definitions(-D_USRDLL)
   set(CMAKE_MFC_FLAG 2)
   set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}")
   set(SOURCE_FILES
