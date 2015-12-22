@@ -35,7 +35,7 @@ static char THIS_FILE[] = __FILE__;
 #define COBOLDPC2002_SOFTWAREDEPENDENT_H
 #define FOR_COBOLDPC2002
 #include "Analysis/JSONReader.cpp"
-#include "Analysis/LMFReader.cpp"
+#include "Analysis/EventDataReader.cpp"
 #include "Analysis/Unit.cpp"
 #include "Analysis/Flag.cpp"
 #include "Analysis/ObjectFlag.cpp"

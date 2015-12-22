@@ -6,6 +6,7 @@
 #include "ElectronParameters.h"
 #include "Ions.h"
 #include "Electrons.h"
+#include "EventDataReader.h"
 
 #ifdef FOR_COBOLDPC2002
 #include "LMFReader.h"
@@ -13,13 +14,14 @@
 
 
 namespace Analysis {
+struct XY { const double x; const double y; };
+
 class AnalysisTools {
  private:
   int eventNumber;
   const EquipmentParameters equipmentParameters;
   const IonParameters ionParameters;
   const ElectronParameters electronParameters;
-  struct XY { const double x; const double y; };
   AnalysisTools(const EquipmentParameters &,
                 const IonParameters &,
                 const ElectronParameters &);
@@ -59,10 +61,11 @@ class AnalysisTools {
   const double calculateTOF(const Unit &,
                             const Electron &,
                             const double &) const;
-  const double calculateFrequencyOfCycle(const double &m, const double &q, const double &B) const; 
-  const double calculateFrequencyOfCycle(const Object &) const; 
+  const double calculateFrequencyOfCycle
+      (const double &m, const double &q, const double &B) const;
+  const double calculateFrequencyOfCycle(const Object &) const;
   const double calculatePeriodOfCycle(const double &m,
-	  const double &q, const double &B) const; 
+                                      const double &q, const double &B) const;
   const double calculatePeriodOfCycle(const Object &) const;
   const double calculatePeriodOfCycle(const Unit &,
                                       const Object &) const;
@@ -83,23 +86,21 @@ class AnalysisTools {
   void loadMomentumCalculator(Ions &) const;
   void loadMomentumCalculator(Electrons &) const;
 
-#ifdef FOR_COBOLDPC2002
   public:
    void loadEventDataInputer(Ion &,
                              const Unit &,
-                             const LMFReader &,
+                             const EventDataReader &,
                              const int &) const;
    void loadEventDataInputer(Ions &,
                              const Unit &,
-                             const LMFReader &) const;
+                             const EventDataReader &) const;
    void loadEventDataInputer(Electron &,
                              const Unit &,
-                             const LMFReader &,
+                             const EventDataReader &,
                              const int &) const;
    void loadEventDataInputer(Electrons &,
                              const Unit &,
-                             const LMFReader &) const;
-#endif
+                             const EventDataReader &) const;
 };
 }
 #endif

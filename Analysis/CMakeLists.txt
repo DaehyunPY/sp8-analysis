@@ -10,7 +10,7 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}")
 set(HEADER_FILES
     JSONReader.h
-    LMFReader.h
+    EventDataReader.h
     Unit.h
     Flag.h
     ObjectFlag.h
@@ -29,7 +29,7 @@ set(HEADER_FILES
     )
 set(SOURCE_FILES
     JSONReader.cpp
-    LMFReader.cpp
+    EventDataReader.cpp
     Unit.cpp
     Flag.cpp
     ObjectFlag.cpp

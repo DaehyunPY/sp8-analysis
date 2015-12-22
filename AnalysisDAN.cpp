@@ -99,7 +99,6 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
   pElectrons->resetEventData();
   int ionMasterFlag = 0;
   int electronMasterFlag = 0;
-
   pLMFReader = new Analysis::LMFReader(*pEventData);
   pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, *pLMFReader);
   pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, *pLMFReader);

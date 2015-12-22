@@ -148,7 +148,7 @@ Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
     Analysis::ElectronParameters(unit, reader)) {
   return;
 }
-const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateMomentumXY(
+const Analysis::XY Analysis::AnalysisTools::calculateMomentumXY(
     const Object &object) const {
   const double pi = atan2(0e0, -1e0);
   const double &m = object.getMass();
@@ -311,34 +311,33 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   return;
 }
 
-#ifdef FOR_COBOLDPC2002
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                                                    const Unit &unit,
-                                                   const LMFReader &reader,
+                                                   const EventDataReader &reader,
                                                    const int &iHit) const {
   this->loadEventDataInputer(ion,
                              unit,
-                             reader.getAt(1, 1, iHit)/1000e0,
-                             reader.getAt(2, 0, iHit)/1000e0,
-                             reader.getAt(2, 1, iHit)/1000e0,
+                             reader.getAt(1, 1, iHit),
+                             reader.getAt(2, 0, iHit),
+                             reader.getAt(2, 1, iHit),
                              0);
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const Unit &unit,
-                                                   const LMFReader &reader,
+                                                   const EventDataReader &reader,
                                                    const int &iHit) const {
   this->loadEventDataInputer(electron,
                              unit,
-                             reader.getAt(0, 0, iHit)/1000e0,
-                             reader.getAt(0, 1, iHit)/1000e0,
-                             reader.getAt(1, 0, iHit)/1000e0,
+                             reader.getAt(0, 0, iHit),
+                             reader.getAt(0, 1, iHit),
+                             reader.getAt(1, 0, iHit),
                              0);
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
                                                    const Unit &unit,
-                                                   const LMFReader &reader) const {
+                                                   const EventDataReader &reader) const {
   const int &n = ions.getNumberOfObjects();
   const int &m = ions.getNumberOfRealOrDummyObjects();
   for(int i = 0; i < n; i++) {
@@ -351,7 +350,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electrons,
                                                    const Unit &unit,
-                                                   const LMFReader &reader) const {
+                                                   const EventDataReader &reader) const {
   const int &n = electrons.getNumberOfObjects();
   const int &m = electrons.getNumberOfRealOrDummyObjects();
   for(int i = 0; i < n; i++) {
@@ -362,7 +361,6 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electron
   }
   return;
 }
-#endif
 
 const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
                                                    const Analysis::Ion &ion,
@@ -397,7 +395,7 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(
     const Analysis::Object &object) const {
   return unit.writeTime(calculatePeriodOfCycle(object));
 }
-const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateRotation(
+const Analysis::XY Analysis::AnalysisTools::calculateRotation(
     const XY &xy,
     const double &theta) const {
   return {xy.x * cos(theta) - xy.y * sin(theta),
