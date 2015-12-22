@@ -108,6 +108,8 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 //      pElectrons->getNumberOfDeadRealOrDummyObjects() << std::endl;
   if (pIons->isAllDeadRealAndDummyObjects()
       || pElectrons->isAllDeadRealAndDummyObjects()) {
+	pIons->resetEventData(); 
+	pElectrons->resetEventData(); 
     ionMasterFlag = -10;
     electronMasterFlag = -10;
     if (pIons->isAllDeadRealAndDummyObjects()) { ionMasterFlag = -11; }
@@ -119,7 +121,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 
 
 //  ion:
-  if (pIons->existDeadRealOrDummyObject()) {
+  if (pIons->existDeadObject()) {
     ionMasterFlag = -20;
     goto electron;
   }
@@ -132,10 +134,10 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray *pEventData,
 
 
   electron:
-//    if(pElectrons->existDeadRealOrDummyObject()) {
-//      electronMasterFlag = -20;
-//      goto output;
-//    }
+    if(pElectrons->existDeadObject()) {
+      electronMasterFlag = -20;
+      goto output;
+    }
   if (!pElectrons->isAllWithinMasterRegion()) {
     electronMasterFlag = -21;
     goto output;

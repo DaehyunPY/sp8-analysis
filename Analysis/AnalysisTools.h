@@ -59,6 +59,10 @@ class AnalysisTools {
   const double calculateTOF(const Unit &,
                             const Electron &,
                             const double &) const;
+  const double calculateFrequencyOfCycle(const double &m, const double &q, const double &B) const; 
+  const double calculateFrequencyOfCycle(const Object &) const; 
+  const double calculatePeriodOfCycle(const double &m,
+	  const double &q, const double &B) const; 
   const double calculatePeriodOfCycle(const Object &) const;
   const double calculatePeriodOfCycle(const Unit &,
                                       const Object &) const;

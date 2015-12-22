@@ -15,12 +15,12 @@ void Analysis::AnalysisTools::resetCounter() {
 }
 const double Analysis::AnalysisTools::calculateTOF(const Ion &ion,
                                                    const double &p0) const {
-  const double &len1 = this->getEquipmentParameters().getLengthOfL1();
-  const double &len2 = this->getEquipmentParameters().getLengthOfL2();
-  const double &len3 = this->getEquipmentParameters().getLengthOfL3();
-  const double &E1 = this->getEquipmentParameters().getElectricFiledOfL1();
-  const double &E2 = this->getEquipmentParameters().getElectricFiledOfL2();
-  const double &E3 = this->getEquipmentParameters().getElectricFiledOfL3();
+  const double &len1 = getEquipmentParameters().getLengthOfL1();
+  const double &len2 = getEquipmentParameters().getLengthOfL2();
+  const double &len3 = getEquipmentParameters().getLengthOfL3();
+  const double &E1 = getEquipmentParameters().getElectricFiledOfL1();
+  const double &E2 = getEquipmentParameters().getElectricFiledOfL2();
+  const double &E3 = getEquipmentParameters().getElectricFiledOfL3();
   const double &m = ion.getMass();
   const double &q = ion.getCharge();
   const double p1 = pow(pow(p0, 2e0) + 2e0 * m * q * E1 * len1, 0.5e0);
@@ -33,12 +33,12 @@ const double Analysis::AnalysisTools::calculateTOF(const Ion &ion,
 }
 const double Analysis::AnalysisTools::calculateDiffTOF(const Ion &ion,
                                                        const double &p0) const {
-  const double &len1 = this->getEquipmentParameters().getLengthOfL1();
-  const double &len2 = this->getEquipmentParameters().getLengthOfL2();
-  const double &len3 = this->getEquipmentParameters().getLengthOfL3();
-  const double &E1 = this->getEquipmentParameters().getElectricFiledOfL1();
-  const double &E2 = this->getEquipmentParameters().getElectricFiledOfL2();
-  const double &E3 = this->getEquipmentParameters().getElectricFiledOfL3();
+  const double &len1 = getEquipmentParameters().getLengthOfL1();
+  const double &len2 = getEquipmentParameters().getLengthOfL2();
+  const double &len3 = getEquipmentParameters().getLengthOfL3();
+  const double &E1 = getEquipmentParameters().getElectricFiledOfL1();
+  const double &E2 = getEquipmentParameters().getElectricFiledOfL2();
+  const double &E3 = getEquipmentParameters().getElectricFiledOfL3();
   const double &m = ion.getMass();
   const double &q = ion.getCharge();
   return
@@ -83,9 +83,9 @@ const double Analysis::AnalysisTools::calculateMomentumZ(const Ion &ion, bool& i
 }
 const double Analysis::AnalysisTools::calculateTOF(
     const Analysis::Electron &electron, const double &p0) const {
-  const double &len1 = this->getEquipmentParameters().getLengthOfD1();
-  const double &len2 = this->getEquipmentParameters().getLengthOfD2();
-  const double &E1 = this->getEquipmentParameters().getElectricFiledOfD1();
+  const double &len1 = getEquipmentParameters().getLengthOfD1();
+  const double &len2 = getEquipmentParameters().getLengthOfD2();
+  const double &E1 = getEquipmentParameters().getElectricFiledOfD1();
   const double &m = electron.getMass();
   const double &q = electron.getCharge();
   const double p1 = pow(pow(p0, 2e0) + 2e0 * m * q * E1 * len1, 0.5e0);
@@ -95,9 +95,9 @@ const double Analysis::AnalysisTools::calculateTOF(
 }
 const double Analysis::AnalysisTools::calculateDiffTOF
     (const Electron &elec, const double &p0) const {
-  const double &len1 = this->getEquipmentParameters().getLengthOfD1();
-  const double &len2 = this->getEquipmentParameters().getLengthOfD2();
-  const double &E1 = this->getEquipmentParameters().getElectricFiledOfD1();
+  const double &len1 = getEquipmentParameters().getLengthOfD1();
+  const double &len2 = getEquipmentParameters().getLengthOfD2();
+  const double &E1 = getEquipmentParameters().getElectricFiledOfD1();
   const double &m = elec.getMass();
   const double &q = elec.getCharge();
   return -1.0 * len2 * m * pow(p0, 1.0)
@@ -149,25 +149,23 @@ Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
   return;
 }
 const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateMomentumXY(
-    const Object &obj) const {
+    const Object &object) const {
   const double pi = atan2(0e0, -1e0);
-  const double &m = obj.getMass();
-  const double &q = obj.getCharge();
-  const double &t = obj.getTOF();
-  const double &x = obj.getLocationX();
-  const double &y = obj.getLocationY();
-  const double &B = this->getEquipmentParameters().getMagneticFiled();
-  if (float(B) == 0e0) {
+  const double &m = object.getMass();
+  const double &q = object.getCharge();
+  const double &t = object.getTOF();
+  const double &x = object.getLocationX();
+  const double &y = object.getLocationY();
+  const double &B = getEquipmentParameters().getMagneticFiled();
+  if (float(calculateFrequencyOfCycle(object)) == 0e0) { // small magnetic filed 
     return {m * x / t, m * y / t};
-  } else {
-    const double period
-        = this->calculatePeriodOfCycle(obj);
+  } else { // big magnetic filed 
+    const double period = calculatePeriodOfCycle(object);
     double theta = t / period;
-    theta = theta - floor(theta);
-    theta = 2e0 * pi * theta;
+    theta = 2e0 * pi * (theta - int(theta));
     theta = 0.5e0 * theta;
     const double p0 = fabs(q * B / sin(theta) / 2e0);
-    return this->calculateRotation({p0 * x, p0 * y}, theta);
+    return calculateRotation({p0 * x, p0 * y}, theta);
   }
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
@@ -175,14 +173,14 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                                                    const double &y1,
                                                    const double &t1,
                                                    const int &f1) const {
-  const double &theta = this->getIonParameters().getAngleOfDetector();
-  const double &dx = this->getIonParameters().getPixelSizeOfX();
-  const double &dy = this->getIonParameters().getPixelSizeOfY();
-  const double &deadTime = this->getIonParameters().getDeadTime();
-  const double &x0 = this->getIonParameters().getXZeroOfCOM();
-  const double &y0 = this->getIonParameters().getYZeroOfCOM();
-  const double &t0 = this->getIonParameters().getTimeZeroOfTOF();
-  const XY xy = this->calculateRotation({x1 * dx, y1 * dy}, theta);
+  const double &theta = getIonParameters().getAngleOfDetector();
+  const double &dx = getIonParameters().getPixelSizeOfX();
+  const double &dy = getIonParameters().getPixelSizeOfY();
+  const double &deadTime = getIonParameters().getDeadTime();
+  const double &x0 = getIonParameters().getXZeroOfCOM();
+  const double &y0 = getIonParameters().getYZeroOfCOM();
+  const double &t0 = getIonParameters().getTimeZeroOfTOF();
+  const XY xy = calculateRotation({x1 * dx, y1 * dy}, theta);
   const double x = xy.x - x0;
   const double y = xy.y - y0;
   const double t = t1 - t0;
@@ -206,14 +204,14 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const double &y1,
                                                    const double &t1,
                                                    const int &flag1) const {
-  const double &theta = this->getElectronParameters().getAngleOfDetector();
-  const double &dx = this->getElectronParameters().getPixelSizeOfX();
-  const double &dy = this->getElectronParameters().getPixelSizeOfY();
-  const double &deadTime = this->getElectronParameters().getDeadTime();
-  const double &x0 = this->getElectronParameters().getXZeroOfCOM();
-  const double &y0 = this->getElectronParameters().getYZeroOfCOM();
-  const double &t0 = this->getElectronParameters().getTimeZeroOfTOF();
-  const XY xy = this->calculateRotation({x1 * dx, y1 * dy}, theta);
+  const double &theta = getElectronParameters().getAngleOfDetector();
+  const double &dx = getElectronParameters().getPixelSizeOfX();
+  const double &dy = getElectronParameters().getPixelSizeOfY();
+  const double &deadTime = getElectronParameters().getDeadTime();
+  const double &x0 = getElectronParameters().getXZeroOfCOM();
+  const double &y0 = getElectronParameters().getYZeroOfCOM();
+  const double &t0 = getElectronParameters().getTimeZeroOfTOF();
+  const XY xy = calculateRotation({x1 * dx, y1 * dy}, theta);
   const double x = xy.x - x0;
   const double y = xy.y - y0;
   const double t = t1 - t0;
@@ -234,8 +232,8 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
 	bool info; 
-  const XY &pxy = this->calculateMomentumXY(ion);
-  const double &pz = this->calculateMomentumZ(ion, info);
+  const XY &pxy = calculateMomentumXY(ion);
+  const double &pz = calculateMomentumZ(ion, info);
   ion.setMomentumX(pxy.x);
   ion.setMomentumY(pxy.y);
   if(info)
@@ -250,8 +248,8 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
 void Analysis::AnalysisTools::loadMomentumCalculator(
     Analysis::Electron &electron) const {
 	bool info; 
-  const XY &pxy = this->calculateMomentumXY(electron);
-  const double &pz = this->calculateMomentumZ(electron, info);
+  const XY &pxy = calculateMomentumXY(electron);
+  const double &pz = calculateMomentumZ(electron, info);
   electron.setMomentumX(pxy.x);
   electron.setMomentumY(pxy.y);
   electron.setMomentumZ(pz);  
@@ -265,15 +263,11 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   return;
 }
 const int &Analysis::AnalysisTools::getEventNumber() const {
-  return this->eventNumber;
+  return eventNumber;
 }
 const double Analysis::AnalysisTools::calculatePeriodOfCycle(
     const Object &object) const {
-  const double pi = atan2(0e0, -1e0);
-  const double &m = object.getMass();
-  const double &q = object.getCharge();
-  const double &B = this->getEquipmentParameters().getMagneticFiled();
-  return 2e0 * pi * m / B / q;
+  return calculatePeriodOfCycle(object.getMass(), object.getCharge(), getEquipmentParameters().getMagneticFiled());
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                                                    const Unit &unit,
@@ -380,10 +374,28 @@ const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
                                                    const double &d) const {
   return unit.writeTime(this->calculateTOF(electron, unit.readMomentum(d)));
 }
+
+const double Analysis::AnalysisTools::calculateFrequencyOfCycle(const double& m, const double& q, const double& B) const
+{
+	const double pi = atan2(0e0, -1e0); 
+	return 0.5e0 / pi / m * B * q; 
+}
+
+const double Analysis::AnalysisTools::calculateFrequencyOfCycle(const Object &object) const
+{
+	return calculateFrequencyOfCycle(object.getMass(), object.getCharge(), getEquipmentParameters().getMagneticFiled()); 
+}
+
+const double Analysis::AnalysisTools::calculatePeriodOfCycle(const double& m, const double& q, const double& B) const
+{
+  const double pi = atan2(0e0, -1e0);
+  return 2e0 * pi * m / B / q;
+}
+
 const double Analysis::AnalysisTools::calculatePeriodOfCycle(
     const Analysis::Unit &unit,
     const Analysis::Object &object) const {
-  return unit.writeTime(this->calculatePeriodOfCycle(object));
+  return unit.writeTime(calculatePeriodOfCycle(object));
 }
 const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateRotation(
     const XY &xy,
