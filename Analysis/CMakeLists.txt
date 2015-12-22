@@ -4,9 +4,6 @@ project(Analysis)
 ### core setting
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}")
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  add_definitions(-DFOR_COBOLDPC2002)
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 find_package(RapidJSON)
 set(HEADER_FILES
     JSONReader.h

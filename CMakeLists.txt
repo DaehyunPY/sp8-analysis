@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.3)
 project(BL17_Analysis)
 
 ### sub directory
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  add_definitions(-DFOR_COBOLDPC2002)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 add_subdirectory(Analysis)
 
 ### for windows
@@ -11,7 +14,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(CMAKE_MFC_FLAG 2)
   set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}")
   add_definitions(-D_AFXDLL)
-  add_definitions(-DFOR_COBOLDPC2002)
   include_directories("${PROJECT_SOURCE_DIR}")
   set(SOURCE_FILES
       Res/CDan.rc2
