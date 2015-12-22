@@ -170,7 +170,7 @@ const bool Analysis::Objects::isAllWithinMasterRegion() const {
   for(int i = 0; i < numberOfHits; i++) {
     b = b && getObject(i).getObjectFlag().isWithinMasterRegion();
   }
-  return 0;
+  return b;
 }
 const int Analysis::Objects::getNumberOfDeadObjects() const {
   int n = 0;
