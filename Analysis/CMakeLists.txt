@@ -46,14 +46,9 @@ set(SOURCE_FILES
 ### install library
 add_library(AnalysisSharedLib SHARED ${HEADER_FILES} ${SOURCE_FILES})
 add_library(AnalysisStaticLib STATIC ${HEADER_FILES} ${SOURCE_FILES})
-install(TARGETS AnalysisSharedLib AnalysisStaticLib
-    LIBRARY DESTINATION "lib" RENAME ${PROJECT_NAME}
-    ARCHIVE DESTINATION "lib" RENAME ${PROJECT_NAME}
-    )
-install(FILES ${HEADER_FILES} DESTINATION "include/${PROJECT_NAME}")
 
 ### example executable
 set(EXAMPLE_FILES Example/Main.cpp)
-add_executable(AnalysisExample ${EXAMPLE_FILES})
-# target_link_libraries(AnalysisExample AnalysisSharedLib)
-target_link_libraries(AnalysisExample AnalysisStaticLib)
+add_executable(Example ${EXAMPLE_FILES})
+# target_link_libraries(Example AnalysisSharedLib)
+target_link_libraries(Example AnalysisStaticLib)
