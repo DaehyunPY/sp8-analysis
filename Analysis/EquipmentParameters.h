@@ -7,7 +7,7 @@
 namespace Analysis {
 class EquipmentParameters {
  private:
-  const bool polarizationIsHorizontal;
+  const bool polarizationIsHorizontal; // TODO: delete it
   const double lengthOfD2;
   const double lengthOfD1;
   const double lengthOfL1;
