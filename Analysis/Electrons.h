@@ -19,10 +19,12 @@ class Electrons : public Objects {
   Electrons(const Unit &, const JSONReader &);
   Electrons(const Unit &, const JSONReader &, const int &);
   ~Electrons();
-  Electron &setElectronMembers(const int &i);
-  Electron &setDummyElectronMembers(const int &i);
-  const Electron &getElectron(const int &i) const;
-  const Electron &getDummyElectron(const int &i) const;
+  Electron &setElectronMembers(const int &);
+  Electron &setDummyElectronMembers(const int &);
+  Electron &setRealOrDummyElectronMembers(const int &);
+  const Electron &getElectron(const int &) const;
+  const Electron &getDummyElectron(const int &) const;
+  const Electron &getRealOrDummyElectron(const int &) const;
 };
 }
 

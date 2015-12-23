@@ -150,13 +150,13 @@ const int &Analysis::Objects::getNumberOfRealOrDummyObjects() const {
   return this->numberOfHitsUsed;
 }
 const bool Analysis::Objects::isDummyObject(const int &i) const {
-  const int &n = this->getNumberOfObjects();
-  const int &m = this->getNumberOfRealOrDummyObjects();
+  const int &n = getNumberOfObjects();
+  const int &m = getNumberOfRealOrDummyObjects();
   return (i >= n) && (i < m);
 }
 const bool Analysis::Objects::isRealObject(const int &i) const {
-  const int &n = this->getNumberOfObjects();
-  const int &m = this->getNumberOfRealOrDummyObjects();
+  const int &n = getNumberOfObjects();
+  const int &m = getNumberOfRealOrDummyObjects();
   return (i >= 0) && (i < n);
 }
 const bool Analysis::Objects::existDeadRealOrDummyObject() const {
@@ -224,4 +224,28 @@ const double Analysis::Objects::getTotalEnergyXY(Analysis::Unit &unit) const {
 }
 const int Analysis::Objects::getNumberOfDummyObject() const {
   return getNumberOfRealOrDummyObjects()-getNumberOfObjects();
+const Analysis::Object &Analysis::Objects::getRealOrDummyObject(const int &i) const {
+  const Object *pObject;
+  if(isRealObject(i)) {
+    pObject = &getObject(i);
+  } else if(isDummyObject(i)) {
+    pObject = &getDummyObject(i);
+  } else {
+    assert(false);
+    pObject = new Object();
+  }
+  return *pObject;
+}
+Analysis::Object &Analysis::Objects::setRealOrDummyObjectMembers(const int &i) {
+  Object *pObject;
+  if(isRealObject(i)) {
+    pObject = &setObjectMembers(i);
+  } else if(isDummyObject(i)) {
+    pObject = &setDummyObjectMembers(i);
+  } else {
+    assert(false);
+    pObject = new Object();
+  }
+  return *pObject;
+}
 }

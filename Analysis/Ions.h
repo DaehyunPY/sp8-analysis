@@ -22,8 +22,10 @@ class Ions : public Objects {
   ~Ions();
   Ion &setIonMembers(const int &i);
   Ion &setDummyIonMembers(const int &i);
+  Ion &setRealOrDummyIonMembers(const int &i);
   const Ion &getIon(const int &i) const;
   const Ion &getDummyIon(const int &i) const;
+  const Ion &getRealOrDummyIon(const int &i) const;
 };
 }
 

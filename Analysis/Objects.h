@@ -25,13 +25,15 @@ class Objects {
   void setDummyObject(const int &, Object &);
 
  public:
-  Analysis::Object &setObjectMembers(const int &);
-  Analysis::Object &setDummyObjectMembers(const int &);
+  Object &setObjectMembers(const int &);
+  Object &setDummyObjectMembers(const int &);
+  Object &setRealOrDummyObjectMembers(const int &);
   void resetEventData();
   const int &getNumberOfObjects() const;
   const int &getNumberOfRealOrDummyObjects() const;
   const Object &getObject(const int &) const;
   const Object &getDummyObject(const int &) const;
+  const Object &getRealOrDummyObject(const int &) const;
   const int getNumberOfDummyObject() const;
   const double getLocationXOfCOM() const;
   const double getLocationYOfCOM() const;
@@ -59,6 +61,7 @@ class Objects {
   const int getNumberOfDeadRealOrDummyObjects() const;
   const bool isDummyObject(const int &) const;
   const bool isRealObject(const int &) const;
+  const bool isRealOrDummyObject(const int &) const;
   const bool existDeadObject() const;
   const bool existDeadDummyObject() const;
   const bool existDeadRealOrDummyObject() const;

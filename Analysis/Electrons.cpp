@@ -47,3 +47,25 @@ const Analysis::Electron &Analysis::Electrons::getDummyElectron(const int &i) co
   assert(isDummyObject(i));
   return *pElectron[i];
 }
+Analysis::Electron &Analysis::Electrons::setRealOrDummyElectronMembers(const int &i) {
+  Electron *pElectron;
+  if(isRealObject(i)) {
+    pElectron = &setElectronMembers(i);
+  } else if(isDummyObject(i)) {
+    pElectron = &setDummyElectronMembers(i);
+  } else {
+    pElectron = new Electron();
+  }
+  return *pElectron;
+}
+const Analysis::Electron &Analysis::Electrons::getRealOrDummyElectron(const int &i) const {
+  const Electron *pElectron;
+  if(isRealObject(i)) {
+    pElectron = &getElectron(i);
+  } else if(isDummyObject(i)) {
+    pElectron = &getDummyElectron(i);
+  } else {
+    pElectron = new Electron();
+  }
+  return *pElectron;
+}

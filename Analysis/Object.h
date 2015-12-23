@@ -23,11 +23,11 @@ class Object {
   const double &getMaxOfTOF() const;
 
  protected:
-  Object(); // for dummy object
   Object(const double &m, const double &q, const double &t0, const double &t1);
   virtual ~Object();
 
  public:
+  Object(); // for dummy object
   void resetEventData();
   void setLocationX(const double &);
   void setLocationY(const double &);

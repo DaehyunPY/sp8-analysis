@@ -65,3 +65,27 @@ const std::string Analysis::Ions::getIonName(int i) const {
     else { return str + "th_hit"; }
   }
 }
+Analysis::Ion &Analysis::Ions::setRealOrDummyIonMembers(const int &i) {
+  Ion *pIon;
+  if(isRealObject(i)) {
+    pIon = &setIonMembers(i);
+  } else if(isDummyObject(i)) {
+    pIon = &setDummyIonMembers(i);
+  } else {
+    assert(false);
+    pIon = new Ion();
+  }
+  return *pIon;
+}
+const Analysis::Ion &Analysis::Ions::getRealOrDummyIon(const int &i) const {
+  const Ion *pIon;
+  if(isRealObject(i)) {
+    pIon = &getIon(i);
+  } else if(isDummyObject(i)) {
+    pIon = &getDummyIon(i);
+  } else {
+    assert(false);
+    pIon = new Ion(); 
+  }
+  return *pIon;
+}
