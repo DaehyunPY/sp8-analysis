@@ -1,0 +1,21 @@
+;/////////////////////////////////////////////////////////////////////////////
+;// Parameter description used in this hardware dependent part!
+;// -----------------------------------------------------------
+;//
+// Parameter  1 = IO Address of IO Card
+// Parameter  2 = Save TimeStamp
+//                0 = no Timestamp,
+//                1 = 32Bit Timestamp	(Low.Low, Low.high)
+//                2 = 64Bit Timestamp	(Low.Low, Low.high, High.Low, High.high)
+// Parameter  3 = System Timeout Time in s
+//				  (after this time with no event the system will be resetted)
+// Parameter  5 = TimeScaling (Internally set, tics per second)
+// Parameter  6 = DAQ Version # (Internally set)
+// Parameter  7 = Time Reference of DAQ Initialize (Start time of LMF) (Internally set)
+// Parameter 40 = DataFormat (Internally set)
+
+
+Parameter 1,0x340	;io-hardwareaddress of the ATMD-Boards
+Parameter 2,2		;Save TimeStamp
+Parameter 3,5		;System Timeout Time in s
+
