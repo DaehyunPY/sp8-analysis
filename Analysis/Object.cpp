@@ -70,14 +70,14 @@ const Analysis::ObjectFlag &Analysis::Object::getObjectFlag() const {
 const bool Analysis::Object::isWithinMasterRegion() const {
   return (getTOF() < getMaxOfTOF()) && (getTOF() > getMinOfTOF());
 }
-const double Analysis::Object::getDirectionX() const {
-  return getMomentumX() / getMomentum();
+const double Analysis::Object::getMotionalDirectionX() const {
+  return acos(getMomentumX() / getMomentum());
 }
-const double Analysis::Object::getDirectionY() const {
-  return getMomentumY() / getMomentum();
+const double Analysis::Object::getMotionalDirectionY() const {
+  return acos(getMomentumY() / getMomentum());
 }
-const double Analysis::Object::getDirectionZ() const {
-  return getMomentumZ() / getMomentum();
+const double Analysis::Object::getMotionalDirectionZ() const {
+  return acos(getMomentumZ() / getMomentum());
 }
 const double Analysis::Object::getLocationX(const Analysis::Unit &unit) const {
   return unit.writeLength(getLocationX());
@@ -111,17 +111,103 @@ Analysis::Object::Object() : Object(0e0, 0e0, 0e0, 0e0) { return; }
 const double Analysis::Object::getMomentumXY() const {
   return pow(pow(getMomentumX(), 2e0) + pow(getMomentumY(), 2e0), 0.5e0);
 }
-const double Analysis::Object::getEnergyXY() const {
-  return getMomentumXY() / (2e0 * getMass());
-}
 const double Analysis::Object::getMomentumXY(const Analysis::Unit
                                                                 &unit) const {
   return unit.writeMomentum(getMomentumXY());
 }
-const double Analysis::Object::getEnergyXY(const Analysis::Unit
-                                                              &unit) const {
-  return unit.writeEnergy(getMomentumXY());
-}
 const bool Analysis::Object::isDead() const {
   return getObjectFlag().isDead();
+}
+const double Analysis::Object::getMomentumYZ() const {
+  return pow(pow(getMomentumY(),2e0) + pow(getMomentumZ(),2e0), 0.5e0);
+}
+const double Analysis::Object::getMomentumZX() const {
+  return pow(pow(getMomentumZ(),2e0) + pow(getMomentumX(),2e0), 0.5e0);
+}
+const double Analysis::Object::getMotionalDirectionXY() const {
+  return atan2(getMomentumY(), getMomentumX());
+}
+const double Analysis::Object::getMotionalDirectionYZ() const {
+  return atan2(getMomentumZ(), getMomentumY());
+}
+const double Analysis::Object::getMotionalDirectionZX() const {
+  return atan2(getMomentumX(), getMomentumZ());
+}
+const double Analysis::Object::getMomentumYZ(const Analysis::Unit &unit) const {
+  return unit.writeMomentum(getMomentumYZ());
+}
+const double Analysis::Object::getMomentumZX(const Analysis::Unit &unit) const {
+  return unit.writeMomentum(getMomentumZX());
+}
+const double Analysis::Object::getMotionalDirectionX(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getMotionalDirectionX());
+}
+const double Analysis::Object::getMotionalDirectionY(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getMotionalDirectionY());
+}
+const double Analysis::Object::getMotionalDirectionZ(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getMotionalDirectionZ());
+}
+const double Analysis::Object::getMotionalDirectionXY(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getMotionalDirectionXY());
+}
+const double Analysis::Object::getMotionalDirectionYZ(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getMotionalDirectionYZ());
+}
+const double Analysis::Object::getMotionalDirectionZX(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getMotionalDirectionZX());
+}
+const double Analysis::Object::getLocationXY() const {
+  return pow(pow(getLocationX(),2e0) + pow(getLocationY(),2e0), 0.5e0);
+}
+const double Analysis::Object::getLocationXY(const Analysis::Unit &unit) const {
+  return unit.writeLength(getLocationXY());
+}
+const double Analysis::Object::getLocation() const {
+  return getLocationXY();
+}
+const double Analysis::Object::getLocationalDirectionXY() const {
+  return atan2(getLocationY(), getLocationX());
+}
+const double Analysis::Object::getLocationalDirectionX() const {
+  return acos(getLocationX()/getLocation());
+}
+const double Analysis::Object::getLocationalDirectionY() const {
+  return acos(getLocationY()/getLocation());
+}
+const double Analysis::Object::getLocation(const Analysis::Unit &unit) const {
+  return unit.writeLength(getLocation());
+}
+const double Analysis::Object::getLocationalDirectionXY(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getLocationalDirectionXY());
+}
+const double Analysis::Object::getLocationalDirectionYX() const {
+  return atan2(getLocationX(), getLocationY());
+}
+const double Analysis::Object::getMotionalDirectionXZ() const {
+  return atan2(getMomentumZ(), getMomentumX());
+}
+const double Analysis::Object::getMotionalDirectionYX() const {
+  return atan2(getMomentumX(), getMomentumY());
+}
+const double Analysis::Object::getMotionalDirectionZY() const {
+  return atan2(getMomentumY(), getMomentumZ());
+}
+const double Analysis::Object::getLocationalDirectionX(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getLocationalDirectionX());
+}
+const double Analysis::Object::getLocationalDirectionY(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getLocationalDirectionY());
+}
+const double Analysis::Object::getLocationalDirectionYX(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getLocationalDirectionYX());
+}
+const double Analysis::Object::getMotionalDirectionXZ(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getMotionalDirectionXZ());
+}
+const double Analysis::Object::getMotionalDirectionYX(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getMotionalDirectionYX());
+}
+const double Analysis::Object::getMotionalDirectionZY(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getMotionalDirectionZY());
 }
