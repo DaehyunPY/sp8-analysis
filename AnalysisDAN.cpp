@@ -113,16 +113,14 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray * pEventData,
     const int &nHit = eventData.d3;
     for (int iTDC = 0; iTDC < nTDC; iTDC++) {
       for (int iCH = 0; iCH < nCH; iCH++) {
-        for (int iHit = 0xFFFFFFFF; iHit < nHit; iHit++) {
-          eventData.array[iTDC][iCH][iHit] =
-              (iHit + iCH * (nHit + 1) + iTDC * (nHit + 1) * nCH) / 1e3;
+        for (int iHit = 0; iHit < nHit; iHit++) {
+          eventData.array[iTDC][iCH][iHit] = pEventData->GetAt(iHit + iCH * (nHit + 1) + iTDC * (nHit + 1) * nCH) / 1e3;
         }
       }
     }
     pEventDataReader = new Analysis::EventDataReader(eventData);
   }
-
-
+  
   pIons->resetEventData();
   pElectrons->resetEventData();
   int ionMasterFlag = 0;
@@ -191,12 +189,12 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray * pEventData,
   }
   pEventData->SetAt(128, pIons->getLocationX(*pUnit));
   pEventData->SetAt(129, pIons->getLocationY(*pUnit));
-  pEventData->SetAt(205, pIons->getSumOfTOF(0,1));
-  pEventData->SetAt(206, pIons->getSumOfTOF(0,2));
-  pEventData->SetAt(207, pIons->getSumOfTOF(0,3));
-  pEventData->SetAt(208, pIons->getSumOfTOF(1,2));
-  pEventData->SetAt(209, pIons->getSumOfTOF(1,3));
-  pEventData->SetAt(210, pIons->getSumOfTOF(2,3));
+  pEventData->SetAt(205, pIons->getSumOfTOF(*pUnit,0,1));
+  pEventData->SetAt(206, pIons->getSumOfTOF(*pUnit,0,2));
+  pEventData->SetAt(207, pIons->getSumOfTOF(*pUnit,0,3));
+  pEventData->SetAt(208, pIons->getSumOfTOF(*pUnit,1,2));
+  pEventData->SetAt(209, pIons->getSumOfTOF(*pUnit,1,3));
+  pEventData->SetAt(210, pIons->getSumOfTOF(*pUnit,2,3));
 //  pEventData->SetAt(130, 0e0); //dCOM_z/unit_milli);
   pEventData->SetAt(88, pIons->getMomentumX(*pUnit));
   pEventData->SetAt(89, pIons->getMomentumY(*pUnit));
@@ -233,13 +231,14 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray * pEventData,
       }
     }
   }
-  pEventData->SetAt(131, pElectrons->getLocationXOfCOM(*pUnit));
-  pEventData->SetAt(132, pElectrons->getLocationYOfCOM(*pUnit));
+  pEventData->SetAt(131, pElectrons->getLocationX(*pUnit));
+  pEventData->SetAt(132, pElectrons->getLocationY(*pUnit));
 //  pEventData->SetAt(119,dElectronPx_norm[0]);         // Normalized electron Px
 //  pEventData->SetAt(120,dElectronPy_norm[0]);         // Normalized electron Py
 //  pEventData->SetAt(121,dElectronPz_norm[0]);         // Normalized electron Pz
   pEventData->SetAt(122, pElectrons->getMomentum(*pUnit));
-  pEventData->SetAt(137, pElectrons->getElectron(0).getLocationalDriectionXY(*pUnit));
+  pEventData->SetAt(137, pElectrons->getElectron(0).getLocationalDirectionXY(*pUnit));
+  pEventData->SetAt(198, pElectrons->getElectron(0).getLocation(*pUnit));
   pEventData->SetAt(136, pElectrons->getElectron(0).getMotionalDirectionZ(*pUnit));
   pEventData->SetAt(123, pElectrons->getElectron(0).getMotionalDirectionXY(*pUnit));
   pEventData->SetAt(124, pElectrons->getElectron(0).getMotionalDirectionZY(*pUnit));
@@ -263,7 +262,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray * pEventData,
     const int &n = pElectrons->getNumberOfObjects();
     for (int i = 0; i < n; i++) {
       pEventData->SetAt(199 + i,
-                        pIons->getTotalEnergy(*pUnit)
+                        pIons->getEnergy(*pUnit)
                             + pElectrons->getElectron(i).getEnergy(*pUnit));
     }
   }
@@ -304,7 +303,6 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray * pEventData,
 //  }
 //  pEventData->SetAt(196, 0e0); //d_I_Angle*180.0/pi);
 //  pEventData->SetAt(197, 0e0); //d_e_I_Angle*180.0/pi);
-//  pEventData->SetAt(198, 0e0); //distancexy/unit_milli);
   return;
 }
 

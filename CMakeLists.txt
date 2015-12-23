@@ -29,11 +29,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       )
 
   ### install library
-  add_library(CDan SHARED ${SOURCE_FILES})
-  install(TARGETS CDan 
-    LIBRARY DESTINATION "lib"
-    ARCHIVE DESTINATION "lib"
-    )
-  # target_link_libraries(CDan AnalysisSharedLib)
-  target_link_libraries(CDan AnalysisStaticLib)
+  add_library(DAn SHARED ${SOURCE_FILES})
+  target_link_libraries(DAn AnalysisStaticLib)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
