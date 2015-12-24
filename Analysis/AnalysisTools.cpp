@@ -191,7 +191,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setLocationX(x);
   ion.setLocationY(y);
   ion.setTOF(t);
-  if (ion.getTOF() > deadTime) {
+  if (ion.getTOF() > deadTime || ion.getTOF() < 0e0) {
     ion.setFlagMembers().setDeadFlag();
   } else {
     if (ion.isWithinMasterRegion()) {
@@ -221,7 +221,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   electron.setLocationX(x);
   electron.setLocationY(y);
   electron.setTOF(t);
-  if (electron.getTOF() > deadTime) {
+  if (electron.getTOF() > deadTime || electron.getTOF() < 0e0) {
     electron.setFlagMembers().setDeadFlag();
   } else {
     if (electron.isWithinMasterRegion()) {
