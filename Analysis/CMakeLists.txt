@@ -3,7 +3,6 @@ project(Analysis)
 
 ### core setting
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}")
 set(HEADER_FILES
     JSONReader.h
     EventDataReader.h
@@ -51,8 +50,9 @@ set(SOURCE_FILES
 add_library(AnalysisSharedLib SHARED ${HEADER_FILES} ${SOURCE_FILES})
 add_library(AnalysisStaticLib STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
-### example executable
-set(EXAMPLE_FILES Example/Main.cpp)
-add_executable(Example ${EXAMPLE_FILES})
-# target_link_libraries(Example AnalysisSharedLib)
-target_link_libraries(Example AnalysisStaticLib)
+### test executable
+set(MAIN_FILE Test/Main.cpp)
+add_executable(AnalysisTest ${MAIN_FILE})
+# target_link_libraries(AnalysisTest AnalysisSharedLib)
+target_link_libraries(AnalysisTest AnalysisStaticLib)
+
