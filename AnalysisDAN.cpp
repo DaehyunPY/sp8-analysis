@@ -62,7 +62,7 @@ logFile << "The path is setted here. " <<
 std::endl;
 
 pUnit = new Analysis::Unit;
-pJSONReader = new Analysis::JSONReader("parameters.json");
+pJSONReader = new Analysis::JSONReader("Parameters.json");
 pAnalysisTools = new Analysis::AnalysisTools(*pUnit, *pJSONReader);
 pIons = new Analysis::Ions(*pUnit, *pJSONReader, numberOfHitsUsed);
 pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader, numberOfHitsUsed);

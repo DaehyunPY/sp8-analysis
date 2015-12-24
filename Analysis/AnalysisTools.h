@@ -13,13 +13,15 @@ struct XY { const double x; const double y; };
 
 class AnalysisTools {
  private:
-  int eventNumber;
   const EquipmentParameters equipmentParameters;
   const IonParameters ionParameters;
   const ElectronParameters electronParameters;
+  const std::string ID;
+  int eventNumber;
   AnalysisTools(const EquipmentParameters &,
                 const IonParameters &,
-                const ElectronParameters &);
+                const ElectronParameters &,
+                const std::string &ID = "0000"); // main initializer
   void resetCounter();
   const EquipmentParameters &getEquipmentParameters() const;
   const IonParameters &getIonParameters() const;
@@ -30,20 +32,21 @@ class AnalysisTools {
   const XY calculateMomentumXY(const Object &) const;
   const double calculateMomentumZ(const Ion &, bool &info) const;
   const double calculateMomentumZ(const Electron &, bool &info) const;
-  void loadEventDataInputer(Ion &, // main inputer for ion 
+  void loadEventDataInputer(Ion &,
                             const double &,
                             const double &,
                             const double &,
-                            const int &) const;
-  void loadEventDataInputer(Electron &, // main inputer for electron 
+                            const int &) const; // main inputer for ion
+  void loadEventDataInputer(Electron &,
                             const double &,
                             const double &,
                             const double &,
-                            const int &) const;
+                            const int &) const; // main inputer for electron
 
  public:
   AnalysisTools(const Unit &, const JSONReader &);
   ~AnalysisTools();
+  const std::string &getID() const;
   const int &getEventNumber() const;
   void loadEventCounter();
   const double calculateTOF(const Ion &,

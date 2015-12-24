@@ -10,6 +10,7 @@ set(HEADER_FILES
     Unit.h
     Flag.h
     ObjectFlag.h
+    JSONFlag.h
     EventDataFlag.h
     Object.h
     Objects.h
@@ -22,6 +23,7 @@ set(HEADER_FILES
     IonParameters.h
     ElectronParameters.h
     AnalysisTools.h
+    LogWriter.h
     )
 set(SOURCE_FILES
     JSONReader.cpp
@@ -29,6 +31,7 @@ set(SOURCE_FILES
     Unit.cpp
     Flag.cpp
     ObjectFlag.cpp
+    JSONFlag.cpp
     EventDataFlag.cpp
     Object.cpp
     Objects.cpp
@@ -41,6 +44,7 @@ set(SOURCE_FILES
     IonParameters.cpp
     ElectronParameters.cpp
     AnalysisTools.cpp
+    LogWriter.cpp
     )
 
 ### install library

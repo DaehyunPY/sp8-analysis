@@ -19,7 +19,7 @@ void Analysis::Object::resetEventData() {
   momentumX = 0e0;
   momentumY = 0e0;
   momentumZ = 0e0;
-  objectFlag.loadInitialFlager();
+  flag.loadInitialFlager();
   return;
 }
 void Analysis::Object::setLocationX(const double &x) {
@@ -43,8 +43,8 @@ void Analysis::Object::setMomentumZ(const double &pz) {
   momentumZ = pz;
   return;
 }
-Analysis::ObjectFlag &Analysis::Object::setObjectFlagMembers() {
-  return objectFlag;
+Analysis::ObjectFlag &Analysis::Object::setFlagMembers() {
+  return flag;
 }
 const double &Analysis::Object::getMass() const { return mass; }
 const double &Analysis::Object::getCharge() const { return charge; }
@@ -64,8 +64,8 @@ const double Analysis::Object::getMomentum() const {
 const double Analysis::Object::getEnergy() const {
   return pow(getMomentum(), 2e0) / (2e0 * getMass());
 }
-const Analysis::ObjectFlag &Analysis::Object::getObjectFlag() const {
-  return objectFlag;
+const Analysis::ObjectFlag &Analysis::Object::getFlag() const {
+  return flag;
 }
 const bool Analysis::Object::isWithinMasterRegion() const {
   return (getTOF() < getMaxOfTOF()) && (getTOF() > getMinOfTOF());
@@ -116,7 +116,7 @@ const double Analysis::Object::getMomentumXY(const Analysis::Unit
   return unit.writeMomentum(getMomentumXY());
 }
 const bool Analysis::Object::isDead() const {
-  return getObjectFlag().isDead();
+  return getFlag().isDead();
 }
 const double Analysis::Object::getMomentumYZ() const {
   return pow(pow(getMomentumY(),2e0) + pow(getMomentumZ(),2e0), 0.5e0);

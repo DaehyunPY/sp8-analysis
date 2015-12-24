@@ -18,7 +18,7 @@ class Object {
   double momentumX;
   double momentumY;
   double momentumZ;
-  ObjectFlag objectFlag;
+  ObjectFlag flag;
   const double &getMinOfTOF() const;
   const double &getMaxOfTOF() const;
 
@@ -35,7 +35,7 @@ class Object {
   void setMomentumX(const double &);
   void setMomentumY(const double &);
   void setMomentumZ(const double &);
-  ObjectFlag &setObjectFlagMembers();
+  ObjectFlag &setFlagMembers();
   const double &getMass() const;
   const double &getCharge() const;
   const double &getLocationX() const;
@@ -44,7 +44,7 @@ class Object {
   const double &getMomentumX() const;
   const double &getMomentumY() const;
   const double &getMomentumZ() const;
-  const ObjectFlag &getObjectFlag() const;
+  const ObjectFlag &getFlag() const;
   const double getLocationXY() const;
   const double getLocation() const;
   const double getLocationalDirectionX() const;

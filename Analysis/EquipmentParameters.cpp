@@ -1,7 +1,6 @@
 #include "EquipmentParameters.h"
 
-Analysis::EquipmentParameters::EquipmentParameters(const bool &plr,
-                                                   const double &lenD2,
+Analysis::EquipmentParameters::EquipmentParameters(const double &lenD2,
                                                    const double &lenD1,
                                                    const double &lenL1,
                                                    const double &lenL2,
@@ -11,8 +10,7 @@ Analysis::EquipmentParameters::EquipmentParameters(const bool &plr,
                                                    const double &VIon2,
                                                    const double &VIon0,
                                                    const double &B)
-    : polarizationIsHorizontal(plr),
-      lengthOfD2(lenD2),
+    : lengthOfD2(lenD2),
       lengthOfD1(lenD1),
       lengthOfL1(lenL1),
       lengthOfL2(lenL2),
@@ -30,7 +28,6 @@ Analysis::EquipmentParameters::EquipmentParameters(
   return;
 }
 Analysis::EquipmentParameters::EquipmentParameters(const Analysis::Unit &unit,
-                                                   const bool &plr,
                                                    const double &lenD2,
                                                    const double &lenD1,
                                                    const double &lenL1,
@@ -41,8 +38,7 @@ Analysis::EquipmentParameters::EquipmentParameters(const Analysis::Unit &unit,
                                                    const double &VIon2,
                                                    const double &VIon0,
                                                    const double &B)
-    : EquipmentParameters(plr,
-                          unit.readLength(lenD2),
+    : EquipmentParameters(unit.readLength(lenD2),
                           unit.readLength(lenD1),
                           unit.readLength(lenL1),
                           unit.readLength(lenL2),
@@ -59,23 +55,19 @@ Analysis::EquipmentParameters::EquipmentParameters(const Analysis::Unit &unit,
                                                    const std::string &prefix)
     : EquipmentParameters(
     unit,
-    reader.getBool(prefix + "is_polarization_horizontal?"),
-    reader.getDouble(prefix + "length_of_D2"),
-    reader.getDouble(prefix + "length_of_D1"),
-    reader.getDouble(prefix + "length_of_L1"),
-    reader.getDouble(prefix + "length_of_L2"),
-    reader.getDouble(prefix + "length_of_L3"),
-    reader.getDouble(prefix + "electric_potential_of_electron_region"),
-    reader.getDouble(prefix + "electric_potential_of_ion_1st"),
-    reader.getDouble(prefix + "electric_potential_of_ion_2nd"),
-    reader.getDouble(prefix + "electric_potential_of_ion_MCP"),
-    reader.getDouble(prefix + "magnetic_filed")) {
+    reader.getDoubleAt(prefix + "length_of_D2"),
+    reader.getDoubleAt(prefix + "length_of_D1"),
+    reader.getDoubleAt(prefix + "length_of_L1"),
+    reader.getDoubleAt(prefix + "length_of_L2"),
+    reader.getDoubleAt(prefix + "length_of_L3"),
+    reader.getDoubleAt(prefix + "electric_potential_of_electron_region"),
+    reader.getDoubleAt(prefix + "electric_potential_of_ion_1st"),
+    reader.getDoubleAt(prefix + "electric_potential_of_ion_2nd"),
+    reader.getDoubleAt(prefix + "electric_potential_of_ion_MCP"),
+    reader.getDoubleAt(prefix + "magnetic_filed")) {
   return;
 }
 Analysis::EquipmentParameters::~EquipmentParameters() { return; };
-const bool &Analysis::EquipmentParameters::getPolarizationIsHorizontal() const {
-  return this->polarizationIsHorizontal;
-}
 const double &Analysis::EquipmentParameters::getLengthOfD2() const {
   return this->lengthOfD2;
 }

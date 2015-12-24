@@ -37,13 +37,13 @@ Analysis::ObjectParameters::ObjectParameters(const Unit &unit,
                                              const JSONReader &reader,
                                              const std::string &prefix)
     : ObjectParameters(unit,
-                       reader.getDouble(prefix + "angle_of_detector"),
-                       reader.getDouble(prefix + "pixel_size_of_x"),
-                       reader.getDouble(prefix + "pixel_size_of_y"),
-                       reader.getDouble(prefix + "dead_time"),
-                       reader.getDouble(prefix + "x_zero_of_COM"),
-                       reader.getDouble(prefix + "y_zero_of_COM"),
-                       reader.getDouble(prefix + "time_zero_of_TOF")) {
+                       reader.getDoubleAt(prefix + "angle_of_detector"),
+                       reader.getDoubleAt(prefix + "pixel_size_of_x"),
+                       reader.getDoubleAt(prefix + "pixel_size_of_y"),
+                       reader.getDoubleAt(prefix + "dead_time"),
+                       reader.getDoubleAt(prefix + "x_zero_of_COM"),
+                       reader.getDoubleAt(prefix + "y_zero_of_COM"),
+                       reader.getDoubleAt(prefix + "time_zero_of_TOF")) {
   return;
 }
 Analysis::ObjectParameters::~ObjectParameters() { return; }

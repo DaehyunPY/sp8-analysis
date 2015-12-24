@@ -5,20 +5,28 @@
 #include <sstream>
 #include <fstream>
 #include "rapidjson/document.h"
+#include "JSONFlag.h"
 
 namespace Analysis {
 class JSONReader {
  private:
+  std::string filename;
   rapidjson::Document document;
   const rapidjson::Document &getDocument() const;
-  const rapidjson::Value &getValue(std::string str1) const;
+  const rapidjson::Value &getValue(std::string) const;
+  JSONFlag flag;
 
  public:
-  JSONReader(const std::string &filename);
+  JSONReader(const std::string &f = "Parameters.json");
   ~JSONReader();
-  const bool getBool(const std::string &str) const;
-  const int getInt(const std::string &str) const;
-  const double getDouble(const std::string &str) const;
+  JSONFlag &setFlagMembers();
+  const std::string &getFilename() const;
+  const JSONFlag &getFlag() const;
+  const bool getBoolAt(const std::string &) const;
+  const int getIntAt(const std::string &) const;
+  const double getDoubleAt(const std::string &) const;
+  const std::string getStringAt(const std::string &) const;
+  const bool hasMember(std::string) const;
 };
 }
 

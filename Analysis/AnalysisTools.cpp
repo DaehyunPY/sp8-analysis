@@ -2,10 +2,13 @@
 
 Analysis::AnalysisTools::AnalysisTools(const EquipmentParameters &equip,
                                        const IonParameters &ion,
-                                       const ElectronParameters &elec)
-    : equipmentParameters(equip), ionParameters(ion),
-      electronParameters(elec) {
-  this->resetCounter();
+                                       const ElectronParameters &elec,
+                                       const std::string &ID)
+    : equipmentParameters(equip),
+      ionParameters(ion),
+      electronParameters(elec),
+      ID(ID) {
+  resetCounter();
   return;
 }
 Analysis::AnalysisTools::~AnalysisTools() { return; }
@@ -142,10 +145,11 @@ const Analysis::ElectronParameters
 void Analysis::AnalysisTools::loadEventCounter() { this->eventNumber += 1; }
 Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
                                        const Analysis::JSONReader &reader)
-    : AnalysisTools(
-    Analysis::EquipmentParameters(unit, reader),
-    Analysis::IonParameters(unit, reader),
-    Analysis::ElectronParameters(unit, reader)) {
+    : AnalysisTools(Analysis::EquipmentParameters(unit, reader),
+                    Analysis::IonParameters(unit, reader),
+                    Analysis::ElectronParameters(unit, reader),
+                    reader.hasMember("ID") ? reader.getStringAt("ID") : "0000")
+{
   return;
 }
 const Analysis::XY Analysis::AnalysisTools::calculateMomentumXY(
@@ -189,12 +193,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setTOF(t);
   if (ion.getTOF() > deadTime) {
     ion.setTOF(deadTime);
-    ion.setObjectFlagMembers().loadDeadFlager();
+    ion.setFlagMembers().loadDeadFlager();
   } else {
     if (ion.isWithinMasterRegion()) {
-      ion.setObjectFlagMembers().loadWithinMasterRegionFlager();
+      ion.setFlagMembers().loadWithinMasterRegionFlager();
     } else {
-      ion.setObjectFlagMembers().loadNotWithinMasterRegionFlager();
+      ion.setFlagMembers().loadNotWithinMasterRegionFlager();
     }
   }
   return;
@@ -220,12 +224,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   electron.setTOF(t);
   if (electron.getTOF() > deadTime) {
     electron.setTOF(deadTime);
-    electron.setObjectFlagMembers().loadDeadFlager();
+    electron.setFlagMembers().loadDeadFlager();
   } else {
     if (electron.isWithinMasterRegion()) {
-      electron.setObjectFlagMembers().loadWithinMasterRegionFlager();
+      electron.setFlagMembers().loadWithinMasterRegionFlager();
     } else {
-      electron.setObjectFlagMembers().loadNotWithinMasterRegionFlager();
+      electron.setFlagMembers().loadNotWithinMasterRegionFlager();
     }
   }
   return;
@@ -241,7 +245,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
       ion.setMomentumZ(pz);
   } else
   {
-	  ion.setObjectFlagMembers().loadDeadFlager(); 
+    ion.setFlagMembers().loadDeadFlager();
   }
   return;
 }
@@ -258,7 +262,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
       electron.setMomentumZ(pz);
   } else
   {
-	  electron.setObjectFlagMembers().loadDeadFlager(); 
+    electron.setFlagMembers().loadDeadFlager();
   }
   return;
 }
@@ -400,4 +404,7 @@ const Analysis::XY Analysis::AnalysisTools::calculateRotation(
     const double &theta) const {
   return {xy.x * cos(theta) - xy.y * sin(theta),
           xy.x * sin(theta) + xy.y * cos(theta)};
+}
+const std::string &Analysis::AnalysisTools::getID() const {
+  return ID;
 }

@@ -13,8 +13,8 @@ Analysis::Electron::Electron(const Analysis::Unit &unit,
 Analysis::Electron::Electron(const Analysis::Unit &unit,
                              const Analysis::JSONReader &reader)
     : Electron(unit,
-               reader.getDouble("electrons.minimum_of_TOF"),
-               reader.getDouble("electrons.maximum_of_TOF")) {
+               reader.getDoubleAt("electrons.minimum_of_TOF"),
+               reader.getDoubleAt("electrons.maximum_of_TOF")) {
   return;
 }
 Analysis::Electron::~Electron() { return; }

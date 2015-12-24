@@ -17,10 +17,10 @@ Analysis::Ion::Ion(const Analysis::Unit &unit,
                    const std::string &prefix)
 
     : Ion(unit,
-          reader.getDouble("ions." + prefix + ".mass"),
-          reader.getDouble("ions." + prefix + ".charge"),
-          reader.getDouble("ions." + prefix + ".minimum_of_TOF"),
-          reader.getDouble("ions." + prefix + ".maximum_of_TOF")) {
+          reader.getDoubleAt("ions." + prefix + ".mass"),
+          reader.getDoubleAt("ions." + prefix + ".charge"),
+          reader.getDoubleAt("ions." + prefix + ".minimum_of_TOF"),
+          reader.getDoubleAt("ions." + prefix + ".maximum_of_TOF")) {
   return;
 }
 Analysis::Ion::~Ion() { return; }

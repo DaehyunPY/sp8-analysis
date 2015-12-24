@@ -168,14 +168,14 @@ const bool Analysis::Objects::existDeadObject() const {
 const bool Analysis::Objects::isAllWithinMasterRegion() const {
   bool b = true;
   for(int i = 0; i < numberOfHits; i++) {
-    b = b && getObject(i).getObjectFlag().isWithinMasterRegion();
+    b = b && getObject(i).getFlag().isWithinMasterRegion();
   }
   return b;
 }
 const int Analysis::Objects::getNumberOfDeadObjects() const {
   int n = 0;
   for (int i = 0; i < numberOfHits; i++) {
-    if (getObject(i).getObjectFlag().isDead()) {
+    if (getObject(i).getFlag().isDead()) {
       n += 1;
     }
   }
@@ -184,7 +184,7 @@ const int Analysis::Objects::getNumberOfDeadObjects() const {
 const int Analysis::Objects::getNumberOfDeadDummyObjects() const {
   int n = 0;
   for (int i = numberOfHits; i < numberOfHitsUsed; i++) {
-    if (getDummyObject(i).getObjectFlag().isDead()) {
+    if (getDummyObject(i).getFlag().isDead()) {
       n += 1;
     }
   }

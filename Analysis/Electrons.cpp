@@ -17,8 +17,8 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                                const Analysis::JSONReader &reader)
     : Electrons(unit,
                 reader,
-                reader.getInt("electrons.number_of_hits"),
-                reader.getInt("electrons.number_of_hits")) {
+                reader.getIntAt("electrons.number_of_hits"),
+                reader.getIntAt("electrons.number_of_hits")) {
   return;
 }
 Analysis::Electrons::Electrons(const Analysis::Unit &unit,
@@ -26,7 +26,7 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                                const int &m)
     : Electrons(unit,
                 reader,
-                reader.getInt("electrons.number_of_hits"),
+                reader.getIntAt("electrons.number_of_hits"),
                 m) {
   return;
 }

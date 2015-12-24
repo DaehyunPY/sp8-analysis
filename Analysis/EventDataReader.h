@@ -9,6 +9,7 @@
 #define NUMBER_OF_CHANNELS_USED 2
 #define NUMBER_OF_HITS_USED 4
 #include <assert.h>
+#include "EventDataFlag.h"
 
 namespace Analysis {
 
@@ -25,6 +26,7 @@ class EventDataReader {
   const int numberOfChannelsUsed = NUMBER_OF_CHANNELS_USED;
   const int numberOfHitsUsed = NUMBER_OF_HITS_USED;
   const EventData eventData;
+  EventDataFlag flag;
 
  public:
   EventDataReader(const EventData &);

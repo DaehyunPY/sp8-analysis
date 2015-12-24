@@ -21,8 +21,8 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
                      const Analysis::JSONReader &reader)
     : Ions(unit,
            reader,
-           reader.getInt("ions.number_of_hits"),
-           reader.getInt("ions.number_of_hits")) {
+           reader.getIntAt("ions.number_of_hits"),
+           reader.getIntAt("ions.number_of_hits")) {
   return;
 }
 Analysis::Ions::Ions(const Analysis::Unit &unit,
@@ -30,7 +30,7 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
                      const int &m)
     : Ions(unit,
            reader,
-           reader.getInt("ions.number_of_hits"),
+           reader.getIntAt("ions.number_of_hits"),
            m) {
   return;
 }

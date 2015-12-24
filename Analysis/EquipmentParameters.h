@@ -7,7 +7,6 @@
 namespace Analysis {
 class EquipmentParameters {
  private:
-  const bool polarizationIsHorizontal; // TODO: delete it
   const double lengthOfD2;
   const double lengthOfD1;
   const double lengthOfL1;
@@ -18,8 +17,7 @@ class EquipmentParameters {
   const double electricPotentialOfIon2nd;
   const double electricPotentialOfIonMCP;
   const double magneticFiled;
-  EquipmentParameters(const bool &plr,
-                      const double &lenD2,
+  EquipmentParameters(const double &lenD2,
                       const double &lenD1,
                       const double &lenL1,
                       const double &lenL2,
@@ -28,9 +26,8 @@ class EquipmentParameters {
                       const double &VIon1,
                       const double &VIon2,
                       const double &VIon0,
-                      const double &B);
+                      const double &B); // main initializer
   EquipmentParameters(const Analysis::Unit &unit,
-                      const bool &plr,
                       const double &lenD2,
                       const double &lenD1,
                       const double &lenL1,
@@ -40,14 +37,13 @@ class EquipmentParameters {
                       const double &VIon1,
                       const double &VIon2,
                       const double &VIon0,
-                      const double &B);
+                      const double &B); // unit
 
  public:
   EquipmentParameters(const Unit &unit, const JSONReader &reader,
                       const std::string &prefix);
   EquipmentParameters(const Unit &unit, const JSONReader &reader);
   ~EquipmentParameters();
-  const bool &getPolarizationIsHorizontal() const;
   const double &getLengthOfD2() const;
   const double &getLengthOfD1() const;
   const double &getLengthOfL1() const;
