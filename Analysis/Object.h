@@ -12,6 +12,7 @@ class Object {
   const double charge;
   const double minOfTOF;
   const double maxOfTOF;
+  const double outOfFrame = OUT_OF_FRAME; 
   double locationX;
   double locationY;
   double TOF;
