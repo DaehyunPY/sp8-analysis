@@ -120,7 +120,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 		// if exist a object dead or not within master region
 		const bool existDeadObject = pIons->existDeadObject();
 		const bool areAllWithinMasterRegion = pIons->areAllWithinMasterRegion();
-		if (existDeadObject || areAllWithinMasterRegion) 
+		if (existDeadObject || !areAllWithinMasterRegion) 
 		{
 			// don't plot momentum data
 			pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag();
@@ -132,8 +132,6 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 	}
 	// calculate momentum 
 	pAnalysisTools->loadMomentumCalculator(*pIons);
-	// if dummy object, don't plot momentum data 
-	pIons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); 
 	ionMasterFlag = 1;
 
 
@@ -142,7 +140,7 @@ electron:
 		// if exist a object dead or not within master region
 		const bool existDeadObject = pElectrons->existDeadObject();
 		const bool areAllWithinMasterRegion = pElectrons->areAllWithinMasterRegion();
-		if (existDeadObject || areAllWithinMasterRegion)
+		if (existDeadObject || !areAllWithinMasterRegion)
 		{
 			// don't plot momentum data
 			pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag(); 
@@ -154,8 +152,6 @@ electron:
 	}
 	// calculate momentum 
 	pAnalysisTools->loadMomentumCalculator(*pElectrons);
-	// if dummy object, don't plot momentum data 
-	pElectrons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); 
 	electronMasterFlag = 1;
 
 
@@ -165,20 +161,24 @@ output:
 	pEventData->SetAt(127, electronMasterFlag);
 
 	// write ion data
+	// if dummy object, don't plot momentum data 
+	pIons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); 
 	{
 		// plot data of a object 
 		const int& m = pIons->getNumberOfRealOrDummyObjects();
 		for (int i = 0; i < m; i++)
 		{
+			// if dead object, don't plot it 
+			if (pIons->getRealOrDummyIon(i).isDead()) { pIons->setRealOrDummyIonMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag(); }
 			// basic data 
-			pEventData->SetAt(31 + 28 + i, pIons->getIon(i).getLocationX(*pUnit));
-			pEventData->SetAt(31 + 32 + i, pIons->getIon(i).getLocationY(*pUnit));
-			pEventData->SetAt(67 + i, pIons->getIon(i).getTOF(*pUnit));
+			pEventData->SetAt(31 + 28 + i, pIons->getRealOrDummyIon(i).getLocationX(*pUnit));
+			pEventData->SetAt(31 + 32 + i, pIons->getRealOrDummyIon(i).getLocationY(*pUnit));
+			pEventData->SetAt(67 + i, pIons->getRealOrDummyIon(i).getTOF(*pUnit));
 			// momentum data 
-			pEventData->SetAt(76 + i, pIons->getIon(i).getMomentumX(*pUnit));
-			pEventData->SetAt(80 + i, pIons->getIon(i).getMomentumY(*pUnit));
-			pEventData->SetAt(84 + i, pIons->getIon(i).getMomentumZ(*pUnit));
-			pEventData->SetAt(67 + 4 + i, pIons->getIon(i).getEnergy(*pUnit));
+			pEventData->SetAt(76 + i, pIons->getRealOrDummyIon(i).getMomentumX(*pUnit));
+			pEventData->SetAt(80 + i, pIons->getRealOrDummyIon(i).getMomentumY(*pUnit));
+			pEventData->SetAt(84 + i, pIons->getRealOrDummyIon(i).getMomentumZ(*pUnit));
+			pEventData->SetAt(67 + 4 + i, pIons->getRealOrDummyIon(i).getEnergy(*pUnit));
 		}
 	}
 	// plot data of objects 
@@ -201,20 +201,24 @@ output:
 	pEventData->SetAt(94, pIons->getIon(0).getMotionalDirectionZX(*pUnit));
 
 	// write electron data
+	// if dummy object, don't plot momentum data 
+	pElectrons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); 
 	{
 		// plot data of a object 
 		const int& m = pElectrons->getNumberOfRealOrDummyObjects();
 		for (int i = 0; i < m; i++)
 		{
+			// if dead object, don't plot it 
+			if (pElectrons->setRealOrDummyElectronMembers(i).isDead()) { pElectrons->setRealOrDummyElectronMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag(); }
 			// basic data 
-			pEventData->SetAt(31 + i, pElectrons->getElectron(i).getLocationX(*pUnit));
-			pEventData->SetAt(31 + 4 + i, pElectrons->getElectron(i).getLocationY(*pUnit));
-			pEventData->SetAt(98 + i, pElectrons->getElectron(i).getTOF(*pUnit));
+			pEventData->SetAt(31 + i, pElectrons->setRealOrDummyElectronMembers(i).getLocationX(*pUnit));
+			pEventData->SetAt(31 + 4 + i, pElectrons->setRealOrDummyElectronMembers(i).getLocationY(*pUnit));
+			pEventData->SetAt(98 + i, pElectrons->setRealOrDummyElectronMembers(i).getTOF(*pUnit));
 			// momentum data 
-			pEventData->SetAt(107 + i, pElectrons->getElectron(i).getMomentumX(*pUnit));
-			pEventData->SetAt(111 + i, pElectrons->getElectron(i).getMomentumY(*pUnit));
-			pEventData->SetAt(115 + i, pElectrons->getElectron(i).getMomentumZ(*pUnit));
-			pEventData->SetAt(103 + i, pElectrons->getElectron(i).getEnergy(*pUnit));
+			pEventData->SetAt(107 + i, pElectrons->setRealOrDummyElectronMembers(i).getMomentumX(*pUnit));
+			pEventData->SetAt(111 + i, pElectrons->setRealOrDummyElectronMembers(i).getMomentumY(*pUnit));
+			pEventData->SetAt(115 + i, pElectrons->setRealOrDummyElectronMembers(i).getMomentumZ(*pUnit));
+			pEventData->SetAt(103 + i, pElectrons->setRealOrDummyElectronMembers(i).getEnergy(*pUnit));
 		}
 	}
 	// plot data of objects 

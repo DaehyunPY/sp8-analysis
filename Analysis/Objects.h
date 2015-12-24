@@ -15,6 +15,7 @@ class Objects {
   const int maximumOfHits = MAXIMUM_OF_HITS;
   const int numberOfHits;
   const int numberOfHitsUsed;
+  const double outOfFrame = OUT_OF_FRAME; 
   Object *pObject[MAXIMUM_OF_HITS];
   const int getNumberOfDeadObjects() const;
   const int getNumberOfDeadDummyObjects() const;
