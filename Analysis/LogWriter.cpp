@@ -16,7 +16,8 @@ Analysis::LogWriter::LogWriter(const std::string &prefix)
   logFile.open(filename, std::fstream::out);
   logFile
       << "It is writen at "
-      << std::put_time(std::localtime(&now), "%c %Z")
+      << std::put_time(std::localtime(&now), "%c %Z") // TODO: warning 
+	  //  warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
       << "."
       << std::endl;
   logFile << "The path is setten here." << std::endl;

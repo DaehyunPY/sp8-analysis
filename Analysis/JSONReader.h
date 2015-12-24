@@ -1,10 +1,10 @@
 #ifndef ANALYSIS_JSONREADER_H
 #define ANALYSIS_JSONREADER_H
 
-#include <string>
-#include <sstream>
+#include <sstream> // TODO: restruct including 
 #include <fstream>
-#include "rapidjson/document.h"
+#include <string>
+#include "rapidjson/document.h" // TODO: find alternative json library 
 #include "JSONFlag.h"
 
 namespace Analysis {
