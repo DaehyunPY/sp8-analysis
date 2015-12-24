@@ -71,7 +71,7 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
   for (int i = 0; i < n; i++) {
     const std::string name = getObjectName(i);
     const double t = analysisTools.calculateTOF(unit, ions.getIon(i), 0e0);
-    logFile << "TOF of " + name + "ion: " << t << std::endl;
+    logFile << "TOF of " + name + " ion: " << t << std::endl;
   }
   const double t1 = analysisTools.calculateTOF(unit, electrons.getElectron(0), 0e0);
   const double t2 = analysisTools.calculatePeriodOfCycle(unit, electrons.getElectron(0));
