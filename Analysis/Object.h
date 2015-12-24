@@ -4,14 +4,15 @@
 
 #include "Unit.h"
 #include "ObjectFlag.h"
+#define OUT_OF_FRAME -100000000
 
 namespace Analysis {
 class Object {
- private:
   const double mass;
   const double charge;
   const double minOfTOF;
   const double maxOfTOF;
+  const double outOfFrame = OUT_OF_FRAME; 
   double locationX;
   double locationY;
   double TOF;
@@ -65,6 +66,7 @@ class Object {
   const double getMotionalDirectionZX() const;
   const double getMotionalDirectionZY() const;
   const double getEnergy() const;
+
   const double getLocationX(const Unit &) const;
   const double getLocationY(const Unit &) const;
   const double getLocationXY(const Unit &) const;

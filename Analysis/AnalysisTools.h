@@ -7,9 +7,17 @@
 #include "Ions.h"
 #include "Electrons.h"
 #include "EventDataReader.h"
+#define DEFAULT_ANALYSISTOOLS_ID 0000
 
 namespace Analysis {
-struct XY { const double x; const double y; };
+struct XY {
+	XY(double x, double y)
+		: x(x),
+		  y(y)
+	{
+		return;
+	}
+	const double x; const double y; };
 
 class AnalysisTools {
  private:
@@ -21,7 +29,7 @@ class AnalysisTools {
   AnalysisTools(const EquipmentParameters &,
                 const IonParameters &,
                 const ElectronParameters &,
-                const std::string &ID = "0000"); // main initializer
+                const std::string &ID = "DEFAULT_ANALYSISTOOLS_ID"); // main initializer
   void resetCounter();
   const EquipmentParameters &getEquipmentParameters() const;
   const IonParameters &getIonParameters() const;
