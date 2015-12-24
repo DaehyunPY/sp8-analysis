@@ -29,3 +29,8 @@ const int &Analysis::EventDataReader::getNumberOfChannelsUsed() const {
 const int &Analysis::EventDataReader::getNumberOfHitsUsed() const {
   return this->numberOfHitsUsed;
 }
+
+const int& Analysis::EventDataReader::getTmpFlag() const
+{
+	return tmpFlag; 
+}

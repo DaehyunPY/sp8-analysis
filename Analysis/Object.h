@@ -12,7 +12,6 @@ class Object {
   const double charge;
   const double minOfTOF;
   const double maxOfTOF;
-  const double outOfFrame = OUT_OF_FRAME; 
   double locationX;
   double locationY;
   double TOF;
@@ -39,60 +38,62 @@ class Object {
   ObjectFlag &setFlagMembers();
   const double &getMass() const;
   const double &getCharge() const;
-  const double &getLocationX() const;
-  const double &getLocationY() const;
-  const double &getTOF() const;
-  const double &getMomentumX() const;
-  const double &getMomentumY() const;
-  const double &getMomentumZ() const;
   const ObjectFlag &getFlag() const;
-  const double getLocationXY() const;
-  const double getLocation() const;
-  const double getLocationalDirectionX() const;
-  const double getLocationalDirectionY() const;
-  const double getLocationalDirectionXY() const;
-  const double getLocationalDirectionYX() const;
-  const double getMomentumXY() const;
-  const double getMomentumYZ() const;
-  const double getMomentumZX() const;
-  const double getMomentum() const;
-  const double getMotionalDirectionX() const;
-  const double getMotionalDirectionY() const;
-  const double getMotionalDirectionZ() const;
-  const double getMotionalDirectionXY() const;
-  const double getMotionalDirectionXZ() const;
-  const double getMotionalDirectionYX() const;
-  const double getMotionalDirectionYZ() const;
-  const double getMotionalDirectionZX() const;
-  const double getMotionalDirectionZY() const;
-  const double getEnergy() const;
 
-  const double getLocationX(const Unit &) const;
-  const double getLocationY(const Unit &) const;
-  const double getLocationXY(const Unit &) const;
-  const double getLocation(const Unit &) const;
-  const double getLocationalDirectionX(const Unit &) const;
-  const double getLocationalDirectionY(const Unit &) const;
-  const double getLocationalDirectionXY(const Unit &) const;
-  const double getLocationalDirectionYX(const Unit &) const;
-  const double getTOF(const Unit &) const;
-  const double getMomentumX(const Unit &) const;
-  const double getMomentumY(const Unit &) const;
-  const double getMomentumZ(const Unit &) const;
-  const double getMomentumXY(const Unit &) const;
-  const double getMomentumYZ(const Unit &) const;
-  const double getMomentumZX(const Unit &) const;
-  const double getMomentum(const Unit &) const;
-  const double getMotionalDirectionX(const Unit &) const;
-  const double getMotionalDirectionY(const Unit &) const;
-  const double getMotionalDirectionZ(const Unit &) const;
-  const double getMotionalDirectionXY(const Unit &) const;
-  const double getMotionalDirectionXZ(const Unit &) const;
-  const double getMotionalDirectionYX(const Unit &) const;
-  const double getMotionalDirectionYZ(const Unit &) const;
-  const double getMotionalDirectionZX(const Unit &) const;
-  const double getMotionalDirectionZY(const Unit &) const;
-  const double getEnergy(const Unit &) const;
+  const double &getLocationX() const; // could be out out frame 
+  const double &getLocationY() const; // could be out out frame 
+  const double &getTOF() const; // could be out out frame 
+  const double &getMomentumX() const; // could be out out frame 
+  const double &getMomentumY() const; // could be out out frame 
+  const double &getMomentumZ() const; // could be out out frame 
+  const double getLocationXY() const; // could be out out frame 
+  const double getLocation() const; // could be out out frame 
+  const double getLocationalDirectionX() const; // could be out out frame 
+  const double getLocationalDirectionY() const; // could be out out frame 
+  const double getLocationalDirectionXY() const; // could be out out frame 
+  const double getLocationalDirectionYX() const; // could be out out frame 
+  const double getMomentumXY() const; // could be out out frame 
+  const double getMomentumYZ() const; // could be out out frame 
+  const double getMomentumZX() const; // could be out out frame 
+  const double getMomentum() const; // could be out out frame 
+  const double getMotionalDirectionX() const; // could be out out frame 
+  const double getMotionalDirectionY() const; // could be out out frame 
+  const double getMotionalDirectionZ() const; // could be out out frame 
+  const double getMotionalDirectionXY() const; // could be out out frame 
+  const double getMotionalDirectionXZ() const; // could be out out frame 
+  const double getMotionalDirectionYX() const; // could be out out frame 
+  const double getMotionalDirectionYZ() const; // could be out out frame 
+  const double getMotionalDirectionZX() const; // could be out out frame 
+  const double getMotionalDirectionZY() const; // could be out out frame 
+  const double getEnergy() const; // could be out out frame 
+
+  const double getLocationX(const Unit &) const; // could be out out frame 
+  const double getLocationY(const Unit &) const; // could be out out frame 
+  const double getLocationXY(const Unit &) const; // could be out out frame 
+  const double getLocation(const Unit &) const; // could be out out frame 
+  const double getLocationalDirectionX(const Unit &) const; // could be out out frame 
+  const double getLocationalDirectionY(const Unit &) const; // could be out out frame 
+  const double getLocationalDirectionXY(const Unit &) const; // could be out out frame 
+  const double getLocationalDirectionYX(const Unit &) const; // could be out out frame 
+  const double getTOF(const Unit &) const; // could be out out frame 
+  const double getMomentumX(const Unit &) const; // could be out out frame 
+  const double getMomentumY(const Unit &) const; // could be out out frame 
+  const double getMomentumZ(const Unit &) const; // could be out out frame 
+  const double getMomentumXY(const Unit &) const; // could be out out frame 
+  const double getMomentumYZ(const Unit &) const; // could be out out frame 
+  const double getMomentumZX(const Unit &) const; // could be out out frame 
+  const double getMomentum(const Unit &) const; // could be out out frame 
+  const double getMotionalDirectionX(const Unit &) const; // could be out out frame 
+  const double getMotionalDirectionY(const Unit &) const; // could be out out frame 
+  const double getMotionalDirectionZ(const Unit &) const; // could be out out frame 
+  const double getMotionalDirectionXY(const Unit &) const; // could be out out frame 
+  const double getMotionalDirectionXZ(const Unit &) const; // could be out out frame 
+  const double getMotionalDirectionYX(const Unit &) const; // could be out out frame 
+  const double getMotionalDirectionYZ(const Unit &) const; // could be out out frame 
+  const double getMotionalDirectionZX(const Unit &) const; // could be out out frame 
+  const double getMotionalDirectionZY(const Unit &) const; // could be out out frame 
+  const double getEnergy(const Unit &) const; // could be out out frame 
+
   const bool isWithinMasterRegion() const;
   const bool isDead() const;
 };

@@ -192,13 +192,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setLocationY(y);
   ion.setTOF(t);
   if (ion.getTOF() > deadTime) {
-    ion.setTOF(deadTime);
-    ion.setFlagMembers().loadDeadFlager();
+    ion.setFlagMembers().setDeadFlag();
   } else {
     if (ion.isWithinMasterRegion()) {
-      ion.setFlagMembers().loadWithinMasterRegionFlager();
+      ion.setFlagMembers().setWithinMasterRegionFlag();
     } else {
-      ion.setFlagMembers().loadNotWithinMasterRegionFlager();
+      ion.setFlagMembers().setNotWithinMasterRegionFlag();
     }
   }
   return;
@@ -223,13 +222,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   electron.setLocationY(y);
   electron.setTOF(t);
   if (electron.getTOF() > deadTime) {
-    electron.setTOF(deadTime);
-    electron.setFlagMembers().loadDeadFlager();
+    electron.setFlagMembers().setDeadFlag();
   } else {
     if (electron.isWithinMasterRegion()) {
-      electron.setFlagMembers().loadWithinMasterRegionFlager();
+      electron.setFlagMembers().setWithinMasterRegionFlag();
     } else {
-      electron.setFlagMembers().loadNotWithinMasterRegionFlager();
+      electron.setFlagMembers().setNotWithinMasterRegionFlag();
     }
   }
   return;
@@ -245,7 +243,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
       ion.setMomentumZ(pz);
   } else
   {
-    ion.setFlagMembers().loadDeadFlager();
+    ion.setFlagMembers().setDeadFlag();
   }
   return;
 }
@@ -262,7 +260,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
       electron.setMomentumZ(pz);
   } else
   {
-    electron.setFlagMembers().loadDeadFlager();
+    electron.setFlagMembers().setDeadFlag();
   }
   return;
 }
@@ -319,24 +317,24 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                                                    const Unit &unit,
                                                    const EventDataReader &reader,
                                                    const int &iHit) const {
-  this->loadEventDataInputer(ion,
-                             unit,
-                             reader.getAt(1, 1, iHit),
-                             reader.getAt(2, 0, iHit),
-                             reader.getAt(2, 1, iHit),
-                             0);
+	loadEventDataInputer(ion,
+		unit,
+		reader.getAt(1, 1, iHit),
+		reader.getAt(2, 0, iHit),
+		reader.getAt(2, 1, iHit),
+		reader.getTmpFlag()); 
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const Unit &unit,
                                                    const EventDataReader &reader,
                                                    const int &iHit) const {
-  this->loadEventDataInputer(electron,
-                             unit,
-                             reader.getAt(0, 0, iHit),
-                             reader.getAt(0, 1, iHit),
-                             reader.getAt(1, 0, iHit),
-                             0);
+	loadEventDataInputer(electron,
+	                     unit,
+	                     reader.getAt(0, 0, iHit),
+	                     reader.getAt(0, 1, iHit),
+	                     reader.getAt(1, 0, iHit),
+	                     reader.getTmpFlag());
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,

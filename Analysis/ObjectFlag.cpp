@@ -5,50 +5,70 @@
 #include "ObjectFlag.h"
 
 Analysis::ObjectFlag::ObjectFlag() : Flag() {
-  loadInitialFlager();
+  setInitialFlag();
   return;
 }
-Analysis::ObjectFlag::~ObjectFlag() {
-  return;
-}
-void Analysis::ObjectFlag::loadInitialFlager() {
+Analysis::ObjectFlag::~ObjectFlag() {}
+void Analysis::ObjectFlag::setInitialFlag() {
   setSign(initialFlagForSign);
 }
+
+void Analysis::ObjectFlag::setValidFlag()
+{
+	setSign(validFlagForSign);
+}
+
+void Analysis::ObjectFlag::setInvalidFlag()
+{
+	setSign(validFlagForSign);
+}
+
 const bool Analysis::ObjectFlag::isInitial() const {
   return getSign() == initialFlagForSign;
 }
-void Analysis::ObjectFlag::loadValidFlager() {
-  setSign(validFlagForSign);
+void Analysis::ObjectFlag::setOutOfFrameOfMomentumDataFlag() {
+  set2ndDigit(outOfFrameOfMomentumDataFlagFor2ndDigit);
+}
+
+void Analysis::ObjectFlag::setInFrameOfAllDataFlag()
+{
+	set2ndDigit(inFrameOfAllDataFlagFor2ndDigit); 
+}
+
+void Analysis::ObjectFlag::setOutOfFrameOfBaicDataFlag() {
+  set2ndDigit(outOfFrameOfBasicDataFlagFor2ndDigit);
   return;
 }
-void Analysis::ObjectFlag::loadInvalidFlager() {
-  setSign(invalidFlagForSign);
-  return;
+const bool Analysis::ObjectFlag::isInFrameOfAllData() const {
+  return get2ndDigit() == inFrameOfAllDataFlagFor2ndDigit;
 }
-const bool Analysis::ObjectFlag::isValid() const {
-  return getSign() == validFlagForSign;
-}
-void Analysis::ObjectFlag::loadWithinMasterRegionFlager() {
+void Analysis::ObjectFlag::setWithinMasterRegionFlag() {
   set1stDigit(withinMasterRegionFlagFor1stDigit);
   return;
 }
-void Analysis::ObjectFlag::loadNotWithinMasterRegionFlager() {
+void Analysis::ObjectFlag::setNotWithinMasterRegionFlag() {
   set1stDigit(notWithinMasterRegionFlagFor1stDigit);
   return;
 }
 const bool Analysis::ObjectFlag::isWithinMasterRegion() const {
   return get1stDigit() == withinMasterRegionFlagFor1stDigit;
 }
-void Analysis::ObjectFlag::loadDeadFlager() {
+void Analysis::ObjectFlag::setDeadFlag() {
   set1stDigit(deadFlagFor1stDigit);
   return;
 }
 const bool Analysis::ObjectFlag::isDead() const {
   return get1stDigit() == deadFlagFor1stDigit;
 }
-const bool Analysis::ObjectFlag::isInvalid() const {
-  return getSign() == invalidFlagForSign;
+const bool Analysis::ObjectFlag::isOutOfFrameOfBasicData() const {
+  return get2ndDigit() == outOfFrameOfBasicDataFlagFor2ndDigit;
 }
+
+const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const
+{
+	return get2ndDigit() == outOfFrameOfMomentumDataFlagFor2ndDigit; 
+}
+
 const bool Analysis::ObjectFlag::isNotWithinMasterRegion() const {
   return get1stDigit() == notWithinMasterRegionFlagFor1stDigit;
 }
