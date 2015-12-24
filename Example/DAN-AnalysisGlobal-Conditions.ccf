@@ -1,0 +1,3 @@
+Condition IonFlag,1,100,IonMaster;
+Condition ElecFlag,1,100,ElecMaster;
+Condition IonMaster,and,ElecMaster,master;

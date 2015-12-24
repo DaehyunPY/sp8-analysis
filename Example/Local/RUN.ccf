@@ -1,18 +1,18 @@
 restart;
-
-// setpath C:\path;
+setpath ABS_PATH;
 // execute ..\DAQ-CamacStandard-Parameters.ccf;
 // execute ..\DAQ-HM1Standard-Parameters.ccf;
 execute ..\DAQ-HM1Standard-Coordinates.ccf;
-execute ..\DAN-analysisCustom-Coordinates.ccf;
-execute ..\DAN-analysisCustom-Conditions.ccf;
-execute ..\DAN-analysisCustom-Spectra.ccf;
+execute ..\DAN-AnalysisGlobal-Coordinates.ccf;
+execute ..\DAN-AnalysisGlobal-Conditions.ccf;
+execute ..\DAN-AnalysisGlobal-Spectra.ccf;
+execute DAN-AnalysisLocal.ccf;
 
-// setpath C:\path;
-// new example.lmf;
+setpath ABS_PATH;
+new LMF_FILE;
 start;
-view 1;
-update 30s;
+view NUMBER;
+update SECONDs;
 show stat;
-wait;
-// save example.dcf;
+
+save RUN.dcf;

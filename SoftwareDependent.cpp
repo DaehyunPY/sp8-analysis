@@ -26,18 +26,9 @@ static char THIS_FILE[] = __FILE__;
 
 ////////////////////////////////////////
 //
-// Custom DAN
+//  RoentDek Standard DAN
 //
 ////////////////////////////////////////
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <fstream>
-#include "rapidjson/document.h"
-#include "rapidjson/prettywriter.h"
-#include "rapidjson/stringbuffer.h"
-
-#include "Custom/glb.cpp"
-#include "Custom/init.cpp"
-#include "Custom/proc.cpp"
-#include "Custom/fin.cpp"
+// #include "EmptyDAN.cpp"
+// #include "StandardDAN.cpp"
+#include "AnalysisDAN.cpp"
