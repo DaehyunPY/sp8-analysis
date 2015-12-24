@@ -5,8 +5,8 @@
 #include <assert.h>
 #include "Objects.h"
 
-#define ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1 if(existOutOfFrameOfBasicDataObject()) { return OUT_OF_FRAME; }
-#define ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2 if(existOutOfFrameOfBasicDataObject() || existOutOfFrameOfMomentumDataObject()) { return OUT_OF_FRAME; }
+#define ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1 if(existOutOfFrameOfBasicDataObject()) { return outOfFrame; }
+#define ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2 if(existOutOfFrameOfBasicDataObject() || existOutOfFrameOfMomentumDataObject()) { return outOfFrame; }
 
 Analysis::Objects::Objects(const int &n)
     : numberOfHits(n), numberOfHitsUsed(n) {
