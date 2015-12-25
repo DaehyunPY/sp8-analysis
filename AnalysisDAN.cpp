@@ -5,13 +5,13 @@
 #include "Analysis/AnalysisTools.h"
 #include "Analysis/LogWriter.h"
 
-Analysis::Unit* pUnit;
-Analysis::JSONReader* pJSONReader;
-Analysis::EventDataReader* pEventDataReader;
-Analysis::AnalysisTools* pAnalysisTools;
-Analysis::Ions* pIons;
-Analysis::Electrons* pElectrons;
-Analysis::LogWriter* pLogWriter;
+Analysis::Unit* pUnit = nullptr;
+Analysis::JSONReader* pJSONReader = nullptr;
+Analysis::EventDataReader* pEventDataReader = nullptr;
+Analysis::AnalysisTools* pAnalysisTools = nullptr;
+Analysis::Ions* pIons = nullptr;
+Analysis::Electrons* pElectrons = nullptr;
+Analysis::LogWriter* pLogWriter = nullptr;
 
 /////////////////////////////////////////////////////////////////////////////
 // Parameter description used in this insert dependent part!
@@ -61,6 +61,7 @@ AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleA
 
 	// initialization is done, and log it 
 	pLogWriter->write() << "Initialization is done." << std::endl;
+	pJSONReader = nullptr; 
 	return TRUE;
 }
 
@@ -87,6 +88,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 		}
 		pEventDataReader = new Analysis::EventDataReader(eventData);
 	}
+
+	// count event 
+	pAnalysisTools->loadEventCounter(); 
 
 	// make sure ion and electron data is empty, and reset flags 
 	pIons->resetEventData();
@@ -295,6 +299,7 @@ output:
 //			                  + pElectrons->getElectron(i).getEnergy(*pUnit));
 //		}
 
+	pEventDataReader = nullptr;
 	return;
 }
 
@@ -302,5 +307,14 @@ CDAN_API void AnalysisFinalize(CDoubleArray* pEventData,
                                CDoubleArray* pParameters,
                                CDoubleArray* pWeighParameter)
 {
+	pLogWriter->write() << "Event count: " << pAnalysisTools->getEventNumber() << std::endl;
+	pLogWriter->write() << "One LMF file is done." << std::endl; 
+	pUnit = nullptr;
+	pJSONReader = nullptr; // for sure 
+	pEventDataReader = nullptr; // for sure 
+	pAnalysisTools = nullptr;
+	pIons = nullptr;
+	pElectrons = nullptr;
+	pLogWriter = nullptr;
 	return;
 }
