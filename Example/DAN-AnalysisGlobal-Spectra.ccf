@@ -97,12 +97,12 @@ define2 -180,180,2,posi_xy,,0,75,0.25,distancexy,,none,master,electron locationa
 // TOF 
 define1 -20,100,0.1,tElectronh1,,none,always,1st hit electron TOF [ns];
 define1 -20,100,0.1,tElectronh1,,none,master,1st hit electron TOF [ns];
-define1 -20,100,0.1,tElectronh2,,none,always,1st hit electron TOF [ns];
-define1 -20,100,0.1,tElectronh2,,none,master,1st hit electron TOF [ns];
-define1 -20,100,0.1,tElectronh3,,none,always,1st hit electron TOF [ns];
-define1 -20,100,0.1,tElectronh3,,none,master,1st hit electron TOF [ns];
-define1 -20,100,0.1,tElectronh4,,none,always,1st hit electron TOF [ns];
-define1 -20,100,0.1,tElectronh4,,none,master,1st hit electron TOF [ns];
+define1 -20,100,0.1,tElectronh2,,none,always,2nd hit electron TOF [ns];
+define1 -20,100,0.1,tElectronh2,,none,master,2nd hit electron TOF [ns];
+define1 -20,100,0.1,tElectronh3,,none,always,3rd hit electron TOF [ns];
+define1 -20,100,0.1,tElectronh3,,none,master,3rd hit electron TOF [ns];
+define1 -20,100,0.1,tElectronh4,,none,always,4th hit electron TOF [ns];
+define1 -20,100,0.1,tElectronh4,,none,master,4th hit electron TOF [ns];
 // momentum
 define2 -3,3,0.05,electron_pxh1,,-3,3,0.05,electron_pyh1,,none,always,1st hit electron momentum image [au]; 
 define2 -3,3,0.05,electron_pxh1,,-3,3,0.05,electron_pyh1,,none,master,1st hit electron momentum image [au]; 
