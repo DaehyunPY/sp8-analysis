@@ -11,7 +11,7 @@ execute DAN-AnalysisLocal.ccf;
 setpath ABS_PATH;
 new LMF_FILE;
 start;
-view NUMBER;
+view SPECTRA_NUMBER;
 update SECONDs;
 show stat;
 

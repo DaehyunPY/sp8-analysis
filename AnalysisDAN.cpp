@@ -4,13 +4,13 @@
 
 #include "Analysis/LogWriter.h"
 
-Analysis::Unit* pUnit;
-Analysis::JSONReader* pJSONReader;
-Analysis::EventDataReader* pEventDataReader;
-Analysis::AnalysisTools* pAnalysisTools;
-Analysis::Ions* pIons;
-Analysis::Electrons* pElectrons;
-Analysis::LogWriter* pLogWriter;
+Analysis::Unit* pUnit = nullptr;
+Analysis::JSONReader* pJSONReader = nullptr;
+Analysis::EventDataReader* pEventDataReader = nullptr;
+Analysis::AnalysisTools* pAnalysisTools = nullptr;
+Analysis::Ions* pIons = nullptr;
+Analysis::Electrons* pElectrons = nullptr;
+Analysis::LogWriter* pLogWriter = nullptr;
 
 /////////////////////////////////////////////////////////////////////////////
 // Parameter description used in this insert dependent part!
@@ -62,6 +62,7 @@ AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleA
 	pLogWriter->logAnalysisTools(*pUnit, *pAnalysisTools, *pIons, *pElectrons); 
 
 	// initialization is done, and log it 
+	pJSONReader = nullptr; 
 	pLogWriter->write() << "Initialization is done." << std::endl;
 	pLogWriter->write() << std::endl;
 	return TRUE;
@@ -90,6 +91,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 		}
 		pEventDataReader = new Analysis::EventDataReader(eventData);
 	}
+
+	// count event 
+	pAnalysisTools->loadEventCounter(); 
 
 	// make sure ion and electron data is empty, and reset flags 
 	pIons->resetEventData();
@@ -199,9 +203,9 @@ output:
 	pEventData->SetAt(89, pIons->getMomentumY(*pUnit));
 	pEventData->SetAt(90, pIons->getMomentumZ(*pUnit));
 	pEventData->SetAt(75, pIons->getEnergy(*pUnit));
-	pEventData->SetAt(92, pIons->getIon(0).getMotionalDirectionXY(*pUnit));
-	pEventData->SetAt(93, pIons->getIon(0).getMotionalDirectionZY(*pUnit));
-	pEventData->SetAt(94, pIons->getIon(0).getMotionalDirectionZX(*pUnit));
+	pEventData->SetAt(92, pIons->getMotionalDirectionXY(*pUnit));
+	pEventData->SetAt(93, pIons->getMotionalDirectionZY(*pUnit));
+	pEventData->SetAt(94, pIons->getMotionalDirectionZX(*pUnit));
 
 	// write electron data
 	// if dummy object, don't plot momentum data 
@@ -229,13 +233,13 @@ output:
 	pEventData->SetAt(131, pElectrons->getLocationX(*pUnit));
 	pEventData->SetAt(132, pElectrons->getLocationY(*pUnit));
 	pEventData->SetAt(122, pElectrons->getMomentum(*pUnit));
-	pEventData->SetAt(137, pElectrons->getElectron(0).getLocationalDirectionXY(*pUnit));
-	pEventData->SetAt(198, pElectrons->getElectron(0).getLocation(*pUnit));
+	pEventData->SetAt(137, pElectrons->getLocationalDirectionXY(*pUnit));
+	pEventData->SetAt(198, pElectrons->getLocation(*pUnit));
 	// momentum data 
-	pEventData->SetAt(136, pElectrons->getElectron(0).getMotionalDirectionZ(*pUnit));
-	pEventData->SetAt(123, pElectrons->getElectron(0).getMotionalDirectionXY(*pUnit));
-	pEventData->SetAt(124, pElectrons->getElectron(0).getMotionalDirectionZY(*pUnit));
-	pEventData->SetAt(125, pElectrons->getElectron(0).getMotionalDirectionZX(*pUnit));
+	pEventData->SetAt(136, pElectrons->getMotionalDirectionZ(*pUnit));
+	pEventData->SetAt(123, pElectrons->getMotionalDirectionXY(*pUnit));
+	pEventData->SetAt(124, pElectrons->getMotionalDirectionZY(*pUnit));
+	pEventData->SetAt(125, pElectrons->getMotionalDirectionZX(*pUnit));
 
 	//  ignore these 
 //	  pEventData->SetAt(18, 0e0); //nHexX1);  // 18+0
@@ -298,6 +302,7 @@ output:
 //			                  + pElectrons->getElectron(i).getEnergy(*pUnit));
 //		}
 
+	pEventDataReader = nullptr;
 	return;
 }
 
@@ -305,6 +310,15 @@ CDAN_API void AnalysisFinalize(CDoubleArray* pEventData,
                                CDoubleArray* pParameters,
                                CDoubleArray* pWeighParameter)
 {
+	pLogWriter->write() << "Event count: " << pAnalysisTools->getEventNumber() << std::endl;
+	pLogWriter->write() << "One LMF file is done." << std::endl; 
 	pLogWriter->write() << std::endl;
+	pUnit = nullptr;
+	pJSONReader = nullptr; // for sure 
+	pEventDataReader = nullptr; // for sure 
+	pAnalysisTools = nullptr;
+	pIons = nullptr;
+	pElectrons = nullptr;
+	pLogWriter = nullptr;
 	return;
 }
