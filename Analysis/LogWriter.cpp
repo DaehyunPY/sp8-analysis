@@ -125,3 +125,6 @@ const std::string Analysis::LogWriter::getObjectName(int i) const {
 std::fstream &Analysis::LogWriter::write() {
   return logFile;
 }
+const std::string Analysis::LogWriter::getFilename() const {
+  return filename;
+}

@@ -1,8 +1,8 @@
 {
   "ID": "1740",
   "output_option": {
-    "option1": true,
-    "option2": true
+    "send_out_of_frame": true,
+    "export_electron_momentum": true
   },
   "equipment_parameters": {
     "electric_potential_of_electron_region": -200,
