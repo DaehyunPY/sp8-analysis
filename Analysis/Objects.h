@@ -16,7 +16,7 @@ class Objects {
   const int numberOfHits;
   const int numberOfHitsUsed;
   const double outOfFrame = OUT_OF_FRAME; 
-  Object *pObject[MAXIMUM_OF_HITS];
+  Object *pObject[MAXIMUM_OF_HITS]; // todo: think a better way
   const int getNumberOfDeadObjects() const;
   const int getNumberOfDeadDummyObjects() const;
   const int getNumberOfDeadRealOrDummyObjects() const;
@@ -36,7 +36,7 @@ class Objects {
   void setAllOfObjectIsOutOfFrameOfMomentumDatatFlag(); 
   void setAllOfDummyObjectIsOutOfFrameOfBasicDataFlag(); 
   void setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); 
-  void setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag(); // TODO: define set* and load* clearly 
+  void setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
   void setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag(); 
   void resetEventData();
   const int &getNumberOfObjects() const;

@@ -2,7 +2,6 @@
 //  User defined analysis part called from cobold main program
 ///////////////////////////////////////////////////////////////////////////
 
-#include "Analysis/AnalysisTools.h"
 #include "Analysis/LogWriter.h"
 
 Analysis::Unit* pUnit;
@@ -40,6 +39,9 @@ AnalysisGetInformationString()
 CDAN_API BOOL
 AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleArray* pWeighParameter)
 {
+	// set seed for random
+	srand(std::time(nullptr));
+
 	// make unit helper 
 	pUnit = new Analysis::Unit;
 

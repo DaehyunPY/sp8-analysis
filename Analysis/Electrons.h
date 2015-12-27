@@ -12,7 +12,7 @@
 namespace Analysis {
 class Electrons : public Objects {
  private:
-  Electron *pElectron[MAXIMUM_OF_HITS];
+  Electron *pElectron[MAXIMUM_OF_HITS]; // todo: think a better way
   Electrons(const Unit &, const JSONReader &, const int &, const int &);
 
  public:
