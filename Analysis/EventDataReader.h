@@ -26,8 +26,8 @@ class EventDataReader {
   const int numberOfChannelsUsed = NUMBER_OF_CHANNELS_USED;
   const int numberOfHitsUsed = NUMBER_OF_HITS_USED;
   const EventData eventData;
-  EventDataFlag flag; // TODO: make flag 
-  const int tmpFlag = 0; // TODO: delete it 
+  EventDataFlag flag; // todo: make flag
+  const int tmpFlag = 0; // todo: delete it
 
  public:
   EventDataReader(const EventData &);

@@ -44,6 +44,11 @@ class ObjectParameters {
   const double &getXZeroOfCOM() const;
   const double &getYZeroOfCOM() const;
   const double &getTimeZeroOfTOF() const;
+  const double getAngleOfDetector(const Unit &) const;
+  const double getDeadTime(const Unit &) const;
+  const double getXZeroOfCOM(const Unit &) const;
+  const double getYZeroOfCOM(const Unit &) const;
+  const double getTimeZeroOfTOF(const Unit &) const;
 };
 }
 
