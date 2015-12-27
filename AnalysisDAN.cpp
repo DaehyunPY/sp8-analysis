@@ -61,6 +61,7 @@ AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleA
 
 	// initialization is done, and log it 
 	pLogWriter->write() << "Initialization is done." << std::endl;
+	pLogWriter->write() << std::endl;
 	return TRUE;
 }
 
@@ -302,5 +303,6 @@ CDAN_API void AnalysisFinalize(CDoubleArray* pEventData,
                                CDoubleArray* pParameters,
                                CDoubleArray* pWeighParameter)
 {
+	pLogWriter->write() << std::endl;
 	return;
 }
