@@ -429,15 +429,15 @@ const double Analysis::Objects::getLocationalDirectionXY() const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return atan2(getLocationY(), getLocationX());
 }
-const double Analysis::Objects::getLocationDirectionX(const Analysis::Unit &unit) const {
+const double Analysis::Objects::getLocationalDirectionX(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return unit.writeDegree(getLocationalDirectionX());
 }
-const double Analysis::Objects::getLocaitonDirectionY(const Analysis::Unit &unit) const {
+const double Analysis::Objects::getLocaitonalDirectionY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return unit.writeDegree(getLocationalDirectionY());
 }
-const double Analysis::Objects::getLocationDirectionXY(const Analysis::Unit &unit) const {
+const double Analysis::Objects::getLocationalDirectionXY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return unit.writeDegree(getLocationalDirectionXY());
 }

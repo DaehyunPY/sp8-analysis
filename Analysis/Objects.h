@@ -77,9 +77,9 @@ class Objects {
   const double getLocationY(const Unit &) const; // could be out of frame 
   const double getLocationXY(const Unit &) const; // could be out of frame 
   const double getLocation(const Unit &) const; // could be out of frame 
-  const double getLocationDirectionX(const Unit &) const; // could be out of frame 
-  const double getLocaitonDirectionY(const Unit &) const; // could be out of frame 
-  const double getLocationDirectionXY(const Unit &) const; // could be out of frame 
+  const double getLocationalDirectionX(const Unit &) const; // could be out of frame 
+  const double getLocaitonalDirectionY(const Unit &) const; // could be out of frame 
+  const double getLocationalDirectionXY(const Unit &) const; // could be out of frame 
   const double getLocationDirectionYX(const Unit &) const; // could be out of frame 
   const double getSumOfTOF(const Unit &, const int &, const int &) const; // could be out of frame (note: don't use macro)  
   const double getMomentumX(const Unit &) const; // could be out of frame 

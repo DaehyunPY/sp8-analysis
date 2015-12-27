@@ -7,11 +7,10 @@
 Analysis::LogWriter::LogWriter(const std::string &prefix)
     : ID(getRandomID()) {
   auto now = std::time(nullptr);
-  if(prefix == "") {
-    filename = ID + ".log";
-  } else {
-    filename = prefix + "-" + ID + ".log";
-  }
+  filename = prefix;
+  if(!(prefix == "")) { filename += "-"; }
+  filename += ID;
+  filename += ".log";
   logFile.open(filename, std::fstream::out);
   logFile
       << "It is writen at "
@@ -70,41 +69,41 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
   logFile << "    ID: " << analysisTools.getID() << std::endl;
   logFile << "    Equipment Parameters: " << std::endl;
   logFile << "        Electric Potential of Electron Region: " << analysisTools.getEquipmentParameters().getElectricPotentialOfElectronRegion(unit) << std::endl;
-  logFile << "        Electric Potential of Ion 1st:         " << analysisTools.getEquipmentParameters().getElectricPotentialOfIon1st(unit) << std::endl;
-  logFile << "        Electric Potential of Ion_2nd:         " << analysisTools.getEquipmentParameters().getElectricPotentialOfIon2nd(unit) << std::endl;
-  logFile << "        Electric Potential of Ion_MCP:         " << analysisTools.getEquipmentParameters().getElectricPotentialOfIonMCP(unit) << std::endl;
-  logFile << "        Length of_D2:                          " << analysisTools.getEquipmentParameters().getLengthOfD2(unit) << std::endl;
-  logFile << "        Length of_D1:                          " << analysisTools.getEquipmentParameters().getLengthOfD1(unit) << std::endl;
-  logFile << "        Length of_L1:                          " << analysisTools.getEquipmentParameters().getLengthOfL1(unit) << std::endl;
-  logFile << "        Length of_L2:                          " << analysisTools.getEquipmentParameters().getLengthOfL2(unit) << std::endl;
-  logFile << "        Length of_L3:                          " << analysisTools.getEquipmentParameters().getLengthOfL3(unit) << std::endl;
-  logFile << "        Magnetic Filed:                        " << analysisTools.getEquipmentParameters().getMagneticFiled(unit) << std::endl;
+  logFile << "        Electric Potential of Ion 1st: " << analysisTools.getEquipmentParameters().getElectricPotentialOfIon1st(unit) << std::endl;
+  logFile << "        Electric Potential of Ion 2nd: " << analysisTools.getEquipmentParameters().getElectricPotentialOfIon2nd(unit) << std::endl;
+  logFile << "        Electric Potential of Ion MCP: " << analysisTools.getEquipmentParameters().getElectricPotentialOfIonMCP(unit) << std::endl;
+  logFile << "        Length of D2: " << analysisTools.getEquipmentParameters().getLengthOfD2(unit) << std::endl;
+  logFile << "        Length of D1: " << analysisTools.getEquipmentParameters().getLengthOfD1(unit) << std::endl;
+  logFile << "        Length of L1: " << analysisTools.getEquipmentParameters().getLengthOfL1(unit) << std::endl;
+  logFile << "        Length of L2: " << analysisTools.getEquipmentParameters().getLengthOfL2(unit) << std::endl;
+  logFile << "        Length of L3: " << analysisTools.getEquipmentParameters().getLengthOfL3(unit) << std::endl;
+  logFile << "        Magnetic Filed: " << analysisTools.getEquipmentParameters().getMagneticFiled(unit) << std::endl;
   logFile << "    Ion Parameters: " << std::endl; 
   logFile << "        Angle of Detector: " << analysisTools.getIonParameters().getAngleOfDetector(unit) << std::endl;
-  logFile << "        Pixel Size of x:   " << analysisTools.getIonParameters().getPixelSizeOfX() << std::endl;
-  logFile << "        Pixel Size of y:   " << analysisTools.getIonParameters().getPixelSizeOfY() << std::endl;
-  logFile << "        Dead Time:         " << analysisTools.getIonParameters().getDeadTime(unit) << std::endl;
-  logFile << "        X Zero of COM:     " << analysisTools.getIonParameters().getXZeroOfCOM(unit) << std::endl;
-  logFile << "        Y Zero of COM:     " << analysisTools.getIonParameters().getYZeroOfCOM(unit) << std::endl;
-  logFile << "        Time Zero of TOF:  " << analysisTools.getIonParameters().getTimeZeroOfTOF(unit) << std::endl;
+  logFile << "        Pixel Size of x: " << analysisTools.getIonParameters().getPixelSizeOfX() << std::endl;
+  logFile << "        Pixel Size of y: " << analysisTools.getIonParameters().getPixelSizeOfY() << std::endl;
+  logFile << "        Dead Time: " << analysisTools.getIonParameters().getDeadTime(unit) << std::endl;
+  logFile << "        X Zero of COM: " << analysisTools.getIonParameters().getXZeroOfCOM(unit) << std::endl;
+  logFile << "        Y Zero of COM: " << analysisTools.getIonParameters().getYZeroOfCOM(unit) << std::endl;
+  logFile << "        Time Zero of TOF: " << analysisTools.getIonParameters().getTimeZeroOfTOF(unit) << std::endl;
   logFile << "    Electron Parameters: " << std::endl;
   logFile << "        Angle of Detector: " << analysisTools.getElectronParameters().getAngleOfDetector(unit) << std::endl;
-  logFile << "        Pixel Size of x:   " << analysisTools.getElectronParameters().getPixelSizeOfX() << std::endl;
-  logFile << "        Pixel Size of y:   " << analysisTools.getElectronParameters().getPixelSizeOfY() << std::endl;
-  logFile << "        Dead Time:         " << analysisTools.getElectronParameters().getDeadTime(unit) << std::endl;
-  logFile << "        X Zero of COM:     " << analysisTools.getElectronParameters().getXZeroOfCOM(unit) << std::endl;
-  logFile << "        Y Zero of COM:     " << analysisTools.getElectronParameters().getYZeroOfCOM(unit) << std::endl;
-  logFile << "        Time Zero of TOF:  " << analysisTools.getElectronParameters().getTimeZeroOfTOF(unit) << std::endl;
+  logFile << "        Pixel Size of x: " << analysisTools.getElectronParameters().getPixelSizeOfX() << std::endl;
+  logFile << "        Pixel Size of y: " << analysisTools.getElectronParameters().getPixelSizeOfY() << std::endl;
+  logFile << "        Dead Time: " << analysisTools.getElectronParameters().getDeadTime(unit) << std::endl;
+  logFile << "        X Zero of COM: " << analysisTools.getElectronParameters().getXZeroOfCOM(unit) << std::endl;
+  logFile << "        Y Zero of COM: " << analysisTools.getElectronParameters().getYZeroOfCOM(unit) << std::endl;
+  logFile << "        Time Zero of TOF: " << analysisTools.getElectronParameters().getTimeZeroOfTOF(unit) << std::endl;
   logFile << std::endl;
   const int &n = ions.getNumberOfObjects();
   for (int i = 0; i < n; i++) {
     const std::string name = getObjectName(i);
     const double t = analysisTools.calculateTOF(unit, ions.getIon(i), 0e0);
-    logFile << "TOF of " + name + " ion:         " << t << std::endl;
+    logFile << "TOF of " + name + " ion: " << t << std::endl;
   }
   const double t1 = analysisTools.calculateTOF(unit, electrons.getElectron(0), 0e0);
   const double t2 = analysisTools.calculatePeriodOfCycle(unit, electrons.getElectron(0));
-  logFile << "TOF of electron:             " << t1 << std::endl;
+  logFile << "TOF of electron: " << t1 << std::endl;
   logFile << "Period of cycle of electron: " << t2 << std::endl;
   logFile << std::endl;
 }

@@ -43,7 +43,7 @@ CDAN_API BOOL
 AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleArray* pWeighParameter)
 {
 	// set seed for random
-	srand(std::time(nullptr));
+	srand((unsigned int)time(nullptr));
 
 	// make unit helper 
 	pUnit = new Analysis::Unit;
@@ -65,33 +65,40 @@ AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleA
 	pLogWriter->logAnalysisTools(*pUnit, *pAnalysisTools, *pIons, *pElectrons);
 
 	// output option
-	optionOfSendingOutOfFrame = pJSONReader->getBoolAt("output_option.send_out_of_frame");
-	optionOfExportingElectronMomentum = pJSONReader->getBoolAt("output_option.export_electron_momentum");
+	optionOfSendingOutOfFrame = pJSONReader->getBoolAt("output_options.send_out_of_frame");
+	optionOfExportingElectronMomentum = pJSONReader->getBoolAt("output_options.export_electron_momentum");
 	// log it
 	pLogWriter->write() << "Output Options: " << std::endl;
-	pLogWriter->write() << "    Send Out of Frame: " << optionOfSendingOutOfFrame << std::endl;
-	pLogWriter->write() << "    Export electron momentum: " << optionOfExportingElectronMomentum << std::endl;
+	pLogWriter->write() << "    Send Out of Frame: " << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
+	pLogWriter->write() << "    Export electron momentum: " << (optionOfExportingElectronMomentum ? "true" : "false") << std::endl;
 	pLogWriter->write() << std::endl;
 
 	// export electron momentum
-	exportedFile.open(pLogWriter->getFilename()+".csv", fstream::out);
-	exportedFile << "1st hit electron px" << ",";
-	exportedFile << "1st hit electron py" << ",";
-	exportedFile << "1st hit electron pz" << ",";
-	exportedFile << "1st hit electron E"  << ",";
-	exportedFile << "2nd hit electron px" << ",";
-	exportedFile << "2nd hit electron py" << ",";
-	exportedFile << "2nd hit electron pz" << ",";
-	exportedFile << "2nd hit electron E"  << ",";
-	exportedFile << "3rd hit electron px" << ",";
-	exportedFile << "3rd hit electron py" << ",";
-	exportedFile << "3rd hit electron pz" << ",";
-	exportedFile << "3rd hit electron E"  << ",";
-	exportedFile << "4th hit electron px" << ",";
-	exportedFile << "4th hit electron py" << ",";
-	exportedFile << "4th hit electron pz" << ",";
-	exportedFile << "4th hit electron E"  << ",";
-	exportedFile << endl;
+	if (optionOfExportingElectronMomentum) {
+		std::string filename; 
+		filename = pAnalysisTools->getID();
+		if (!(filename == "")) { filename += "-"; }
+		filename += pLogWriter->getID(); 
+		filename += ".csv";
+		exportedFile.open(filename, std::fstream::out);
+		exportedFile << "1st hit electron px" << ",";
+		exportedFile << "1st hit electron py" << ",";
+		exportedFile << "1st hit electron pz" << ",";
+		exportedFile << "1st hit electron E"  << ",";
+		exportedFile << "2nd hit electron px" << ",";
+		exportedFile << "2nd hit electron py" << ",";
+		exportedFile << "2nd hit electron pz" << ",";
+		exportedFile << "2nd hit electron E"  << ",";
+		exportedFile << "3rd hit electron px" << ",";
+		exportedFile << "3rd hit electron py" << ",";
+		exportedFile << "3rd hit electron pz" << ",";
+		exportedFile << "3rd hit electron E"  << ",";
+		exportedFile << "4th hit electron px" << ",";
+		exportedFile << "4th hit electron py" << ",";
+		exportedFile << "4th hit electron pz" << ",";
+		exportedFile << "4th hit electron E"  << ",";
+		exportedFile << std::endl;
+	}
 
 	// initialization is done
 	pJSONReader = nullptr;
@@ -160,7 +167,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 		// if exist a object dead or not within master region
 		const bool existDeadObject = pIons->existDeadObject();
 		const bool areAllWithinMasterRegion = pIons->areAllWithinMasterRegion();
-		if (existDeadObject || !areAllWithinMasterRegion) 
+		if (existDeadObject || !areAllWithinMasterRegion)
 		{
 			// don't plot momentum data
 			if (optionOfSendingOutOfFrame) { pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag(); }
@@ -168,11 +175,11 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 			if (!areAllWithinMasterRegion) { ionMasterFlag = -22; }
 			// don't calculate momentum 
 			goto electron;
-		}		
+		}
+		// calculate momentum 
+		pAnalysisTools->loadMomentumCalculator(*pIons);
+		if (existDeadObject) { ionMasterFlag = -30; }
 	}
-	// calculate momentum 
-	pAnalysisTools->loadMomentumCalculator(*pIons);
-	if (existDeadObject) { ionMasterFlag = -30; }
 	ionMasterFlag = 1;
 
 
@@ -190,24 +197,26 @@ electron:
 			// don't calculate momentum 
 			goto output;
 		}
+		// calculate momentum 
+		pAnalysisTools->loadMomentumCalculator(*pElectrons);
+		if (existDeadObject) { electronMasterFlag = -30; }
 	}
-	// calculate momentum 
-	pAnalysisTools->loadMomentumCalculator(*pElectrons);
-	if (existDeadObject) { electronMasterFlag = -30; }
 	electronMasterFlag = 1;
 
 
 output:
 	// export electron momentum
-	if (ionMasterFlag > 0 && electronMasterFlag > 0) {
-		const int& n = pElectrons->getNumberOfObjects();
-		for (int i = 0; i < n; i++) {
-			exportedFile << pElectrons->getElectron(i).getMomentumX(*pUnit) << ",";
-			exportedFile << pElectrons->getElectron(i).getMomentumY(*pUnit) << ",";
-			exportedFile << pElectrons->getElectron(i).getMomentumZ(*pUnit) << ",";
-			exportedFile << pElectrons->getElectron(i).getEnergy(*pUnit) << ",";
+	if (optionOfExportingElectronMomentum) {
+		if (ionMasterFlag > 0 && electronMasterFlag > 0) {
+			const int& n = pElectrons->getNumberOfObjects();
+			for (int i = 0; i < n; i++) {
+				exportedFile << pElectrons->getElectron(i).getMomentumX(*pUnit) << ",";
+				exportedFile << pElectrons->getElectron(i).getMomentumY(*pUnit) << ",";
+				exportedFile << pElectrons->getElectron(i).getMomentumZ(*pUnit) << ",";
+				exportedFile << pElectrons->getElectron(i).getEnergy(*pUnit) << ",";
+			}
+			exportedFile << std::endl;
 		}
-		exportedFile << std::endl;
 	}
 
 	// write flag data
@@ -366,16 +375,17 @@ CDAN_API void AnalysisFinalize(CDoubleArray* pEventData,
                                CDoubleArray* pWeighParameter)
 {
 	// finalization is done
-	pLogWriter->write() << "Event count: " << pAnalysisTools->getEventNumber() << std::endl;
-	pLogWriter->write() << "One LMF file is done." << std::endl;
-	// log it
-	pLogWriter->write() << std::endl;
 	pUnit = nullptr;
 	pJSONReader = nullptr; // for sure 
 	pEventDataReader = nullptr; // for sure 
 	pAnalysisTools = nullptr;
 	pIons = nullptr;
 	pElectrons = nullptr;
+	if (optionOfExportingElectronMomentum) { exportedFile.close(); }
+	// log it
+	pLogWriter->write() << "Event count: " << pAnalysisTools->getEventNumber() << std::endl;
+	pLogWriter->write() << "One LMF file is done." << std::endl;
+	pLogWriter->write() << std::endl;
 	pLogWriter = nullptr;
 	return;
 }
