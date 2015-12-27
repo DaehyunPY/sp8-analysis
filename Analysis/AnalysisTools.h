@@ -7,8 +7,6 @@
 #include "Ions.h"
 #include "Electrons.h"
 #include "EventDataReader.h"
-#define DEFAULT_ANALYSISTOOLS_ID 0000
-
 namespace Analysis
 {
 	struct XY
@@ -23,7 +21,6 @@ namespace Analysis
 		const double x;
 		const double y;
 	};
-
 	class AnalysisTools
 	{
 		const EquipmentParameters equipmentParameters;
@@ -34,11 +31,8 @@ namespace Analysis
 		AnalysisTools(const EquipmentParameters&,
 		              const IonParameters&,
 		              const ElectronParameters&,
-		              const std::string& ID = "DEFAULT_ANALYSISTOOLS_ID"); // main initializer
+		              const std::string&); // main initializer
 		void resetCounter();
-		const EquipmentParameters& getEquipmentParameters() const;
-		const IonParameters& getIonParameters() const;
-		const ElectronParameters& getElectronParameters() const;
 		const XY calculateRotation(const XY&, const double&) const;
 		const double calculateDiffTOF(const Ion&, const double&) const;
 		const double calculateDiffTOF(const Electron&, const double&) const;
@@ -67,6 +61,9 @@ namespace Analysis
 	public:
 		AnalysisTools(const Unit&, const JSONReader&);
 		~AnalysisTools();
+	    const EquipmentParameters& getEquipmentParameters() const;
+	    const IonParameters& getIonParameters() const;
+	    const ElectronParameters& getElectronParameters() const;
 		const std::string& getID() const;
 		const int& getEventNumber() const;
 		void loadEventCounter();

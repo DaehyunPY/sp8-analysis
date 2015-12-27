@@ -148,7 +148,7 @@ Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
     : AnalysisTools(Analysis::EquipmentParameters(unit, reader),
                     Analysis::IonParameters(unit, reader),
                     Analysis::ElectronParameters(unit, reader),
-                    reader.hasMember("ID") ? reader.getStringAt("ID") : "DEFAULT_ANALYSISTOOLS_ID")
+                    reader.hasMember("ID") ? reader.getStringAt("ID") : "")
 {
   return;
 }

@@ -48,23 +48,38 @@ Analysis::ObjectParameters::ObjectParameters(const Unit &unit,
 }
 Analysis::ObjectParameters::~ObjectParameters() { return; }
 const double &Analysis::ObjectParameters::getXZeroOfCOM() const {
-  return this->xZeroOfCOM;
+  return xZeroOfCOM;
 }
 const double &Analysis::ObjectParameters::getYZeroOfCOM() const {
-  return this->yZeroOfCOM;
+  return yZeroOfCOM;
 }
 const double &Analysis::ObjectParameters::getTimeZeroOfTOF() const {
-  return this->timeZeroOfTOF;
+  return timeZeroOfTOF;
 }
 const double &Analysis::ObjectParameters::getPixelSizeOfX() const {
-  return this->pixelSizeOfX;
+  return pixelSizeOfX;
 }
 const double &Analysis::ObjectParameters::getPixelSizeOfY() const {
-  return this->pixelSizeOfY;
+  return pixelSizeOfY;
 }
 const double &Analysis::ObjectParameters::getAngleOfDetector() const {
-  return this->angleOfDetector;
+  return angleOfDetector;
 }
 const double &Analysis::ObjectParameters::getDeadTime() const {
-  return this->deadTime;
+  return deadTime;
+}
+const double Analysis::ObjectParameters::getAngleOfDetector(const Analysis::Unit &unit) const {
+  return unit.writeDegree(getAngleOfDetector());
+}
+const double Analysis::ObjectParameters::getDeadTime(const Analysis::Unit &unit) const {
+  return unit.writeTime(getDeadTime());
+}
+const double Analysis::ObjectParameters::getXZeroOfCOM(const Analysis::Unit &unit) const {
+  return unit.writeLength(getXZeroOfCOM());
+}
+const double Analysis::ObjectParameters::getYZeroOfCOM(const Analysis::Unit &unit) const {
+  return unit.writeLength(getYZeroOfCOM());
+}
+const double Analysis::ObjectParameters::getTimeZeroOfTOF(const Analysis::Unit &unit) const {
+  return unit.writeTime(getTimeZeroOfTOF());
 }

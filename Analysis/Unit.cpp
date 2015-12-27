@@ -18,8 +18,7 @@ const double Analysis::Unit::readLength(const double d) const {
   return d * milli;
 }
 
-const double Analysis::Unit::readMomentum(const double d) const
-{
+const double Analysis::Unit::readMomentum(const double d) const {
 	return d * auMomentum;
 }
 
@@ -27,7 +26,7 @@ const double Analysis::Unit::writeLength(const double d) const {
   return d / milli;
 }
 const double Analysis::Unit::readElectricPotential(const double d) const {
-  return d;
+  return d * 1e0;
 }
 const double Analysis::Unit::readMagnaticField(const double d) const {
   return d * gauss;
@@ -48,3 +47,9 @@ const double Analysis::Unit::writeEnergy(const double d) const {
   return d / elementaryCharge;
 }
 
+const double Analysis::Unit::writeElectricPotential(const double d) const {
+  return d / 1e0;
+}
+const double Analysis::Unit::writeMagnaticField(const double d) const {
+  return d / gauss;
+}

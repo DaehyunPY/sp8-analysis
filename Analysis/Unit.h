@@ -34,6 +34,8 @@ class Unit {
   const double writeLength(const double) const;
   const double writeTime(const double) const;
   const double writeMomentum(const double) const;
+  const double writeElectricPotential(const double) const;
+  const double writeMagnaticField(const double) const;
   const double writeEnergy(const double) const;
   const double writeDegree(const double) const;
 

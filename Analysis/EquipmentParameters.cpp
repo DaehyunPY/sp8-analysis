@@ -121,3 +121,37 @@ const double Analysis::EquipmentParameters::getElectricFiledOfL3() const {
 const double &Analysis::EquipmentParameters::getMagneticFiled() const {
   return magneticFiled;
 }
+const double Analysis::EquipmentParameters::getLengthOfD2(const Analysis::Unit &unit) const {
+  return unit.writeLength(getLengthOfD2());
+}
+const double Analysis::EquipmentParameters::getLengthOfD1(const Analysis::Unit &unit) const {
+  return unit.writeLength(getLengthOfD1());
+}
+const double Analysis::EquipmentParameters::getLengthOfL1(const Analysis::Unit &unit) const {
+  return unit.writeLength(getLengthOfL1());
+}
+const double Analysis::EquipmentParameters::getLengthOfL2(const Analysis::Unit &unit) const {
+  return unit.writeLength(getLengthOfL2());
+}
+const double Analysis::EquipmentParameters::getLengthOfL3(const Analysis::Unit &unit) const {
+  return unit.writeLength(getLengthOfL3());
+}
+const double Analysis::EquipmentParameters::getElectricPotentialOfElectronRegion(
+    const Analysis::Unit &unit) const {
+  return unit.writeElectricPotential(getElectricPotentialOfElectronRegion());
+}
+const double Analysis::EquipmentParameters::getElectricPotentialOfIon1st(
+    const Analysis::Unit &unit) const {
+  return unit.writeElectricPotential(getElectricPotentialOfIon1st());
+}
+const double Analysis::EquipmentParameters::getElectricPotentialOfIon2nd(
+    const Analysis::Unit &unit) const {
+  return unit.writeElectricPotential(getElectricPotentialOfIon2nd());
+}
+const double Analysis::EquipmentParameters::getElectricPotentialOfIonMCP(
+    const Analysis::Unit &unit) const {
+  return unit.writeElectricPotential(getElectricPotentialOfIonMCP());
+}
+const double Analysis::EquipmentParameters::getMagneticFiled(const Analysis::Unit &unit) const {
+  return unit.writeMagnaticField(getMagneticFiled());
+}
