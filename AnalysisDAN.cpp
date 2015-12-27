@@ -4,13 +4,16 @@
 
 #include "Analysis/LogWriter.h"
 
-Analysis::Unit* pUnit;
-Analysis::JSONReader* pJSONReader;
-Analysis::EventDataReader* pEventDataReader;
-Analysis::AnalysisTools* pAnalysisTools;
-Analysis::Ions* pIons;
-Analysis::Electrons* pElectrons;
-Analysis::LogWriter* pLogWriter;
+Analysis::Unit* pUnit = nullptr;
+Analysis::JSONReader* pJSONReader = nullptr;
+Analysis::EventDataReader* pEventDataReader = nullptr;
+Analysis::AnalysisTools* pAnalysisTools = nullptr;
+Analysis::Ions* pIons = nullptr;
+Analysis::Electrons* pElectrons = nullptr;
+Analysis::LogWriter* pLogWriter = nullptr;
+bool optionOfSendingOutOfFrame = true;
+bool optionOfExportingElectronMomentum = true;
+std::fstream exportedFile;
 
 /////////////////////////////////////////////////////////////////////////////
 // Parameter description used in this insert dependent part!
@@ -59,10 +62,42 @@ AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleA
 		pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader, numberOfHitsUsed);
 	}
 	// log it 
-	pLogWriter->logAnalysisTools(*pUnit, *pAnalysisTools, *pIons, *pElectrons); 
+	pLogWriter->logAnalysisTools(*pUnit, *pAnalysisTools, *pIons, *pElectrons);
 
-	// initialization is done, and log it 
+	// output option
+	optionOfSendingOutOfFrame = pJSONReader->getBoolAt("output_option.send_out_of_frame");
+	optionOfExportingElectronMomentum = pJSONReader->getBoolAt("output_option.export_electron_momentum");
+	// log it
+	pLogWriter->write() << "Output Options: " << std::endl;
+	pLogWriter->write() << "    Send Out of Frame: " << optionOfSendingOutOfFrame << std::endl;
+	pLogWriter->write() << "    Export electron momentum: " << optionOfExportingElectronMomentum << std::endl;
+	pLogWriter->write() << std::endl;
+
+	// export electron momentum
+	exportedFile.open(pLogWriter->getFilename()+".csv", fstream::out);
+	exportedFile << "1st hit electron px" << ",";
+	exportedFile << "1st hit electron py" << ",";
+	exportedFile << "1st hit electron pz" << ",";
+	exportedFile << "1st hit electron E"  << ",";
+	exportedFile << "2nd hit electron px" << ",";
+	exportedFile << "2nd hit electron py" << ",";
+	exportedFile << "2nd hit electron pz" << ",";
+	exportedFile << "2nd hit electron E"  << ",";
+	exportedFile << "3rd hit electron px" << ",";
+	exportedFile << "3rd hit electron py" << ",";
+	exportedFile << "3rd hit electron pz" << ",";
+	exportedFile << "3rd hit electron E"  << ",";
+	exportedFile << "4th hit electron px" << ",";
+	exportedFile << "4th hit electron py" << ",";
+	exportedFile << "4th hit electron pz" << ",";
+	exportedFile << "4th hit electron E"  << ",";
+	exportedFile << endl;
+
+	// initialization is done
+	pJSONReader = nullptr;
+	// log it
 	pLogWriter->write() << "Initialization is done." << std::endl;
+	pLogWriter->write() << std::endl;
 	return TRUE;
 }
 
@@ -90,6 +125,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 		pEventDataReader = new Analysis::EventDataReader(eventData);
 	}
 
+	// count event 
+	pAnalysisTools->loadEventCounter(); 
+
 	// make sure ion and electron data is empty, and reset flags 
 	pIons->resetEventData();
 	pElectrons->resetEventData();
@@ -107,8 +145,8 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 		if (ionsAreAllDead || electronsAreeAllDead)
 		{
 			// don't plot momentum data
-			pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag(); 
-			pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag(); 
+			if(optionOfSendingOutOfFrame) { pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag(); }
+			if(optionOfSendingOutOfFrame) { pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag(); }
 			if (ionsAreAllDead) { ionMasterFlag = -10; }
 			if (electronsAreeAllDead) { electronMasterFlag = -10; }
 			// don't calculate momentum 
@@ -125,7 +163,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 		if (existDeadObject || !areAllWithinMasterRegion) 
 		{
 			// don't plot momentum data
-			pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag();
+			if (optionOfSendingOutOfFrame) { pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag(); }
 			if (existDeadObject) { ionMasterFlag = -21; }
 			if (!areAllWithinMasterRegion) { ionMasterFlag = -22; }
 			// don't calculate momentum 
@@ -134,6 +172,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 	}
 	// calculate momentum 
 	pAnalysisTools->loadMomentumCalculator(*pIons);
+	if (existDeadObject) { ionMasterFlag = -30; }
 	ionMasterFlag = 1;
 
 
@@ -145,7 +184,7 @@ electron:
 		if (existDeadObject || !areAllWithinMasterRegion)
 		{
 			// don't plot momentum data
-			pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag(); 
+			if (optionOfSendingOutOfFrame) { pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag(); }
 			if (existDeadObject) { electronMasterFlag = -21; }
 			if (!areAllWithinMasterRegion) { electronMasterFlag = -22; }
 			// don't calculate momentum 
@@ -154,24 +193,41 @@ electron:
 	}
 	// calculate momentum 
 	pAnalysisTools->loadMomentumCalculator(*pElectrons);
+	if (existDeadObject) { electronMasterFlag = -30; }
 	electronMasterFlag = 1;
 
 
 output:
+	// export electron momentum
+	if (ionMasterFlag > 0 && electronMasterFlag > 0) {
+		const int& n = pElectrons->getNumberOfObjects();
+		for (int i = 0; i < n; i++) {
+			exportedFile << pElectrons->getElectron(i).getMomentumX(*pUnit) << ",";
+			exportedFile << pElectrons->getElectron(i).getMomentumY(*pUnit) << ",";
+			exportedFile << pElectrons->getElectron(i).getMomentumZ(*pUnit) << ",";
+			exportedFile << pElectrons->getElectron(i).getEnergy(*pUnit) << ",";
+		}
+		exportedFile << std::endl;
+	}
+
 	// write flag data
 	pEventData->SetAt(126, ionMasterFlag);
 	pEventData->SetAt(127, electronMasterFlag);
 
 	// write ion data
 	// if dummy object, don't plot momentum data 
-	pIons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); 
+	if (optionOfSendingOutOfFrame) { pIons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); }
 	{
 		// plot data of a object 
 		const int& m = pIons->getNumberOfRealOrDummyObjects();
 		for (int i = 0; i < m; i++)
 		{
-			// if dead object, don't plot it 
-			if (pIons->getRealOrDummyIon(i).isDead()) { pIons->setRealOrDummyIonMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag(); }
+			// if dead object, don't plot it
+			if (optionOfSendingOutOfFrame) {
+				if (pIons->getRealOrDummyIon(i).isDead()) {
+					pIons->setRealOrDummyIonMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
+				}
+			}
 			// basic data 
 			pEventData->SetAt(31 + 28 + i, pIons->getRealOrDummyIon(i).getLocationX(*pUnit));
 			pEventData->SetAt(31 + 32 + i, pIons->getRealOrDummyIon(i).getLocationY(*pUnit));
@@ -198,20 +254,24 @@ output:
 	pEventData->SetAt(89, pIons->getMomentumY(*pUnit));
 	pEventData->SetAt(90, pIons->getMomentumZ(*pUnit));
 	pEventData->SetAt(75, pIons->getEnergy(*pUnit));
-	pEventData->SetAt(92, pIons->getIon(0).getMotionalDirectionXY(*pUnit));
-	pEventData->SetAt(93, pIons->getIon(0).getMotionalDirectionZY(*pUnit));
-	pEventData->SetAt(94, pIons->getIon(0).getMotionalDirectionZX(*pUnit));
+	pEventData->SetAt(92, pIons->getMotionalDirectionXY(*pUnit));
+	pEventData->SetAt(93, pIons->getMotionalDirectionZY(*pUnit));
+	pEventData->SetAt(94, pIons->getMotionalDirectionZX(*pUnit));
 
 	// write electron data
 	// if dummy object, don't plot momentum data 
-	pElectrons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); 
+	if(optionOfSendingOutOfFrame) { pElectrons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); }
 	{
 		// plot data of a object 
 		const int& m = pElectrons->getNumberOfRealOrDummyObjects();
 		for (int i = 0; i < m; i++)
 		{
-			// if dead object, don't plot it 
-			if (pElectrons->setRealOrDummyElectronMembers(i).isDead()) { pElectrons->setRealOrDummyElectronMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag(); }
+			// if dead object, don't plot it
+			if(optionOfSendingOutOfFrame) {
+				if (pElectrons->setRealOrDummyElectronMembers(i).isDead()) {
+					pElectrons->setRealOrDummyElectronMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
+				}
+			}
 			// basic data 
 			pEventData->SetAt(31 + i, pElectrons->setRealOrDummyElectronMembers(i).getLocationX(*pUnit));
 			pEventData->SetAt(31 + 4 + i, pElectrons->setRealOrDummyElectronMembers(i).getLocationY(*pUnit));
@@ -228,13 +288,13 @@ output:
 	pEventData->SetAt(131, pElectrons->getLocationX(*pUnit));
 	pEventData->SetAt(132, pElectrons->getLocationY(*pUnit));
 	pEventData->SetAt(122, pElectrons->getMomentum(*pUnit));
-	pEventData->SetAt(137, pElectrons->getElectron(0).getLocationalDirectionXY(*pUnit));
-	pEventData->SetAt(198, pElectrons->getElectron(0).getLocation(*pUnit));
+	pEventData->SetAt(137, pElectrons->getLocationalDirectionXY(*pUnit));
+	pEventData->SetAt(198, pElectrons->getLocation(*pUnit));
 	// momentum data 
-	pEventData->SetAt(136, pElectrons->getElectron(0).getMotionalDirectionZ(*pUnit));
-	pEventData->SetAt(123, pElectrons->getElectron(0).getMotionalDirectionXY(*pUnit));
-	pEventData->SetAt(124, pElectrons->getElectron(0).getMotionalDirectionZY(*pUnit));
-	pEventData->SetAt(125, pElectrons->getElectron(0).getMotionalDirectionZX(*pUnit));
+	pEventData->SetAt(136, pElectrons->getMotionalDirectionZ(*pUnit));
+	pEventData->SetAt(123, pElectrons->getMotionalDirectionXY(*pUnit));
+	pEventData->SetAt(124, pElectrons->getMotionalDirectionZY(*pUnit));
+	pEventData->SetAt(125, pElectrons->getMotionalDirectionZX(*pUnit));
 
 	//  ignore these 
 //	  pEventData->SetAt(18, 0e0); //nHexX1);  // 18+0
@@ -297,6 +357,7 @@ output:
 //			                  + pElectrons->getElectron(i).getEnergy(*pUnit));
 //		}
 
+	pEventDataReader = nullptr;
 	return;
 }
 
@@ -304,5 +365,17 @@ CDAN_API void AnalysisFinalize(CDoubleArray* pEventData,
                                CDoubleArray* pParameters,
                                CDoubleArray* pWeighParameter)
 {
+	// finalization is done
+	pLogWriter->write() << "Event count: " << pAnalysisTools->getEventNumber() << std::endl;
+	pLogWriter->write() << "One LMF file is done." << std::endl;
+	// log it
+	pLogWriter->write() << std::endl;
+	pUnit = nullptr;
+	pJSONReader = nullptr; // for sure 
+	pEventDataReader = nullptr; // for sure 
+	pAnalysisTools = nullptr;
+	pIons = nullptr;
+	pElectrons = nullptr;
+	pLogWriter = nullptr;
 	return;
 }

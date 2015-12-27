@@ -10,7 +10,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   add_definitions(-D_USRDLL)
   add_definitions(-DCDAN_EXPORTS)
   set(CMAKE_MFC_FLAG 2)
-  set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}")
   set(SOURCE_FILES
       Res/CDan.rc2
       CDan.cpp

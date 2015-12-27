@@ -1,5 +1,9 @@
 {
-  "ID": "0000",
+  "ID": "1740",
+  "output_option": {
+    "send_out_of_frame": true,
+    "export_electron_momentum": true
+  },
   "equipment_parameters": {
     "electric_potential_of_electron_region": -200,
     "electric_potential_of_ion_1st": -285,
@@ -16,32 +20,50 @@
     "angle_of_detector": 0,
     "pixel_size_of_x": 0.927,
     "pixel_size_of_y": 0.927,
-    "dead_time": 12000,
-    "x_zero_of_COM": 93.256,
-    "y_zero_of_COM": 95.567,
-    "time_zero_of_TOF": 1840.9
-  },
-  "electron_parameters": {
-    "angle_of_detector": -30,
-    "pixel_size_of_x": 0.925,
-    "pixel_size_of_y": 0.925,
-    "dead_time": 12000,
-    "x_zero_of_COM": 124.479,
-    "y_zero_of_COM": 34.50485,
-    "time_zero_of_TOF": 1805.9491
-  },
-  "electrons": {
-    "number_of_hits": 1,
-    "maximum_of_TOF": 40.0,
-    "minimum_of_TOF": 20.0
+    "dead_time": 13000,
+    "x_zero_of_COM": 93.253363,
+    "y_zero_of_COM": 94.9788,
+    "time_zero_of_TOF": 1846.0035258
   },
   "ions": {
     "number_of_hits": 1,
     "1st_hit": {
       "charge": 1,
-      "mass": 20,
-      "maximum_of_TOF": 4900,
+      "mass": 20.1797,
+      "maximum_of_TOF": 4500,
       "minimum_of_TOF": 2500
+    },
+    "2nd_hit": {
+      "charge": 1,
+      "mass": 83.8,
+      "maximum_of_TOF": 10000,
+      "minimum_of_TOF": 5000
+    },
+    "3rd_hit": {
+      "charge": 1,
+      "mass": 83.8,
+      "maximum_of_TOF": 10000,
+      "minimum_of_TOF": 5000
+    },
+    "4th_hit": {
+      "charge": 1,
+      "mass": 83.8,
+      "maximum_of_TOF": 10000,
+      "minimum_of_TOF": 5000
     }
+  },
+  "electron_parameters": {
+    "angle_of_detector": -30,
+    "pixel_size_of_x": 0.925,
+    "pixel_size_of_y": 0.925,
+    "dead_time": 60,
+    "x_zero_of_COM": 125.104,
+    "y_zero_of_COM": 34.50485,
+    "time_zero_of_TOF": 1805.536719
+  },
+  "electrons": {
+    "number_of_hits": 1,
+    "maximum_of_TOF": 45.0,
+    "minimum_of_TOF": 20.0
   }
 }

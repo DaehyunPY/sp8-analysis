@@ -23,6 +23,7 @@ class LogWriter {
   LogWriter(const Analysis::JSONReader &);
   ~LogWriter();
   const std::string getID() const;
+  const std::string getFilename() const;
   void logJSONReader(const JSONReader &);
   void logAnalysisTools(const Unit &,
                         const AnalysisTools &,
