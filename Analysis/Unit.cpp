@@ -53,3 +53,12 @@ const double Analysis::Unit::writeElectricPotential(const double d) const {
 const double Analysis::Unit::writeMagnaticField(const double d) const {
   return d / gauss;
 }
+const double Analysis::Unit::writeElectronRestMass(const double d) const {
+  return d / electronRestMass;
+}
+const double Analysis::Unit::writeAtomicMass(const double d) const {
+  return d / atomicMass;
+}
+const double Analysis::Unit::writeCharge(const double d) const {
+  return d / elementaryCharge;
+}

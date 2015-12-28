@@ -3,6 +3,9 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                                const Analysis::JSONReader &reader,
                                const int &n,
                                const int &m) : Objects(n, m) {
+  for (int i = 0; i < getMaximumOfHits(); i++) {
+    delete pElectron[i];
+  }
   for (int i = 0; i < n; i++) { // for real electrons
     pElectron[i] = new Electron(unit, reader);
     setObject(i, *pElectron[i]);
@@ -11,7 +14,6 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
     pElectron[i] = new Electron();
     setDummyObject(i, *pElectron[i]);
   }
-  return;
 }
 Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                                const Analysis::JSONReader &reader)
@@ -19,7 +21,6 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                 reader,
                 reader.getIntAt("electrons.number_of_hits"),
                 reader.getIntAt("electrons.number_of_hits")) {
-  return;
 }
 Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                                const Analysis::JSONReader &reader,
@@ -28,9 +29,12 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                 reader,
                 reader.getIntAt("electrons.number_of_hits"),
                 m) {
-  return;
 }
-Analysis::Electrons::~Electrons() { return; }
+Analysis::Electrons::~Electrons() : ~Objects() {
+  for(int i = 0; i < getMaximumOfHits(); i++) {
+    delete pElectron[i];
+  }
+}
 Analysis::Electron &Analysis::Electrons::setElectronMembers(const int &i) {
   assert(isRealObject(i));
   return *pElectron[i];

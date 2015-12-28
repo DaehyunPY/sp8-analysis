@@ -20,8 +20,6 @@ class Object {
   double momentumY;
   double momentumZ;
   ObjectFlag flag;
-  const double &getMinOfTOF() const;
-  const double &getMaxOfTOF() const;
 
  protected:
   Object(const double &m, const double &q, const double &t0, const double &t1);
@@ -39,7 +37,13 @@ class Object {
   ObjectFlag &setFlagMembers();
   const double &getMass() const;
   const double &getCharge() const;
+  const double &getMinOfTOF() const;
+  const double &getMaxOfTOF() const;
   const ObjectFlag &getFlag() const;
+  const double getMass(const Unit &) const;
+  const double getCharge(const Unit &) const;
+  const double getMinOfTOF(const Unit &) const;
+  const double getMaxOfTOF(const Unit &) const;
 
   const double &getLocationX() const; // could be out out frame 
   const double &getLocationY() const; // could be out out frame 

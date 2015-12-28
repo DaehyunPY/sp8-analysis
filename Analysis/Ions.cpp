@@ -7,13 +7,16 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
                      const Analysis::JSONReader &reader,
                      const int &n,
                      const int &m) : Objects(n, m) {
+  for (int i = 0; i < getMaximumOfHits(); i++) {
+    delete pIon[i];
+  }
   for (int i = 0; i < n; i++) { // for real ions
-    this->pIon[i] = new Ion(unit, reader, this->getIonName(0));
-    this->setObject(i, *(this->pIon[i]));
+    pIon[i] = new Ion(unit, reader, getIonName(0));
+    setObject(i, *pIon[i]);
   }
   for (int i = n; i < m; i++) { // for dummy ions
-    this->pIon[i] = new Ion();
-    this->setDummyObject(i, *(this->pIon[i]));
+    pIon[i] = new Ion();
+    setDummyObject(i, *pIon[i]);
   }
   return;
 }
@@ -34,7 +37,11 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
            m) {
   return;
 }
-Analysis::Ions::~Ions() { return; }
+Analysis::Ions::~Ions() : ~Objects() {
+  for (int i = 0; i < getMaximumOfHits(); i++) {
+    delete pIon[i];
+  }
+}
 Analysis::Ion &Analysis::Ions::setIonMembers(const int &i) {
   assert(i < this->getNumberOfObjects());
   return *(this->pIon[i]);

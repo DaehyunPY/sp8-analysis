@@ -285,3 +285,15 @@ const double Analysis::Object::getMotionalDirectionZY(const Analysis::Unit &unit
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return unit.writeDegree(getMotionalDirectionZY());
 }
+const double Analysis::Object::getMass(const Analysis::Unit &unit) const {
+  return unit.writeAtomicMass(getMass());
+}
+const double Analysis::Object::getCharge(const Analysis::Unit &unit) const {
+  return unit.writeCharge(getCharge());
+}
+const double Analysis::Object::getMinOfTOF(const Analysis::Unit &unit) const {
+  return unit.writeTime(getMinOfTOF());
+}
+const double Analysis::Object::getMaxOfTOF(const Analysis::Unit &unit) const {
+  return unit.writeTime(getMaxOfTOF());
+}

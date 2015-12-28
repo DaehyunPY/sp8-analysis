@@ -10,29 +10,37 @@
 
 Analysis::Objects::Objects(const int &n)
     : numberOfHits(n), numberOfHitsUsed(n) {
-  assert(n > 0 && n <= this->maximumOfHits);
+  assert(n > 0 && n <= maximumOfHits);
   return;
 }
 Analysis::Objects::Objects(const int &n, const int &m)
     : numberOfHits(n), numberOfHitsUsed(m) {
   assert(n <= m);
-  assert(n > 0 && m <= this->maximumOfHits);
+  assert(n > 0 && m <= maximumOfHits);
+  for (int i = 0; i < getMaximumOfHits(); i++) {
+    delete pObject[i];
+  }
   return;
 }
 Analysis::Objects::~Objects() {
+  for (int i = 0; i < getMaximumOfHits(); i++) {
+    delete pObject[i];
+  }
   return;
 }
 void Analysis::Objects::setObject(const int &i, Object &object) {
   assert(this->isRealObject(i));
-  this->pObject[i] = &object;
+  delete pObject[i];
+  pObject[i] = &object;
   return;
 }
 void Analysis::Objects::setDummyObject(const int &i, Analysis::Object &object) {
   assert(this->isDummyObject(i));
-  this->pObject[i] = &object;
+  delete pObject[i];
+  pObject[i] = &object;
 }
 const int &Analysis::Objects::getNumberOfObjects() const {
-  return this->numberOfHits;
+  return numberOfHits;
 }
 const double Analysis::Objects::getLocationX() const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
@@ -58,54 +66,54 @@ const double Analysis::Objects::getLocationY() const {
 }
 const double Analysis::Objects::getMomentumX() const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  const int &n = this->getNumberOfObjects();
+  const int &n = getNumberOfObjects();
   long double sumOfMomentum = 0e0;
   for (int i = 0; i < n; i++) {
-    sumOfMomentum += this->getObject(i).getMomentumX();
+    sumOfMomentum += getObject(i).getMomentumX();
   }
   return double(sumOfMomentum);
 }
 const double Analysis::Objects::getMomentumY() const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  const int &n = this->getNumberOfObjects();
+  const int &n = getNumberOfObjects();
   long double sumOfMomentum = 0e0;
   for (int i = 0; i < n; i++) {
-    sumOfMomentum += this->getObject(i).getMomentumY();
+    sumOfMomentum += getObject(i).getMomentumY();
   }
   return double(sumOfMomentum);
 }
 const double Analysis::Objects::getMomentumZ() const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  const int &n = this->getNumberOfObjects();
+  const int &n = getNumberOfObjects();
   long double sumOfMomentum = 0e0;
   for (int i = 0; i < n; i++) {
-    sumOfMomentum += this->getObject(i).getMomentumZ();
+    sumOfMomentum += getObject(i).getMomentumZ();
   }
   return double(sumOfMomentum);
 }
 const double Analysis::Objects::getEnergy() const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  const int &n = this->getNumberOfObjects();
+  const int &n = getNumberOfObjects();
   long double sumOfEnergy = 0e0;
   for (int i = 0; i < n; i++) {
-    sumOfEnergy += this->getObject(i).getEnergy();
+    sumOfEnergy += getObject(i).getEnergy();
   }
   return double(sumOfEnergy);
 }
 const Analysis::Object &Analysis::Objects::getObject(const int &i) const {
-  assert(this->isRealObject(i));
-  return *(this->pObject[i]);
+  assert(isRealObject(i));
+  return *pObject[i];
 }
 const Analysis::Object &Analysis::Objects::getDummyObject(const int &i) const {
-  assert(this->isDummyObject(i));
-  return *(this->pObject[i]);
+  assert(isDummyObject(i));
+  return *pObject[i];
 }
 
 const double Analysis::Objects::getMomentum() const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return pow(pow(this->getMomentumX(), 2e0)
-                 + pow(this->getMomentumY(), 2e0)
-                 + pow(this->getMomentumZ(), 2e0), 0.5e0);
+  return pow(pow(getMomentumX(), 2e0)
+                 + pow(getMomentumY(), 2e0)
+                 + pow(getMomentumZ(), 2e0), 0.5e0);
 }
 const double Analysis::Objects::getMotionalDirectionX() const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
@@ -131,40 +139,40 @@ void Analysis::Objects::resetEventData() {
   return;
 }
 Analysis::Object &Analysis::Objects::setObjectMembers(const int &i) {
-  assert(this->isRealObject(i));
-  return *(this->pObject[i]);
+  assert(isRealObject(i));
+  return *pObject[i];
 }
 Analysis::Object &Analysis::Objects::setDummyObjectMembers(const int &i) {
-  assert(this->isDummyObject(i));
-  return *(this->pObject[i]);
+  assert(isDummyObject(i));
+  return *pObject[i];
 }
 const double Analysis::Objects::getLocationX(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(this->getLocationX());
+  return unit.writeLength(getLocationX());
 }
 const double Analysis::Objects::getLocationY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(this->getLocationY());
+  return unit.writeLength(getLocationY());
 }
 const double Analysis::Objects::getMomentumX(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(this->getMomentumX());
+  return unit.writeMomentum(getMomentumX());
 }
 const double Analysis::Objects::getMomentumY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(this->getMomentumY());
+  return unit.writeMomentum(getMomentumY());
 }
 const double Analysis::Objects::getMomentumZ(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(this->getMomentumZ());
+  return unit.writeMomentum(getMomentumZ());
 }
 const double Analysis::Objects::getMomentum(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(this->getMomentum());
+  return unit.writeMomentum(getMomentum());
 }
 const double Analysis::Objects::getEnergy(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeEnergy(this->getEnergy());
+  return unit.writeEnergy(getEnergy());
 }
 const int &Analysis::Objects::getNumberOfRealOrDummyObjects() const {
   return numberOfHitsUsed;
@@ -480,4 +488,13 @@ const double Analysis::Objects::getMotionalDirectionYX(const Analysis::Unit &uni
 const double Analysis::Objects::getMotionalDirectionZY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return unit.writeDegree(getMotionalDirectionZY());
+}
+const int &Analysis::Objects::getMaximumOfHits() const {
+  return maximumOfHits;
+}
+const int &Analysis::Objects::getNumberOfHits() const {
+  return numberOfHits;
+}
+const int &Analysis::Objects::getNumberOfHitsUsed() const {
+  return numberOfHitsUsed;
 }
