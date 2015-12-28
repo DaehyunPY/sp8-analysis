@@ -105,7 +105,7 @@ AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleA
 	// log it
 	pLogWriter->write() << "Initialization is done." << std::endl;
 	pLogWriter->write() << std::endl;
-	return TRUE;
+	return true;
 }
 
 CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
@@ -367,14 +367,16 @@ output:
 //		}
 
 	pEventDataReader = nullptr;
-	return;
 }
 
-CDAN_API void AnalysisFinalize(CDoubleArray* pEventData,
-                               CDoubleArray* pParameters,
-                               CDoubleArray* pWeighParameter)
+///////////////////////
+// AnalysisFinalize
+///////////////////////
+// is called when analysis is stopped (not paused!)
+CDAN_API void AnalysisFinalize(CDoubleArray *pEventData, CDoubleArray *pParameters, CDoubleArray *pWeighParameter)
 {
-	// finalization is done
+	// finalization
+	pLogWriter->write() << "Event count: " << pAnalysisTools->getEventNumber() << std::endl;
 	pUnit = nullptr;
 	pJSONReader = nullptr; // for sure 
 	pEventDataReader = nullptr; // for sure 
@@ -383,9 +385,7 @@ CDAN_API void AnalysisFinalize(CDoubleArray* pEventData,
 	pElectrons = nullptr;
 	if (optionOfExportingElectronMomentum) { exportedFile.close(); }
 	// log it
-	pLogWriter->write() << "Event count: " << pAnalysisTools->getEventNumber() << std::endl;
-	pLogWriter->write() << "One LMF file is done." << std::endl;
+	pLogWriter->write() << "Finalization is done." << std::endl;
 	pLogWriter->write() << std::endl;
 	pLogWriter = nullptr;
-	return;
 }
