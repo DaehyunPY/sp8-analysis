@@ -26,7 +26,7 @@ class Object {
 
  public:
   Object(); // for dummy object
-  virtual ~Object();
+  ~Object();
   void resetEventData();
   void setLocationX(const double &);
   void setLocationY(const double &);
