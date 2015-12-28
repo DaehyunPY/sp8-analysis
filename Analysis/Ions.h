@@ -12,8 +12,11 @@
 namespace Analysis {
 class Ions : public Objects {
  private:
-  Ion *pIon[MAXIMUM_OF_HITS]; // todo: think a better way
-  Ions(const Unit &unit, const JSONReader &reader, const int &n, const int &m); // main initializer
+  Ion **ppIon;
+  Ions(const Unit &unit,
+       const JSONReader &reader,
+       const int &n,
+       const int &m); // main initializer
   const std::string getIonName(int i) const;
 
  public:

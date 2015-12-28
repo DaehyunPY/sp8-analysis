@@ -5,25 +5,21 @@
 #ifndef ANALYSIS_OBJECTS_H
 #define ANALYSIS_OBJECTS_H
 
-
-#define MAXIMUM_OF_HITS 9
 #include "Object.h"
 
 namespace Analysis {
 class Objects {
  private:
-  const int maximumOfHits = MAXIMUM_OF_HITS;
   const int numberOfHits;
   const int numberOfHitsUsed;
-  const double outOfFrame = OUT_OF_FRAME; 
-  Object *pObject[MAXIMUM_OF_HITS]; // todo: think a better way
+  const double outOfFrame = OUT_OF_FRAME;
+  Object **ppObject;
   const int getNumberOfDeadObjects() const;
   const int getNumberOfDeadDummyObjects() const;
   const int getNumberOfDeadRealOrDummyObjects() const;
 
  protected:
-  Objects(const int &); // main initializer
-  Objects(const int &, const int &); // main initializer
+  Objects(const int &n, const int &m); // main initializer
   virtual ~Objects();
   void setObject(const int &, Object &);
   void setDummyObject(const int &, Object &);
@@ -40,8 +36,6 @@ class Objects {
   void setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
   void setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag(); 
   void resetEventData();
-  // get refferenced data
-  const int &getMaximumOfHits() const;
   const int &getNumberOfHits() const;
   const int &getNumberOfHitsUsed() const;
   const int &getNumberOfObjects() const;

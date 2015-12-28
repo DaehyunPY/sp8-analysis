@@ -7,16 +7,14 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
                      const Analysis::JSONReader &reader,
                      const int &n,
                      const int &m) : Objects(n, m) {
-  for (int i = 0; i < getMaximumOfHits(); i++) {
-    delete pIon[i];
-  }
+  ppIon = new Ion *[m];
   for (int i = 0; i < n; i++) { // for real ions
-    pIon[i] = new Ion(unit, reader, getIonName(0));
-    setObject(i, *pIon[i]);
+    ppIon[i] = new Ion(unit, reader, getIonName(0));
+    setObject(i, *ppIon[i]);
   }
   for (int i = n; i < m; i++) { // for dummy ions
-    pIon[i] = new Ion();
-    setDummyObject(i, *pIon[i]);
+    ppIon[i] = new Ion();
+    setDummyObject(i, *ppIon[i]);
   }
   return;
 }
@@ -26,7 +24,6 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
            reader,
            reader.getIntAt("ions.number_of_hits"),
            reader.getIntAt("ions.number_of_hits")) {
-  return;
 }
 Analysis::Ions::Ions(const Analysis::Unit &unit,
                      const Analysis::JSONReader &reader,
@@ -35,28 +32,28 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
            reader,
            reader.getIntAt("ions.number_of_hits"),
            m) {
-  return;
 }
 Analysis::Ions::~Ions() {
-  for (int i = 0; i < getMaximumOfHits(); i++) {
-    delete pIon[i];
+  for (int i = 0; i < getNumberOfRealOrDummyObjects(); i++) {
+    delete ppIon[i];
   }
+  delete ppIon;
 }
 Analysis::Ion &Analysis::Ions::setIonMembers(const int &i) {
   assert(i < this->getNumberOfObjects());
-  return *(this->pIon[i]);
+  return *(this->ppIon[i]);
 }
 Analysis::Ion &Analysis::Ions::setDummyIonMembers(const int &i) {
   assert(i >= this->getNumberOfObjects());
-  return *(this->pIon[i]);
+  return *(this->ppIon[i]);
 }
 const Analysis::Ion &Analysis::Ions::getIon(const int &i) const {
   assert(i < this->getNumberOfObjects());
-  return *(this->pIon[i]);
+  return *(this->ppIon[i]);
 }
 const Analysis::Ion &Analysis::Ions::getDummyIon(const int &i) const {
   assert(i >= this->getNumberOfObjects());
-  return *(this->pIon[i]);
+  return *(this->ppIon[i]);
 }
 const std::string Analysis::Ions::getIonName(int i) const {
   i += 1;
