@@ -46,19 +46,25 @@ AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleA
 	srand((unsigned int)time(nullptr));
 
 	// make unit helper 
+	delete pUnit; 
 	pUnit = new Analysis::Unit;
 
 	// make json reader and log writer
+	delete pJSONReader;
 	pJSONReader = new Analysis::JSONReader("Parameters.json");
+	delete pLogWriter; 
 	pLogWriter = new Analysis::LogWriter(*pJSONReader); 
 	// log it 
 	pLogWriter->logJSONReader(*pJSONReader); 
 
 	// make analysis tools, ions, and electrons 
+	delete pAnalysisTools;
 	pAnalysisTools = new Analysis::AnalysisTools(*pUnit, *pJSONReader);
 	{
-		const int numberOfHitsUsed = NUMBER_OF_HITS_USED; 
+		const int numberOfHitsUsed = NUMBER_OF_HITS_USED;
+		delete pIons; 
 		pIons = new Analysis::Ions(*pUnit, *pJSONReader, numberOfHitsUsed);
+		delete pElectrons; 
 		pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader, numberOfHitsUsed);
 	}
 	// log it 
@@ -101,7 +107,7 @@ AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleA
 	}
 
 	// initialization is done
-	pJSONReader = nullptr;
+	delete pJSONReader; 
 	// log it
 	pLogWriter->write() << "Initialization is done." << std::endl;
 	pLogWriter->write() << std::endl;
@@ -114,7 +120,7 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 {
 	// make event data reader 
 	{
-		pEventDataReader = nullptr;
+		delete pEventDataReader; 
 		Analysis::EventData eventData;
 		const int& nTDC = eventData.d1;
 		const int& nCH = eventData.d2;
@@ -366,7 +372,7 @@ output:
 //			                  + pElectrons->getElectron(i).getEnergy(*pUnit));
 //		}
 
-	pEventDataReader = nullptr;
+	delete pEventDataReader; 
 }
 
 ///////////////////////
@@ -377,15 +383,15 @@ CDAN_API void AnalysisFinalize(CDoubleArray *pEventData, CDoubleArray *pParamete
 {
 	// finalization
 	pLogWriter->write() << "Event count: " << pAnalysisTools->getEventNumber() << std::endl;
-	pUnit = nullptr;
-	pJSONReader = nullptr; // for sure 
-	pEventDataReader = nullptr; // for sure 
-	pAnalysisTools = nullptr;
-	pIons = nullptr;
-	pElectrons = nullptr;
+	delete pUnit; 
+	delete pJSONReader; // for sure 
+	delete pEventDataReader; // for sure 
+	delete pAnalysisTools; 
+	delete pIons; 
+	delete pElectrons; 
 	if (optionOfExportingElectronMomentum) { exportedFile.close(); }
 	// log it
 	pLogWriter->write() << "Finalization is done." << std::endl;
 	pLogWriter->write() << std::endl;
-	pLogWriter = nullptr;
+	delete pLogWriter; 
 }
