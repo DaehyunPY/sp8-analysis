@@ -11,6 +11,9 @@
 Analysis::Objects::Objects(const int &n)
     : numberOfHits(n), numberOfHitsUsed(n) {
   assert(n > 0 && n <= maximumOfHits);
+  for (int i = 0; i < getMaximumOfHits(); i++) {
+    delete pObject[i];
+  }
   return;
 }
 Analysis::Objects::Objects(const int &n, const int &m)

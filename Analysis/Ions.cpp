@@ -37,7 +37,7 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
            m) {
   return;
 }
-Analysis::Ions::~Ions() : ~Objects() {
+Analysis::Ions::~Ions() {
   for (int i = 0; i < getMaximumOfHits(); i++) {
     delete pIon[i];
   }

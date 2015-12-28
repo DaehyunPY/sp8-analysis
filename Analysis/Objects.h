@@ -22,7 +22,7 @@ class Objects {
   const int getNumberOfDeadRealOrDummyObjects() const;
 
  protected:
-  Objects(const int &);
+  Objects(const int &); // main initializer
   Objects(const int &, const int &); // main initializer
   virtual ~Objects();
   void setObject(const int &, Object &);

@@ -30,7 +30,7 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                 reader.getIntAt("electrons.number_of_hits"),
                 m) {
 }
-Analysis::Electrons::~Electrons() : ~Objects() {
+Analysis::Electrons::~Electrons() {
   for(int i = 0; i < getMaximumOfHits(); i++) {
     delete pElectron[i];
   }

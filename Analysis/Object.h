@@ -23,10 +23,10 @@ class Object {
 
  protected:
   Object(const double &m, const double &q, const double &t0, const double &t1);
-  virtual ~Object();
 
  public:
   Object(); // for dummy object
+  virtual ~Object();
   void resetEventData();
   void setLocationX(const double &);
   void setLocationY(const double &);
