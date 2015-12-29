@@ -11,19 +11,23 @@
 Analysis::Objects::Objects(const int &n, const int &m)
     : numberOfHits(n), numberOfHitsUsed(m) {
   assert(n > 0 && n <= m);
-  ppObject = new Object *[m];
+  ppObject = new Object *[getNumberOfRealOrDummyObjects()]{nullptr};
 }
 Analysis::Objects::~Objects() {
-  delete ppObject;
+  delete[] ppObject;
 }
 void Analysis::Objects::setObject(const int &i, Object &object) {
   assert(isRealObject(i));
-  assert(ppObject[i] != nullptr);
+  if (ppObject[i] != nullptr) {
+    delete ppObject[i];
+  }
   ppObject[i] = &object;
 }
 void Analysis::Objects::setDummyObject(const int &i, Analysis::Object &object) {
   assert(isDummyObject(i));
-  assert(ppObject[i] != nullptr);
+  if (ppObject[i] != nullptr) {
+    delete ppObject[i];
+  }
   ppObject[i] = &object;
 }
 const int &Analysis::Objects::getNumberOfObjects() const {

@@ -3,7 +3,7 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
                                const Analysis::JSONReader &reader,
                                const int &n,
                                const int &m) : Objects(n, m) {
-  ppElectron = new Electron *[m];
+  ppElectron = new Electron *[getNumberOfRealOrDummyObjects()]{nullptr};
   for (int i = 0; i < n; i++) { // for real electrons
     ppElectron[i] = new Electron(unit, reader);
     setObject(i, *ppElectron[i]);
@@ -32,7 +32,7 @@ Analysis::Electrons::~Electrons() {
   for (int i = 0; i < getNumberOfRealOrDummyObjects(); i++) {
     delete ppElectron[i];
   }
-  delete ppElectron;
+  delete[] ppElectron;
 }
 Analysis::Electron &Analysis::Electrons::setElectronMembers(const int &i) {
   assert(isRealObject(i));
