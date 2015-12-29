@@ -2,7 +2,7 @@
 //  User defined analysis part called from cobold main program
 ///////////////////////////////////////////////////////////////////////////
 
-#include "Analysis/LogWriter.h"
+#include "Analysis/Analysis.h"
 
 Analysis::Unit* pUnit = nullptr;
 Analysis::JSONReader* pJSONReader = nullptr;
@@ -11,6 +11,9 @@ Analysis::AnalysisTools* pAnalysisTools = nullptr;
 Analysis::Ions* pIons = nullptr;
 Analysis::Electrons* pElectrons = nullptr;
 Analysis::LogWriter* pLogWriter = nullptr;
+const int numberOfTDCUsed = 3;
+const int numberOfChannelsUsed = 2;
+const int numberOfHitsUsed = 4;
 bool optionOfSendingOutOfFrame = true;
 bool optionOfExportingElectronMomentum = true;
 std::fstream exportedFile;
@@ -46,25 +49,24 @@ AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleA
 	srand((unsigned int)time(nullptr));
 
 	// make unit helper 
-	delete pUnit; 
+assert(pUnit != nullptr);
 	pUnit = new Analysis::Unit;
 
 	// make json reader and log writer
-	delete pJSONReader;
+assert(pJSONReader != nullptr);
 	pJSONReader = new Analysis::JSONReader("Parameters.json");
-	delete pLogWriter; 
+assert(pLogWriter != nullptr);
 	pLogWriter = new Analysis::LogWriter(*pJSONReader); 
 	// log it 
 	pLogWriter->logJSONReader(*pJSONReader); 
 
 	// make analysis tools, ions, and electrons 
-	delete pAnalysisTools;
+assert(pAnalysisTools != nullptr);
 	pAnalysisTools = new Analysis::AnalysisTools(*pUnit, *pJSONReader);
 	{
-		const int numberOfHitsUsed = NUMBER_OF_HITS_USED;
-		delete pIons; 
+assert(pIons != nullptr);
 		pIons = new Analysis::Ions(*pUnit, *pJSONReader, numberOfHitsUsed);
-		delete pElectrons; 
+assert(pElectrons != nullptr);
 		pElectrons = new Analysis::Electrons(*pUnit, *pJSONReader, numberOfHitsUsed);
 	}
 	// log it 
@@ -119,23 +121,33 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
                                    CDoubleArray* pWeighParameter)
 {
 	// make event data reader 
+	assert(pEventDataReader != nullptr);
+	pEventDataReader = new Analysis::EventDataReader(numberOfTDCUsed,
+													 numberOfChannelsUsed,
+													 numberOfHitsUsed);
 	{
-		delete pEventDataReader; 
-		Analysis::EventData eventData;
-		const int& nTDC = eventData.d1;
-		const int& nCH = eventData.d2;
-		const int& nHit = eventData.d3;
+		const int &nTDC = pEventDataReader->getNumberOfTDCUsed();
+		const int &nCH = pEventDataReader->getNumberOfChannelsUsed();
+		const int &nHit = pEventDataReader->getNumberOfHitsUsed();
 		for (int iTDC = 0; iTDC < nTDC; iTDC++)
 		{
 			for (int iCH = 0; iCH < nCH; iCH++)
 			{
 				for (int iHit = 0; iHit < nHit; iHit++)
 				{
-					eventData.array[iTDC][iCH][iHit] = pEventData->GetAt(iHit + iCH * (nHit + 1) + iTDC * (nHit + 1) * nCH) / 1e3;
+					pEventDataReader->setEventDataAt(iTDC, iCH, iHit,
+													 pEventData->GetAt(iHit
+																			   + iCH
+																					   * (nHit
+																							   + 1)
+																			   + iTDC
+																					   * (nHit
+																							   + 1)
+																					   * nCH)
+															 / 1e3);
 				}
 			}
 		}
-		pEventDataReader = new Analysis::EventDataReader(eventData);
 	}
 
 	// count event 

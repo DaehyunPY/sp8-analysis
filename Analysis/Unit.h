@@ -22,22 +22,27 @@ class Unit {
   const double degree = pi / 180e0;
 
  public:
+  // read
   const double readElectronRestMass(const double) const;
   const double readAtomicMass(const double) const;
   const double readCharge(const double) const;
-  const double readTime(const double) const;
-  const double readLength(const double) const;
-  const double readMomentum(const double) const; 
+  const double readTime(const double) const; // ns
+  const double readLength(const double) const; // mm
+  const double readMomentum(const double) const; // au
   const double readElectricPotential(const double) const;
-  const double readMagnaticField(const double) const;
-  const double readDegree(const double) const;
-  const double writeLength(const double) const;
-  const double writeTime(const double) const;
-  const double writeMomentum(const double) const;
+  const double readMagnaticField(const double) const; // Gauss
+  const double readDegree(const double) const; // degree
+  // write
+  const double writeElectronRestMass(const double) const;
+  const double writeAtomicMass(const double) const;
+  const double writeCharge(const double) const;
+  const double writeLength(const double) const; // mm
+  const double writeTime(const double) const; // ns
+  const double writeMomentum(const double) const; // au
   const double writeElectricPotential(const double) const;
-  const double writeMagnaticField(const double) const;
-  const double writeEnergy(const double) const;
-  const double writeDegree(const double) const;
+  const double writeMagnaticField(const double) const; // Gauss
+  const double writeEnergy(const double) const; // eV
+  const double writeDegree(const double) const; // degree
 
  public:
   Unit();

@@ -5,30 +5,27 @@
 #ifndef ANALYSIS_OBJECTS_H
 #define ANALYSIS_OBJECTS_H
 
-
-#define MAXIMUM_OF_HITS 9
 #include "Object.h"
 
 namespace Analysis {
 class Objects {
  private:
-  const int maximumOfHits = MAXIMUM_OF_HITS;
   const int numberOfHits;
   const int numberOfHitsUsed;
-  const double outOfFrame = OUT_OF_FRAME; 
-  Object *pObject[MAXIMUM_OF_HITS]; // todo: think a better way
+  const double outOfFrame = OUT_OF_FRAME;
+  Object **ppObject;
   const int getNumberOfDeadObjects() const;
   const int getNumberOfDeadDummyObjects() const;
   const int getNumberOfDeadRealOrDummyObjects() const;
 
  protected:
-  Objects(const int &);
-  Objects(const int &, const int &);
+  Objects(const int &n, const int &m); // main initializer
   virtual ~Objects();
   void setObject(const int &, Object &);
   void setDummyObject(const int &, Object &);
 
  public:
+  // set & reset
   Object &setObjectMembers(const int &);
   Object &setDummyObjectMembers(const int &);
   Object &setRealOrDummyObjectMembers(const int &);
@@ -39,13 +36,15 @@ class Objects {
   void setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
   void setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag(); 
   void resetEventData();
+  const int &getNumberOfHits() const;
+  const int &getNumberOfHitsUsed() const;
   const int &getNumberOfObjects() const;
   const int &getNumberOfRealOrDummyObjects() const;
   const Object &getObject(const int &) const;
   const Object &getDummyObject(const int &) const;
   const Object &getRealOrDummyObject(const int &) const;
+  // get
   const int getNumberOfDummyObject() const;
-
   const double getLocationX() const; // could be out of frame 
   const double getLocationY() const; // could be out of frame 
   const double getLocationXY() const; // could be out of frame 
@@ -72,7 +71,7 @@ class Objects {
   const double getMotionalDirectionZX() const; // could be out of frame 
   const double getMotionalDirectionZY() const; // could be out of frame 
   const double getEnergy() const; // could be out of frame 
-
+  // get with unit
   const double getLocationX(const Unit &) const; // could be out of frame 
   const double getLocationY(const Unit &) const; // could be out of frame 
   const double getLocationXY(const Unit &) const; // could be out of frame 
@@ -99,7 +98,7 @@ class Objects {
   const double getMotionalDirectionZX(const Unit &) const; // could be out of frame 
   const double getMotionalDirectionZY(const Unit &) const; // could be out of frame 
   const double getEnergy(const Unit &) const; // could be out of frame 
-
+  // bools
   const bool isDummyObject(const int &) const;
   const bool isRealObject(const int &) const;
   const bool isRealOrDummyObject(const int &) const;

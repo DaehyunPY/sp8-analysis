@@ -7,13 +7,14 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
                      const Analysis::JSONReader &reader,
                      const int &n,
                      const int &m) : Objects(n, m) {
+  ppIon = new Ion *[getNumberOfRealOrDummyObjects()]{nullptr};
   for (int i = 0; i < n; i++) { // for real ions
-    this->pIon[i] = new Ion(unit, reader, this->getIonName(0));
-    this->setObject(i, *(this->pIon[i]));
+    ppIon[i] = new Ion(unit, reader, getIonName(0));
+    setObject(i, *ppIon[i]);
   }
   for (int i = n; i < m; i++) { // for dummy ions
-    this->pIon[i] = new Ion();
-    this->setDummyObject(i, *(this->pIon[i]));
+    ppIon[i] = new Ion();
+    setDummyObject(i, *ppIon[i]);
   }
   return;
 }
@@ -23,7 +24,6 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
            reader,
            reader.getIntAt("ions.number_of_hits"),
            reader.getIntAt("ions.number_of_hits")) {
-  return;
 }
 Analysis::Ions::Ions(const Analysis::Unit &unit,
                      const Analysis::JSONReader &reader,
@@ -32,24 +32,28 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
            reader,
            reader.getIntAt("ions.number_of_hits"),
            m) {
-  return;
 }
-Analysis::Ions::~Ions() { return; }
+Analysis::Ions::~Ions() {
+  for (int i = 0; i < getNumberOfRealOrDummyObjects(); i++) {
+    delete ppIon[i];
+  }
+  delete[] ppIon;
+}
 Analysis::Ion &Analysis::Ions::setIonMembers(const int &i) {
   assert(i < this->getNumberOfObjects());
-  return *(this->pIon[i]);
+  return *(this->ppIon[i]);
 }
 Analysis::Ion &Analysis::Ions::setDummyIonMembers(const int &i) {
   assert(i >= this->getNumberOfObjects());
-  return *(this->pIon[i]);
+  return *(this->ppIon[i]);
 }
 const Analysis::Ion &Analysis::Ions::getIon(const int &i) const {
   assert(i < this->getNumberOfObjects());
-  return *(this->pIon[i]);
+  return *(this->ppIon[i]);
 }
 const Analysis::Ion &Analysis::Ions::getDummyIon(const int &i) const {
   assert(i >= this->getNumberOfObjects());
-  return *(this->pIon[i]);
+  return *(this->ppIon[i]);
 }
 const std::string Analysis::Ions::getIonName(int i) const {
   i += 1;
@@ -67,9 +71,9 @@ const std::string Analysis::Ions::getIonName(int i) const {
 }
 Analysis::Ion &Analysis::Ions::setRealOrDummyIonMembers(const int &i) {
   Ion *pIon;
-  if(isRealObject(i)) {
+  if (isRealObject(i)) {
     pIon = &setIonMembers(i);
-  } else if(isDummyObject(i)) {
+  } else if (isDummyObject(i)) {
     pIon = &setDummyIonMembers(i);
   } else {
     assert(false);
@@ -79,13 +83,13 @@ Analysis::Ion &Analysis::Ions::setRealOrDummyIonMembers(const int &i) {
 }
 const Analysis::Ion &Analysis::Ions::getRealOrDummyIon(const int &i) const {
   const Ion *pIon;
-  if(isRealObject(i)) {
+  if (isRealObject(i)) {
     pIon = &getIon(i);
-  } else if(isDummyObject(i)) {
+  } else if (isDummyObject(i)) {
     pIon = &getDummyIon(i);
   } else {
     assert(false);
-    pIon = new Ion(); 
+    pIon = new Ion();
   }
   return *pIon;
 }

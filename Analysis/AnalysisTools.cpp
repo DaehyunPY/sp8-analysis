@@ -318,11 +318,11 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                                                    const EventDataReader &reader,
                                                    const int &iHit) const {
 	loadEventDataInputer(ion,
-		unit,
-		reader.getAt(1, 1, iHit),
-		reader.getAt(2, 0, iHit),
-		reader.getAt(2, 1, iHit),
-		reader.getTmpFlag()); 
+                         unit,
+                         reader.getEventDataAt(1, 1, iHit),
+                         reader.getEventDataAt(2, 0, iHit),
+                         reader.getEventDataAt(2, 1, iHit),
+                         reader.getTmpFlag());
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
@@ -330,11 +330,11 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const EventDataReader &reader,
                                                    const int &iHit) const {
 	loadEventDataInputer(electron,
-	                     unit,
-	                     reader.getAt(0, 0, iHit),
-	                     reader.getAt(0, 1, iHit),
-	                     reader.getAt(1, 0, iHit),
-	                     reader.getTmpFlag());
+                         unit,
+                         reader.getEventDataAt(0, 0, iHit),
+                         reader.getEventDataAt(0, 1, iHit),
+                         reader.getEventDataAt(1, 0, iHit),
+                         reader.getTmpFlag());
   return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
