@@ -6,10 +6,8 @@
 
 Analysis::Flag::Flag() {
   flag = 0;
-  return;
 }
 Analysis::Flag::~Flag() {
-  return;
 }
 const int Analysis::Flag::getSign() const {
   if (flag == 0) { return 0; }

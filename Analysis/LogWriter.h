@@ -19,7 +19,7 @@ class LogWriter {
   const std::string getObjectName(int) const;
 
  public:
-  LogWriter(const std::string &prefix = "");
+  LogWriter(const std::string &prefix = ""); // main initializer
   LogWriter(const Analysis::JSONReader &);
   ~LogWriter();
   const std::string getID() const;

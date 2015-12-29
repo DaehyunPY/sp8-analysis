@@ -21,7 +21,16 @@ Analysis::LogWriter::LogWriter(const std::string &prefix)
   logFile << std::endl;
   return;
 }
-Analysis::LogWriter::~LogWriter() { return; }
+Analysis::LogWriter::~LogWriter() {
+  auto now = std::time(nullptr);
+  logFile
+      << "It is closed at "
+      << std::put_time(std::localtime(&now), "%c %Z")
+      << "."
+      << std::endl;
+  logFile << std::endl;
+  logFile.close();
+}
 const int Analysis::LogWriter::getRandomNumber() const {
   const char numbers[] = "0123456789";
   const int n = 10;
@@ -94,17 +103,32 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
   logFile << "        X Zero of COM: " << analysisTools.getElectronParameters().getXZeroOfCOM(unit) << std::endl;
   logFile << "        Y Zero of COM: " << analysisTools.getElectronParameters().getYZeroOfCOM(unit) << std::endl;
   logFile << "        Time Zero of TOF: " << analysisTools.getElectronParameters().getTimeZeroOfTOF(unit) << std::endl;
-  logFile << std::endl;
-  const int &n = ions.getNumberOfObjects();
-  for (int i = 0; i < n; i++) {
-    const std::string name = getObjectName(i);
-    const double t = analysisTools.calculateTOF(unit, ions.getIon(i), 0e0);
-    logFile << "TOF of " + name + " ion: " << t << std::endl;
+  logFile << "    Ions: " << std::endl;
+  {
+    const int &n = ions.getNumberOfObjects();
+    logFile << "        Number of Hits: " << n << std::endl;
+    for (int i = 0; i < n; i++) {
+      const std::string name = getObjectName(i);
+      logFile << "        " << name << ":" << std::endl;
+      logFile << "            Mass: " << ions.getIon(i).getMass(unit) << std::endl;
+      logFile << "            Charge: " << ions.getIon(i).getCharge(unit) << std::endl;
+      logFile << "            Maximum of TOF: " << ions.getIon(i).getMaxOfTOF(unit) << std::endl;
+      logFile << "            Minimum of TOF: " << ions.getIon(i).getMinOfTOF(unit) << std::endl;
+      const double t1 = analysisTools.calculateTOF(unit, ions.getIon(i), 0e0);
+      const double t2 = analysisTools.calculatePeriodOfCycle(unit, ions.getIon(0));
+      logFile << "            TOF of Stopped Object: " << t1 << std::endl;
+      logFile << "            Period of Cycle: " << t2 << std::endl;
+    }
   }
-  const double t1 = analysisTools.calculateTOF(unit, electrons.getElectron(0), 0e0);
-  const double t2 = analysisTools.calculatePeriodOfCycle(unit, electrons.getElectron(0));
-  logFile << "TOF of electron: " << t1 << std::endl;
-  logFile << "Period of cycle of electron: " << t2 << std::endl;
+  logFile << "    Electrons: " << std::endl;
+  {
+    const int &n = electrons.getNumberOfObjects();
+    logFile << "        Number of Hits: " << n << std::endl;
+    const double t1 = analysisTools.calculateTOF(unit, electrons.getElectron(0), 0e0);
+    const double t2 = analysisTools.calculatePeriodOfCycle(unit, electrons.getElectron(0));
+    logFile << "        TOF of Stopped Object: " << t1 << std::endl;
+    logFile << "        Period of Cycle: " << t2 << std::endl;
+  }
   logFile << std::endl;
 }
 const std::string Analysis::LogWriter::getObjectName(int i) const {
@@ -113,12 +137,12 @@ const std::string Analysis::LogWriter::getObjectName(int i) const {
   const int firstDigit = i % 10;
   const int secondDigit = (i / 10) % 10;
   std::string str = std::to_string(i);
-  if (secondDigit == 1) { return str + "th hit"; }
+  if (secondDigit == 1) { return str + "th Hit"; }
   else {
-    if (firstDigit == 1) { return str + "st hit"; }
-    else if (firstDigit == 2) { return str + "nd hit"; }
-    else if (firstDigit == 3) { return str + "rd hit"; }
-    else { return str + "th hit"; }
+    if (firstDigit == 1) { return str + "st Hit"; }
+    else if (firstDigit == 2) { return str + "nd Hit"; }
+    else if (firstDigit == 3) { return str + "rd Hit"; }
+    else { return str + "th Hit"; }
   }
 }
 std::fstream &Analysis::LogWriter::write() {
