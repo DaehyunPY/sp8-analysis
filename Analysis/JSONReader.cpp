@@ -20,7 +20,7 @@ Analysis::JSONReader::JSONReader(const std::string &f) {
   fileStream.close();
   return;
 }
-Analysis::JSONReader::~JSONReader() { return; }
+Analysis::JSONReader::~JSONReader() { }
 const rapidjson::Value &Analysis::JSONReader::getValue(std::string str1)
 const {
   std::string str0;
