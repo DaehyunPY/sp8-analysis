@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.3)
-project(Run)
+project(BL17Analysis)
 
 ### add subdirectory
 add_subdirectory(Analysis)
 
-### Run
+### BL17Analysis
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(SOURCE_FILES
     Run.cpp
     Run.h
     )
-add_library(Run STATIC ${SOURCE_FILES})
-target_link_libraries(Run AnalysisStaticLib)
+add_library(BL17Analysis STATIC ${SOURCE_FILES})
+target_link_libraries(BL17Analysis AnalysisStaticLib)
 
 ### DAn
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -36,5 +36,5 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       StdAfx.h
       )
   add_library(DAn SHARED ${COBOLDPC_FILES})
-  target_link_libraries(DAn Run)
+  target_link_libraries(DAn BL17Analysis)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")

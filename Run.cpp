@@ -3,6 +3,8 @@
 //
 
 #include "Run.h"
+#include <ctime>
+
 BL17Analysis::Run::Run() {
   // set seed for random
   srand((unsigned int) time(nullptr));
@@ -227,4 +229,16 @@ const Analysis::Ions &BL17Analysis::Run::getIons() const {
 }
 const Analysis::Electrons &BL17Analysis::Run::getElectrons() const {
   return *pElectrons;
+}
+
+const int& BL17Analysis::Run::getNumberOfTDCUsed() const {
+  return numberOfTDCUsed; 
+}
+
+const int& BL17Analysis::Run::getNumberOfChannelsUsed() const {
+  return numberOfChannelsUsed; 
+}
+
+const int& BL17Analysis::Run::getNumberOfHitsUsed() const {
+  return numberOfHitsUsed;
 }

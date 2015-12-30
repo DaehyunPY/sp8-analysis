@@ -31,6 +31,9 @@ class Run {
   const Analysis::Unit &getUnit() const;
   const Analysis::Ions &getIons() const;
   const Analysis::Electrons &getElectrons() const;
+  const int &getNumberOfTDCUsed() const; 
+  const int &getNumberOfChannelsUsed() const; 
+  const int &getNumberOfHitsUsed() const; 
 };
 }
 

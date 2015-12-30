@@ -41,9 +41,9 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
                                    CDoubleArray* pWeighParameter)
 {
 	// make event data reader 
-	Analysis::EventDataReader reader(numberOfTDCUsed,
-	                                 numberOfChannelsUsed,
-	                                 numberOfHitsUsed);
+	Analysis::EventDataReader reader(pRun->getNumberOfTDCUsed(),
+	                                 pRun->getNumberOfChannelsUsed(),
+	                                 pRun->getNumberOfHitsUsed());
 	{
 		const int& nTDC = reader.getNumberOfTDCUsed();
 		const int& nCH = reader.getNumberOfChannelsUsed();
@@ -122,27 +122,20 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 		{
 			// basic data
 			pEventData->SetAt(31 + i,
-							  electrons.setRealOrDummyElectronMembers(i).getLocationX(
-									  unit));
+							  electrons.getRealOrDummyElectron(i).getLocationX(unit));
 			pEventData->SetAt(31 + 4 + i,
-							  electrons.setRealOrDummyElectronMembers(i).getLocationY(
-									  unit));
+							  electrons.getRealOrDummyElectron(i).getLocationY(unit));
 			pEventData->SetAt(98 + i,
-							  electrons.setRealOrDummyElectronMembers(i).getTOF(
-									  unit));
+							  electrons.getRealOrDummyElectron(i).getTOF(unit));
 			// momentum data 
 			pEventData->SetAt(107 + i,
-							  electrons.setRealOrDummyElectronMembers(i).getMomentumX(
-									  unit));
+							  electrons.getRealOrDummyElectron(i).getMomentumX(unit));
 			pEventData->SetAt(111 + i,
-							  electrons.setRealOrDummyElectronMembers(i).getMomentumY(
-									  unit));
+							  electrons.getRealOrDummyElectron(i).getMomentumY(unit));
 			pEventData->SetAt(115 + i,
-							  electrons.setRealOrDummyElectronMembers(i).getMomentumZ(
-									  unit));
+							  electrons.getRealOrDummyElectron(i).getMomentumZ(unit));
 			pEventData->SetAt(103 + i,
-							  electrons.setRealOrDummyElectronMembers(i).getEnergy(
-									  unit));
+							  electrons.getRealOrDummyElectron(i).getEnergy(unit));
 		}
 	}
 	// plot data of objects 
