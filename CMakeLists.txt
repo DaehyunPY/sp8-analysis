@@ -1,16 +1,25 @@
 cmake_minimum_required(VERSION 3.3)
-project(BL17_Analysis)
+project(Run)
 
-### analysis library 
+### add subdirectory
 add_subdirectory(Analysis)
 
+### Run
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(SOURCE_FILES
+    Run.cpp
+    Run.h
+    )
+add_library(Run STATIC ${SOURCE_FILES})
+target_link_libraries(Run AnalysisStaticLib)
+
+### DAn
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  ### core setting
   add_definitions(-D_AFXDLL)
   add_definitions(-D_USRDLL)
   add_definitions(-DCDAN_EXPORTS)
   set(CMAKE_MFC_FLAG 2)
-  set(SOURCE_FILES
+  set(COBOLDPC_FILES
       Res/CDan.rc2
       CDan.cpp
       CDan.h
@@ -26,8 +35,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       StdAfx.cpp
       StdAfx.h
       )
-
-  ### install library
-  add_library(DAn SHARED ${SOURCE_FILES})
-  target_link_libraries(DAn AnalysisStaticLib)
+  add_library(DAn SHARED ${COBOLDPC_FILES})
+  target_link_libraries(DAn Run)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")

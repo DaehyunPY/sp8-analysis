@@ -2,8 +2,8 @@
 // Created by Daehyun You on 12/24/15.
 //
 
-#ifndef BL17_ANALYSIS_JSONFLAG_H
-#define BL17_ANALYSIS_JSONFLAG_H
+#ifndef ANALYSIS_JSONFLAG_H
+#define ANALYSIS_JSONFLAG_H
 
 
 #include "Flag.h"

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 project(Analysis)
 
-### core setting
+### Analysis
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(SOURCE_FILES
     JSONReader.cpp
@@ -42,20 +42,12 @@ set(SOURCE_FILES
     AnalysisTools.h
     LogWriter.cpp
     LogWriter.h
-    Initialize.cpp
-    Initialize.h
-    ProcessEvent.cpp
-    ProcessEvent.h
-    Finalize.cpp Finalize.h
     )
-
-### install library
 add_library(AnalysisSharedLib SHARED ${SOURCE_FILES})
 add_library(AnalysisStaticLib STATIC ${SOURCE_FILES})
 
-### test executable
+### test
 set(MAIN_FILE Test/Main.cpp)
 add_executable(AnalysisTest ${MAIN_FILE})
-# target_link_libraries(AnalysisTest AnalysisSharedLib)
 target_link_libraries(AnalysisTest AnalysisStaticLib)
 

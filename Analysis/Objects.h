@@ -29,8 +29,11 @@ class Objects {
   Object &setObjectMembers(const int &);
   Object &setDummyObjectMembers(const int &);
   Object &setRealOrDummyObjectMembers(const int &);
-  void setAllOfObjectIsOutOfFrameOfBasicDataFlag(); 
-  void setAllOfObjectIsOutOfFrameOfMomentumDatatFlag(); 
+  void setAllOfObjectIsDead();
+  void setAllOfDummyObjectIsDead();
+  void setAllOfRealOrDummyObjectIsDead();
+  void setAllOfObjectIsOutOfFrameOfBasicDataFlag();
+  void setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
   void setAllOfDummyObjectIsOutOfFrameOfBasicDataFlag(); 
   void setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); 
   void setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();

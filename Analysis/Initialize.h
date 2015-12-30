@@ -1,8 +1,0 @@
-//
-// Created by Daehyun You on 12/29/15.
-//
-
-#ifndef BL17_ANALYSIS_INITIALIZE_H
-#define BL17_ANALYSIS_INITIALIZE_H
-
-#endif //BL17_ANALYSIS_INITIALIZE_H

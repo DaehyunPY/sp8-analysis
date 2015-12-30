@@ -2,19 +2,8 @@
 //  User defined analysis part called from cobold main program
 ///////////////////////////////////////////////////////////////////////////
 
-#include "Analysis/Analysis.h"
-
-Analysis::Unit* pUnit = nullptr;
-Analysis::AnalysisTools* pAnalysisTools = nullptr;
-Analysis::Ions* pIons = nullptr;
-Analysis::Electrons* pElectrons = nullptr;
-Analysis::LogWriter* pLogWriter = nullptr;
-const int numberOfTDCUsed = 3;
-const int numberOfChannelsUsed = 2;
-const int numberOfHitsUsed = 4;
-bool optionOfSendingOutOfFrame = true;
-bool optionOfExportingElectronMomentum = true;
-std::fstream exportedFile;
+#include "Run.h"
+BL17Analysis::Run *pRun;
 
 /////////////////////////////////////////////////////////////////////////////
 // Parameter description used in this insert dependent part!
@@ -43,76 +32,7 @@ AnalysisGetInformationString()
 CDAN_API BOOL
 AnalysisInitialize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleArray* pWeighParameter)
 {
-	// set seed for random
-	srand((unsigned int)time(nullptr));
-
-	// make unit helper 
-	assert(pUnit != nullptr);
-	pUnit = new Analysis::Unit;
-
-	// make json reader and log writer
-	Analysis::JSONReader reader("Parameters.json");
-	assert(pLogWriter != nullptr);
-	pLogWriter = new Analysis::LogWriter(reader);
-	// log it 
-	pLogWriter->logJSONReader(reader);
-
-	// make analysis tools, ions, and electrons 
-	assert(pAnalysisTools != nullptr);
-	pAnalysisTools = new Analysis::AnalysisTools(*pUnit, reader);
-	{
-		assert(pIons != nullptr);
-		pIons = new Analysis::Ions(*pUnit, reader, numberOfHitsUsed);
-		assert(pElectrons != nullptr);
-		pElectrons = new Analysis::Electrons(*pUnit, reader, numberOfHitsUsed);
-	}
-	// log it 
-	pLogWriter->logAnalysisTools(*pUnit, *pAnalysisTools, *pIons, *pElectrons);
-
-	// output option
-	optionOfSendingOutOfFrame = reader.getBoolAt("output_options.send_out_of_frame");
-	optionOfExportingElectronMomentum = reader.getBoolAt("output_options.export_electron_momentum");
-	// log it
-	pLogWriter->write() << "Output Options: " << std::endl;
-	pLogWriter->write() << "    Send Out of Frame: " << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
-	pLogWriter->write() << "    Export electron momentum: " << (optionOfExportingElectronMomentum ? "true" : "false") << std::endl;
-	pLogWriter->write() << std::endl;
-
-	// export electron momentum
-	if (optionOfExportingElectronMomentum)
-	{
-		std::string filename;
-		filename = pAnalysisTools->getID();
-		if (!(filename == ""))
-		{
-			filename += "-";
-		}
-		filename += pLogWriter->getID();
-		filename += ".csv";
-		exportedFile.open(filename, std::fstream::out);
-		exportedFile << "1st hit electron px" << ",";
-		exportedFile << "1st hit electron py" << ",";
-		exportedFile << "1st hit electron pz" << ",";
-		exportedFile << "1st hit electron E" << ",";
-		exportedFile << "2nd hit electron px" << ",";
-		exportedFile << "2nd hit electron py" << ",";
-		exportedFile << "2nd hit electron pz" << ",";
-		exportedFile << "2nd hit electron E" << ",";
-		exportedFile << "3rd hit electron px" << ",";
-		exportedFile << "3rd hit electron py" << ",";
-		exportedFile << "3rd hit electron pz" << ",";
-		exportedFile << "3rd hit electron E" << ",";
-		exportedFile << "4th hit electron px" << ",";
-		exportedFile << "4th hit electron py" << ",";
-		exportedFile << "4th hit electron pz" << ",";
-		exportedFile << "4th hit electron E" << ",";
-		exportedFile << std::endl;
-	}
-
-	// initialization is done
-	// log it
-	pLogWriter->write() << "Initialization is done." << std::endl;
-	pLogWriter->write() << std::endl;
+pRun = new BL17Analysis::Run;
 	return true;
 }
 
@@ -140,228 +60,103 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 			}
 		}
 	}
+	int ionMasterFlag;
+	int electronMasterFlag;
 
-	// count event 
-	pAnalysisTools->loadEventCounter();
-
-	// make sure ion and electron data is empty, and reset flags 
-	pIons->resetEventData();
-	pElectrons->resetEventData();
-	int ionMasterFlag = 0;
-	int electronMasterFlag = 0;
-
-	// input event data 
-	pAnalysisTools->loadEventDataInputer(*pIons, *pUnit, reader);
-	pAnalysisTools->loadEventDataInputer(*pElectrons, *pUnit, reader);
-
-	{
-		// if all event data is dead
-		const bool ionsAreAllDead = pIons->areAllDeadRealAndDummyObjects();
-		const bool electronsAreeAllDead = pElectrons->areAllDeadRealAndDummyObjects();
-		if (ionsAreAllDead || electronsAreeAllDead)
-		{
-			// don't plot momentum data
-			if (optionOfSendingOutOfFrame)
-			{
-				pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
-			}
-			if (optionOfSendingOutOfFrame)
-			{
-				pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
-			}
-			if (ionsAreAllDead)
-			{
-				ionMasterFlag = -10;
-			}
-			if (electronsAreeAllDead)
-			{
-				electronMasterFlag = -10;
-			}
-			// don't calculate momentum 
-			goto output;
-		}
-	}
-
-
-	//  ion:
-	{
-		// if exist a object dead or not within master region
-		const bool existDeadObject = pIons->existDeadObject();
-		const bool areAllWithinMasterRegion = pIons->areAllWithinMasterRegion();
-		if (existDeadObject || !areAllWithinMasterRegion)
-		{
-			// don't plot momentum data
-			if (optionOfSendingOutOfFrame)
-			{
-				pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag();
-			}
-			if (existDeadObject)
-			{
-				ionMasterFlag = -21;
-			}
-			if (!areAllWithinMasterRegion)
-			{
-				ionMasterFlag = -22;
-			}
-			// don't calculate momentum 
-			goto electron;
-		}
-		// calculate momentum 
-		pAnalysisTools->loadMomentumCalculator(*pIons);
-		if (existDeadObject)
-		{
-			ionMasterFlag = -30;
-		}
-	}
-	ionMasterFlag = 1;
-
-
-electron:
-	{
-		// if exist a object dead or not within master region
-		const bool existDeadObject = pElectrons->existDeadObject();
-		const bool areAllWithinMasterRegion = pElectrons->areAllWithinMasterRegion();
-		if (existDeadObject || !areAllWithinMasterRegion)
-		{
-			// don't plot momentum data
-			if (optionOfSendingOutOfFrame)
-			{
-				pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag();
-			}
-			if (existDeadObject)
-			{
-				electronMasterFlag = -21;
-			}
-			if (!areAllWithinMasterRegion)
-			{
-				electronMasterFlag = -22;
-			}
-			// don't calculate momentum 
-			goto output;
-		}
-		// calculate momentum 
-		pAnalysisTools->loadMomentumCalculator(*pElectrons);
-		if (existDeadObject)
-		{
-			electronMasterFlag = -30;
-		}
-	}
-	electronMasterFlag = 1;
-
-
-output:
-	// export electron momentum
-	if (optionOfExportingElectronMomentum)
-	{
-		if (ionMasterFlag > 0 && electronMasterFlag > 0)
-		{
-			const int& n = pElectrons->getNumberOfObjects();
-			for (int i = 0; i < n; i++)
-			{
-				exportedFile << pElectrons->getElectron(i).getMomentumX(*pUnit) << ",";
-				exportedFile << pElectrons->getElectron(i).getMomentumY(*pUnit) << ",";
-				exportedFile << pElectrons->getElectron(i).getMomentumZ(*pUnit) << ",";
-				exportedFile << pElectrons->getElectron(i).getEnergy(*pUnit) << ",";
-			}
-			exportedFile << std::endl;
-		}
-	}
+	pRun->ProcessEvent(reader, ionMasterFlag, electronMasterFlag);
+	auto &unit = pRun->getUnit();
+	auto &ions = pRun->getIons();
+	auto &electrons = pRun->getElectrons();
 
 	// write flag data
 	pEventData->SetAt(126, ionMasterFlag);
 	pEventData->SetAt(127, electronMasterFlag);
 
 	// write ion data
-	// if dummy object, don't plot momentum data 
-	if (optionOfSendingOutOfFrame)
-	{
-		pIons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag();
-	}
 	{
 		// plot data of a object 
-		const int& m = pIons->getNumberOfRealOrDummyObjects();
+		const int &m = ions.getNumberOfRealOrDummyObjects();
 		for (int i = 0; i < m; i++)
 		{
-			// if dead object, don't plot it
-			if (optionOfSendingOutOfFrame)
-			{
-				if (pIons->getRealOrDummyIon(i).isDead())
-				{
-					pIons->setRealOrDummyIonMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
-				}
-			}
-			// basic data 
-			pEventData->SetAt(31 + 28 + i, pIons->getRealOrDummyIon(i).getLocationX(*pUnit));
-			pEventData->SetAt(31 + 32 + i, pIons->getRealOrDummyIon(i).getLocationY(*pUnit));
-			pEventData->SetAt(67 + i, pIons->getRealOrDummyIon(i).getTOF(*pUnit));
+			// basic data
+			pEventData->SetAt(31 + 28 + i,
+							  ions.getRealOrDummyIon(i).getLocationX(unit));
+			pEventData->SetAt(31 + 32 + i,
+							  ions.getRealOrDummyIon(i).getLocationY(unit));
+			pEventData->SetAt(67 + i, ions.getRealOrDummyIon(i).getTOF(unit));
 			// momentum data 
-			pEventData->SetAt(76 + i, pIons->getRealOrDummyIon(i).getMomentumX(*pUnit));
-			pEventData->SetAt(80 + i, pIons->getRealOrDummyIon(i).getMomentumY(*pUnit));
-			pEventData->SetAt(84 + i, pIons->getRealOrDummyIon(i).getMomentumZ(*pUnit));
-			pEventData->SetAt(67 + 4 + i, pIons->getRealOrDummyIon(i).getEnergy(*pUnit));
+			pEventData->SetAt(76 + i,
+							  ions.getRealOrDummyIon(i).getMomentumX(unit));
+			pEventData->SetAt(80 + i,
+							  ions.getRealOrDummyIon(i).getMomentumY(unit));
+			pEventData->SetAt(84 + i,
+							  ions.getRealOrDummyIon(i).getMomentumZ(unit));
+			pEventData->SetAt(67 + 4 + i,
+							  ions.getRealOrDummyIon(i).getEnergy(unit));
 		}
 	}
 	// plot data of objects 
 	// basic data 
-	pEventData->SetAt(128, pIons->getLocationX(*pUnit));
-	pEventData->SetAt(129, pIons->getLocationY(*pUnit));
-	pEventData->SetAt(205, pIons->getSumOfTOF(*pUnit, 0, 1));
-	pEventData->SetAt(206, pIons->getSumOfTOF(*pUnit, 0, 2));
-	pEventData->SetAt(207, pIons->getSumOfTOF(*pUnit, 0, 3));
-	pEventData->SetAt(208, pIons->getSumOfTOF(*pUnit, 1, 2));
-	pEventData->SetAt(209, pIons->getSumOfTOF(*pUnit, 1, 3));
-	pEventData->SetAt(210, pIons->getSumOfTOF(*pUnit, 2, 3));
+	pEventData->SetAt(128, ions.getLocationX(unit));
+	pEventData->SetAt(129, ions.getLocationY(unit));
+	pEventData->SetAt(205, ions.getSumOfTOF(unit, 0, 1));
+	pEventData->SetAt(206, ions.getSumOfTOF(unit, 0, 2));
+	pEventData->SetAt(207, ions.getSumOfTOF(unit, 0, 3));
+	pEventData->SetAt(208, ions.getSumOfTOF(unit, 1, 2));
+	pEventData->SetAt(209, ions.getSumOfTOF(unit, 1, 3));
+	pEventData->SetAt(210, ions.getSumOfTOF(unit, 2, 3));
 	// momentum data 
-	pEventData->SetAt(88, pIons->getMomentumX(*pUnit));
-	pEventData->SetAt(89, pIons->getMomentumY(*pUnit));
-	pEventData->SetAt(90, pIons->getMomentumZ(*pUnit));
-	pEventData->SetAt(75, pIons->getEnergy(*pUnit));
-	pEventData->SetAt(92, pIons->getMotionalDirectionXY(*pUnit));
-	pEventData->SetAt(93, pIons->getMotionalDirectionZY(*pUnit));
-	pEventData->SetAt(94, pIons->getMotionalDirectionZX(*pUnit));
+	pEventData->SetAt(88, ions.getMomentumX(unit));
+	pEventData->SetAt(89, ions.getMomentumY(unit));
+	pEventData->SetAt(90, ions.getMomentumZ(unit));
+	pEventData->SetAt(75, ions.getEnergy(unit));
+	pEventData->SetAt(92, ions.getMotionalDirectionXY(unit));
+	pEventData->SetAt(93, ions.getMotionalDirectionZY(unit));
+	pEventData->SetAt(94, ions.getMotionalDirectionZX(unit));
 
 	// write electron data
-	// if dummy object, don't plot momentum data 
-	if (optionOfSendingOutOfFrame)
-	{
-		pElectrons->setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag();
-	}
 	{
 		// plot data of a object 
-		const int& m = pElectrons->getNumberOfRealOrDummyObjects();
+		const int &m = electrons.getNumberOfRealOrDummyObjects();
 		for (int i = 0; i < m; i++)
 		{
-			// if dead object, don't plot it
-			if (optionOfSendingOutOfFrame)
-			{
-				if (pElectrons->setRealOrDummyElectronMembers(i).isDead())
-				{
-					pElectrons->setRealOrDummyElectronMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
-				}
-			}
-			// basic data 
-			pEventData->SetAt(31 + i, pElectrons->setRealOrDummyElectronMembers(i).getLocationX(*pUnit));
-			pEventData->SetAt(31 + 4 + i, pElectrons->setRealOrDummyElectronMembers(i).getLocationY(*pUnit));
-			pEventData->SetAt(98 + i, pElectrons->setRealOrDummyElectronMembers(i).getTOF(*pUnit));
+			// basic data
+			pEventData->SetAt(31 + i,
+							  electrons.setRealOrDummyElectronMembers(i).getLocationX(
+									  unit));
+			pEventData->SetAt(31 + 4 + i,
+							  electrons.setRealOrDummyElectronMembers(i).getLocationY(
+									  unit));
+			pEventData->SetAt(98 + i,
+							  electrons.setRealOrDummyElectronMembers(i).getTOF(
+									  unit));
 			// momentum data 
-			pEventData->SetAt(107 + i, pElectrons->setRealOrDummyElectronMembers(i).getMomentumX(*pUnit));
-			pEventData->SetAt(111 + i, pElectrons->setRealOrDummyElectronMembers(i).getMomentumY(*pUnit));
-			pEventData->SetAt(115 + i, pElectrons->setRealOrDummyElectronMembers(i).getMomentumZ(*pUnit));
-			pEventData->SetAt(103 + i, pElectrons->setRealOrDummyElectronMembers(i).getEnergy(*pUnit));
+			pEventData->SetAt(107 + i,
+							  electrons.setRealOrDummyElectronMembers(i).getMomentumX(
+									  unit));
+			pEventData->SetAt(111 + i,
+							  electrons.setRealOrDummyElectronMembers(i).getMomentumY(
+									  unit));
+			pEventData->SetAt(115 + i,
+							  electrons.setRealOrDummyElectronMembers(i).getMomentumZ(
+									  unit));
+			pEventData->SetAt(103 + i,
+							  electrons.setRealOrDummyElectronMembers(i).getEnergy(
+									  unit));
 		}
 	}
 	// plot data of objects 
 	// basic data 
-	pEventData->SetAt(131, pElectrons->getLocationX(*pUnit));
-	pEventData->SetAt(132, pElectrons->getLocationY(*pUnit));
-	pEventData->SetAt(122, pElectrons->getMomentum(*pUnit));
-	pEventData->SetAt(137, pElectrons->getLocationalDirectionXY(*pUnit));
-	pEventData->SetAt(198, pElectrons->getLocation(*pUnit));
+	pEventData->SetAt(131, electrons.getLocationX(unit));
+	pEventData->SetAt(132, electrons.getLocationY(unit));
+	pEventData->SetAt(122, electrons.getMomentum(unit));
+	pEventData->SetAt(137, electrons.getLocationalDirectionXY(unit));
+	pEventData->SetAt(198, electrons.getLocation(unit));
 	// momentum data 
-	pEventData->SetAt(136, pElectrons->getMotionalDirectionZ(*pUnit));
-	pEventData->SetAt(123, pElectrons->getMotionalDirectionXY(*pUnit));
-	pEventData->SetAt(124, pElectrons->getMotionalDirectionZY(*pUnit));
-	pEventData->SetAt(125, pElectrons->getMotionalDirectionZX(*pUnit));
+	pEventData->SetAt(136, electrons.getMotionalDirectionZ(unit));
+	pEventData->SetAt(123, electrons.getMotionalDirectionXY(unit));
+	pEventData->SetAt(124, electrons.getMotionalDirectionZY(unit));
+	pEventData->SetAt(125, electrons.getMotionalDirectionZX(unit));
 
 	//  ignore these 
 	//	  pEventData->SetAt(18, 0e0); //nHexX1);  // 18+0
@@ -416,12 +211,12 @@ output:
 	//	    pEventData->SetAt(203, 0e0); //dElectronEnergyHigher/dElectron);
 	//	    pEventData->SetAt(204, 0e0); //dElectronEnergyLower/dElectron);
 	//	  }
-	//		const int& n = pElectrons->getNumberOfObjects();
+	//		const int& n = electrons.getNumberOfObjects();
 	//		for (int i = 0; i < n; i++)
 	//		{
 	//			pEventData->SetAt(199 + i,
-	//			                  pIons->getEnergy(*pUnit)
-	//			                  + pElectrons->getElectron(i).getEnergy(*pUnit));
+	//			                  ions.getEnergy(unit)
+	//			                  + electrons.getElectron(i).getEnergy(unit));
 	//		}
 }
 
@@ -431,15 +226,5 @@ output:
 // is called when analysis is stopped (not paused!)
 CDAN_API void AnalysisFinalize(CDoubleArray* pEventData, CDoubleArray* pParameters, CDoubleArray* pWeighParameter)
 {
-	// finalization
-	pLogWriter->write() << "Event count: " << pAnalysisTools->getEventNumber() << std::endl;
-	delete pUnit;
-	delete pAnalysisTools;
-	delete pIons;
-	delete pElectrons;
-	if (optionOfExportingElectronMomentum) { exportedFile.close(); }
-	// log it
-	pLogWriter->write() << "Finalization is done." << std::endl;
-	pLogWriter->write() << std::endl;
-	delete pLogWriter;
+	delete pRun;
 }

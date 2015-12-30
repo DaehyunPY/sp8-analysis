@@ -14,9 +14,6 @@ Analysis::Objects::Objects(const int &n, const int &m)
   ppObject = new Object *[getNumberOfRealOrDummyObjects()]{nullptr};
 }
 Analysis::Objects::~Objects() {
-  for (int i = 0; i < getNumberOfRealOrDummyObjects(); i++) {
-    if (ppObject[i] != nullptr) { delete ppObject[i]; }
-  }
   delete[] ppObject;
 }
 void Analysis::Objects::setObject(const int &i, Object &object) {
@@ -356,7 +353,7 @@ void Analysis::Objects::setAllOfObjectIsOutOfFrameOfBasicDataFlag() {
   }
 }
 
-void Analysis::Objects::setAllOfObjectIsOutOfFrameOfMomentumDatatFlag() {
+void Analysis::Objects::setAllOfObjectIsOutOfFrameOfMomentumDataFlag() {
   const int &n = getNumberOfObjects();
   for (int i = 0; i < n; i++) {
     setObjectMembers(i).setFlagMembers().setOutOfFrameOfMomentumDataFlag();
@@ -385,7 +382,7 @@ void Analysis::Objects::setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag() {
 }
 
 void Analysis::Objects::setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag() {
-  setAllOfObjectIsOutOfFrameOfMomentumDatatFlag();
+  setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
   setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag();
 }
 
@@ -469,4 +466,23 @@ const int &Analysis::Objects::getNumberOfHits() const {
 }
 const int &Analysis::Objects::getNumberOfHitsUsed() const {
   return numberOfHitsUsed;
+}
+void Analysis::Objects::setAllOfObjectIsDead() {
+  const int &n = getNumberOfObjects();
+  for (int i = 0; i < n; i++) {
+    setObjectMembers(i).setFlagMembers().setDeadFlag();
+  }
+}
+void Analysis::Objects::setAllOfDummyObjectIsDead() {
+  const int &n = getNumberOfObjects();
+  const int &m = getNumberOfRealOrDummyObjects();
+  for (int i = n; i < m; i++) {
+    setDummyObjectMembers(i).setFlagMembers().setDeadFlag();
+  }
+}
+void Analysis::Objects::setAllOfRealOrDummyObjectIsDead() {
+  const int &m = getNumberOfRealOrDummyObjects();
+  for (int i = 0; i < m; i++) {
+    setRealOrDummyObjectMembers(i).setFlagMembers().setDeadFlag();
+  }
 }
