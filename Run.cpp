@@ -100,8 +100,8 @@ BL17Analysis::Run::~Run() {
 
   // close histograms
   histogramOf1stHitElectronEnergy->Write();
-  delete rootFile;
-  delete histogramOf1stHitElectronEnergy;
+//  delete rootFile;
+//  delete histogramOf1stHitElectronEnergy;
 
   // finalization is done
   delete pUnit;

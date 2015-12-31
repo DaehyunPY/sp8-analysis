@@ -7,12 +7,6 @@
 
 
 #include "TCanvas.h"
-#include "TROOT.h"
-#include "TGraphErrors.h"
-#include "TF1.h"
-#include "TLegend.h"
-#include "TArrow.h"
-#include "TLatex.h"
 #include "TFile.h"
 #include "TH1F.h"
 #include "Analysis/Analysis.h"

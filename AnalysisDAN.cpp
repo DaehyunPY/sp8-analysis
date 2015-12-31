@@ -2,6 +2,7 @@
 //  User defined analysis part called from cobold main program
 ///////////////////////////////////////////////////////////////////////////
 
+#include "Windows4Root.h"
 #include "RUN.h"
 BL17Analysis::Run *pRun;
 
