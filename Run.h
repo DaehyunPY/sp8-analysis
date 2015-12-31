@@ -6,6 +6,15 @@
 #define BL17ANALYSIS_RUN_H
 
 
+#include "TCanvas.h"
+#include "TROOT.h"
+#include "TGraphErrors.h"
+#include "TF1.h"
+#include "TLegend.h"
+#include "TArrow.h"
+#include "TLatex.h"
+#include "TFile.h"
+#include "TH1F.h"
 #include "Analysis/Analysis.h"
 namespace BL17Analysis {
 class Run {
@@ -17,10 +26,11 @@ class Run {
   Analysis::AnalysisTools *pTools;
   Analysis::Ions *pIons;
   Analysis::Electrons *pElectrons;
-
   bool optionOfSendingOutOfFrame;
   bool optionOfExportingElectronMomentum;
   std::fstream exportedFile;
+  TFile *rootFile;
+  TH1F *histogramOf1stHitElectronEnergy;
 
  public:
   Run();

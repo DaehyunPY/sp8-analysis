@@ -2,7 +2,7 @@
 // Created by Daehyun You on 12/30/15.
 //
 
-#include "Run.h"
+#include "RUN.h"
 #include <ctime>
 
 BL17Analysis::Run::Run() {
@@ -69,6 +69,23 @@ BL17Analysis::Run::Run() {
     exportedFile << std::endl;
   }
 
+  // histograms
+  {
+    std::string filename;
+    filename = tools.getID();
+    if (!(filename == "")) {
+      filename += "-";
+    }
+    filename += writer.getID();
+    filename += ".root";
+    rootFile = new TFile(filename.c_str(),"new");
+    histogramOf1stHitElectronEnergy = new TH1F("1eHit_E",
+                                               "1st Hit Electron Energy;Energy [eV];Count [1]",
+                                               1000,
+                                               0e0,
+                                               50e0);
+  }
+
   // initialization is done
   writer.write() << "Initialization is done." << std::endl;
   writer.write() << std::endl;
@@ -80,6 +97,11 @@ BL17Analysis::Run::~Run() {
 
   // counter
   writer.write() << "Event count: " << tools.getEventNumber() << std::endl;
+
+  // close histograms
+  histogramOf1stHitElectronEnergy->Write();
+  delete rootFile;
+  delete histogramOf1stHitElectronEnergy;
 
   // finalization is done
   delete pUnit;
@@ -219,6 +241,11 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
       }
       exportedFile << std::endl;
     }
+  }
+
+  // histograms
+  if (ionFlag > 0 && electronFlag > 0) {
+    histogramOf1stHitElectronEnergy->Fill(electrons.getRealOrDummyObject(0).getEnergy(unit));
   }
 }
 const Analysis::Unit &BL17Analysis::Run::getUnit() const {
