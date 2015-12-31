@@ -5,10 +5,72 @@ project(BL17Analysis)
 add_subdirectory(Analysis)
 
 ### BL17Analysis
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
+  link_libraries(pthread m dl)
+  include_directories("/usr/local/include/root")
+  link_directories("/usr/local/lib/root")
+  link_libraries(
+      Core
+      RIO
+      Net
+      Hist
+      Graf
+      Graf3d
+      Gpad
+      Tree
+      Rint
+      Postscript
+      Matrix
+      Physics
+      MathCore
+      Thread
+  )
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
+  link_libraries(pthread m dl)
+  include_directories("/usr/local/include/root")
+  link_directories("/usr/local/lib/root")
+  link_libraries(
+      Core
+      RIO
+      Net
+      Hist
+      Graf
+      Graf3d
+      Gpad
+      Tree
+      Rint
+      Postscript
+      Matrix
+      Physics
+      MathCore
+      Thread
+  )
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  set(ROOTSYS "C:/root/")
+  include_directories("${ROOTSYS}/include")
+  link_directories("${ROOTSYS}/lib")
+  link_libraries(
+      libCore.lib
+      libRIO.lib
+      libNet.lib
+      libHist.lib
+      libGraf.lib
+      libGraf3d.lib
+      libGpad.lib
+      libTree.lib
+      libRint.lib
+      libPostscript.lib
+      libMatrix.lib
+      libPhysics.lib
+      libMathCore.lib
+      libThread.lib
+  )
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 set(SOURCE_FILES
-    Run.cpp
-    Run.h
+    RUN.cpp
+    RUN.h
     )
 add_library(BL17Analysis STATIC ${SOURCE_FILES})
 target_link_libraries(BL17Analysis AnalysisStaticLib)
