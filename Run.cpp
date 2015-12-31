@@ -79,7 +79,7 @@ BL17Analysis::Run::Run() {
     filename += writer.getID();
     filename += ".root";
     rootFile = new TFile(filename.c_str(),"new");
-    histogramOf1stHitElectronEnergy = new TH1F("1eHit_E",
+    histogramOf1stHitElectronEnergy = new TH1F("h1_1eHitEnergy",
                                                "1st Hit Electron Energy;Energy [eV];Count [1]",
                                                1000,
                                                0e0,
@@ -100,8 +100,9 @@ BL17Analysis::Run::~Run() {
 
   // close histograms
   histogramOf1stHitElectronEnergy->Write();
-//  delete rootFile;
-//  delete histogramOf1stHitElectronEnergy;
+  rootFile->Close(); 
+  delete rootFile;
+  delete histogramOf1stHitElectronEnergy;
 
   // finalization is done
   delete pUnit;
