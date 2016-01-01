@@ -3,7 +3,6 @@
 //
 
 #include "RUN.h"
-#include <ctime>
 
 BL17Analysis::Run::Run() {
   // set seed for random
@@ -159,9 +158,9 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
     }
     // dummy data, don't plot momentum
     // ion
-    ions.setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag();
+    ions.setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
     // electron
-    electrons.setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag();
+    electrons.setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
   }
 
   // if all ion event data or all electron event data is dead, ignore the event

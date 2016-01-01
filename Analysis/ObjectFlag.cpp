@@ -8,19 +8,17 @@ Analysis::ObjectFlag::ObjectFlag() : Flag() {
   setInitialFlag();
   return;
 }
-Analysis::ObjectFlag::~ObjectFlag() {}
+Analysis::ObjectFlag::~ObjectFlag() { }
 void Analysis::ObjectFlag::setInitialFlag() {
   setSign(initialFlagForSign);
 }
 
-void Analysis::ObjectFlag::setValidFlag()
-{
-	setSign(validFlagForSign);
+void Analysis::ObjectFlag::setValidFlag() {
+  setSign(validFlagForSign);
 }
 
-void Analysis::ObjectFlag::setInvalidFlag()
-{
-	setSign(validFlagForSign);
+void Analysis::ObjectFlag::setInvalidFlag() {
+  setSign(validFlagForSign);
 }
 
 const bool Analysis::ObjectFlag::isInitial() const {
@@ -30,9 +28,8 @@ void Analysis::ObjectFlag::setOutOfFrameOfMomentumDataFlag() {
   set2ndDigit(outOfFrameOfMomentumDataFlagFor2ndDigit);
 }
 
-void Analysis::ObjectFlag::setInFrameOfAllDataFlag()
-{
-	set2ndDigit(inFrameOfAllDataFlagFor2ndDigit); 
+void Analysis::ObjectFlag::setInFrameOfAllDataFlag() {
+  set2ndDigit(inFrameOfAllDataFlagFor2ndDigit);
 }
 
 void Analysis::ObjectFlag::setOutOfFrameOfBaicDataFlag() {
@@ -64,9 +61,8 @@ const bool Analysis::ObjectFlag::isOutOfFrameOfBasicData() const {
   return get2ndDigit() == outOfFrameOfBasicDataFlagFor2ndDigit;
 }
 
-const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const
-{
-	return get2ndDigit() == outOfFrameOfMomentumDataFlagFor2ndDigit; 
+const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const {
+  return get2ndDigit() == outOfFrameOfMomentumDataFlagFor2ndDigit;
 }
 
 const bool Analysis::ObjectFlag::isNotWithinMasterRegion() const {

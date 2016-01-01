@@ -34,8 +34,8 @@ class Objects {
   void setAllOfRealOrDummyObjectIsDead();
   void setAllOfObjectIsOutOfFrameOfBasicDataFlag();
   void setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
-  void setAllOfDummyObjectIsOutOfFrameOfBasicDataFlag(); 
-  void setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag(); 
+  void setAllOfDummyObjectIsOutOfFrameOfBasicDataFlag();
+  void setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
   void setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
   void setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag(); 
   void resetEventData();
