@@ -69,7 +69,7 @@ BL17Analysis::Run::Run() {
     exportedFile << std::endl;
   }
 
-  // histograms
+  // root
   {
     std::string filename;
     filename = tools.getID();
@@ -78,12 +78,8 @@ BL17Analysis::Run::Run() {
     }
     filename += writer.getID();
     filename += ".root";
-    rootFile = new TFile(filename.c_str(),"new");
-    histogramOf1stHitElectronEnergy = new TH1F("h1_1eHitEnergy",
-                                               "1st Hit Electron Energy;Energy [eV];Count [1]",
-                                               1000,
-                                               0e0,
-                                               50e0);
+    rootFile.Open(filename.c_str(), "new");
+    rootApp.Run();
   }
 
   // initialization is done
@@ -99,10 +95,7 @@ BL17Analysis::Run::~Run() {
   writer.write() << "Event count: " << tools.getEventNumber() << std::endl;
 
   // close histograms
-  histogramOf1stHitElectronEnergy->Write();
-  rootFile->Close(); 
-  delete rootFile;
-  delete histogramOf1stHitElectronEnergy;
+  rootFile.Close();
 
   // finalization is done
   delete pUnit;
@@ -245,9 +238,17 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
   }
 
   // histograms
-  if (ionFlag > 0 && electronFlag > 0) {
-    histogramOf1stHitElectronEnergy->Fill(electrons.getRealOrDummyObject(0).getEnergy(unit));
-  }
+  root1DHistogramOfIonFlag.Fill(ionFlag);
+  root1DHistogramOfIonFlag.Write();
+  root1DHistogramOfElectronFlag.Fill(electronFlag);
+  root1DHistogramOfElectronFlag.Write();
+  // ion
+  root2DHistogramOf1stHitIonLocationX_LocationY.Fill(ions.getRealOrDummyObject(0).getLocationX(unit),
+                                                     ions.getRealOrDummyObject(0).getLocationY(unit));
+  root2DHistogramOf1stHitElectronLocationX_LocationY.Fill(electrons.getRealOrDummyObject(0).getLocationX(unit),
+                                                          electrons.getRealOrDummyObject(0).getLocationY(unit));
+  root1DHistogramOf1stHitElectronEnergy.Fill(electrons.getRealOrDummyObject(0).getEnergy(unit));
+  root1DHistogramOf1stHitElectronEnergy.Write();
 }
 const Analysis::Unit &BL17Analysis::Run::getUnit() const {
   return *pUnit;
