@@ -14,8 +14,6 @@
 #include "Analysis/Analysis.h"
 namespace BL17Analysis {
 class Run {
-  int *argc;
-  char **argv;
   const int numberOfTDCUsed = 3;
   const int numberOfChannelsUsed = 2;
   const int numberOfHitsUsed = 4;
@@ -28,7 +26,9 @@ class Run {
   bool optionOfExportingElectronMomentum;
   std::fstream exportedFile;
 
-  TApplication rootApp{"Root Application", argc, argv};
+//  int *argc;
+//  char **argv;
+//  TApplication rootApp{"Root Application", argc, argv};
   TFile rootFile;
   TH1F root1DHistogramOfIonFlag
       {"iFlag",

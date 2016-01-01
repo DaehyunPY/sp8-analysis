@@ -79,7 +79,7 @@ BL17Analysis::Run::Run() {
     filename += writer.getID();
     filename += ".root";
     rootFile.Open(filename.c_str(), "new");
-    rootApp.Run();
+//    rootApp.Run();
   }
 
   // initialization is done
@@ -95,6 +95,14 @@ BL17Analysis::Run::~Run() {
   writer.write() << "Event count: " << tools.getEventNumber() << std::endl;
 
   // close histograms
+  root1DHistogramOfIonFlag.Write();
+  root1DHistogramOfElectronFlag.Write();
+  // ion
+  root2DHistogramOf1stHitIonLocationX_LocationY.Write();
+  root2DHistogramOf1stHitElectronLocationX_LocationY.Write();
+  // electron
+  root1DHistogramOf1stHitElectronEnergy.Write();
+  // file
   rootFile.Close();
 
   // finalization is done
@@ -239,16 +247,14 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
 
   // histograms
   root1DHistogramOfIonFlag.Fill(ionFlag);
-  root1DHistogramOfIonFlag.Write();
   root1DHistogramOfElectronFlag.Fill(electronFlag);
-  root1DHistogramOfElectronFlag.Write();
   // ion
   root2DHistogramOf1stHitIonLocationX_LocationY.Fill(ions.getRealOrDummyObject(0).getLocationX(unit),
                                                      ions.getRealOrDummyObject(0).getLocationY(unit));
+  // electron
   root2DHistogramOf1stHitElectronLocationX_LocationY.Fill(electrons.getRealOrDummyObject(0).getLocationX(unit),
                                                           electrons.getRealOrDummyObject(0).getLocationY(unit));
   root1DHistogramOf1stHitElectronEnergy.Fill(electrons.getRealOrDummyObject(0).getEnergy(unit));
-  root1DHistogramOf1stHitElectronEnergy.Write();
 }
 const Analysis::Unit &BL17Analysis::Run::getUnit() const {
   return *pUnit;
