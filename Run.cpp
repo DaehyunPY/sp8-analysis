@@ -199,9 +199,9 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
   root1DHistogramOfElectronFlag.Fill(electronFlag);
   fillFlags();
   fillIonBasicData();
-  fillIonMomentumData();
+  if (optionOfShowingOnlyMasterRegionEvents) { fillIonMomentumData(); }
   fillElectronBasicData();
-  fillElectronMomentumData();
+  if (optionOfShowingOnlyMasterRegionEvents) { fillElectronMomentumData(); }
 }
 const Analysis::Unit &BL17Analysis::Run::getUnit() const {
   return *pUnit;
