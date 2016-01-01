@@ -241,7 +241,6 @@ void BL17Analysis::Run::fillIonBasicData() {
   const double &i4HitTOF = pIons->getRealOrDummyObject(3).getTOF(*pUnit);
   const double &i1HitPlus2HitTOF = pIons->getSumOfTOF(*pUnit, 0, 1);
   const double &i2HitPlus3HitTOF = pIons->getSumOfTOF(*pUnit, 1, 2);
-  const double &i3HitPlus4HitTOF = pIons->getSumOfTOF(*pUnit, 2, 3);
   root2DHistogramOf1stHitIonLocationX_LocationY.Fill(i1HitX, i1HitY);
   root2DHistogramOf2ndHitIonLocationX_LocationY.Fill(i2HitX, i2HitY);
   root2DHistogramOf3rdHitIonLocationX_LocationY.Fill(i3HitX, i3HitY);
@@ -321,10 +320,10 @@ void BL17Analysis::Run::fillElectronBasicData() {
   const double &e2HitTOF = pElectrons->getRealOrDummyObject(1).getTOF(*pUnit);
   const double &e3HitTOF = pElectrons->getRealOrDummyObject(2).getTOF(*pUnit);
   const double &e4HitTOF = pElectrons->getRealOrDummyObject(3).getTOF(*pUnit);
-  root2DHistogramOf1stHitElectronLocationX_LocationY.Fill(e1HitX, e1HitX);
-  root2DHistogramOf2ndHitElectronLocationX_LocationY.Fill(e1HitX, e2HitX);
-  root2DHistogramOf3rdHitElectronLocationX_LocationY.Fill(e1HitX, e3HitX);
-  root2DHistogramOf4thHitElectronLocationX_LocationY.Fill(e1HitX, e4HitX);
+  root2DHistogramOf1stHitElectronLocationX_LocationY.Fill(e1HitX, e1HitY);
+  root2DHistogramOf2ndHitElectronLocationX_LocationY.Fill(e2HitX, e2HitY);
+  root2DHistogramOf3rdHitElectronLocationX_LocationY.Fill(e3HitX, e3HitY);
+  root2DHistogramOf4thHitElectronLocationX_LocationY.Fill(e4HitX, e4HitY);
   root2DHistogramOfElectronsCOMLocationX_LocationY.Fill(eCOMX, eCOMY);
   root2DHistogramOfElectronsCOMLocationalDirectionXY_Radius.Fill(eCOMThetaXY,
                                                                  eCOMR);
