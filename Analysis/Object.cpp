@@ -22,7 +22,7 @@ void Analysis::Object::resetEventData() {
   momentumX = 0e0;
   momentumY = 0e0;
   momentumZ = 0e0;
-  flag.setInitialFlag();
+  flag.resetFlag();
   return;
 }
 void Analysis::Object::setLocationX(const double &x) {

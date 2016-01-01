@@ -18,16 +18,12 @@ Analysis::Objects::~Objects() {
 }
 void Analysis::Objects::setObject(const int &i, Object &object) {
   assert(isRealObject(i));
-  if (ppObject[i] != nullptr) {
-    delete ppObject[i];
-  }
+  if (ppObject[i] != nullptr) { delete ppObject[i]; }
   ppObject[i] = &object;
 }
 void Analysis::Objects::setDummyObject(const int &i, Analysis::Object &object) {
   assert(isDummyObject(i));
-  if (ppObject[i] != nullptr) {
-    delete ppObject[i];
-  }
+  if (ppObject[i] != nullptr) { delete ppObject[i]; }
   ppObject[i] = &object;
 }
 const int &Analysis::Objects::getNumberOfObjects() const {
@@ -312,7 +308,7 @@ const double Analysis::Objects::getSumOfTOF(const int &i1,
                                             const int &i2) const {
   if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
       || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
-    return OUT_OF_FRAME;
+    return outOfFrame;
   }
   return getRealOrDummyObject(i1).getTOF() + getRealOrDummyObject(i2).getTOF();
 }
@@ -321,7 +317,7 @@ const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit,
                                             const int &i2) const {
   if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
       || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
-    return OUT_OF_FRAME;
+    return outOfFrame;
   }
   return unit.writeTime(getSumOfTOF(i1, i2));
 }
@@ -353,11 +349,11 @@ Analysis::Object &Analysis::Objects::setRealOrDummyObjectMembers(const int &i) {
 void Analysis::Objects::setAllOfObjectIsOutOfFrameOfBasicDataFlag() {
   const int &n = getNumberOfObjects();
   for (int i = 0; i < n; i++) {
-    setObjectMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
+    setObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
   }
 }
 
-void Analysis::Objects::setAllOfObjectIsOutOfFrameOfMomentumDatatFlag() {
+void Analysis::Objects::setAllOfObjectIsOutOfFrameOfMomentumDataFlag() {
   const int &n = getNumberOfObjects();
   for (int i = 0; i < n; i++) {
     setObjectMembers(i).setFlagMembers().setOutOfFrameOfMomentumDataFlag();
@@ -368,11 +364,11 @@ void Analysis::Objects::setAllOfDummyObjectIsOutOfFrameOfBasicDataFlag() {
   const int &n = getNumberOfObjects();
   const int &m = getNumberOfDeadRealOrDummyObjects();
   for (int i = n; i < m; i++) {
-    setDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
+    setDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
   }
 }
 
-void Analysis::Objects::setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag() {
+void Analysis::Objects::setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag() {
   const int &n = getNumberOfObjects();
   const int &m = getNumberOfDeadRealOrDummyObjects();
   for (int i = n; i < m; i++) {
@@ -386,8 +382,8 @@ void Analysis::Objects::setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag() {
 }
 
 void Analysis::Objects::setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag() {
-  setAllOfObjectIsOutOfFrameOfMomentumDatatFlag();
-  setAllOfDummyOfjectIsOutOfFrameOfMomentumDataFlag();
+  setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
+  setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
 }
 
 const bool Analysis::Objects::isRealOrDummyObject(const int &i) const {
@@ -470,4 +466,23 @@ const int &Analysis::Objects::getNumberOfHits() const {
 }
 const int &Analysis::Objects::getNumberOfHitsUsed() const {
   return numberOfHitsUsed;
+}
+void Analysis::Objects::setAllOfObjectIsDead() {
+  const int &n = getNumberOfObjects();
+  for (int i = 0; i < n; i++) {
+    setObjectMembers(i).setFlagMembers().setDeadFlag();
+  }
+}
+void Analysis::Objects::setAllOfDummyObjectIsDead() {
+  const int &n = getNumberOfObjects();
+  const int &m = getNumberOfRealOrDummyObjects();
+  for (int i = n; i < m; i++) {
+    setDummyObjectMembers(i).setFlagMembers().setDeadFlag();
+  }
+}
+void Analysis::Objects::setAllOfRealOrDummyObjectIsDead() {
+  const int &m = getNumberOfRealOrDummyObjects();
+  for (int i = 0; i < m; i++) {
+    setRealOrDummyObjectMembers(i).setFlagMembers().setDeadFlag();
+  }
 }

@@ -5,57 +5,90 @@
 #include "ObjectFlag.h"
 
 Analysis::ObjectFlag::ObjectFlag() : Flag() {
-  setInitialFlag();
+  resetFlag();
   return;
 }
-Analysis::ObjectFlag::~ObjectFlag() {}
-void Analysis::ObjectFlag::setInitialFlag() {
-  setSign(initialFlagForSign);
+Analysis::ObjectFlag::~ObjectFlag() { }
+void Analysis::ObjectFlag::resetFlag() {
+  setFlag(initialFlag);
 }
 
-void Analysis::ObjectFlag::setValidFlag()
+void Analysis::ObjectFlag::setWithinMasterRegionFlag() 
 {
-	setSign(validFlagForSign);
+	if (get1stDigit() < withinMasterRegionFlagFor1stDigit)
+	{
+		set1stDigit(withinMasterRegionFlagFor1stDigit);
+	}
 }
 
-void Analysis::ObjectFlag::setInvalidFlag()
+void Analysis::ObjectFlag::setNotWithinMasterRegionFlag()
 {
-	setSign(validFlagForSign);
+	if (get1stDigit() < notWithinMasterRegionFlagFor1stDigit)
+	{
+		set1stDigit(notWithinMasterRegionFlagFor1stDigit);
+	}
 }
 
-const bool Analysis::ObjectFlag::isInitial() const {
-  return getSign() == initialFlagForSign;
-}
-void Analysis::ObjectFlag::setOutOfFrameOfMomentumDataFlag() {
-  set2ndDigit(outOfFrameOfMomentumDataFlagFor2ndDigit);
+void Analysis::ObjectFlag::setDeadFlag()
+{
+	if (get1stDigit() < deadFlagFor1stDigit)
+	{
+		set1stDigit(deadFlagFor1stDigit);
+	}
 }
 
 void Analysis::ObjectFlag::setInFrameOfAllDataFlag()
 {
-	set2ndDigit(inFrameOfAllDataFlagFor2ndDigit); 
+	if (get2ndDigit() < inFrameOfAllDataFlagFor2ndDigit)
+	{
+		set2ndDigit(inFrameOfAllDataFlagFor2ndDigit);
+	}
 }
 
-void Analysis::ObjectFlag::setOutOfFrameOfBaicDataFlag() {
+void Analysis::ObjectFlag::setOutOfFrameOfMomentumDataFlag()
+{
+	if (get2ndDigit() < outOfFrameOfMomentumDataFlagFor2ndDigit)
+	{
+		set2ndDigit(outOfFrameOfMomentumDataFlagFor2ndDigit);
+	}
+}
+
+void Analysis::ObjectFlag::setOutOfFrameOfBasicDataFlag()
+{
+	if (get2ndDigit() < outOfFrameOfBasicDataFlagFor2ndDigit)
+	{
+		set2ndDigit(outOfFrameOfBasicDataFlagFor2ndDigit);
+	}
+}
+
+const bool Analysis::ObjectFlag::isInitial() const {
+  return getFlag() == initialFlag;
+}
+void Analysis::ObjectFlag::forceToSetOutOfFrameOfMomentumDataFlag() {
+  set2ndDigit(outOfFrameOfMomentumDataFlagFor2ndDigit);
+}
+
+void Analysis::ObjectFlag::forceToSetInFrameOfAllDataFlag() {
+  set2ndDigit(inFrameOfAllDataFlagFor2ndDigit);
+}
+
+void Analysis::ObjectFlag::forceToSetOutOfFrameOfBasicDataFlag() {
   set2ndDigit(outOfFrameOfBasicDataFlagFor2ndDigit);
-  return;
 }
 const bool Analysis::ObjectFlag::isInFrameOfAllData() const {
   return get2ndDigit() == inFrameOfAllDataFlagFor2ndDigit;
 }
-void Analysis::ObjectFlag::setWithinMasterRegionFlag() {
+void Analysis::ObjectFlag::forceToSetWithinMasterRegionFlag() {
   set1stDigit(withinMasterRegionFlagFor1stDigit);
-  return;
 }
-void Analysis::ObjectFlag::setNotWithinMasterRegionFlag() {
+void Analysis::ObjectFlag::forceToSetNotWithinMasterRegionFlag() {
   set1stDigit(notWithinMasterRegionFlagFor1stDigit);
-  return;
 }
 const bool Analysis::ObjectFlag::isWithinMasterRegion() const {
   return get1stDigit() == withinMasterRegionFlagFor1stDigit;
 }
-void Analysis::ObjectFlag::setDeadFlag() {
+void Analysis::ObjectFlag::forceToSetDeadFlag() {
   set1stDigit(deadFlagFor1stDigit);
-  return;
 }
 const bool Analysis::ObjectFlag::isDead() const {
   return get1stDigit() == deadFlagFor1stDigit;
@@ -64,9 +97,8 @@ const bool Analysis::ObjectFlag::isOutOfFrameOfBasicData() const {
   return get2ndDigit() == outOfFrameOfBasicDataFlagFor2ndDigit;
 }
 
-const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const
-{
-	return get2ndDigit() == outOfFrameOfMomentumDataFlagFor2ndDigit; 
+const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const {
+  return get2ndDigit() == outOfFrameOfMomentumDataFlagFor2ndDigit;
 }
 
 const bool Analysis::ObjectFlag::isNotWithinMasterRegion() const {

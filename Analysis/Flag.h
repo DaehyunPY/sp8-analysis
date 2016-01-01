@@ -10,7 +10,6 @@
 
 namespace Analysis {
 class Flag {
- private:
   int flag;
 
  protected:
@@ -24,6 +23,7 @@ class Flag {
   void set1stDigit(const int &);
   void set2ndDigit(const int &);
   void set3ndDigit(const int &);
+  void setFlag(const int &);
 
  public:
   const int &getFlag() const;
