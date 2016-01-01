@@ -197,11 +197,19 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
   // histograms
   root1DHistogramOfIonFlag.Fill(ionFlag);
   root1DHistogramOfElectronFlag.Fill(electronFlag);
-  fillFlags();
-  fillIonBasicData();
-  if (optionOfShowingOnlyMasterRegionEvents) { fillIonMomentumData(); }
-  fillElectronBasicData();
-  if (optionOfShowingOnlyMasterRegionEvents) { fillElectronMomentumData(); }
+  if (optionOfShowingOnlyMasterRegionEvents) {
+	fillFlags();
+	fillIonBasicData();
+	if (ionFlag > 0 && electronFlag > 0) { fillIonMomentumData(); }
+    fillElectronBasicData();
+	if (ionFlag > 0 && electronFlag > 0) { fillElectronMomentumData(); }
+  } else {
+	fillFlags();
+	fillIonBasicData();
+	fillIonMomentumData(); 
+    fillElectronBasicData();
+	fillElectronMomentumData();
+  }
 }
 const Analysis::Unit &BL17Analysis::Run::getUnit() const {
   return *pUnit;
