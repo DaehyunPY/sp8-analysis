@@ -9,7 +9,7 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
                      const int &m) : Objects(n, m) {
   ppIon = new Ion *[getNumberOfRealOrDummyObjects()]{nullptr};
   for (int i = 0; i < n; i++) { // for real ions
-    ppIon[i] = new Ion(unit, reader, getIonName(0));
+    ppIon[i] = new Ion(unit, reader, getIonName(i));
     setObject(i, *ppIon[i]);
   }
   for (int i = n; i < m; i++) { // for dummy ions
