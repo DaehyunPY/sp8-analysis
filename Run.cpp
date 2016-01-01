@@ -2,8 +2,8 @@
 // Created by Daehyun You on 12/30/15.
 //
 
+#include <ctime>
 #include "RUN.h"
-
 BL17Analysis::Run::Run() {
   // set seed for random
   srand((unsigned int) time(nullptr));
@@ -144,7 +144,7 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
       const int &m = ions.getNumberOfRealOrDummyObjects();
       for (int i = 0; i < m; i++) {
         if (ions.getRealOrDummyIon(i).isDead()) {
-          ions.setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
+          ions.setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
         }
       }
     }
@@ -152,7 +152,7 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
       const int &m = electrons.getNumberOfRealOrDummyObjects();
       for (int i = 0; i < m; i++) {
         if (electrons.getRealOrDummyObject(i).isDead()) {
-          electrons.setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
+          electrons.setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
         }
       }
     }

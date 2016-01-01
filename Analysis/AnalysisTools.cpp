@@ -200,7 +200,6 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
       ion.setFlagMembers().setNotWithinMasterRegionFlag();
     }
   }
-  return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const double &x1,
@@ -230,7 +229,6 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
       electron.setFlagMembers().setNotWithinMasterRegionFlag();
     }
   }
-  return;
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
 	bool info; 
@@ -243,7 +241,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
       ion.setMomentumZ(pz);
   } else
   {
-    ion.setFlagMembers().setDeadFlag();
+    ion.setFlagMembers().forceToSetDeadFlag();
   }
   return;
 }

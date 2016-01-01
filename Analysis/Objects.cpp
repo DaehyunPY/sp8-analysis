@@ -349,7 +349,7 @@ Analysis::Object &Analysis::Objects::setRealOrDummyObjectMembers(const int &i) {
 void Analysis::Objects::setAllOfObjectIsOutOfFrameOfBasicDataFlag() {
   const int &n = getNumberOfObjects();
   for (int i = 0; i < n; i++) {
-    setObjectMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
+    setObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
   }
 }
 
@@ -364,7 +364,7 @@ void Analysis::Objects::setAllOfDummyObjectIsOutOfFrameOfBasicDataFlag() {
   const int &n = getNumberOfObjects();
   const int &m = getNumberOfDeadRealOrDummyObjects();
   for (int i = n; i < m; i++) {
-    setDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBaicDataFlag();
+    setDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
   }
 }
 
