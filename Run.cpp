@@ -35,7 +35,7 @@ BL17Analysis::Run::Run() {
   writer.write() << "Output Options: " << std::endl;
   writer.write() << "    Send Out of Frame: "
       << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
-  writer.write() << "    Show Only Master Region Events"
+  writer.write() << "    Show Only Master Region Events: "
       << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
   writer.write() << std::endl;
 
