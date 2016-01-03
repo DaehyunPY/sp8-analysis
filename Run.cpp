@@ -168,10 +168,10 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
         if (optionOfSendingOutOfFrame) {
           ions.setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
         }
-        ionFlag = -30;
+        ionFlag = 1;
       } else {
         // succeed
-        ionFlag = 1;
+        ionFlag = 10;
       }
     }
 
@@ -190,10 +190,10 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
       const bool electronsExistDeadObject = electrons.existDeadObject();
       // if it couldn't calculate momentum, don't plot it
       if (electronsExistDeadObject) {
-        electronFlag = -30;
+        electronFlag = 1;
       } else {
         // succeed
-        electronFlag = 1;
+        electronFlag = 10;
       }
     }
   }

@@ -1,7 +1,7 @@
 #ifndef ANALYSIS_ANALYSISTOOLS_H
 #define ANALYSIS_ANALYSISTOOLS_H
 
-#define LIMITATION_NUMBER_OF_LOOP 1000
+#define LIMITATION_NUMBER_OF_LOOP 100
 
 #include "EquipmentParameters.h"
 #include "IonParameters.h"

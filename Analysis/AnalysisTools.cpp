@@ -241,7 +241,6 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
   } else {
     ion.setFlagMembers().setDeadFlag();
   }
-  return;
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(
     Analysis::Electron &electron) const {
@@ -255,7 +254,6 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   } else {
     electron.setFlagMembers().setDeadFlag();
   }
-  return;
 }
 const int &Analysis::AnalysisTools::getEventNumber() const {
   return eventNumber;
@@ -275,7 +273,6 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                              unit.readLength(y),
                              unit.readTime(t),
                              f);
-  return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const Unit &unit,
@@ -288,14 +285,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                              unit.readLength(y),
                              unit.readTime(t),
                              f);
-  return;
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ions &ions) const {
   const int &n = ions.getNumberOfObjects();
   for (int i = 0; i < n; i++) {
     loadMomentumCalculator(ions.setIonMembers(i));
   }
-  return;
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(
     Analysis::Electrons &elecs) const {
@@ -303,7 +298,6 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   for (int i = 0; i < n; i++) {
     loadMomentumCalculator(elecs.setElectronMembers(i));
   }
-  return;
 }
 
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
@@ -316,7 +310,6 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                          reader.getEventDataAt(2, 0, iHit),
                          reader.getEventDataAt(2, 1, iHit),
                          reader.getTmpFlag());
-  return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const Unit &unit,
@@ -328,7 +321,6 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                          reader.getEventDataAt(0, 1, iHit),
                          reader.getEventDataAt(1, 0, iHit),
                          reader.getTmpFlag());
-  return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
                                                    const Unit &unit,
@@ -341,7 +333,6 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
   for(int i = n; i < m; i++) {
     loadEventDataInputer(ions.setDummyIonMembers(i), unit, reader, i);
   }
-  return;
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electrons,
                                                    const Unit &unit,
@@ -354,7 +345,6 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electron
   for(int i = n; i < m; i++) {
     loadEventDataInputer(electrons.setDummyElectronMembers(i), unit, reader, i);
   }
-  return;
 }
 
 const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
