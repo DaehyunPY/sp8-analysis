@@ -71,7 +71,7 @@ const double Analysis::AnalysisTools::calculateMomentumZ(const Ion &ion, bool& i
   const double &f0 = ion.getTOF();
   x1 = 0e0;
   info = false; 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < LIMITATION_NUMBER_OF_LOOP; i++) {
     x0 = x1;
     f = calculateTOF(ion, x0) - f0;
     df = calculateDiffTOF(ion, x0);
@@ -115,7 +115,7 @@ const double Analysis::AnalysisTools::calculateMomentumZ
   const double &f0 = elec.getTOF();
   x1 = 0e0;
   info = false; 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < LIMITATION_NUMBER_OF_LOOP; i++) {
     x0 = x1;
     f = calculateTOF(elec, x0) - f0;
     df = calculateDiffTOF(elec, x0);
@@ -236,11 +236,9 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
   const double &pz = calculateMomentumZ(ion, info);
   ion.setMomentumX(pxy.x);
   ion.setMomentumY(pxy.y);
-  if(info)
-  {
+  if(info) {
       ion.setMomentumZ(pz);
-  } else
-  {
+  } else {
     ion.setFlagMembers().setDeadFlag();
   }
   return;
@@ -252,12 +250,9 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   const double &pz = calculateMomentumZ(electron, info);
   electron.setMomentumX(pxy.x);
   electron.setMomentumY(pxy.y);
-  electron.setMomentumZ(pz);  
-  if(info)
-  {
+  if(info) {
       electron.setMomentumZ(pz);
-  } else
-  {
+  } else {
     electron.setFlagMembers().setDeadFlag();
   }
   return;

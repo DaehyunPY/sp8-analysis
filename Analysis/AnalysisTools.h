@@ -1,6 +1,8 @@
 #ifndef ANALYSIS_ANALYSISTOOLS_H
 #define ANALYSIS_ANALYSISTOOLS_H
 
+#define LIMITATION_NUMBER_OF_LOOP 1000
+
 #include "EquipmentParameters.h"
 #include "IonParameters.h"
 #include "ElectronParameters.h"
@@ -97,10 +99,10 @@ class AnalysisTools {
   void loadEventDataInputer(Electrons &,
                             const Unit &,
                             const EventDataReader &) const; // for ions
-  void loadMomentumCalculator(Ion &) const;
-  void loadMomentumCalculator(Electron &) const;
-  void loadMomentumCalculator(Ions &) const;
-  void loadMomentumCalculator(Electrons &) const;
+  void loadMomentumCalculator(Ion &) const; // main momentum calculator
+  void loadMomentumCalculator(Electron &) const; // main momentum calculator
+  void loadMomentumCalculator(Ions &) const; // for ions
+  void loadMomentumCalculator(Electrons &) const; // for electrons
 };
 }
 #endif
