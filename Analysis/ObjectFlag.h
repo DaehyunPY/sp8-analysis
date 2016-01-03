@@ -9,37 +9,66 @@
 
 namespace Analysis {
 class ObjectFlag: protected Flag {
+ private:
   const int initialFlag = 0;
-  const int withinMasterRegionFlagFor1stDigit = 1;
-  const int notWithinMasterRegionFlagFor1stDigit = 2;
-  const int deadFlagFor1stDigit = 3;
-  const int inFrameOfAllDataFlagFor2ndDigit = 1; 
-  const int outOfFrameOfMomentumDataFlagFor2ndDigit = 2; 
-  const int outOfFrameOfBasicDataFlagFor2ndDigit = 3; 
-
  public:
   ObjectFlag();
   ~ObjectFlag();
   void resetFlag();
-  void setWithinMasterRegionFlag();
-  void setNotWithinMasterRegionFlag();
-  void setDeadFlag();
-  void setInFrameOfAllDataFlag();
-  void setOutOfFrameOfMomentumDataFlag();
-  void setOutOfFrameOfBasicDataFlag();
-  void forceToSetWithinMasterRegionFlag();
-  void forceToSetNotWithinMasterRegionFlag();
-  void forceToSetDeadFlag();
-  void forceToSetOutOfFrameOfBasicDataFlag();
-  void forceToSetOutOfFrameOfMomentumDataFlag();
-  void forceToSetInFrameOfAllDataFlag(); 
   const bool isInitial() const;
+
+ private:
+  const int flagFor1stDigit_withinMasterRegion = 1;
+  const int flagFor1stDigit_outOfMasterRegionButNotDead = 2;
+  const int flagFor1stDigit_dead = 3;
+//  ┌─whole data────────────────────────────────┐
+//  │                                           │
+//  │ ┌─master region─┐┌─out of master region─┐ │
+//  │ │               ││                      │ │
+//  │ │               ││         ┌─dead────┐  │ │
+//  │ │               ││         │         │  │ │
+//  │ │ flag #1       ││ flag #2 │ flag #3 │  │ │
+//  │ │               ││         │         │  │ │
+//  │ │               ││         └─────────┘  │ │
+//  │ └───────────────┘└──────────────────────┘ │
+//  │                                           │
+//  │ initial data (not input TOF data)         │
+//  │ flag #0                                   │
+//  │                                           │
+//  └───────────────────────────────────────────┘
+ public:
+  void setWithinMasterRegionFlag(); // only can set when it's initial flag
+  void setOutOfMasterRegionFlag(); // only can set when it's initial flag
+  void setDeadFlag();
+ public:
   const bool isDead() const;
-  const bool isNotWithinMasterRegion() const;
+  const bool isOutOfMasterRegion() const;
   const bool isWithinMasterRegion() const;
-  const bool isOutOfFrameOfBasicData() const;
-  const bool isOutOfFrameOfMomentumData() const; 
+
+ private:
+  const int flagFor2ndDigit_inFrameOfAllData = 1;
+  const int flagFor2ndDigit_outOfFrameOfMomentumData = 2;
+  const int flagFor2ndDigit_outOfFrameOfBasicDataButNotOutOfFrameOfMomentumData = 3;
+//  ┌─whole data───────────────────────────────────────────────────────┐
+//  │┌─in frame of all data─┐┌─out of frame of momentum data──────────┐│
+//  ││                      ││                 ~~~~~~~~~~~~~          ││
+//  ││                      ││                 (Px,Py,Pz,E)           ││
+//  ││                      ││         ┌─out of frame of basic data──┐││
+//  ││                      ││         │                 ~~~~~~~~~~  │││
+//  ││ flag #1              ││ flag #2 │ flag #3         (X,Y,TOF,   │││
+//  ││                      ││         │                  Px,Py,Pz,E)│││
+//  ││                      ││         └─────────────────────────────┘││
+//  │└──────────────────────┘└────────────────────────────────────────┘│
+//  │ initial data (not inputed)                                       │
+//  │ flag #0                                                          │
+//  └──────────────────────────────────────────────────────────────────┘
+ public:
+  void setInFrameOfAllDataFlag(); // only can set when it's initial flag
+  void setOutOfFrameOfMomentumDataFlag(); // only can set when it's in-frame-of-all-data
+  void setOutOfFrameOfBasicDataFlag(); // only can set when it's in-frame-of-all-data, or out-of-frame-of-momentum-data
   const bool isInFrameOfAllData() const;
+  const bool isOutOfFrameOfMomentumData() const;
+  const bool isOutOfFrameOfBasicData() const;
 };
 }
 

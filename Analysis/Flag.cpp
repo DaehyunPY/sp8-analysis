@@ -9,23 +9,23 @@ Analysis::Flag::Flag() {
 }
 Analysis::Flag::~Flag() {
 }
-const int Analysis::Flag::getSign() const {
-  if (flag == 0) {
+const int Analysis::Flag::getSign(const int &f) const {
+  if (f == 0) {
 	return 0;
-  } else if (flag > 0) {
+  } else if (f > 0) {
 	return 1;
   } else { return -1; }
 }
-const int Analysis::Flag::get1stDigit() const {
-  const int unsignedFlag = abs(flag);
+const int Analysis::Flag::get1stDigit(const int &f) const {
+  const int unsignedFlag = abs(f);
   return unsignedFlag % 10;
 }
-const int Analysis::Flag::get2ndDigit() const {
-  const int unsignedFlag = abs(flag);
+const int Analysis::Flag::get2ndDigit(const int &f) const {
+  const int unsignedFlag = abs(f);
   return (unsignedFlag / 10) % 10;
 }
-const int Analysis::Flag::get3rdDigit() const {
-  const int unsignedFlag = abs(flag);
+const int Analysis::Flag::get3rdDigit(const int &f) const {
+  const int unsignedFlag = abs(f);
   return (unsignedFlag / 100) % 10;
 }
 void Analysis::Flag::setSign(const int &f1) {
@@ -51,4 +51,16 @@ void Analysis::Flag::setFlag(const int &f) {
 
 const int &Analysis::Flag::getFlag() const {
   return flag;
+}
+const int Analysis::Flag::get1stDigit() const {
+  return get1stDigit(flag);
+}
+const int Analysis::Flag::get2ndDigit() const {
+  return get2ndDigit(flag);
+}
+const int Analysis::Flag::get3rdDigit() const {
+  return get3rdDigit(flag);
+}
+const int Analysis::Flag::getSign() const {
+  return getSign(flag);
 }

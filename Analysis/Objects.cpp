@@ -467,22 +467,23 @@ const int &Analysis::Objects::getNumberOfHits() const {
 const int &Analysis::Objects::getNumberOfHitsUsed() const {
   return numberOfHitsUsed;
 }
-void Analysis::Objects::setAllOfObjectIsDead() {
-  const int &n = getNumberOfObjects();
-  for (int i = 0; i < n; i++) {
-    setObjectMembers(i).setFlagMembers().setDeadFlag();
+void Analysis::Objects::setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag() {
+  const int &m = getNumberOfRealOrDummyObjects();
+  for(int i = 0; i < m; i++) {
+    setRealOrDummyObjectMembers(i).setFlagMembers().setInFrameOfAllDataFlag();
   }
 }
-void Analysis::Objects::setAllOfDummyObjectIsDead() {
+void Analysis::Objects::setAllOfDummyObjectIsInFrameOfAllDataFlag() {
   const int &n = getNumberOfObjects();
   const int &m = getNumberOfRealOrDummyObjects();
-  for (int i = n; i < m; i++) {
-    setDummyObjectMembers(i).setFlagMembers().setDeadFlag();
+  for(int i = n; i < m; i++) {
+    setDummyObjectMembers(i).setFlagMembers().setInFrameOfAllDataFlag();
   }
+
 }
-void Analysis::Objects::setAllOfRealOrDummyObjectIsDead() {
-  const int &m = getNumberOfRealOrDummyObjects();
-  for (int i = 0; i < m; i++) {
-    setRealOrDummyObjectMembers(i).setFlagMembers().setDeadFlag();
+void Analysis::Objects::setAllOfObjectIsInFrameOfAllDataFlag() {
+  const int &n = getNumberOfObjects();
+  for(int i = 0; i < n; i++) {
+    setObjectMembers(i).setFlagMembers().setInFrameOfAllDataFlag();
   }
 }

@@ -103,6 +103,10 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
   tools.loadEventDataInputer(electrons, unit, reader);
 
   if (optionOfSendingOutOfFrame) {
+    ions.setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
+    electrons.setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
+  }
+  if (optionOfSendingOutOfFrame) {
     // dead data, don't plot basic data(x, y, TOF)
     { // ion
       const int &m = ions.getNumberOfRealOrDummyObjects();

@@ -15,6 +15,10 @@ class Flag {
  protected:
   Flag();
   virtual ~Flag();
+  const int getSign(const int &) const;
+  const int get1stDigit(const int &) const;
+  const int get2ndDigit(const int &) const;
+  const int get3rdDigit(const int &) const;
   const int getSign() const;
   const int get1stDigit() const;
   const int get2ndDigit() const;
