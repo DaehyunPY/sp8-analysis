@@ -38,16 +38,15 @@ void Analysis::ObjectFlag::setInFrameOfAllDataFlag() {
 }
 
 void Analysis::ObjectFlag::setOutOfFrameOfMomentumDataFlag() {
-  if (get2ndDigit() >= flagFor2ndDigit_inFrameOfAllData
-      || get2ndDigit() < flagFor2ndDigit_outOfFrameOfMomentumData) {
+  if (flagFor2ndDigit_inFrameOfAllData <= get2ndDigit()
+      && get2ndDigit() < flagFor2ndDigit_outOfFrameOfMomentumData) {
     set2ndDigit(flagFor2ndDigit_outOfFrameOfMomentumData);
   }
 }
 
 void Analysis::ObjectFlag::setOutOfFrameOfBasicDataFlag() {
-  if (get2ndDigit() >= flagFor2ndDigit_inFrameOfAllData
-      || get2ndDigit()
-          < flagFor2ndDigit_outOfFrameOfBasicData) {
+  if (flagFor2ndDigit_inFrameOfAllData <= get2ndDigit()
+      && get2ndDigit() < flagFor2ndDigit_outOfFrameOfBasicData) {
     set2ndDigit(
         flagFor2ndDigit_outOfFrameOfBasicData);
   }
