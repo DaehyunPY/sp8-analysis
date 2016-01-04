@@ -24,7 +24,6 @@
 #define H1_ELECTRON_ENERGY_BINSIZE_REGION 1000, 0, 50
 
 #include <TApplication.h>
-#include "TCanvas.h"
 #include "TFile.h"
 #include "TH1F.h"
 #include "TH2F.h"
@@ -43,6 +42,7 @@ class Run {
   bool optionOfShowingOnlyMasterRegionEvents;
   std::fstream exportedFile;
 
+  // todo: launch root gui app
   void fillFlags();
   void fillIonBasicData();
   void fillIonMomentumData();
