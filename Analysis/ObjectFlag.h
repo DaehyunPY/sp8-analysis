@@ -71,6 +71,7 @@ class ObjectFlag: protected Flag {
   const bool isInFrameOfAllData() const;
   const bool isOutOfFrameOfMomentumData() const;
   const bool isOutOfFrameOfBasicData() const;
+  // todo: make only one pulic method using string option
 };
 }
 
