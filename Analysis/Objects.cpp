@@ -6,7 +6,7 @@
 #include "Objects.h"
 
 #define ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1 if(existOutOfFrameOfBasicDataObject()) { return outOfFrame; }
-#define ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2 if(existOutOfFrameOfBasicDataObject() || existOutOfFrameOfMomentumDataObject()) { return outOfFrame; }
+#define ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2 if(existOutOfFrameOfMomentumDataObject()) { return outOfFrame; }
 
 Analysis::Objects::Objects(const int &n, const int &m)
     : numberOfHits(n), numberOfHitsUsed(m) {
@@ -461,17 +461,9 @@ const double Analysis::Objects::getMotionalDirectionZY(const Analysis::Unit &uni
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return unit.writeDegree(getMotionalDirectionZY());
 }
-const int &Analysis::Objects::getNumberOfHits() const {
-  return numberOfHits;
-}
-const int &Analysis::Objects::getNumberOfHitsUsed() const {
-  return numberOfHitsUsed;
-}
 void Analysis::Objects::setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag() {
-  const int &m = getNumberOfRealOrDummyObjects();
-  for(int i = 0; i < m; i++) {
-    setRealOrDummyObjectMembers(i).setFlagMembers().setInFrameOfAllDataFlag();
-  }
+  setAllOfObjectIsInFrameOfAllDataFlag();
+  setAllOfDummyObjectIsInFrameOfAllDataFlag();
 }
 void Analysis::Objects::setAllOfDummyObjectIsInFrameOfAllDataFlag() {
   const int &n = getNumberOfObjects();

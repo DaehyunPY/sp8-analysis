@@ -14,14 +14,14 @@ void Analysis::ObjectFlag::resetFlag() {
 }
 
 void Analysis::ObjectFlag::setWithinMasterRegionFlag() {
-  if (get1stDigit(initialFlag) == get1stDigit()) {
+  if (get1stDigit() == get1stDigit(initialFlag)) {
     set1stDigit(flagFor1stDigit_withinMasterRegion);
   }
 }
 
 void Analysis::ObjectFlag::setOutOfMasterRegionFlag() {
-  if (get1stDigit(initialFlag) == get1stDigit()) {
-    set1stDigit(flagFor1stDigit_outOfMasterRegionButNotDead);
+  if (get1stDigit() == get1stDigit(initialFlag)) {
+    set1stDigit(flagFor1stDigit_outOfMasterRegion);
   }
 }
 
@@ -32,23 +32,24 @@ void Analysis::ObjectFlag::setDeadFlag() {
 }
 
 void Analysis::ObjectFlag::setInFrameOfAllDataFlag() {
-  if (get2ndDigit(initialFlag) == get2ndDigit()) {
+  if (get2ndDigit() == get2ndDigit(initialFlag)) {
     set2ndDigit(flagFor2ndDigit_inFrameOfAllData);
   }
 }
 
 void Analysis::ObjectFlag::setOutOfFrameOfMomentumDataFlag() {
-  if (get2ndDigit() >= get2ndDigit(flagFor2ndDigit_inFrameOfAllData)
+  if (get2ndDigit() >= flagFor2ndDigit_inFrameOfAllData
       || get2ndDigit() < flagFor2ndDigit_outOfFrameOfMomentumData) {
     set2ndDigit(flagFor2ndDigit_outOfFrameOfMomentumData);
   }
 }
 
 void Analysis::ObjectFlag::setOutOfFrameOfBasicDataFlag() {
-  if (get2ndDigit() >= get2ndDigit(flagFor2ndDigit_inFrameOfAllData)
-      || get2ndDigit() < flagFor2ndDigit_outOfFrameOfBasicDataButNotOutOfFrameOfMomentumData) {
+  if (get2ndDigit() >= flagFor2ndDigit_inFrameOfAllData
+      || get2ndDigit()
+          < flagFor2ndDigit_outOfFrameOfBasicData) {
     set2ndDigit(
-        flagFor2ndDigit_outOfFrameOfBasicDataButNotOutOfFrameOfMomentumData);
+        flagFor2ndDigit_outOfFrameOfBasicData);
   }
 }
 
@@ -62,7 +63,8 @@ const bool Analysis::ObjectFlag::isDead() const {
   return get1stDigit() >= flagFor1stDigit_dead;
 }
 const bool Analysis::ObjectFlag::isOutOfFrameOfBasicData() const {
-  return get2ndDigit() >= flagFor2ndDigit_outOfFrameOfBasicDataButNotOutOfFrameOfMomentumData;
+  return get2ndDigit()
+      >= flagFor2ndDigit_outOfFrameOfBasicData;
 }
 
 const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const {
@@ -70,7 +72,7 @@ const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const {
 }
 
 const bool Analysis::ObjectFlag::isOutOfMasterRegion() const {
-  return get1stDigit() >= flagFor1stDigit_outOfMasterRegionButNotDead;
+  return get1stDigit() >= flagFor1stDigit_outOfMasterRegion;
 }
 const bool Analysis::ObjectFlag::isWithinMasterRegion() const {
   return get1stDigit() == flagFor1stDigit_withinMasterRegion;

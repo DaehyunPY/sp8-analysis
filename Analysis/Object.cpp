@@ -2,7 +2,7 @@
 #include "Object.h"
 
 #define ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1 if(getFlag().isOutOfFrameOfBasicData()) { return outOfFrame; }
-#define ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2 if(getFlag().isOutOfFrameOfBasicData() || getFlag().isOutOfFrameOfMomentumData()) { return outOfFrame; }
+#define ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2 if(getFlag().isOutOfFrameOfMomentumData()) { return outOfFrame; }
 
 Analysis::Object::Object(const double &m,
                          const double &q,

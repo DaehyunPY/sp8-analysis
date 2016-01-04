@@ -39,8 +39,6 @@ class Objects {
   void setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag();
   void setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
   void resetEventData();
-  const int &getNumberOfHits() const;
-  const int &getNumberOfHitsUsed() const;
   const int &getNumberOfObjects() const;
   const int &getNumberOfRealOrDummyObjects() const;
   const Object &getObject(const int &) const;

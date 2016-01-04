@@ -19,7 +19,7 @@ class ObjectFlag: protected Flag {
 
  private:
   const int flagFor1stDigit_withinMasterRegion = 1;
-  const int flagFor1stDigit_outOfMasterRegionButNotDead = 2;
+  const int flagFor1stDigit_outOfMasterRegion = 2;
   const int flagFor1stDigit_dead = 3;
 //  ┌─whole data────────────────────────────────┐
 //  │                                           │
@@ -37,8 +37,8 @@ class ObjectFlag: protected Flag {
 //  │                                           │
 //  └───────────────────────────────────────────┘
  public:
-  void setWithinMasterRegionFlag(); // only can set when it's initial flag
-  void setOutOfMasterRegionFlag(); // only can set when it's initial flag
+  void setWithinMasterRegionFlag(); // only can set when it's initial flag(0)
+  void setOutOfMasterRegionFlag(); // only can set when it's initial flag(0)
   void setDeadFlag();
  public:
   const bool isDead() const;
@@ -48,7 +48,7 @@ class ObjectFlag: protected Flag {
  private:
   const int flagFor2ndDigit_inFrameOfAllData = 1;
   const int flagFor2ndDigit_outOfFrameOfMomentumData = 2;
-  const int flagFor2ndDigit_outOfFrameOfBasicDataButNotOutOfFrameOfMomentumData = 3;
+  const int flagFor2ndDigit_outOfFrameOfBasicData = 3;
 //  ┌─whole data───────────────────────────────────────────────────────┐
 //  │┌─in frame of all data─┐┌─out of frame of momentum data──────────┐│
 //  ││                      ││                 ~~~~~~~~~~~~~          ││
@@ -63,9 +63,11 @@ class ObjectFlag: protected Flag {
 //  │ flag #0                                                          │
 //  └──────────────────────────────────────────────────────────────────┘
  public:
-  void setInFrameOfAllDataFlag(); // only can set when it's initial flag
-  void setOutOfFrameOfMomentumDataFlag(); // only can set when it's in-frame-of-all-data
-  void setOutOfFrameOfBasicDataFlag(); // only can set when it's in-frame-of-all-data, or out-of-frame-of-momentum-data
+  void setInFrameOfAllDataFlag(); // only can set when it's initial flag(0)
+  void setOutOfFrameOfMomentumDataFlag
+      (); // only can set when it's in-frame-of-all-data flag(1)
+  void setOutOfFrameOfBasicDataFlag
+      (); // only can set when it's in-frame-of-all-data flag(1), or out-of-frame-of-momentum-data flag(2)
   const bool isInFrameOfAllData() const;
   const bool isOutOfFrameOfMomentumData() const;
   const bool isOutOfFrameOfBasicData() const;
