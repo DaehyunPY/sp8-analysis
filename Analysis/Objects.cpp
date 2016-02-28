@@ -479,3 +479,52 @@ void Analysis::Objects::setAllOfObjectIsInFrameOfAllDataFlag() {
     setObjectMembers(i).setFlagMembers().setInFrameOfAllDataFlag();
   }
 }
+const double Analysis::Objects::getSumOfTOF(const int &i1,
+                                            const int &i2,
+                                            const int &i3) const {
+  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getObject(i2).getFlag().isOutOfFrameOfBasicData()
+      || getObject(i3).getFlag().isOutOfFrameOfBasicData()) {
+    return outOfFrame;
+  }
+  return getRealOrDummyObject(i1).getTOF()
+      + getRealOrDummyObject(i2).getTOF()
+      + getRealOrDummyObject(i3).getTOF();
+}
+const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit,
+                                            const int &i1,
+                                            const int &i2,
+                                            const int &i3) const {
+  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getObject(i2).getFlag().isOutOfFrameOfBasicData()
+      || getObject(i3).getFlag().isOutOfFrameOfBasicData()) {
+    return outOfFrame;
+  }
+  return unit.writeTime(getSumOfTOF(i1, i2, i3));
+}
+const double Analysis::Objects::getSumOfTOF() const {
+  const int& n = getNumberOfObjects();
+  bool itIsOutOfFrame = false;
+  long double sum = 0;
+  for(int i=0; i<n; i++) {
+    itIsOutOfFrame = itIsOutOfFrame || getObject(i).getFlag().isOutOfFrameOfBasicData();
+    sum += getObject(i).getTOF();
+  }
+  if(itIsOutOfFrame) {
+    return outOfFrame;
+  } else {
+    return double(sum);
+  }
+}
+const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit) const {
+  const int& n = getNumberOfObjects();
+  bool itIsOutOfFrame = false;
+  for(int i=0; i<n; i++) {
+    itIsOutOfFrame = itIsOutOfFrame || getObject(i).getFlag().isOutOfFrameOfBasicData();
+  }
+  if(itIsOutOfFrame) {
+    return outOfFrame;
+  } else {
+    return unit.writeTime(getSumOfTOF());
+  }
+}

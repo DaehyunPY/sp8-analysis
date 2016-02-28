@@ -69,6 +69,7 @@ BL17Analysis::Run::~Run() {
   writeIonMomentumData();
   writeElectronBasicData();
   writeElectronMomentumData();
+  writeIonAndElectronMomentumData();
   rootFile.Close();
 
   // finalization is done
@@ -199,20 +200,20 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
   }
 
   // histograms
-  root1DHistogramOfIonFlag.Fill(ionFlag);
-  root1DHistogramOfElectronFlag.Fill(electronFlag);
   if (optionOfShowingOnlyMasterRegionEvents) {
 	fillFlags();
 	fillIonBasicData();
 	if (ionFlag > 0 && electronFlag > 0) { fillIonMomentumData(); }
     fillElectronBasicData();
 	if (ionFlag > 0 && electronFlag > 0) { fillElectronMomentumData(); }
+    if (ionFlag > 0 && electronFlag > 0) { fillIonAndElectronMomentumData(); }
   } else {
 	fillFlags();
 	fillIonBasicData();
 	fillIonMomentumData(); 
     fillElectronBasicData();
 	fillElectronMomentumData();
+    fillIonAndElectronMomentumData();
   }
 }
 const Analysis::Unit &BL17Analysis::Run::getUnit() const {
@@ -264,6 +265,9 @@ void BL17Analysis::Run::fillIonBasicData() {
   root1DHistogramOf4thHitIonTOF.Fill(i4HitTOF);
   root2DHistogramOf1stHitIonTOF_2ndHitIonTOF.Fill(i1HitTOF, i2HitTOF);
   root2DHistogramOf2ndHitIonTOF_3rdHitIonTOF.Fill(i2HitTOF, i3HitTOF);
+  if(pIons->getRealOrDummyIon(0).isWithinMasterRegion()) {
+    root2DHistogramOf2ndHitIonTOF_3rdHitIonTOF_under1stHitIonMaster.Fill(i2HitTOF, i3HitTOF);
+  }
   root2DHistogramOf3rdHitIonTOF_4thHitIonTOF.Fill(i3HitTOF, i4HitTOF);
   root2DHistogramOf1stHitIonTOFPlus2ndHitIonTOF_3rdHitIonTOF.Fill(
       i1HitPlus2HitTOF,
@@ -419,6 +423,7 @@ void BL17Analysis::Run::writeIonBasicData() {
   root1DHistogramOf4thHitIonTOF.Write();
   root2DHistogramOf1stHitIonTOF_2ndHitIonTOF.Write();
   root2DHistogramOf2ndHitIonTOF_3rdHitIonTOF.Write();
+  root2DHistogramOf2ndHitIonTOF_3rdHitIonTOF_under1stHitIonMaster.Write();
   root2DHistogramOf3rdHitIonTOF_4thHitIonTOF.Write();
   root2DHistogramOf1stHitIonTOFPlus2ndHitIonTOF_3rdHitIonTOF.Write();
   root2DHistogramOf2ndHitIonTOFPlus3rdHitIonTOF_4thHitIonTOF.Write();
@@ -470,4 +475,18 @@ void BL17Analysis::Run::writeElectronMomentumData() {
   root2DHistogramOf2ndHitElectronEnergy_3rdHitElectronEnergy.Write();
   root2DHistogramOf3rdHitElectronEnergy_4thHitElectronEnergy.Write();
   root1DHistogramOfElectronsTotalEnergy.Write();
+}
+//void BL17Analysis::Run::fillIonAndElectronBasicData() {
+//
+//}
+void BL17Analysis::Run::fillIonAndElectronMomentumData() {
+  const double &iSumOfTOF = pIons->getSumOfTOF(*pUnit);
+  const double &iTotalE = pIons->getEnergy(*pUnit);
+  const double &e1HitE = pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit);
+  root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy.Fill(iSumOfTOF, e1HitE);
+  root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Fill(iTotalE, e1HitE);
+}
+void BL17Analysis::Run::writeIonAndElectronMomentumData() {
+  root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy.Write();
+  root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Write();
 }
