@@ -5,14 +5,15 @@
 #ifndef BL17ANALYSIS_RUN_H
 #define BL17ANALYSIS_RUN_H
 
-#define H1_FLAG_BINSIZE_REGION 198, 99, 99
 #define H2_ION_LOCATION_BINSIZE_REGION 100, -50, 50
 #define H1_ION_TOF_BINSIZE_REGION 1000, -2000, 13000
 #define H2_ION_TOF_BINSIZE_REGION 100, 0, 10000
-#define H2_ION_SUMOFTOF_BINSIZE_REGION 200, 0, 20000
+#define H2_ION_SUMOFTOF_BINSIZE_REGION 300, 0, 30000
 #define H2_ION_MOMENTUM_BINSIZE_REGION 100, -250, 250
 #define H1_ION_MOMENTUM_BINSIZE_REGION 1000, -250, 250
 #define H1_ION_ENERGY_BINSIZE_REGION 1000, 0, 50
+#define H1_Ion_TOTALENERGY_BINSIZE_REGION 1500, 0, 150
+#define H2_Ion_TOTALENERGY_BINSIZE_REGION 150, 0, 150
 #define H2_ELECTRON_DEGREE_BINSIZE_REGION 180, -180, 180
 #define H2_ELECTRON_LOCATION_BINSIZE_REGION 100, -75, 75
 #define H2_ELECTRON_RADIUS_BINSIZE_REGION 100, 0, 75
@@ -48,22 +49,19 @@ class Run {
   void fillIonMomentumData();
   void fillElectronBasicData();
   void fillElectronMomentumData();
+//  void fillIonAndElectronBasicData();
+  void fillIonAndElectronMomentumData();
   void writeFlags();
   void writeIonBasicData();
   void writeIonMomentumData();
   void writeElectronBasicData();
   void writeElectronMomentumData();
+//  void writeIonAndElectronBasicData();
+  void writeIonAndElectronMomentumData();
   TFile rootFile;
-  // flag
-  TH1F root1DHistogramOfIonFlag
-      {"iFlag",
-       "Ion Flag;Flag [1];Count [1]",
-       H1_FLAG_BINSIZE_REGION};
-  TH1F root1DHistogramOfElectronFlag
-      {"eFlag",
-       "Electron Flag;Flag [1];Count [1]",
-       H1_FLAG_BINSIZE_REGION};
+  // todo: add master spectra
   // ion
+  // location
   TH2F root2DHistogramOf1stHitIonLocationX_LocationY
       {"i1HitX_Y",
        "1st Hit Ion Location Image;Location X [mm];Location Y [mm]",
@@ -89,6 +87,7 @@ class Run {
        "Ions COM Location Image;Location X [mm];Location Y [mm]",
        H2_ION_LOCATION_BINSIZE_REGION,
        H2_ION_LOCATION_BINSIZE_REGION};
+  // TOF
   TH1F root1DHistogramOf1stHitIonTOF
       {"i1HitTOF",
        "1st Hit Ion TOF;TOF [ns];Count [1]",
@@ -115,6 +114,11 @@ class Run {
        "2nd Hit and 3rd Hit Ion PIPICO;2nd Hit Ion TOF [ns];3rd Hit Ion TOF [ns]",
        H2_ION_TOF_BINSIZE_REGION,
        H2_ION_TOF_BINSIZE_REGION};
+  TH2F root2DHistogramOf2ndHitIonTOF_3rdHitIonTOF_under1stHitIonMaster
+      {"i2Hit_3HitTOF_under1HitMaster",
+       "2nd Hit and 3rd Hit Ion PIPICO under 1st Hit Ion is in Master Region;2nd Hit Ion TOF [ns];3rd Hit Ion TOF [ns]",
+       H2_ION_TOF_BINSIZE_REGION,
+       H2_ION_TOF_BINSIZE_REGION};
   TH2F root2DHistogramOf3rdHitIonTOF_4thHitIonTOF
       {"i3Hit_4HitTOF",
        "3rd Hit Ion 4th Hit Ion PIPICO;3rd Hit Ion TOF [ns];4th Hit Ion TOF [ns]",
@@ -130,6 +134,7 @@ class Run {
        "2nd Hit, 3rd Hit and 4th Hit Ion PIPIPICO;2nd Hit Ion TOF + 3rd Hit Ion TOF [ns];4th Hit Ion TOF [ns]",
        H2_ION_SUMOFTOF_BINSIZE_REGION,
        H2_ION_TOF_BINSIZE_REGION};
+  // momentum
   TH2F root2DHistogramOf1stHitIonMomentumXY
       {"i1HitPx_Py",
        "1st Hit Ion Momentum XY Image;Momentum X [au];Momentum Y [au]",
@@ -166,6 +171,7 @@ class Run {
       {"i4HitPz",
        "4rd Hit Ion Momentum Z;Momentum Z [au];Count [1]",
        H1_ION_MOMENTUM_BINSIZE_REGION};
+  // energy
   TH1F root1DHistogramOf1stHitIonEnergy
       {"i1HitE",
        "1st Hit Ion Energy;Energy [eV];Count [1]",
@@ -185,8 +191,10 @@ class Run {
   TH1F root1DHistogramOfIonsTotalEnergy
       {"iTotalE",
        "Ions Total Energy;Energy [eV];Count [1]",
-       H1_ION_ENERGY_BINSIZE_REGION};
+       H1_Ion_TOTALENERGY_BINSIZE_REGION};
+
   // electron
+  // location
   TH2F root2DHistogramOf1stHitElectronLocationX_LocationY
       {"e1HitX_Y",
        "1st Hit Electron Location Image;Location X [mm];Location Y [mm]",
@@ -217,6 +225,7 @@ class Run {
        "Electrons COM Locational Direction and Radius;Locational Direction XY [degree];Radius [mm]",
        H2_ELECTRON_DEGREE_BINSIZE_REGION,
        H2_ELECTRON_RADIUS_BINSIZE_REGION};
+  // TOF
   TH1F root1DHistogramOf1stHitElectronTOF
       {"e1HitTOF",
        "1st Hit Electron TOF;TOF [ns];Count [1]",
@@ -233,6 +242,7 @@ class Run {
       {"e4HitTOF",
        "4th Hit Electron TOF;TOF [ns];Count [1]",
        H1_ELECTRON_TOF_BINSIZE_REGION};
+  // momentum
   TH2F root2DHistogramOf1stHitElectronMomentumXY
       {"e1HitPx_Py",
        "1st Hit Electron Momentum XY Image;Momentum X [au];Momentum Y [au]",
@@ -284,6 +294,7 @@ class Run {
        "Electrons Total Motional Direction and Momentum;Motional Direction ZY [degree];Momentum [au]",
        H2_ELECTRON_DEGREE_BINSIZE_REGION,
        H2_ELECTRON_NORMOFMOMENTUM_BINSIZE_REGION};
+  // energy
   TH1F root1DHistogramOf1stHitElectronEnergy
       {"e1HitE",
        "1st Hit Electron Energy;Energy [eV];Count [1]",
@@ -319,6 +330,20 @@ class Run {
       {"eTotalE",
        "Electrons Total Energy;Energy [eV];Count [1]",
        H1_ELECTRON_ENERGY_BINSIZE_REGION};
+
+  // ion and electron
+  // todo: ion KER vs electron energy
+  TH2F root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy
+      {"iSumTOF_e1HitE",
+       "Sum of Ion TOFs vs 1st Hit Electron Energy;Sum of TOFs [ns];Energy [eV]",
+       H2_ION_SUMOFTOF_BINSIZE_REGION,
+       H2_ELECTRON_ENERGY_BINSIZE_REGION};
+  TH2F root2DHistogramOfTotalEnergy_1stHitElectronEnergy
+      {"iTotalE_e1HitE",
+       "Total Ion Energy vs 1st Hit Electron Energy;Total Ion Energy [eV];Electron Energy [eV]",
+       H2_Ion_TOTALENERGY_BINSIZE_REGION,
+       H2_ELECTRON_ENERGY_BINSIZE_REGION};
+
 
  public:
   Run();
