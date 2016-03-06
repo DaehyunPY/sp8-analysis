@@ -54,9 +54,10 @@ class Objects {
   const double getLocationalDirectionY() const; // could be out of frame 
   const double getLocationalDirectionXY() const; // could be out of frame 
   const double getLocationalDirectionYX() const; // could be out of frame 
-  const double getSumOfTOF(const int &, const int&) const; // could be out of frame (note: don't use macro)
-  const double getSumOfTOF(const int &, const int&, const int&) const; // could be out of frame (note: don't use macro)
-  const double getSumOfTOF() const;
+  const double getSumOfTOF(const int &, const int &) const; // could be out of frame (note: don't use macro)
+  const double getSumOfTOF(const int &, const int &, const int &) const; // could be out of frame (note: don't use macro)
+  const double getSumOfTOF() const; // could be out of frame (note: don't use macro)
+  const double getDiffOfTOF(const int &, const int &) const; // could be out of frame (note: don't use macro)
   const double getMomentumX() const; // could be out of frame 
   const double getMomentumY() const; // could be out of frame 
   const double getMomentumZ() const; // could be out of frame 
@@ -86,6 +87,7 @@ class Objects {
   const double getSumOfTOF(const Unit &) const;
   const double getSumOfTOF(const Unit &, const int &, const int &) const; // could be out of frame (note: don't use macro)
   const double getSumOfTOF(const Unit &, const int &, const int&, const int&) const; // could be out of frame (note: don't use macro)
+  const double getDiffOfTOF(const Unit &, const int &, const int &) const; // could be out of frame (note: don't use macro) 
   const double getMomentumX(const Unit &) const; // could be out of frame 
   const double getMomentumY(const Unit &) const; // could be out of frame 
   const double getMomentumZ(const Unit &) const; // could be out of frame 

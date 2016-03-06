@@ -502,6 +502,16 @@ const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit,
   }
   return unit.writeTime(getSumOfTOF(i1, i2, i3));
 }
+
+const double Analysis::Objects::getDiffOfTOF(const Unit& unit, const int& i1, const int& i2) const
+{
+  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+    return outOfFrame;
+  }
+  return unit.writeTime(fabs(getRealOrDummyObject(i1).getTOF() - getRealOrDummyObject(i2).getTOF()));
+}
+
 const double Analysis::Objects::getSumOfTOF() const {
   const int& n = getNumberOfObjects();
   bool itIsOutOfFrame = false;
@@ -516,6 +526,16 @@ const double Analysis::Objects::getSumOfTOF() const {
     return double(sum);
   }
 }
+
+const double Analysis::Objects::getDiffOfTOF(const int& i1, const int& i2) const
+{ 
+  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+    return outOfFrame;
+  }
+  return fabs(getRealOrDummyObject(i1).getTOF() - getRealOrDummyObject(i2).getTOF());
+}
+
 const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit) const {
   const int& n = getNumberOfObjects();
   bool itIsOutOfFrame = false;

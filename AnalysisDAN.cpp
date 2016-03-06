@@ -99,13 +99,19 @@ CDAN_API void AnalysisProcessEvent(CDoubleArray* pEventData,
 	// plot data of objects 
 	// basic data 
 	pEventData->SetAt(128, ions.getLocationX(unit));
-	pEventData->SetAt(129, ions.getLocationY(unit));
+	pEventData->SetAt(129, ions.getLocationY(unit)); 
 	pEventData->SetAt(205, ions.getSumOfTOF(unit, 0, 1));
 	pEventData->SetAt(206, ions.getSumOfTOF(unit, 0, 2));
 	pEventData->SetAt(207, ions.getSumOfTOF(unit, 0, 3));
 	pEventData->SetAt(208, ions.getSumOfTOF(unit, 1, 2));
 	pEventData->SetAt(209, ions.getSumOfTOF(unit, 1, 3));
 	pEventData->SetAt(210, ions.getSumOfTOF(unit, 2, 3));
+	pEventData->SetAt(211, ions.getDiffOfTOF(unit, 0, 1));
+	pEventData->SetAt(212, ions.getDiffOfTOF(unit, 0, 2));
+	pEventData->SetAt(213, ions.getDiffOfTOF(unit, 0, 3));
+	pEventData->SetAt(214, ions.getDiffOfTOF(unit, 1, 2));
+	pEventData->SetAt(215, ions.getDiffOfTOF(unit, 1, 3));
+	pEventData->SetAt(216, ions.getDiffOfTOF(unit, 2, 3));
 	// momentum data 
 	pEventData->SetAt(88, ions.getMomentumX(unit));
 	pEventData->SetAt(89, ions.getMomentumY(unit));

@@ -108,3 +108,5 @@ Coordinate dElectronEnergyHigher,dElectronEnergyLower; // 203-204
 
 Coordinate TOF1p2,TOF1p3,TOF1p4; // 205-207
 Coordinate TOF2p3,TOF2p4,TOF3p4; // 208-210
+Coordinate TOF1m2,TOF1m3,TOF1m4; // 211-213
+Coordinate TOF2m3,TOF2m4,TOF3m4; // 214-216
