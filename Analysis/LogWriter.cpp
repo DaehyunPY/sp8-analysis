@@ -67,7 +67,7 @@ void Analysis::LogWriter::logJSONReader(const Analysis::JSONReader &reader) {
   logFile << std::endl;
 }
 Analysis::LogWriter::LogWriter(const Analysis::JSONReader &reader)
-    : LogWriter(reader.hasMember("ID") ? reader.getStringAt("ID") : "0000"){
+    : LogWriter(reader.hasMember("ID") ? reader.getStringAt("ID") : ""){
   return;
 }
 void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
