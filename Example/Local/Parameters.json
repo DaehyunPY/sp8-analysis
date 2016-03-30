@@ -65,22 +65,5 @@
     "number_of_hits": 1,
     "maximum_of_TOF": 45.0,
     "minimum_of_TOF": 20.0
-  }, 
-  "rm_diag": {
-    "1st_hit_and_2nd_hit": {
-      "turn_on_the_option?": false,
-      "t0": 0, 
-      "t1": 500 
-    },
-    "2nd_hit_and_3rd_hit": {
-      "turn_on_the_option?": true,
-      "t0": 0, 
-      "t1": 500 
-    },
-    "3rd_hit_and_4th_hit": {
-      "turn_on_the_option?": false,
-      "t0": 0, 
-      "t1": 500 
-    }
-  }
+  } 
 }
