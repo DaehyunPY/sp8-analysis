@@ -24,7 +24,7 @@ class LogWriter {
   ~LogWriter();
   const std::string getID() const;
   const std::string getFilename() const;
-  void logJSONReader(const JSONReader &);
+  void logResultOfLoadingJSONFile(const JSONReader &);
   void logAnalysisTools(const Unit &,
                         const AnalysisTools &,
                         const Ions &,

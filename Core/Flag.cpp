@@ -2,6 +2,8 @@
 // Created by Daehyun You on 11/27/15.
 //
 
+#include <cmath>
+#include <assert.h>
 #include "Flag.h"
 
 Analysis::Flag::Flag() {
@@ -64,3 +66,19 @@ const int Analysis::Flag::get3rdDigit() const {
 const int Analysis::Flag::getSign() const {
   return getSign(flag);
 }
+const unsigned int Analysis::Flag::getNthDigit(const unsigned int &nth,
+                                               const int &f) const {
+  assert(nth > 0);
+  const unsigned int unsignedFlag = (const unsigned int) abs(f);
+  return (unsignedFlag / (unsigned int) pow(10, nth - 1)) % 10;
+}
+const unsigned int Analysis::Flag::getNthDigit(const unsigned int &nth) const {
+  return getNthDigit(nth, flag);
+}
+void Analysis::Flag::setNthDigit(const unsigned int &nth,
+                                 const unsigned int &f1) {
+  assert(nth > 0);
+  const unsigned int f0 = getNthDigit(nth, f1);
+  flag = flag + ((unsigned int) pow(10, nth)) * (-f0 + f1);
+}
+

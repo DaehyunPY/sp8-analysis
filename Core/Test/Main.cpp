@@ -10,7 +10,7 @@ int main() {
   Analysis::Unit unit;
   Analysis::JSONReader reader("/Users/Hyuna917/Documents/ClionProjects/BL17_Analysis/Example/Local/Parameters.json");
   Analysis::LogWriter writer(reader);
-  writer.logJSONReader(reader);
+  writer.logResultOfLoadingJSONFile(reader);
 
   Analysis::AnalysisTools analysisTools(unit, reader);
   Analysis::Ions ions(unit, reader, 4);

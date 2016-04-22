@@ -3,65 +3,72 @@
 //
 
 #include <ctime>
+#include <TChain.h>
+#include <zconf.h>
 #include "RUN.h"
-BL17Analysis::Run::Run() {
-  // set seed for random
-  srand((unsigned int) time(nullptr));
+Analysis::Run::Run(const char const *filename) {
 
-  // setup reader & writer
-  Analysis::JSONReader reader("Parameters.json"); // make json reader
+  // Setup reader.
+  Analysis::JSONReader reader(filename);
+
+  // Change the working directory.
+  chdir(reader.getStringAt("working_directory").c_str());
+
+  // Setup writer.
   pLogWriter = new Analysis::LogWriter(reader);
-  auto &writer = *pLogWriter;
-  writer.logJSONReader(reader);
+  pLogWriter->logResultOfLoadingJSONFile(reader);
 
-  // make unit helper
+  // Setup ROOT files.
+  pChain = new TChain(reader.getStringAt("setup_input.tree_name").c_str());
+  pChain->Add(reader.getStringAt("setup_input.filenames").c_str());
+
+  // Make unit helper.
   pUnit = new Analysis::Unit;
   auto &unit = *pUnit;
 
-  // make analysis tools, ions, and electrons
+  // Make analysis tools, ions, and electrons
   pTools = new Analysis::AnalysisTools(unit, reader);
   auto &tools = *pTools;
   pIons = new Analysis::Ions(unit, reader, numberOfHitsUsed);
   auto &ions = *pIons;
   pElectrons = new Analysis::Electrons(unit, reader, numberOfHitsUsed);
   auto &electrons = *pElectrons;
-  writer.logAnalysisTools(unit, tools, ions, electrons);
+  pLogWriter->logAnalysisTools(unit, tools, ions, electrons);
 
   // output option
   optionOfSendingOutOfFrame =
       reader.getBoolAt("output_options.send_out_of_frame");
   optionOfShowingOnlyMasterRegionEvents =
       reader.getBoolAt("output_options.show_only_master_region_events");
-  writer.write() << "Output Options: " << std::endl;
-  writer.write() << "    Send Out of Frame: "
+  pLogWriter->write() << "Output Options: " << std::endl;
+  pLogWriter->write() << "    Send Out of Frame: "
       << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
-  writer.write() << "    Show Only Master Region Events: "
+  pLogWriter->write() << "    Show Only Master Region Events: "
       << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
-  writer.write() << std::endl;
+  pLogWriter->write() << std::endl;
 
   // root
   {
-    std::string filename;
-    filename = tools.getID();
-    if (!(filename == "")) {
-      filename += "-";
+    std::string str;
+    str = tools.getID();
+    if (str != "") {
+      str += "-";
     }
-    filename += writer.getID();
-    filename += ".root";
-    rootFile.Open(filename.c_str(), "new");
+    str += pLogWriter->getID();
+    str += ".root";
+    rootFile.Open(str.c_str(), "new");
   }
 
   // initialization is done
-  writer.write() << "Initialization is done." << std::endl;
-  writer.write() << std::endl;
+  pLogWriter->write() << "Initialization is done." << std::endl;
+  pLogWriter->write() << std::endl;
 }
-BL17Analysis::Run::~Run() {
-  // setup writer
-  auto &writer = *pLogWriter;
+Analysis::Run::~Run() {
+  // setup pLogWriter
   auto &tools = *pTools;
 
   // counter
-  writer.write() << "Event count: " << tools.getEventNumber() << std::endl;
+  pLogWriter->write() << "Event count: " << tools.getEventNumber() << std::endl;
 
   // root
   writeFlags();
@@ -73,15 +80,16 @@ BL17Analysis::Run::~Run() {
   rootFile.Close();
 
   // finalization is done
+  delete pChain;
   delete pUnit;
   delete pTools;
   delete pIons;
   delete pElectrons;
-  writer.write() << "Finalization is done." << std::endl;
-  writer.write() << std::endl;
+  pLogWriter->write() << "Finalization is done." << std::endl;
+  pLogWriter->write() << std::endl;
   delete pLogWriter;
 }
-void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
+void Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
                                      int &ionFlag,
                                      int &electronFlag) {
   // setup
@@ -216,28 +224,28 @@ void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
     fillIonAndElectronMomentumData();
   }
 }
-const Analysis::Unit &BL17Analysis::Run::getUnit() const {
+const Analysis::Unit &Analysis::Run::getUnit() const {
   return *pUnit;
 }
-const Analysis::Ions &BL17Analysis::Run::getIons() const {
+const Analysis::Ions &Analysis::Run::getIons() const {
   return *pIons;
 }
-const Analysis::Electrons &BL17Analysis::Run::getElectrons() const {
+const Analysis::Electrons &Analysis::Run::getElectrons() const {
   return *pElectrons;
 }
 
-const int& BL17Analysis::Run::getNumberOfTDCUsed() const {
+const int& Analysis::Run::getNumberOfTDCUsed() const {
   return numberOfTDCUsed; 
 }
 
-const int& BL17Analysis::Run::getNumberOfChannelsUsed() const {
+const int& Analysis::Run::getNumberOfChannelsUsed() const {
   return numberOfChannelsUsed; 
 }
 
-const int& BL17Analysis::Run::getNumberOfHitsUsed() const {
+const int& Analysis::Run::getNumberOfHitsUsed() const {
   return numberOfHitsUsed;
 }
-void BL17Analysis::Run::fillIonBasicData() {
+void Analysis::Run::fillIonBasicData() {
   const double &i1HitX = pIons->getRealOrDummyObject(0).getLocationX(*pUnit);
   const double &i1HitY = pIons->getRealOrDummyObject(0).getLocationY(*pUnit);
   const double &i2HitX = pIons->getRealOrDummyObject(1).getLocationX(*pUnit);
@@ -276,10 +284,10 @@ void BL17Analysis::Run::fillIonBasicData() {
       i2HitPlus3HitTOF,
       i4HitTOF);
 }
-void BL17Analysis::Run::fillFlags() {
+void Analysis::Run::fillFlags() {
 
 }
-void BL17Analysis::Run::fillIonMomentumData() {
+void Analysis::Run::fillIonMomentumData() {
   const double &i1HitPx = pIons->getRealOrDummyObject(0).getMomentumX(*pUnit);
   const double &i1HitPy = pIons->getRealOrDummyObject(0).getMomentumY(*pUnit);
   const double &i1HitPz = pIons->getRealOrDummyObject(0).getMomentumZ(*pUnit);
@@ -311,7 +319,7 @@ void BL17Analysis::Run::fillIonMomentumData() {
   root1DHistogramOf4thHitIonEnergy.Fill(i4HitE);
   root1DHistogramOfIonsTotalEnergy.Fill(iTotalE);
 }
-void BL17Analysis::Run::fillElectronBasicData() {
+void Analysis::Run::fillElectronBasicData() {
   const double
       &e1HitX = pElectrons->getRealOrDummyObject(0).getLocationX(*pUnit);
   const double
@@ -348,7 +356,7 @@ void BL17Analysis::Run::fillElectronBasicData() {
   root1DHistogramOf3rdHitElectronTOF.Fill(e3HitTOF);
   root1DHistogramOf4thHitElectronTOF.Fill(e4HitTOF);
 }
-void BL17Analysis::Run::fillElectronMomentumData() {
+void Analysis::Run::fillElectronMomentumData() {
   const double
       &e1HitPx = pElectrons->getRealOrDummyObject(0).getMomentumX(*pUnit);
   const double
@@ -408,10 +416,10 @@ void BL17Analysis::Run::fillElectronMomentumData() {
                                                                   e4HitE);
   root1DHistogramOfElectronsTotalEnergy.Fill(eTotalE);
 }
-void BL17Analysis::Run::writeFlags() {
+void Analysis::Run::writeFlags() {
 
 }
-void BL17Analysis::Run::writeIonBasicData() {
+void Analysis::Run::writeIonBasicData() {
   root2DHistogramOf1stHitIonLocationX_LocationY.Write();
   root2DHistogramOf2ndHitIonLocationX_LocationY.Write();
   root2DHistogramOf3rdHitIonLocationX_LocationY.Write();
@@ -428,7 +436,7 @@ void BL17Analysis::Run::writeIonBasicData() {
   root2DHistogramOf1stHitIonTOFPlus2ndHitIonTOF_3rdHitIonTOF.Write();
   root2DHistogramOf2ndHitIonTOFPlus3rdHitIonTOF_4thHitIonTOF.Write();
 }
-void BL17Analysis::Run::writeIonMomentumData() {
+void Analysis::Run::writeIonMomentumData() {
   root2DHistogramOf1stHitIonMomentumXY.Write();
   root2DHistogramOf2ndHitIonMomentumXY.Write();
   root2DHistogramOf3rdHitIonMomentumXY.Write();
@@ -443,7 +451,7 @@ void BL17Analysis::Run::writeIonMomentumData() {
   root1DHistogramOf4thHitIonEnergy.Write();
   root1DHistogramOfIonsTotalEnergy.Write();
 }
-void BL17Analysis::Run::writeElectronBasicData() {
+void Analysis::Run::writeElectronBasicData() {
   root2DHistogramOf1stHitElectronLocationX_LocationY.Write();
   root2DHistogramOf2ndHitElectronLocationX_LocationY.Write();
   root2DHistogramOf3rdHitElectronLocationX_LocationY.Write();
@@ -455,7 +463,7 @@ void BL17Analysis::Run::writeElectronBasicData() {
   root1DHistogramOf3rdHitElectronTOF.Write();
   root1DHistogramOf4thHitElectronTOF.Write();
 }
-void BL17Analysis::Run::writeElectronMomentumData() {
+void Analysis::Run::writeElectronMomentumData() {
   root2DHistogramOf1stHitElectronMomentumXY.Write();
   root2DHistogramOf2ndHitElectronMomentumXY.Write();
   root2DHistogramOf3rdHitElectronMomentumXY.Write();
@@ -476,17 +484,17 @@ void BL17Analysis::Run::writeElectronMomentumData() {
   root2DHistogramOf3rdHitElectronEnergy_4thHitElectronEnergy.Write();
   root1DHistogramOfElectronsTotalEnergy.Write();
 }
-//void BL17Analysis::Run::fillIonAndElectronBasicData() {
+//void Analysis::Run::fillIonAndElectronBasicData() {
 //
 //}
-void BL17Analysis::Run::fillIonAndElectronMomentumData() {
+void Analysis::Run::fillIonAndElectronMomentumData() {
   const double &iSumOfTOF = pIons->getSumOfTOF(*pUnit);
   const double &iTotalE = pIons->getEnergy(*pUnit);
   const double &e1HitE = pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit);
   root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy.Fill(iSumOfTOF, e1HitE);
   root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Fill(iTotalE, e1HitE);
 }
-void BL17Analysis::Run::writeIonAndElectronMomentumData() {
+void Analysis::Run::writeIonAndElectronMomentumData() {
   root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy.Write();
   root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Write();
 }

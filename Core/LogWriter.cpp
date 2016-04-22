@@ -13,11 +13,11 @@ Analysis::LogWriter::LogWriter(const std::string &prefix)
   filename += ".log";
   logFile.open(filename, std::fstream::out);
   logFile
-      << "It is writen at "
+      << "It is written at "
       << std::put_time(std::localtime(&now), "%c %Z")
       << "."
       << std::endl;
-  logFile << "The path is setten here." << std::endl;
+  logFile << "The path is set here." << std::endl;
   logFile << std::endl;
   return;
 }
@@ -47,16 +47,15 @@ const std::string Analysis::LogWriter::getRandomID() const {
 const std::string Analysis::LogWriter::getID() const {
   return ID;
 }
-void Analysis::LogWriter::logJSONReader(const Analysis::JSONReader &reader) {
-  reader.getFilename();
-  if(reader.getFlag().fileIsOpen()) {
-    logFile << "JSON file '" << reader.getFilename().c_str() << "' is loaded." << std::endl;
-  } else {
-    logFile << "There is no JSON file '" << reader.getFilename().c_str() << "'." << std::endl;
+void Analysis::LogWriter::logResultOfLoadingJSONFile(const Analysis::JSONReader &reader) {
+  if(reader.getFlag().fileIsClosedAndDataIsSaved()) {
+    logFile << "The JSON file '" << reader.getFilename().c_str() << "' is loaded successfully." << std::endl;
+  } else if(reader.getFlag().fileIsNotExist()) {
+    logFile << "There is not the JSON file '" << reader.getFilename().c_str() << "'." << std::endl;
   }
   if(reader.getFlag().hasNoParseError()) {
     logFile << "The JSON file has no parse error." << std::endl;
-  } else {
+  } else if(reader.getFlag().hasParseError()){
     logFile << "The JSON file has parse error." << std::endl;
   }
   logFile << std::endl;
@@ -70,7 +69,7 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
                                            const Analysis::Ions &ions,
                                            const Analysis::Electrons &electrons) {
   logFile << "Loaded Parameters: " << std::endl;
-  logFile << "    ID: " << analysisTools.getID() << std::endl;
+  logFile << "    ID: " << analysisTools.getID().c_str() << std::endl;
   logFile << "    Equipment Parameters: " << std::endl;
   logFile << "        Electric Potential of Electron Region: " << analysisTools.getEquipmentParameters().getElectricPotentialOfElectronRegion(unit) << std::endl;
   logFile << "        Electric Potential of Ion 1st: " << analysisTools.getEquipmentParameters().getElectricPotentialOfIon1st(unit) << std::endl;

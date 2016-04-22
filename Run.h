@@ -28,8 +28,8 @@
 #include "TFile.h"
 #include "TH1F.h"
 #include "TH2F.h"
-#include "Analysis/Analysis.h"
-namespace BL17Analysis {
+#include "Core/Analysis.h"
+namespace Analysis {
 class Run {
   const int numberOfTDCUsed = 3;
   const int numberOfChannelsUsed = 2;
@@ -41,7 +41,7 @@ class Run {
   Analysis::Electrons *pElectrons;
   bool optionOfSendingOutOfFrame;
   bool optionOfShowingOnlyMasterRegionEvents;
-  std::fstream exportedFile;
+  TChain *pChain;
 
   // todo: launch root gui app
   void fillFlags();
@@ -346,7 +346,7 @@ class Run {
 
 
  public:
-  Run();
+  Run(const char const *filename = "Parameters.json");
   ~Run();
   void ProcessEvent(Analysis::EventDataReader &reader,
                     int &ionFlag,
