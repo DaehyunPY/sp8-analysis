@@ -42,6 +42,7 @@ class Run {
   bool optionOfSendingOutOfFrame;
   bool optionOfShowingOnlyMasterRegionEvents;
   TChain *pChain;
+  Analysis::EventDataReader *pEventReader;
 
   // todo: launch root gui app
   void fillFlags();

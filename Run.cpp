@@ -8,38 +8,48 @@
 #include "RUN.h"
 Analysis::Run::Run(const char const *filename) {
 
-  // Setup reader.
-  Analysis::JSONReader reader(filename);
+  // Setup json file reader.
+  Analysis::JSONReader configReader(filename);
 
   // Change the working directory.
-  chdir(reader.getStringAt("working_directory").c_str());
+  chdir(configReader.getStringAt("working_directory").c_str());
 
   // Setup writer.
-  pLogWriter = new Analysis::LogWriter(reader);
-  pLogWriter->logResultOfLoadingJSONFile(reader);
+  pLogWriter = new Analysis::LogWriter(configReader);
+  pLogWriter->logResultOfLoadingJSONFile(configReader);
 
   // Setup ROOT files.
-  pChain = new TChain(reader.getStringAt("setup_input.tree_name").c_str());
-  pChain->Add(reader.getStringAt("setup_input.filenames").c_str());
+  if(configReader.getStringAt("setup_input.type") == "ROOT") {
+    pChain = new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
+    pChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
+    pLogWriter->write() << "Input file type is ROOT. " << std::endl;
+    pLogWriter->write() << "    Filenames: " << configReader.getStringAt("setup_input.filenames").c_str() << std::endl;
+    pLogWriter->write() << "    Tree Name: " << configReader.getStringAt("setup_input.tree_name").c_str() << std::endl;
+    pLogWriter->write() << std::endl;
+    double d;
+    pEventReader = new Analysis::EventDataReader(numberOfTDCUsed, numberOfChannelsUsed, numberOfHitsUsed);
+
+    pChain->SetBranchAddress("x1", &d);
+  }
 
   // Make unit helper.
   pUnit = new Analysis::Unit;
   auto &unit = *pUnit;
 
   // Make analysis tools, ions, and electrons
-  pTools = new Analysis::AnalysisTools(unit, reader);
+  pTools = new Analysis::AnalysisTools(unit, configReader);
   auto &tools = *pTools;
-  pIons = new Analysis::Ions(unit, reader, numberOfHitsUsed);
+  pIons = new Analysis::Ions(unit, configReader, numberOfHitsUsed);
   auto &ions = *pIons;
-  pElectrons = new Analysis::Electrons(unit, reader, numberOfHitsUsed);
+  pElectrons = new Analysis::Electrons(unit, configReader, numberOfHitsUsed);
   auto &electrons = *pElectrons;
   pLogWriter->logAnalysisTools(unit, tools, ions, electrons);
 
   // output option
   optionOfSendingOutOfFrame =
-      reader.getBoolAt("output_options.send_out_of_frame");
+      configReader.getBoolAt("setup_output.send_out_of_frame");
   optionOfShowingOnlyMasterRegionEvents =
-      reader.getBoolAt("output_options.show_only_master_region_events");
+      configReader.getBoolAt("setup_output.show_only_master_region_events");
   pLogWriter->write() << "Output Options: " << std::endl;
   pLogWriter->write() << "    Send Out of Frame: "
       << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
@@ -64,11 +74,8 @@ Analysis::Run::Run(const char const *filename) {
   pLogWriter->write() << std::endl;
 }
 Analysis::Run::~Run() {
-  // setup pLogWriter
-  auto &tools = *pTools;
-
   // counter
-  pLogWriter->write() << "Event count: " << tools.getEventNumber() << std::endl;
+  pLogWriter->write() << "Event count: " << pTools->getEventNumber() << std::endl;
 
   // root
   writeFlags();
