@@ -1,16 +1,15 @@
-cmake_minimum_required(VERSION 3.3)
-project(BL17Analysis)
+cmake_minimum_required (VERSION 3.3)
+project (Analysis)
 
-### add subdirectory
-add_subdirectory(Analysis)
+### Add core library.
+add_subdirectory (Core)
 
-### BL17Analysis
+### Link ROOT libraries.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
-  link_libraries(pthread m dl)
-  include_directories("/usr/local/include/root")
-  link_directories("/usr/local/lib/root")
-  link_libraries(
+  link_libraries (pthread m dl)
+  include_directories ("/usr/local/include/root")
+  link_directories ("/usr/local/lib/root")
+  link_libraries (
       Core
       RIO
       Net
@@ -27,11 +26,10 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       Thread
   )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
-  link_libraries(pthread m dl)
-  include_directories("/usr/local/include/root")
-  link_directories("/usr/local/lib/root")
-  link_libraries(
+  link_libraries (pthread m dl)
+  include_directories ("/usr/local/include/root")
+  link_directories ("/usr/local/lib/root")
+  link_libraries (
       Core
       RIO
       Net
@@ -48,10 +46,10 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
       Thread
   )
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  set(ROOTSYS "C:/root/")
-  include_directories("${ROOTSYS}/include")
-  link_directories("${ROOTSYS}/lib")
-  link_libraries(
+  set (ROOTSYS "C:/root/")
+  include_directories ("${ROOTSYS}/include")
+  link_directories ("${ROOTSYS}/lib")
+  link_libraries (
       libCore.lib
       libRIO.lib
       libNet.lib
@@ -68,35 +66,20 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       libThread.lib
   )
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-set(SOURCE_FILES
-    RUN.cpp
-    RUN.h
-    )
-add_library(BL17Analysis STATIC ${SOURCE_FILES})
-target_link_libraries(BL17Analysis AnalysisStaticLib)
 
-### DAn
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  add_definitions(-D_AFXDLL)
-  add_definitions(-D_USRDLL)
-  add_definitions(-DCDAN_EXPORTS)
-  set(CMAKE_MFC_FLAG 2)
-  set(COBOLDPC_FILES
-      Res/CDan.rc2
-      CDan.cpp
-      CDan.h
-      CDan.rc
-      CDAQ.h
-      CheckProcess.H
-      CoboldDll.h
-      DanUtilities.cpp
-      DanUtilities.h
-      LMInfo.h
-      Resource.h
-      SoftwareDependent.cpp
-      StdAfx.cpp
-      StdAfx.h
-      )
-  add_library(DAn SHARED ${COBOLDPC_FILES})
-  target_link_libraries(DAn BL17Analysis)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+### Set flags.
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+### Set source files.
+set (SOURCE_FILES
+    Main.cpp
+    )
+
+### Add executable.
+add_executable (AnalysisExe ${SOURCE_FILES})
+target_link_libraries (AnalysisExe AnalysisCoreStaticLib)

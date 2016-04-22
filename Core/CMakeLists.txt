@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
-project(Analysis)
+project(Core)
 
-### Analysis
+### Core
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -48,11 +48,11 @@ set(SOURCE_FILES
     LogWriter.cpp
     LogWriter.h
     )
-add_library(AnalysisSharedLib SHARED ${SOURCE_FILES})
-add_library(AnalysisStaticLib STATIC ${SOURCE_FILES})
+add_library(AnalysisCoreSharedLib SHARED ${SOURCE_FILES})
+add_library(AnalysisCoreStaticLib STATIC ${SOURCE_FILES})
 
 ### test
 set(MAIN_FILE Test/Main.cpp)
-add_executable(AnalysisTest ${MAIN_FILE})
-target_link_libraries(AnalysisTest AnalysisStaticLib)
+add_executable(AnalysisCoreTestExe ${MAIN_FILE})
+target_link_libraries(AnalysisCoreTestExe AnalysisCoreStaticLib)
 
