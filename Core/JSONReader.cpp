@@ -4,20 +4,29 @@ Analysis::JSONReader::JSONReader(const std::string &f) {
   filename = f;
   std::stringstream stringStream;
   std::fstream fileStream;
+
+//  Open json file.
   fileStream.open(f, std::fstream::in);
   if(fileStream.is_open()) {
-    setFlagMembers().loadIsOpenFlager();
+    setFlagMembers().fileIsOpen();
   } else {
+    setFlagMembers().fileIsNotExist();
     assert(false);
   }
+
+//  Save the json file data.
   stringStream << fileStream.rdbuf();
-  document.Parse(stringStream.str().c_str());
+  document.Parse<rapidjson::kParseCommentsFlag+rapidjson::kParseTrailingCommasFlag>(stringStream.str().c_str());
+  fileStream.close();
+  setFlagMembers().fileIsClosedAndDataIsSaved();
+
+//  Check the parse.
   if(document.HasParseError()) {
+    setFlagMembers().hasParseError();
     assert(false);
   } else {
-    setFlagMembers().loadHasNoParseErrorFlager();
+    setFlagMembers().hasNoParseError();
   }
-  fileStream.close();
   return;
 }
 Analysis::JSONReader::~JSONReader() { }

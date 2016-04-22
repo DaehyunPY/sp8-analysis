@@ -49,20 +49,15 @@ const std::string Analysis::LogWriter::getID() const {
 }
 void Analysis::LogWriter::logJSONReader(const Analysis::JSONReader &reader) {
   reader.getFilename();
-  if(reader.getFlag().isOpen()) {
-    logFile
-        << "JSON file '"
-        << reader.getFilename() << "' is loaded." << std::endl;
+  if(reader.getFlag().fileIsOpen()) {
+    logFile << "JSON file '" << reader.getFilename().c_str() << "' is loaded." << std::endl;
   } else {
-    logFile
-        << "There is no JSON file '"
-        << reader.getFilename() << "'." << std::endl;
+    logFile << "There is no JSON file '" << reader.getFilename().c_str() << "'." << std::endl;
   }
   if(reader.getFlag().hasNoParseError()) {
     logFile << "The JSON file has no parse error." << std::endl;
   } else {
-    logFile
-        << "The JSON file has parse error." << std::endl;
+    logFile << "The JSON file has parse error." << std::endl;
   }
   logFile << std::endl;
 }
@@ -109,7 +104,7 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
     logFile << "        Number of Hits: " << n << std::endl;
     for (int i = 0; i < n; i++) {
       const std::string name = getObjectName(i);
-      logFile << "        " << name << ":" << std::endl;
+      logFile << "        " << name.c_str() << ":" << std::endl;
       logFile << "            Mass: " << ions.getIon(i).getMass(unit) << std::endl;
       logFile << "            Charge: " << ions.getIon(i).getCharge(unit) << std::endl;
       logFile << "            Maximum of TOF: " << ions.getIon(i).getMaxOfTOF(unit) << std::endl;
