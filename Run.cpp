@@ -32,7 +32,7 @@ Analysis::Run::Run(const std::string filename) {
     pEventReader = new Analysis::EventDataReader(numberOfHits, 6);
     for(int i=0; i<numberOfHits; i++) {
       for(std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY", "ElecT"}) {
-        pChain->SetBranchAddress(((std::string) str+((char) i+1)).c_str(), &(pEventReader->setEventDataAt(i, str+((char) i+1))));
+        pChain->SetBranchAddress(((std::string) str+((char) (i+1))).c_str(), &(pEventReader->setEventDataAt(i, str+((char) (i+1)))));
       }
     }
   }
