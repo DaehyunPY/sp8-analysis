@@ -29,11 +29,11 @@
 #include "TH1F.h"
 #include "TH2F.h"
 #include "Core/Analysis.h"
+#include "string"
+#include "TChain.h"
 namespace Analysis {
 class Run {
-  const int numberOfTDCUsed = 3;
-  const int numberOfChannelsUsed = 2;
-  const int numberOfHitsUsed = 4;
+  int numberOfHits;
   Analysis::LogWriter *pLogWriter;
   Analysis::Unit *pUnit;
   Analysis::AnalysisTools *pTools;
@@ -347,17 +347,14 @@ class Run {
 
 
  public:
-  Run(const char const *filename = "Parameters.json");
+  Run(const std::string filename = "Parameters.json");
   ~Run();
-  void ProcessEvent(Analysis::EventDataReader &reader,
-                    int &ionFlag,
-                    int &ElectronFlag);
+  void processEvent(const size_t rawOfEntries);
   const Analysis::Unit &getUnit() const;
   const Analysis::Ions &getIons() const;
   const Analysis::Electrons &getElectrons() const;
-  const int &getNumberOfTDCUsed() const;
-  const int &getNumberOfChannelsUsed() const;
   const int &getNumberOfHitsUsed() const;
+  const size_t &getEntries() const;
 };
 }
 

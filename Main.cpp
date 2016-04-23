@@ -2,8 +2,6 @@
 // Created by Daehyun You on 11/29/15.
 //
 #include <iostream>
-#include <TChain.h>
-#include "Core/JSONReader.h"
 #include "Run.h"
 
 int main(int argc, char * argv[]) {
@@ -17,5 +15,8 @@ int main(int argc, char * argv[]) {
 
   // Setup reader & writer
   Analysis::Run run(argv[1]);
+  for (size_t i=0; i<run.getEntries(); i++) {
+    run.processEvent(i);
+  }
   return 0;
 }

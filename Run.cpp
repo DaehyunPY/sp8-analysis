@@ -6,7 +6,7 @@
 #include <TChain.h>
 #include <zconf.h>
 #include "RUN.h"
-Analysis::Run::Run(const char const *filename) {
+Analysis::Run::Run(const std::string filename) {
 
   // Setup json file reader.
   Analysis::JSONReader configReader(filename);
@@ -26,22 +26,27 @@ Analysis::Run::Run(const char const *filename) {
     pLogWriter->write() << "    Filenames: " << configReader.getStringAt("setup_input.filenames").c_str() << std::endl;
     pLogWriter->write() << "    Tree Name: " << configReader.getStringAt("setup_input.tree_name").c_str() << std::endl;
     pLogWriter->write() << std::endl;
-    double d;
-    pEventReader = new Analysis::EventDataReader(numberOfTDCUsed, numberOfChannelsUsed, numberOfHitsUsed);
 
-    pChain->SetBranchAddress("x1", &d);
+    // Setup event reader.
+    numberOfHits = configReader.getIntAt("setup_input.number_of_hits");
+    pEventReader = new Analysis::EventDataReader(numberOfHits, 6);
+    for(int i=0; i<numberOfHits; i++) {
+      for(std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY", "ElecT"}) {
+        pChain->SetBranchAddress(((std::string) str+((char) i+1)).c_str(), &(pEventReader->setEventDataAt(i, str+((char) i+1))));
+      }
+    }
   }
 
-  // Make unit helper.
+  // Setup unit helper.
   pUnit = new Analysis::Unit;
   auto &unit = *pUnit;
 
   // Make analysis tools, ions, and electrons
   pTools = new Analysis::AnalysisTools(unit, configReader);
   auto &tools = *pTools;
-  pIons = new Analysis::Ions(unit, configReader, numberOfHitsUsed);
+  pIons = new Analysis::Ions(unit, configReader, numberOfHits);
   auto &ions = *pIons;
-  pElectrons = new Analysis::Electrons(unit, configReader, numberOfHitsUsed);
+  pElectrons = new Analysis::Electrons(unit, configReader, numberOfHits);
   auto &electrons = *pElectrons;
   pLogWriter->logAnalysisTools(unit, tools, ions, electrons);
 
@@ -87,19 +92,21 @@ Analysis::Run::~Run() {
   rootFile.Close();
 
   // finalization is done
-  delete pChain;
-  delete pUnit;
-  delete pTools;
-  delete pIons;
   delete pElectrons;
+  delete pIons;
+  delete pTools;
+  delete pUnit;
+  delete pEventReader;
+  delete pChain;
+
   pLogWriter->write() << "Finalization is done." << std::endl;
   pLogWriter->write() << std::endl;
   delete pLogWriter;
 }
-void Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
-                                     int &ionFlag,
-                                     int &electronFlag) {
+void Analysis::Run::processEvent(const size_t rawOfEntries) {
   // setup
+  pChain->GetEntry((Long64_t) rawOfEntries);
+  auto &reader = *pEventReader;
   auto &unit = *pUnit;
   auto &tools = *pTools;
   auto &ions = *pIons;
@@ -111,8 +118,8 @@ void Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
   // make sure ion and electron data is empty, and reset flags
   ions.resetEventData();
   electrons.resetEventData();
-  ionFlag = 0;
-  electronFlag = 0;
+  int ionFlag = 0;
+  int electronFlag = 0;
 
   // input event data
   tools.loadEventDataInputer(ions, unit, reader);
@@ -240,17 +247,8 @@ const Analysis::Ions &Analysis::Run::getIons() const {
 const Analysis::Electrons &Analysis::Run::getElectrons() const {
   return *pElectrons;
 }
-
-const int& Analysis::Run::getNumberOfTDCUsed() const {
-  return numberOfTDCUsed; 
-}
-
-const int& Analysis::Run::getNumberOfChannelsUsed() const {
-  return numberOfChannelsUsed; 
-}
-
 const int& Analysis::Run::getNumberOfHitsUsed() const {
-  return numberOfHitsUsed;
+  return numberOfHits;
 }
 void Analysis::Run::fillIonBasicData() {
   const double &i1HitX = pIons->getRealOrDummyObject(0).getLocationX(*pUnit);
@@ -504,4 +502,7 @@ void Analysis::Run::fillIonAndElectronMomentumData() {
 void Analysis::Run::writeIonAndElectronMomentumData() {
   root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy.Write();
   root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Write();
+}
+const size_t &Analysis::Run::getEntries() const {
+  return (const size_t &) pChain->GetEntries();
 }

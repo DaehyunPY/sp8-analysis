@@ -4,49 +4,49 @@
 
 #include "EventDataReader.h"
 
-Analysis::EventDataReader::EventDataReader(const int &nTDC,
-                                           const int &nCH,
-                                           const int &nHit)
-    : numberOfTDCUsed(nTDC), numberOfChannelsUsed(nCH), numberOfHitsUsed(nHit) {
-  pEventData = new double[getNumberOfTDCUsed() * getNumberOfChannelsUsed()
-      * getNumberOfHitsUsed()];
+Analysis::EventDataReader::EventDataReader(const int n) : numberOfData(n) {
+  pEventData = new double[numberOfData];
 }
 Analysis::EventDataReader::~EventDataReader() {
   delete[] pEventData;
 }
-const double &Analysis::EventDataReader::getEventDataAt(const int &iTDC,
-                                                        const int &iCH,
-                                                        const int &iHit) const {
-  return pEventData[getAdressAt(iTDC, iCH, iHit)];
-}
-const int &Analysis::EventDataReader::getNumberOfTDCUsed() const {
-  return numberOfTDCUsed;
-}
-const int &Analysis::EventDataReader::getNumberOfChannelsUsed() const {
-  return numberOfChannelsUsed;
-}
-const int &Analysis::EventDataReader::getNumberOfHitsUsed() const {
-  return numberOfHitsUsed;
-}
-
 const int& Analysis::EventDataReader::getTmpFlag() const
 {
   return tmpFlag;
 }
-void Analysis::EventDataReader::setEventDataAt(const int &iTDC,
-                                               const int &iCH,
-                                               const int &iHit,
-                                               const double &d) {
-  pEventData[getAdressAt(iTDC, iCH, iHit)] = d;
+Analysis::EventDataReader::EventDataReader(const int numOfHit, const int numPerAHit)
+    : EventDataReader(numPerAHit*numOfHit){
 }
-const int Analysis::EventDataReader::getAdressAt(const int &iTDC,
-                                                 const int &iCH,
-                                                 const int &iHit) const {
-  const int &nTDC = getNumberOfTDCUsed();
-  const int &nCH = getNumberOfChannelsUsed();
-  const int &nHit = getNumberOfHitsUsed();
-  assert(iTDC >= 0 && iTDC < nTDC);
-  assert(iCH >= 0 && iCH < nCH);
-  assert(iHit >= 0 && iHit < nHit);
-  return iTDC + nTDC * iCH + nTDC * nCH * iHit;
+const int Analysis::EventDataReader::getAdressAt(const int i, const std::string str) const {
+  int adress = 0;
+  if(str.find("Elec") != std::string::npos) {
+    adress += 3;
+  } else if(str.find("Ion") != std::string::npos) {
+    adress += 0;
+  } else {
+    assert(false);
+  }
+  if(str.find("T") != std::string::npos) {
+    adress += 0;
+  } else if(str.find("X") != std::string::npos) {
+    adress += 1;
+  } else if(str.find("Y") != std::string::npos) {
+    adress += 2;
+  } else {
+    assert(false);
+  }
+  adress += 6*i;
+  return adress;
 }
+const double &Analysis::EventDataReader::getEventDataAt(const int i,
+                                                        const std::string str) const {
+  return pEventData[getAdressAt(i, str)];
+}
+double &Analysis::EventDataReader::setEventDataAt(const int i,
+                                                  std::string str) {
+  return pEventData[getAdressAt(i, str)];
+}
+
+
+
+

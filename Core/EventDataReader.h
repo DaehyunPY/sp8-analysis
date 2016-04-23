@@ -6,28 +6,24 @@
 #define ANALYSIS_EVENTDATAREADER_H
 
 #include <assert.h>
+#include <string>
 #include "EventDataFlag.h"
+
 namespace Analysis {
 class EventDataReader {
  private:
-  const int numberOfTDCUsed;
-  const int numberOfChannelsUsed;
-  const int numberOfHitsUsed;
+  const int numberOfData;
   double *pEventData;
-  EventDataFlag flag; // todo: make flag
-  const int tmpFlag = 0; // todo: delete it
-  const int getAdressAt(const int &iTDC, const int &iCH, const int &iHit) const;
+  EventDataFlag flag; // TODO: Make flag.
+  const int tmpFlag = 0; // TODO: Delete it.
+  const int getAdressAt(const int i, const std::string str) const;
 
  public:
-  EventDataReader(const int &nTDC, const int &nCH, const int &nHit);
+  EventDataReader(const int n);
+  EventDataReader(const int numOfHit, const int numPerAHit);
   ~EventDataReader();
-  void setEventDataAt
-      (const int &iTDC, const int &iCH, const int &iHit, const double &d);
-  const double
-      &getEventDataAt(const int &iTDC, const int &iCH, const int &iHit) const;
-  const int &getNumberOfTDCUsed() const;
-  const int &getNumberOfChannelsUsed() const;
-  const int &getNumberOfHitsUsed() const;
+  double &setEventDataAt(const int i, std::string str);
+  const double &getEventDataAt(const int i, const std::string str) const;
   const int &getTmpFlag() const;
 };
 }
