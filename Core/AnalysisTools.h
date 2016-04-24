@@ -26,7 +26,7 @@ class AnalysisTools {
   AnalysisTools(const EquipmentParameters &,
                 const IonParameters &,
                 const ElectronParameters &,
-                const std::string &); // main initializer
+                const std::string ID = ""); // main initializer
   void resetCounter();
   const XY calculateRotation(const XY &, const double &) const;
   const double calculateDiffTOF(const Ion &, const double &) const;

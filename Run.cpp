@@ -45,18 +45,14 @@ Analysis::Run::Run(const std::string filename) {
 
   // Setup unit helper.
   pUnit = new Analysis::Unit;
-  auto &unit = *pUnit;
 
   // Make analysis tools, ions, and electrons
-  pTools = new Analysis::AnalysisTools(unit, configReader);
-  auto &tools = *pTools;
-  pIons = new Analysis::Ions(unit, configReader, numberOfHits);
-  auto &ions = *pIons;
-  pElectrons = new Analysis::Electrons(unit, configReader, numberOfHits);
-  auto &electrons = *pElectrons;
-  pLogWriter->logAnalysisTools(unit, tools, ions, electrons);
+  pTools = new Analysis::AnalysisTools(*pUnit, configReader);
+  pIons = new Analysis::Ions(*pUnit, configReader, numberOfHits);
+  pElectrons = new Analysis::Electrons(*pUnit, configReader, numberOfHits);
+  pLogWriter->logAnalysisTools(*pUnit, *pTools, *pIons, *pElectrons);
 
-  // output option
+  // Read output option
   optionOfSendingOutOfFrame =
       configReader.getBoolAt("setup_output.send_out_of_frame");
   optionOfShowingOnlyMasterRegionEvents =
@@ -68,19 +64,17 @@ Analysis::Run::Run(const std::string filename) {
       << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
   pLogWriter->write() << std::endl;
 
-  // root
-  {
-    std::string str;
-    str = tools.getID();
-    if (str != "") {
-      str += "-";
-    }
-    str += pLogWriter->getID();
-    str += ".root";
-    rootFile.Open(str.c_str(), "new");
+  // Open ROOT file
+  std::string str = "";
+  str += pTools->getID();
+  if (str != "") {
+    str += "-";
   }
+  str += pLogWriter->getID();
+  str += ".root";
+  pRootFile = new TFile(str.c_str(), "new");
 
-  // initialization is done
+  // Initialization is done
   pLogWriter->write() << "Initialization is done." << std::endl;
   pLogWriter->write() << std::endl;
 }
@@ -95,9 +89,10 @@ Analysis::Run::~Run() {
   writeElectronBasicData();
   writeElectronMomentumData();
   writeIonAndElectronMomentumData();
-  rootFile.Close();
+  pRootFile->Close();
 
   // finalization is done
+  delete pRootFile;
   delete pElectrons;
   delete pIons;
   delete pTools;
@@ -112,62 +107,57 @@ Analysis::Run::~Run() {
 void Analysis::Run::processEvent(const size_t rawOfEntries) {
   // setup
   pChain->GetEntry((Long64_t) rawOfEntries);
-  auto &reader = *pEventReader;
-  auto &unit = *pUnit;
-  auto &tools = *pTools;
-  auto &ions = *pIons;
-  auto &electrons = *pElectrons;
 
   // count event
-  tools.loadEventCounter();
+  pTools->loadEventCounter();
 
   // make sure ion and electron data is empty, and reset flags
-  ions.resetEventData();
-  electrons.resetEventData();
+  pIons->resetEventData();
+  pElectrons->resetEventData();
   int ionFlag = 0;
   int electronFlag = 0;
 
   // input event data
-  tools.loadEventDataInputer(ions, unit, reader);
-  tools.loadEventDataInputer(electrons, unit, reader);
+  pTools->loadEventDataInputer(*pIons, *pUnit, *pEventReader);
+  pTools->loadEventDataInputer(*pElectrons, *pUnit, *pEventReader);
 
   if (optionOfSendingOutOfFrame) {
-    ions.setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
-    electrons.setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
+    pIons->setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
+    pElectrons->setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
   }
   if (optionOfSendingOutOfFrame) {
     // dead data, don't plot basic data(x, y, TOF)
     { // ion
-      const int &m = ions.getNumberOfRealOrDummyObjects();
+      const int &m = pIons->getNumberOfRealOrDummyObjects();
       for (int i = 0; i < m; i++) {
-        if (ions.getRealOrDummyIon(i).isDead()) {
-          ions.setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
+        if (pIons->getRealOrDummyIon(i).isDead()) {
+          pIons->setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
         }
       }
     }
     { // electron
-      const int &m = electrons.getNumberOfRealOrDummyObjects();
+      const int &m = pElectrons->getNumberOfRealOrDummyObjects();
       for (int i = 0; i < m; i++) {
-        if (electrons.getRealOrDummyObject(i).isDead()) {
-          electrons.setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
+        if (pElectrons->getRealOrDummyObject(i).isDead()) {
+          pElectrons->setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
         }
       }
     }
     // dummy data, don't plot momentum
     // ion
-    ions.setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
+    pIons->setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
     // electron
-    electrons.setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
+    pElectrons->setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
   }
 
   // if all ion event data or all electron event data is dead, ignore the event
-  const bool ionsAreAllDead = ions.areAllDeadRealAndDummyObjects();
-  const bool electronsAreAllDead = electrons.areAllDeadRealAndDummyObjects();
+  const bool ionsAreAllDead = pIons->areAllDeadRealAndDummyObjects();
+  const bool electronsAreAllDead = pElectrons->areAllDeadRealAndDummyObjects();
   if (ionsAreAllDead || electronsAreAllDead) {
     // don't plot basic or momentum data
     if (optionOfSendingOutOfFrame) {
-      ions.setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
-      electrons.setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
+      pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
+      pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
     }
     if (ionsAreAllDead) {
       ionFlag = -11;
@@ -182,20 +172,20 @@ void Analysis::Run::processEvent(const size_t rawOfEntries) {
   } else { // calculate ion or electron momentum
     // ion
     // if all data is not within master region, don't calculate momentum
-    const bool ionsAreAllWithinMasterRegion = ions.areAllWithinMasterRegion();
+    const bool ionsAreAllWithinMasterRegion = pIons->areAllWithinMasterRegion();
     if (!ionsAreAllWithinMasterRegion) {
       // don't plot momentum data
       if (optionOfSendingOutOfFrame) {
-        ions.setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
+        pIons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
       }
       ionFlag = -20;
     } else { // calculate ion momentum
-      tools.loadMomentumCalculator(ions);
-      const bool ionsExistDeadObject = ions.existDeadObject();
+      pTools->loadMomentumCalculator(*pIons);
+      const bool ionsExistDeadObject = pIons->existDeadObject();
       // if it couldn't calculate momentum, don't plot it
       if (ionsExistDeadObject) {
         if (optionOfSendingOutOfFrame) {
-          ions.setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
+          pIons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
         }
         ionFlag = 1;
       } else {
@@ -207,16 +197,16 @@ void Analysis::Run::processEvent(const size_t rawOfEntries) {
     // electron
     // if all data is not within master region, don't calculate momentum
     const bool electronsAreAllWithinMasterRegion =
-        electrons.areAllWithinMasterRegion();
+        pElectrons->areAllWithinMasterRegion();
     if (!electronsAreAllWithinMasterRegion) {
       // don't plot momentum data
       if (optionOfSendingOutOfFrame) {
-        electrons.setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
+        pElectrons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
       }
       electronFlag = -20;
     } else { // calculate electron momentum
-      tools.loadMomentumCalculator(electrons);
-      const bool electronsExistDeadObject = electrons.existDeadObject();
+      pTools->loadMomentumCalculator(*pElectrons);
+      const bool electronsExistDeadObject = pElectrons->existDeadObject();
       // if it couldn't calculate momentum, don't plot it
       if (electronsExistDeadObject) {
         electronFlag = 1;

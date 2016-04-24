@@ -39,10 +39,11 @@ class Run {
   Analysis::AnalysisTools *pTools;
   Analysis::Ions *pIons;
   Analysis::Electrons *pElectrons;
+  Analysis::EventDataReader *pEventReader;
   bool optionOfSendingOutOfFrame;
   bool optionOfShowingOnlyMasterRegionEvents;
   TChain *pChain;
-  Analysis::EventDataReader *pEventReader;
+  TFile *pRootFile;
 
   // todo: launch root gui app
   void fillFlags();
@@ -59,7 +60,6 @@ class Run {
   void writeElectronMomentumData();
 //  void writeIonAndElectronBasicData();
   void writeIonAndElectronMomentumData();
-  TFile rootFile;
   // todo: add master spectra
   // ion
   // location

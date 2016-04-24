@@ -4,9 +4,9 @@
 
 #include <iomanip>
 #include "LogWriter.h"
-Analysis::LogWriter::LogWriter(const std::string &prefix)
-    : ID(getRandomID()) {
+Analysis::LogWriter::LogWriter(const std::string &prefix) {
   auto now = std::time(nullptr);
+  ID = std::to_string(now);
   filename = prefix;
   if(!(prefix == "")) { filename += "-"; }
   filename += ID;

@@ -17,6 +17,7 @@ int main(int argc, char * argv[]) {
   Analysis::Run run(argv[1]);
   for (size_t i=0; i<run.getEntries(); i++) {
     run.processEvent(i);
+    // TODO: Add function reading commands JOT
   }
   return 0;
 }

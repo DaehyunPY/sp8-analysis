@@ -11,7 +11,7 @@
 namespace Analysis {
 class LogWriter {
  private:
-  const std::string ID;
+  std::string ID;
   std::string filename;
   std::fstream logFile;
   const int getRandomNumber() const;

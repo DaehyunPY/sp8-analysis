@@ -3,7 +3,7 @@
 Analysis::AnalysisTools::AnalysisTools(const EquipmentParameters &equip,
                                        const IonParameters &ion,
                                        const ElectronParameters &elec,
-                                       const std::string &ID)
+                                       const std::string ID)
     : equipmentParameters(equip),
       ionParameters(ion),
       electronParameters(elec),
