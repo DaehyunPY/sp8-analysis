@@ -306,8 +306,8 @@ const double Analysis::Objects::getMotionalDirectionZX(const Analysis::Unit &uni
 }
 const double Analysis::Objects::getSumOfTOF(const int &i1,
                                             const int &i2) const {
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).getFlag().isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
   return getRealOrDummyObject(i1).getTOF() + getRealOrDummyObject(i2).getTOF();
@@ -315,8 +315,8 @@ const double Analysis::Objects::getSumOfTOF(const int &i1,
 const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit,
                                             const int &i1,
                                             const int &i2) const {
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).getFlag().isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
   return unit.writeTime(getSumOfTOF(i1, i2));
