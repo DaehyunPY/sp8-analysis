@@ -4,7 +4,7 @@
   "setup_input": {
     "type": "ROOT", // only support ROOT file yet
     "filenames": "conductivity_experiment*.root", // wildcard works
-    "tree_name": "cond_data", 
+    "tree_name": "resortedData", 
     "number_of_hits": 4, 
   },
   "setup_output": {
