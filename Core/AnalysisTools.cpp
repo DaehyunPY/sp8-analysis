@@ -309,7 +309,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                          reader.getEventDataAt(iHit, "IonX"),
                          reader.getEventDataAt(iHit, "IonY"),
                          reader.getEventDataAt(iHit, "IonT"),
-                         reader.getTmpFlag());
+                         reader.getFlagDataAt(iHit, "IonFlag"));
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const Unit &unit,
@@ -320,7 +320,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                          reader.getEventDataAt(iHit, "ElecX"),
                          reader.getEventDataAt(iHit, "ElecY"),
                          reader.getEventDataAt(iHit, "ElecT"),
-                         reader.getTmpFlag());
+                         reader.getFlagDataAt(iHit, "ElecFlag"));
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
                                                    const Unit &unit,

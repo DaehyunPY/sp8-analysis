@@ -3,9 +3,9 @@
   "working_directory": "/Users/Hyuna917/Desktop", 
   "setup_input": {
     "type": "ROOT", // only support ROOT file yet
-    "filenames": "conductivity_experiment*.root", // wildcard works
+    "filenames": "resortLess*.root", // wildcard works
     "tree_name": "resortedData", 
-    "number_of_hits": 4, 
+    "number_of_hits": 4
   },
   "setup_output": {
     "send_out_of_frame": true,

@@ -12,19 +12,19 @@
 namespace Analysis {
 class EventDataReader {
  private:
-  const int numberOfData;
+  const int numberOfHit;
   double *pEventData;
-  EventDataFlag flag; // TODO: Make flag.
-  const int tmpFlag = 0; // TODO: Delete it.
+  int *pFlagData;
+  EventDataFlag flag; // TODO: Make flag
   const int getAdressAt(const int i, const std::string str) const;
 
  public:
-  EventDataReader(const int n);
-  EventDataReader(const int numOfHit, const int numPerAHit);
+  EventDataReader(const int numOfHit);
   ~EventDataReader();
   double &setEventDataAt(const int i, std::string str);
+  int &setFlagDataAt(const int i, std::string str);
   const double &getEventDataAt(const int i, const std::string str) const;
-  const int &getTmpFlag() const;
+  const int &getFlagDataAt(const int i, const std::string str) const;
 };
 }
 

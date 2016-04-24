@@ -29,10 +29,16 @@ Analysis::Run::Run(const std::string filename) {
 
     // Setup event reader.
     numberOfHits = configReader.getIntAt("setup_input.number_of_hits");
-    pEventReader = new Analysis::EventDataReader(numberOfHits, 6);
+    pEventReader = new Analysis::EventDataReader(numberOfHits);
+    char ch[2];
     for(int i=0; i<numberOfHits; i++) {
       for(std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY", "ElecT"}) {
-        pChain->SetBranchAddress(((std::string) str+((char) (i+1))).c_str(), &(pEventReader->setEventDataAt(i, str+((char) (i+1)))));
+        sprintf(ch, "%01d", i);
+        pChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setEventDataAt(i, str+ch)));
+      }
+      for(std::string str : {"IonFlag", "ElecFlag"}) {
+        sprintf(ch, "%01d", i);
+        pChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setFlagDataAt(i, str+ch)));
       }
     }
   }
