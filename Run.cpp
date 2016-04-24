@@ -6,44 +6,44 @@
 #include <TChain.h>
 #include <zconf.h>
 #include "RUN.h"
-Analysis::Run::Run(const std::string filename) {
+Analysis::Run::Run(const std::string configFilename) {
 
-  // Setup json file reader.
-  Analysis::JSONReader configReader(filename);
+  // Setup json file reader
+  Analysis::JSONReader configReader(configFilename);
 
-  // Change the working directory.
+  // Change the working directory
   chdir(configReader.getStringAt("working_directory").c_str());
 
-  // Setup writer.
+  // Setup writer
   pLogWriter = new Analysis::LogWriter(configReader);
   pLogWriter->logResultOfLoadingJSONFile(configReader);
 
-  // Setup ROOT files.
+  // Setup ROOT files
   if(configReader.getStringAt("setup_input.type") == "ROOT") {
-    pChain = new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
-    pChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
+    pEventChain = new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
+    pEventChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
     pLogWriter->write() << "Input file type is ROOT. " << std::endl;
     pLogWriter->write() << "    Filenames: " << configReader.getStringAt("setup_input.filenames").c_str() << std::endl;
     pLogWriter->write() << "    Tree Name: " << configReader.getStringAt("setup_input.tree_name").c_str() << std::endl;
     pLogWriter->write() << std::endl;
 
-    // Setup event reader.
+    // Setup event reader
     numberOfHits = configReader.getIntAt("setup_input.number_of_hits");
     pEventReader = new Analysis::EventDataReader(numberOfHits);
     char ch[2];
     for(int i=0; i<numberOfHits; i++) {
       for(std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY", "ElecT"}) {
         sprintf(ch, "%01d", i);
-        pChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setEventDataAt(i, str+ch)));
+        pEventChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setEventDataAt(i, str+ch)));
       }
       for(std::string str : {"IonFlag", "ElecFlag"}) {
         sprintf(ch, "%01d", i);
-        pChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setFlagDataAt(i, str+ch)));
+        pEventChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setFlagDataAt(i, str+ch)));
       }
     }
   }
 
-  // Setup unit helper.
+  // Setup unit helper
   pUnit = new Analysis::Unit;
 
   // Make analysis tools, ions, and electrons
@@ -53,26 +53,28 @@ Analysis::Run::Run(const std::string filename) {
   pLogWriter->logAnalysisTools(*pUnit, *pTools, *pIons, *pElectrons);
 
   // Read output option
-  optionOfSendingOutOfFrame =
-      configReader.getBoolAt("setup_output.send_out_of_frame");
-  optionOfShowingOnlyMasterRegionEvents =
-      configReader.getBoolAt("setup_output.show_only_master_region_events");
+  if(configReader.getBoolAt("setup_output.send_out_of_frame")) {
+    flag.setSendingOutOfFrame();
+  }
+  if(configReader.getBoolAt("setup_output.show_only_master_region_events")) {
+    flag.setShowingOnlyMasterRegionEvents();
+  }
   pLogWriter->write() << "Output Options: " << std::endl;
   pLogWriter->write() << "    Send Out of Frame: "
-      << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
+      << (flag.isSendingOutOfFrame() ? "true" : "false") << std::endl;
   pLogWriter->write() << "    Show Only Master Region Events: "
-      << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
+      << (flag.isShowingOnlyMasterRegionEvents() ? "true" : "false") << std::endl;
   pLogWriter->write() << std::endl;
 
   // Open ROOT file
-  std::string str = "";
-  str += pTools->getID();
-  if (str != "") {
-    str += "-";
+  std::string rootFilename = "";
+  rootFilename += pTools->getID();
+  if (rootFilename != "") {
+    rootFilename += "-";
   }
-  str += pLogWriter->getID();
-  str += ".root";
-  pRootFile = new TFile(str.c_str(), "new");
+  rootFilename += pLogWriter->getID();
+  rootFilename += ".root";
+  pRootFile = new TFile(rootFilename.c_str(), "update");
 
   // Initialization is done
   pLogWriter->write() << "Initialization is done." << std::endl;
@@ -98,15 +100,15 @@ Analysis::Run::~Run() {
   delete pTools;
   delete pUnit;
   delete pEventReader;
-  delete pChain;
+  delete pEventChain;
 
   pLogWriter->write() << "Finalization is done." << std::endl;
   pLogWriter->write() << std::endl;
   delete pLogWriter;
 }
-void Analysis::Run::processEvent(const size_t rawOfEntries) {
+void Analysis::Run::processEvent(const size_t raw) {
   // setup
-  pChain->GetEntry((Long64_t) rawOfEntries);
+  pEventChain->GetEntry((Long64_t) raw);
 
   // count event
   pTools->loadEventCounter();
@@ -121,11 +123,11 @@ void Analysis::Run::processEvent(const size_t rawOfEntries) {
   pTools->loadEventDataInputer(*pIons, *pUnit, *pEventReader);
   pTools->loadEventDataInputer(*pElectrons, *pUnit, *pEventReader);
 
-  if (optionOfSendingOutOfFrame) {
+  if (flag.isSendingOutOfFrame()) {
     pIons->setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
     pElectrons->setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
   }
-  if (optionOfSendingOutOfFrame) {
+  if (flag.isSendingOutOfFrame()) {
     // dead data, don't plot basic data(x, y, TOF)
     { // ion
       const int &m = pIons->getNumberOfRealOrDummyObjects();
@@ -155,7 +157,7 @@ void Analysis::Run::processEvent(const size_t rawOfEntries) {
   const bool electronsAreAllDead = pElectrons->areAllDeadRealAndDummyObjects();
   if (ionsAreAllDead || electronsAreAllDead) {
     // don't plot basic or momentum data
-    if (optionOfSendingOutOfFrame) {
+    if (flag.isSendingOutOfFrame()) {
       pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
       pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
     }
@@ -175,7 +177,7 @@ void Analysis::Run::processEvent(const size_t rawOfEntries) {
     const bool ionsAreAllWithinMasterRegion = pIons->areAllWithinMasterRegion();
     if (!ionsAreAllWithinMasterRegion) {
       // don't plot momentum data
-      if (optionOfSendingOutOfFrame) {
+      if (flag.isSendingOutOfFrame()) {
         pIons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
       }
       ionFlag = -20;
@@ -184,7 +186,7 @@ void Analysis::Run::processEvent(const size_t rawOfEntries) {
       const bool ionsExistDeadObject = pIons->existDeadObject();
       // if it couldn't calculate momentum, don't plot it
       if (ionsExistDeadObject) {
-        if (optionOfSendingOutOfFrame) {
+        if (flag.isSendingOutOfFrame()) {
           pIons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
         }
         ionFlag = 1;
@@ -200,7 +202,7 @@ void Analysis::Run::processEvent(const size_t rawOfEntries) {
         pElectrons->areAllWithinMasterRegion();
     if (!electronsAreAllWithinMasterRegion) {
       // don't plot momentum data
-      if (optionOfSendingOutOfFrame) {
+      if (flag.isSendingOutOfFrame()) {
         pElectrons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
       }
       electronFlag = -20;
@@ -218,7 +220,7 @@ void Analysis::Run::processEvent(const size_t rawOfEntries) {
   }
 
   // histograms
-  if (optionOfShowingOnlyMasterRegionEvents) {
+  if (flag.isShowingOnlyMasterRegionEvents()) {
 	fillFlags();
 	fillIonBasicData();
 	if (ionFlag > 0 && electronFlag > 0) { fillIonMomentumData(); }
@@ -500,5 +502,5 @@ void Analysis::Run::writeIonAndElectronMomentumData() {
   root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Write();
 }
 const size_t &Analysis::Run::getEntries() const {
-  return (const size_t &) pChain->GetEntries();
+  return (const size_t &) pEventChain->GetEntries();
 }

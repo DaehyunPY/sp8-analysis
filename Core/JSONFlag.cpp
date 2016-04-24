@@ -9,40 +9,40 @@ Analysis::JSONFlag::JSONFlag() {
 Analysis::JSONFlag::~JSONFlag() {
 }
 void Analysis::JSONFlag::isInitial() {
-  setSign(isInitial_flagForSign);
+  setSign(flagForSign_isInitial);
 }
 void Analysis::JSONFlag::fileIsOpen() {
-  set1stDigit(fileIsOpen_flagFor1stDigit);
+  set1stDigit(flagFor1stDigit_fileIsOpen);
 }
 void Analysis::JSONFlag::hasNoParseError() {
-  set2ndDigit(hasNoParseError_flagFor2ndDigit);
+  set2ndDigit(flagFor2ndDigit_hasNoParseError);
 }
 const bool Analysis::JSONFlag::isInitial() const {
-  return getSign() == isInitial_flagForSign;
+  return getSign() == flagForSign_isInitial;
 }
 const bool Analysis::JSONFlag::fileIsOpen() const {
-  return get1stDigit() == fileIsOpen_flagFor1stDigit;
+  return get1stDigit() == flagFor1stDigit_fileIsOpen;
 }
 const bool Analysis::JSONFlag::hasNoParseError() const {
-  return get2ndDigit() == hasNoParseError_flagFor2ndDigit;
+  return get2ndDigit() == flagFor2ndDigit_hasNoParseError;
 }
 void Analysis::JSONFlag::fileIsNotExist() {
-  set1stDigit(fileIsNotExist_flagFor1stDigit);
+  set1stDigit(flagFor1stDigit_fileIsNotExist);
 }
 void Analysis::JSONFlag::fileIsClosedAndDataIsSaved() {
-  set1stDigit(fileIsClosedAndDataIsSaved_flagFor1stDigit);
+  set1stDigit(flagFor1stDigit_fileIsClosedAndDataIsSaved);
 }
 void Analysis::JSONFlag::hasParseError() {
-  set2ndDigit(hasParseError_flagFor2ndDigit);
+  set2ndDigit(flagFor2ndDigit_hasParseError);
 }
 const bool Analysis::JSONFlag::fileIsNotExist() const {
-  return get1stDigit() == fileIsNotExist_flagFor1stDigit;
+  return get1stDigit() == flagFor1stDigit_fileIsNotExist;
 }
 const bool Analysis::JSONFlag::fileIsClosedAndDataIsSaved() const {
-  return get1stDigit() == fileIsClosedAndDataIsSaved_flagFor1stDigit;
+  return get1stDigit() == flagFor1stDigit_fileIsClosedAndDataIsSaved;
 }
 const bool Analysis::JSONFlag::hasParseError() const {
-  return get2ndDigit() == hasParseError_flagFor2ndDigit;
+  return get2ndDigit() == flagFor2ndDigit_hasParseError;
 }
 
 

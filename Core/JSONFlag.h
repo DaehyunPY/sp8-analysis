@@ -10,12 +10,12 @@
 namespace Analysis {
 class JSONFlag : Flag {
  private:
-  const int isInitial_flagForSign = 0;
-  const int fileIsNotExist_flagFor1stDigit = 1;
-  const int fileIsOpen_flagFor1stDigit = 2;
-  const int fileIsClosedAndDataIsSaved_flagFor1stDigit = 3;
-  const int hasParseError_flagFor2ndDigit = 1;
-  const int hasNoParseError_flagFor2ndDigit = 2;
+  const int flagForSign_isInitial = 0;
+  const int flagFor1stDigit_fileIsNotExist = 1;
+  const int flagFor1stDigit_fileIsOpen = 2;
+  const int flagFor1stDigit_fileIsClosedAndDataIsSaved = 3;
+  const int flagFor2ndDigit_hasParseError = 1;
+  const int flagFor2ndDigit_hasNoParseError = 2;
  public:
   JSONFlag();
   ~JSONFlag();

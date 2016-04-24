@@ -24,27 +24,41 @@
 #define H2_ELECTRON_ENERGY_BINSIZE_REGION 100, 0, 50
 #define H1_ELECTRON_ENERGY_BINSIZE_REGION 1000, 0, 50
 
-#include <TApplication.h>
-#include "TFile.h"
-#include "TH1F.h"
-#include "TH2F.h"
+#include <string>
+
+#include <TFile.h>
+#include <TChain.h>
+#include <TH1F.h>
+#include <TH2F.h>
+
 #include "Core/Analysis.h"
-#include "string"
-#include "TChain.h"
+#include "OutputFlag.h"
+
 namespace Analysis {
 class Run {
   int numberOfHits;
-  Analysis::LogWriter *pLogWriter;
+  TFile *pRootFile;
+  TChain *pEventChain;
+  TChain *pAnalyzedChain;
   Analysis::Unit *pUnit;
   Analysis::AnalysisTools *pTools;
   Analysis::Ions *pIons;
   Analysis::Electrons *pElectrons;
   Analysis::EventDataReader *pEventReader;
-  bool optionOfSendingOutOfFrame;
-  bool optionOfShowingOnlyMasterRegionEvents;
-  TChain *pChain;
-  TFile *pRootFile;
+  Analysis::LogWriter *pLogWriter;
+  Analysis::OutputFlag flag;
 
+ public:
+  Run(const std::string configFilename = "Parameters.json");
+  ~Run();
+  void processEvent(const size_t raw);
+  const Analysis::Unit &getUnit() const;
+  const Analysis::Ions &getIons() const;
+  const Analysis::Electrons &getElectrons() const;
+  const int &getNumberOfHitsUsed() const;
+  const size_t &getEntries() const;
+
+ private:
   // todo: launch root gui app
   void fillFlags();
   void fillIonBasicData();
@@ -344,17 +358,6 @@ class Run {
        "Total Ion Energy vs 1st Hit Electron Energy;Total Ion Energy [eV];Electron Energy [eV]",
        H2_Ion_TOTALENERGY_BINSIZE_REGION,
        H2_ELECTRON_ENERGY_BINSIZE_REGION};
-
-
- public:
-  Run(const std::string filename = "Parameters.json");
-  ~Run();
-  void processEvent(const size_t rawOfEntries);
-  const Analysis::Unit &getUnit() const;
-  const Analysis::Ions &getIons() const;
-  const Analysis::Electrons &getElectrons() const;
-  const int &getNumberOfHitsUsed() const;
-  const size_t &getEntries() const;
 };
 }
 

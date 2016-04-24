@@ -8,6 +8,10 @@
     "number_of_hits": 4
   },
   "setup_output": {
+    "write_analyzed_data": {
+      "enable": true,
+      "tree_name": "analyzedData"
+    },
     "send_out_of_frame": true,
     "show_only_master_region_events": true
   },
@@ -33,6 +37,7 @@
     "time_zero_of_TOF": 1846.0035258
   },
   "ions": {
+    "resort_flag": 14,
     "number_of_hits": 1,
     "1st_hit": {
       "charge": 1,
@@ -69,6 +74,7 @@
     "time_zero_of_TOF": 1805.536719
   },
   "electrons": {
+    "resort_flag": 14,
     "number_of_hits": 1,
     "maximum_of_TOF": 45.0,
     "minimum_of_TOF": 20.0

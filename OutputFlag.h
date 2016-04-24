@@ -10,8 +10,16 @@
 
 namespace Analysis {
 class OutputFlag: protected Flag {
- private:
- protected:
+  const int flagFor2ndDigit_sendingOutOfFrame = 1;
+  const int flagFor3rdDigit_showingOnlyMasterRegionEvents = 1;
+
+ public:
+  OutputFlag();
+  ~OutputFlag();
+  void setSendingOutOfFrame();
+  const bool isSendingOutOfFrame() const;
+  void setShowingOnlyMasterRegionEvents();
+  const bool isShowingOnlyMasterRegionEvents() const;
 };
 }
 

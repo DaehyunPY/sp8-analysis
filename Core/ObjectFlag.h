@@ -40,7 +40,6 @@ class ObjectFlag: protected Flag {
   void setWithinMasterRegionFlag(); // only can set when it's initial flag(0)
   void setOutOfMasterRegionFlag(); // only can set when it's initial flag(0)
   void setDeadFlag();
- public:
   const bool isDead() const;
   const bool isOutOfMasterRegion() const;
   const bool isWithinMasterRegion() const;
