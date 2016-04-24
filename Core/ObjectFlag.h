@@ -11,6 +11,7 @@ namespace Analysis {
 class ObjectFlag: protected Flag {
  private:
   const int initialFlag = 0;
+  // TODO: Add resort flag
  public:
   ObjectFlag();
   ~ObjectFlag();

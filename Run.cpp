@@ -107,6 +107,7 @@ Analysis::Run::~Run() {
   delete pLogWriter;
 }
 void Analysis::Run::processEvent(const size_t raw) {
+  // TODO: Add gating resort flag option
   // setup
   pEventChain->GetEntry((Long64_t) raw);
 
