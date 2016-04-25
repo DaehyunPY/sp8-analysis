@@ -10,7 +10,7 @@
 namespace Analysis {
 class ObjectFlag: protected Flag {
  private:
-  const int initialFlag = 0;
+  const unsigned int initialFlag = 0;
  public:
   ObjectFlag();
   ~ObjectFlag();
@@ -19,9 +19,9 @@ class ObjectFlag: protected Flag {
   // todo: make only one pulic method using string option
 
  private:
-  const int flagFor1stDigit_withinMasterRegion = 1;
-  const int flagFor1stDigit_outOfMasterRegion = 2;
-  const int flagFor1stDigit_dead = 3;
+  const unsigned int flagFor1stDigit_withinMasterRegion = 1;
+  const unsigned int flagFor1stDigit_outOfMasterRegion = 2;
+  const unsigned int flagFor1stDigit_dead = 3;
 //  ┌─whole data────────────────────────────────┐
 //  │                                           │
 //  │ ┌─master region─┐┌─out of master region─┐ │
@@ -46,9 +46,9 @@ class ObjectFlag: protected Flag {
   const bool isWithinMasterRegion() const;
 
  private:
-  const int flagFor2ndDigit_inFrameOfAllData = 1;
-  const int flagFor2ndDigit_outOfFrameOfMomentumData = 2;
-  const int flagFor2ndDigit_outOfFrameOfBasicData = 3;
+  const unsigned int flagFor2ndDigit_inFrameOfAllData = 1;
+  const unsigned int flagFor2ndDigit_outOfFrameOfMomentumData = 2;
+  const unsigned int flagFor2ndDigit_outOfFrameOfBasicData = 3;
 //  ┌─whole data───────────────────────────────────────────────────────┐
 //  │┌─in frame of all data─┐┌─out of frame of momentum data──────────┐│
 //  ││                      ││                 ~~~~~~~~~~~~~          ││
@@ -73,22 +73,22 @@ class ObjectFlag: protected Flag {
   const bool isOutOfFrameOfBasicData() const;
 
  private:
-  const int flagForCobold_theRegion1 = 0;
-  const int flagForCobold_theRegion2 = 20;
-  const int flagForCobold_mostReliableRegion1 = 0;
-  const int flagForCobold_mostReliableRegion2 = 3;
-  const int flagForCobold_secondMostReliableRegion1 = 4;
-  const int flagForCobold_secondMostReliableRegion2 = 14;
-  const int flagForCobold_riskyRegion1 = 15;
-  const int flagForCobold_riskyRegion2 = 20;
+  const unsigned int flagForCobold_theRegion1 = 0;
+  const unsigned int flagForCobold_theRegion2 = 20;
+  const unsigned int flagForCobold_mostReliableRegion1 = 0;
+  const unsigned int flagForCobold_mostReliableRegion2 = 3;
+  const unsigned int flagForCobold_secondMostReliableRegion1 = 4;
+  const unsigned int flagForCobold_secondMostReliableRegion2 = 14;
+  const unsigned int flagForCobold_riskyRegion1 = 15;
+  const unsigned int flagForCobold_riskyRegion2 = 20;
   // most reliable region: 0 to 3
   // second most reliable region: 4 to 14
   // risky region: 15 to 20
-  const int flagFor3rd2Digit_init = 0;
-  const int flagFor3rd2Digit_inTheRegion1 = 1;
-  const int flagFor3rd2Digit_inTheRegion2 = flagForCobold_theRegion2 - flagForCobold_theRegion1 + 1; // 21
-  const int flagFor3rd2Digit_lowerThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 1;
-  const int flagFor3rd2Digit_upperThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 2;
+  const unsigned int flagFor3rd2Digit_init = 0;
+  const unsigned int flagFor3rd2Digit_inTheRegion1 = 1;
+  const unsigned int flagFor3rd2Digit_inTheRegion2 = flagForCobold_theRegion2 - flagForCobold_theRegion1 + 1; // 21
+  const unsigned int flagFor3rd2Digit_lowerThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 1;
+  const unsigned int flagFor3rd2Digit_upperThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 2;
   unsigned int convertCoboldFlag(const int f0) const;
   const unsigned int convertToCoboldFlag(const unsigned int f0) const;
  public:

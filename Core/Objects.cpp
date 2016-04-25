@@ -560,7 +560,7 @@ const bool Analysis::Objects::areAllMostOrSecondMostReliableObject() const {
   for(int i = 0; i < getNumberOfObjects(); i++) {
     b = b && getObject(i).getFlag().isMostOrSecondMostReliable();
   }
-  return 0;
+  return b;
 }
 
 
