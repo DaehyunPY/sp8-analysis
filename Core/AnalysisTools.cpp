@@ -191,7 +191,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setLocationX(x);
   ion.setLocationY(y);
   ion.setTOF(t);
-  // TODO: Add flag
+  ion.setFlagMembers().setResortFlag((const unsigned int) f1);
   if (ion.getTOF() > deadTime || ion.getTOF() < 0e0) {
     ion.setFlagMembers().setDeadFlag();
   } else {
@@ -206,7 +206,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const double &x1,
                                                    const double &y1,
                                                    const double &t1,
-                                                   const int &flag1) const {
+                                                   const int &f1) const {
   const double &theta = getElectronParameters().getAngleOfDetector();
   const double &dx = getElectronParameters().getPixelSizeOfX();
   const double &dy = getElectronParameters().getPixelSizeOfY();
@@ -221,7 +221,7 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   electron.setLocationX(x);
   electron.setLocationY(y);
   electron.setTOF(t);
-  // TODO: Add flag
+  electron.setFlagMembers().setResortFlag((const unsigned int) f1);
   if (electron.getTOF() > deadTime || electron.getTOF() < 0e0) {
     electron.setFlagMembers().setDeadFlag();
   } else {

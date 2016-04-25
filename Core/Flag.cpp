@@ -74,8 +74,11 @@ void Analysis::Flag::setNthDigit(const unsigned int nth,
                                  const unsigned int f1) {
   assert(nth > 0);
   assert(0 <= f1 && f1 < 10);
-  const unsigned int f0 = getNthDigit(nth, f1);
-  flag += getSign() * ((unsigned int) pow(10, nth - 1)) * (-f0 + f1);
+  const unsigned int f0 = getNthDigit(nth);
+  int sign = getSign();
+  if(sign == 0) { sign = 1; }
+  flag += sign * ((unsigned int) pow(10, nth - 1)) * (-f0 + f1)
+  ;
 }
 const unsigned int Analysis::Flag::getNthNumDigit(const unsigned int nth,
                                                   const int num,
@@ -91,12 +94,14 @@ const unsigned int Analysis::Flag::getNthNumDigit(const unsigned int nth,
 }
 void Analysis::Flag::setNthNumDigit(const unsigned int nth,
                                     const int num,
-                                    const unsigned int f1) {
+                                    const int f1) {
   assert(nth > 0);
   assert(num > 0);
   assert(0 <= f1 && f1 < (unsigned int) pow(10, num));
-  const unsigned int f0 = getNthNumDigit(nth, num, f1);
-  flag += getSign() * ((unsigned int) pow(10, nth - 1)) * (-f0 + f1);
+  const unsigned int f0 = getNthNumDigit(nth, num);
+  int sign = getSign();
+  if(sign == 0) { sign = 1; }
+  flag += sign * ((unsigned int) pow(10, nth - 1)) * (-f0 + f1);
 }
 
 

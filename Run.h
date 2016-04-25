@@ -31,8 +31,12 @@
 #include <TH1F.h>
 #include <TH2F.h>
 
-#include "Core/Analysis.h"
 #include "OutputFlag.h"
+#include "Core/Unit.h"
+#include "Core/AnalysisTools.h"
+#include "Core/Ions.h"
+#include "Core/Electrons.h"
+#include "Core/LogWriter.h"
 
 namespace Analysis {
 class Run {
@@ -59,7 +63,6 @@ class Run {
   const size_t &getEntries() const;
 
  private:
-  // todo: launch root gui app
   void fillFlags();
   void fillIonBasicData();
   void fillIonMomentumData();

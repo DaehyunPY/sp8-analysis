@@ -21,8 +21,6 @@ set(SOURCE_FILES
     ObjectFlag.h
     JSONFlag.cpp
     JSONFlag.h
-    EventDataFlag.cpp
-    EventDataFlag.h
     Object.cpp
     Object.h
     Objects.cpp

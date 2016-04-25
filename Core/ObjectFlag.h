@@ -11,12 +11,12 @@ namespace Analysis {
 class ObjectFlag: protected Flag {
  private:
   const int initialFlag = 0;
-  // TODO: Add resort flag
  public:
   ObjectFlag();
   ~ObjectFlag();
   void resetFlag();
   const bool isInitial() const;
+  // todo: make only one pulic method using string option
 
  private:
   const int flagFor1stDigit_withinMasterRegion = 1;
@@ -71,7 +71,31 @@ class ObjectFlag: protected Flag {
   const bool isInFrameOfAllData() const;
   const bool isOutOfFrameOfMomentumData() const;
   const bool isOutOfFrameOfBasicData() const;
-  // todo: make only one pulic method using string option
+
+ private:
+  const int flagForCobold_theRegion1 = 0;
+  const int flagForCobold_theRegion2 = 20;
+  const int flagForCobold_mostReliableRegion1 = 0;
+  const int flagForCobold_mostReliableRegion2 = 3;
+  const int flagForCobold_secondMostReliableRegion1 = 4;
+  const int flagForCobold_secondMostReliableRegion2 = 14;
+  const int flagForCobold_riskyRegion1 = 15;
+  const int flagForCobold_riskyRegion2 = 20;
+  // most reliable region: 0 to 3
+  // second most reliable region: 4 to 14
+  // risky region: 15 to 20
+  const int flagFor3rd2Digit_init = 0;
+  const int flagFor3rd2Digit_inTheRegion1 = 1;
+  const int flagFor3rd2Digit_inTheRegion2 = flagForCobold_theRegion2 - flagForCobold_theRegion1 + 1; // 21
+  const int flagFor3rd2Digit_lowerThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 1;
+  const int flagFor3rd2Digit_upperThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 2;
+  unsigned int convertCoboldFlag(const int f0) const;
+  const unsigned int convertToCoboldFlag(const unsigned int f0) const;
+ public:
+  // flag for 3rd digit
+  void setResortFlag(const int f0);
+  const bool isResortFlag(const int f0) const;
+  const unsigned int getResortFlag() const;
 };
 }
 

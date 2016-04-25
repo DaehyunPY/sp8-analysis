@@ -2,6 +2,7 @@
 // Created by Daehyun You on 11/27/15.
 //
 
+#include <cassert>
 #include "ObjectFlag.h"
 
 Analysis::ObjectFlag::ObjectFlag() : Flag() {
@@ -76,3 +77,27 @@ const bool Analysis::ObjectFlag::isOutOfMasterRegion() const {
 const bool Analysis::ObjectFlag::isWithinMasterRegion() const {
   return get1stDigit() == flagFor1stDigit_withinMasterRegion;
 }
+void Analysis::ObjectFlag::setResortFlag(const int f0) {
+  setNthNumDigit(3, 2, convertCoboldFlag(f0));
+}
+const bool Analysis::ObjectFlag::isResortFlag(const int f0) const {
+  return getNthNumDigit(3, 2) == convertCoboldFlag(f0);
+}
+const unsigned int Analysis::ObjectFlag::getResortFlag() const {
+  return convertToCoboldFlag(getNthNumDigit(3, 2));
+}
+unsigned int Analysis::ObjectFlag::convertCoboldFlag(const int f0) const {
+  if(f0 < flagForCobold_theRegion1) {
+    return (const unsigned int) flagFor3rd2Digit_lowerThanTheRegion;
+  } else if(f0 > flagForCobold_theRegion2) {
+    return (const unsigned int) flagFor3rd2Digit_upperThanTheRegion;
+  } else {
+    return (const unsigned int) (f0 - flagForCobold_theRegion1 + 1);
+  }
+}
+const unsigned int Analysis::ObjectFlag::convertToCoboldFlag(const unsigned int f0) const {
+  assert(f0 < flagFor3rd2Digit_inTheRegion1);
+  assert(f0 > flagFor3rd2Digit_inTheRegion2);
+  return f0 + flagForCobold_mostReliableRegion1 - 1;
+}
+

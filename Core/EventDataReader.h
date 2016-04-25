@@ -7,7 +7,6 @@
 
 #include <assert.h>
 #include <string>
-#include "EventDataFlag.h"
 
 namespace Analysis {
 class EventDataReader {
@@ -15,7 +14,6 @@ class EventDataReader {
   const int numberOfHit;
   double *pEventData;
   int *pFlagData;
-  EventDataFlag flag; // TODO: Make flag
   const int getAdressAt(const int i, const std::string str) const;
 
  public:

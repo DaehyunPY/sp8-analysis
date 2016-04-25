@@ -34,7 +34,7 @@ class Flag {
   void set3ndDigit(const unsigned int f1);
   void setNthDigit(const unsigned int nth, const unsigned int f1);
   void setNthNumDigit
-      (const unsigned int nth, const int num, const unsigned int f1);
+      (const unsigned int nth, const int num, const int f1);
   void setFlag(const int f);
 
  public:
