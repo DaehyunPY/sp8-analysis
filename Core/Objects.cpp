@@ -548,3 +548,20 @@ const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit) const {
     return unit.writeTime(getSumOfTOF());
   }
 }
+const bool Analysis::Objects::areAllMostReliableObject() const {
+  bool b = true;
+  for(int i = 0; i < getNumberOfObjects(); i++) {
+    b = b && getObject(i).getFlag().isMostReliable();
+  }
+  return b;
+}
+const bool Analysis::Objects::areAllMostOrSecondMostReliableObject() const {
+  bool b = true;
+  for(int i = 0; i < getNumberOfObjects(); i++) {
+    b = b && getObject(i).getFlag().isMostOrSecondMostReliable();
+  }
+  return 0;
+}
+
+
+

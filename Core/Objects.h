@@ -118,6 +118,8 @@ class Objects {
   const bool areAllDeadDummyObjects() const;
   const bool areAllDeadRealAndDummyObjects() const;
   const bool areAllWithinMasterRegion() const;
+  const bool areAllMostReliableObject() const;
+  const bool areAllMostOrSecondMostReliableObject() const;
 };
 }
 

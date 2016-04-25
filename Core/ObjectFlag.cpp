@@ -96,8 +96,16 @@ unsigned int Analysis::ObjectFlag::convertCoboldFlag(const int f0) const {
   }
 }
 const unsigned int Analysis::ObjectFlag::convertToCoboldFlag(const unsigned int f0) const {
-  assert(f0 < flagFor3rd2Digit_inTheRegion1);
-  assert(f0 > flagFor3rd2Digit_inTheRegion2);
+  assert(f0 >= flagFor3rd2Digit_inTheRegion1);
+  assert(f0 <= flagFor3rd2Digit_inTheRegion2);
   return f0 + flagForCobold_mostReliableRegion1 - 1;
 }
-
+const bool Analysis::ObjectFlag::isMostReliable() const {
+  return flagForCobold_mostReliableRegion1 <= getResortFlag() &&  getResortFlag() <= flagForCobold_mostReliableRegion2;
+}
+const bool Analysis::ObjectFlag::isMostOrSecondMostReliable() const {
+  return flagForCobold_mostReliableRegion1 <= getResortFlag() &&  getResortFlag() <= flagForCobold_secondMostReliableRegion2;
+}
+const bool Analysis::ObjectFlag::isRisky() const {
+  return flagForCobold_riskyRegion1 <= getResortFlag() && getResortFlag() <= flagForCobold_riskyRegion2;
+}

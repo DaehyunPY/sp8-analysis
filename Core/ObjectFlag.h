@@ -95,6 +95,9 @@ class ObjectFlag: protected Flag {
   // flag for 3rd digit
   void setResortFlag(const int f0);
   const bool isResortFlag(const int f0) const;
+  const bool isMostReliable() const;
+  const bool isMostOrSecondMostReliable() const;
+  const bool isRisky() const;
   const unsigned int getResortFlag() const;
 };
 }
