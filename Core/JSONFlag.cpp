@@ -4,21 +4,14 @@
 
 #include "JSONFlag.h"
 Analysis::JSONFlag::JSONFlag() {
-  isInitial();
 }
 Analysis::JSONFlag::~JSONFlag() {
-}
-void Analysis::JSONFlag::isInitial() {
-  setSign(flagForSign_isInitial);
 }
 void Analysis::JSONFlag::fileIsOpen() {
   set1stDigit(flagFor1stDigit_fileIsOpen);
 }
 void Analysis::JSONFlag::hasNoParseError() {
   set2ndDigit(flagFor2ndDigit_hasNoParseError);
-}
-const bool Analysis::JSONFlag::isInitial() const {
-  return getSign() == flagForSign_isInitial;
 }
 const bool Analysis::JSONFlag::fileIsOpen() const {
   return get1stDigit() == flagFor1stDigit_fileIsOpen;
