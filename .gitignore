@@ -10,3 +10,4 @@ CDan.sln
 CDan.vcxproj
 include/
 Document/
+*.DS_Store
