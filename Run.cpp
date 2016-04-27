@@ -3,65 +3,86 @@
 //
 
 #include <ctime>
+#include <TChain.h>
+#include <zconf.h>
 #include "RUN.h"
-BL17Analysis::Run::Run() {
-  // set seed for random
-  srand((unsigned int) time(nullptr));
+Analysis::Run::Run(const std::string configFilename) {
 
-  // setup reader & writer
-  Analysis::JSONReader reader("Parameters.json"); // make json reader
-  pLogWriter = new Analysis::LogWriter(reader);
-  auto &writer = *pLogWriter;
-  writer.logJSONReader(reader);
+  // Setup json file reader
+  Analysis::JSONReader configReader(configFilename);
 
-  // make unit helper
-  pUnit = new Analysis::Unit;
-  auto &unit = *pUnit;
+  // Change the working directory
+  chdir(configReader.getStringAt("working_directory").c_str());
 
-  // make analysis tools, ions, and electrons
-  pTools = new Analysis::AnalysisTools(unit, reader);
-  auto &tools = *pTools;
-  pIons = new Analysis::Ions(unit, reader, numberOfHitsUsed);
-  auto &ions = *pIons;
-  pElectrons = new Analysis::Electrons(unit, reader, numberOfHitsUsed);
-  auto &electrons = *pElectrons;
-  writer.logAnalysisTools(unit, tools, ions, electrons);
+  // Setup writer
+  pLogWriter = new Analysis::LogWriter(configReader);
+  pLogWriter->logResultOfLoadingJSONFile(configReader);
 
-  // output option
-  optionOfSendingOutOfFrame =
-      reader.getBoolAt("output_options.send_out_of_frame");
-  optionOfShowingOnlyMasterRegionEvents =
-      reader.getBoolAt("output_options.show_only_master_region_events");
-  writer.write() << "Output Options: " << std::endl;
-  writer.write() << "    Send Out of Frame: "
-      << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
-  writer.write() << "    Show Only Master Region Events: "
-      << (optionOfSendingOutOfFrame ? "true" : "false") << std::endl;
-  writer.write() << std::endl;
+  // Setup ROOT files
+  if(configReader.getStringAt("setup_input.type") == "ROOT") {
+    pEventChain = new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
+    pEventChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
+    pLogWriter->write() << "Input file type is ROOT. " << std::endl;
+    pLogWriter->write() << "    Filenames: " << configReader.getStringAt("setup_input.filenames").c_str() << std::endl;
+    pLogWriter->write() << "    Tree Name: " << configReader.getStringAt("setup_input.tree_name").c_str() << std::endl;
+    pLogWriter->write() << std::endl;
 
-  // root
-  {
-    std::string filename;
-    filename = tools.getID();
-    if (!(filename == "")) {
-      filename += "-";
+    // Setup event reader
+    numberOfHits = configReader.getIntAt("setup_input.number_of_hits");
+    pEventReader = new Analysis::EventDataReader(numberOfHits);
+    char ch[2];
+    for(int i=0; i<numberOfHits; i++) {
+      for(std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY", "ElecT"}) {
+        sprintf(ch, "%01d", i);
+        pEventChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setEventDataAt(i, str+ch)));
+      }
+      for(std::string str : {"IonFlag", "ElecFlag"}) {
+        sprintf(ch, "%01d", i);
+        pEventChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setFlagDataAt(i, str+ch)));
+      }
     }
-    filename += writer.getID();
-    filename += ".root";
-    rootFile.Open(filename.c_str(), "new");
   }
 
-  // initialization is done
-  writer.write() << "Initialization is done." << std::endl;
-  writer.write() << std::endl;
-}
-BL17Analysis::Run::~Run() {
-  // setup writer
-  auto &writer = *pLogWriter;
-  auto &tools = *pTools;
+  // Setup unit helper
+  pUnit = new Analysis::Unit;
 
+  // Make analysis tools, ions, and electrons
+  pTools = new Analysis::AnalysisTools(*pUnit, configReader);
+  pIons = new Analysis::Ions(*pUnit, configReader, numberOfHits);
+  pElectrons = new Analysis::Electrons(*pUnit, configReader, numberOfHits);
+  pLogWriter->logAnalysisTools(*pUnit, *pTools, *pIons, *pElectrons);
+
+  // Read output option
+  if(configReader.getBoolAt("setup_output.send_out_of_frame")) {
+    flag.setSendingOutOfFrame();
+  }
+  if(configReader.getBoolAt("setup_output.show_only_master_region_events")) {
+    flag.setShowingOnlyMasterRegionEvents();
+  }
+  pLogWriter->write() << "Output Options: " << std::endl;
+  pLogWriter->write() << "    Send Out of Frame: "
+      << (flag.isSendingOutOfFrame() ? "true" : "false") << std::endl;
+  pLogWriter->write() << "    Show Only Master Region Events: "
+      << (flag.isShowingOnlyMasterRegionEvents() ? "true" : "false") << std::endl;
+  pLogWriter->write() << std::endl;
+
+  // Open ROOT file
+  std::string rootFilename = "";
+  rootFilename += pTools->getID();
+  if (rootFilename != "") {
+    rootFilename += "-";
+  }
+  rootFilename += pLogWriter->getID();
+  rootFilename += ".root";
+  pRootFile = new TFile(rootFilename.c_str(), "update");
+
+  // Initialization is done
+  pLogWriter->write() << "Initialization is done." << std::endl;
+  pLogWriter->write() << std::endl;
+}
+Analysis::Run::~Run() {
   // counter
-  writer.write() << "Event count: " << tools.getEventNumber() << std::endl;
+  pLogWriter->write() << "Event count: " << pTools->getEventNumber() << std::endl;
 
   // root
   writeFlags();
@@ -70,174 +91,171 @@ BL17Analysis::Run::~Run() {
   writeElectronBasicData();
   writeElectronMomentumData();
   writeIonAndElectronMomentumData();
-  rootFile.Close();
+  pRootFile->Close();
 
   // finalization is done
-  delete pUnit;
-  delete pTools;
-  delete pIons;
+  delete pRootFile;
   delete pElectrons;
-  writer.write() << "Finalization is done." << std::endl;
-  writer.write() << std::endl;
+  delete pIons;
+  delete pTools;
+  delete pUnit;
+  delete pEventReader;
+  delete pEventChain;
+
+  pLogWriter->write() << "Finalization is done." << std::endl;
+  pLogWriter->write() << std::endl;
   delete pLogWriter;
 }
-void BL17Analysis::Run::ProcessEvent(Analysis::EventDataReader &reader,
-                                     int &ionFlag,
-                                     int &electronFlag) {
+void Analysis::Run::processEvent(const size_t raw) {
   // setup
-  auto &unit = *pUnit;
-  auto &tools = *pTools;
-  auto &ions = *pIons;
-  auto &electrons = *pElectrons;
+  pEventChain->GetEntry((Long64_t) raw);
 
   // count event
-  tools.loadEventCounter();
+  pTools->loadEventCounter();
 
   // make sure ion and electron data is empty, and reset flags
-  ions.resetEventData();
-  electrons.resetEventData();
-  ionFlag = 0;
-  electronFlag = 0;
+  pIons->resetEventData();
+  pElectrons->resetEventData();
+  int ionFlag = 0;
+  int electronFlag = 0;
 
   // input event data
-  tools.loadEventDataInputer(ions, unit, reader);
-  tools.loadEventDataInputer(electrons, unit, reader);
+  pTools->loadEventDataInputer(*pIons, *pUnit, *pEventReader);
+  pTools->loadEventDataInputer(*pElectrons, *pUnit, *pEventReader);
 
-  if (optionOfSendingOutOfFrame) {
-    ions.setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
-    electrons.setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
-  }
-  if (optionOfSendingOutOfFrame) {
-    // dead data, don't plot basic data(x, y, TOF)
-    { // ion
-      const int &m = ions.getNumberOfRealOrDummyObjects();
-      for (int i = 0; i < m; i++) {
-        if (ions.getRealOrDummyIon(i).isDead()) {
-          ions.setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
-        }
-      }
-    }
-    { // electron
-      const int &m = electrons.getNumberOfRealOrDummyObjects();
-      for (int i = 0; i < m; i++) {
-        if (electrons.getRealOrDummyObject(i).isDead()) {
-          electrons.setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
-        }
-      }
-    }
-    // dummy data, don't plot momentum
-    // ion
-    ions.setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
-    // electron
-    electrons.setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
-  }
+  // resort option
+  if (pIons->areAllMostOrSecondMostReliableObject() && pElectrons->areAllMostOrSecondMostReliableObject()) {
 
-  // if all ion event data or all electron event data is dead, ignore the event
-  const bool ionsAreAllDead = ions.areAllDeadRealAndDummyObjects();
-  const bool electronsAreAllDead = electrons.areAllDeadRealAndDummyObjects();
-  if (ionsAreAllDead || electronsAreAllDead) {
-    // don't plot basic or momentum data
-    if (optionOfSendingOutOfFrame) {
-      ions.setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
-      electrons.setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
+
+    if (flag.isSendingOutOfFrame()) {
+      pIons->setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
+      pElectrons->setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
     }
-    if (ionsAreAllDead) {
-      ionFlag = -11;
-    } else {
-      ionFlag = -12;
-    }
-    if (electronsAreAllDead) {
-      electronFlag = -11;
-    } else {
-      electronFlag = -12;
-    }
-  } else { // calculate ion or electron momentum
-    // ion
-    // if all data is not within master region, don't calculate momentum
-    const bool ionsAreAllWithinMasterRegion = ions.areAllWithinMasterRegion();
-    if (!ionsAreAllWithinMasterRegion) {
-      // don't plot momentum data
-      if (optionOfSendingOutOfFrame) {
-        ions.setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
-      }
-      ionFlag = -20;
-    } else { // calculate ion momentum
-      tools.loadMomentumCalculator(ions);
-      const bool ionsExistDeadObject = ions.existDeadObject();
-      // if it couldn't calculate momentum, don't plot it
-      if (ionsExistDeadObject) {
-        if (optionOfSendingOutOfFrame) {
-          ions.setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
+    if (flag.isSendingOutOfFrame()) {
+      // dead data, don't plot basic data(x, y, TOF)
+      { // ion
+        const int &m = pIons->getNumberOfRealOrDummyObjects();
+        for (int i = 0; i < m; i++) {
+          if (pIons->getRealOrDummyIon(i).isDead()) {
+            pIons->setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
+          }
         }
-        ionFlag = 1;
+      }
+      { // electron
+        const int &m = pElectrons->getNumberOfRealOrDummyObjects();
+        for (int i = 0; i < m; i++) {
+          if (pElectrons->getRealOrDummyObject(i).isDead()) {
+            pElectrons->setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
+          }
+        }
+      }
+      // dummy data, don't plot momentum
+      // ion
+      pIons->setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
+      // electron
+      pElectrons->setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
+    }
+
+    // if all ion event data or all electron event data is dead, ignore the event
+    const bool ionsAreAllDead = pIons->areAllDeadRealAndDummyObjects();
+    const bool
+        electronsAreAllDead = pElectrons->areAllDeadRealAndDummyObjects();
+    if (ionsAreAllDead || electronsAreAllDead) {
+      // don't plot basic or momentum data
+      if (flag.isSendingOutOfFrame()) {
+        pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
+        pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
+      }
+      if (ionsAreAllDead) {
+        ionFlag = -11;
       } else {
-        // succeed
-        ionFlag = 10;
+        ionFlag = -12;
       }
-    }
-
-    // electron
-    // if all data is not within master region, don't calculate momentum
-    const bool electronsAreAllWithinMasterRegion =
-        electrons.areAllWithinMasterRegion();
-    if (!electronsAreAllWithinMasterRegion) {
-      // don't plot momentum data
-      if (optionOfSendingOutOfFrame) {
-        electrons.setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
-      }
-      electronFlag = -20;
-    } else { // calculate electron momentum
-      tools.loadMomentumCalculator(electrons);
-      const bool electronsExistDeadObject = electrons.existDeadObject();
-      // if it couldn't calculate momentum, don't plot it
-      if (electronsExistDeadObject) {
-        electronFlag = 1;
+      if (electronsAreAllDead) {
+        electronFlag = -11;
       } else {
-        // succeed
-        electronFlag = 10;
+        electronFlag = -12;
+      }
+    } else { // calculate ion or electron momentum
+      // ion
+      // if all data is not within master region, don't calculate momentum
+      const bool
+          ionsAreAllWithinMasterRegion = pIons->areAllWithinMasterRegion();
+      if (!ionsAreAllWithinMasterRegion) {
+        // don't plot momentum data
+        if (flag.isSendingOutOfFrame()) {
+          pIons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
+        }
+        ionFlag = -20;
+      } else { // calculate ion momentum
+        pTools->loadMomentumCalculator(*pIons);
+        const bool ionsExistDeadObject = pIons->existDeadObject();
+        // if it couldn't calculate momentum, don't plot it
+        if (ionsExistDeadObject) {
+          if (flag.isSendingOutOfFrame()) {
+            pIons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
+          }
+          ionFlag = 1;
+        } else {
+          // succeed
+          ionFlag = 10;
+        }
+      }
+
+      // electron
+      // if all data is not within master region, don't calculate momentum
+      const bool electronsAreAllWithinMasterRegion =
+          pElectrons->areAllWithinMasterRegion();
+      if (!electronsAreAllWithinMasterRegion) {
+        // don't plot momentum data
+        if (flag.isSendingOutOfFrame()) {
+          pElectrons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
+        }
+        electronFlag = -20;
+      } else { // calculate electron momentum
+        pTools->loadMomentumCalculator(*pElectrons);
+        const bool electronsExistDeadObject = pElectrons->existDeadObject();
+        // if it couldn't calculate momentum, don't plot it
+        if (electronsExistDeadObject) {
+          electronFlag = 1;
+        } else {
+          // succeed
+          electronFlag = 10;
+        }
       }
     }
-  }
 
-  // histograms
-  if (optionOfShowingOnlyMasterRegionEvents) {
-	fillFlags();
-	fillIonBasicData();
-	if (ionFlag > 0 && electronFlag > 0) { fillIonMomentumData(); }
-    fillElectronBasicData();
-	if (ionFlag > 0 && electronFlag > 0) { fillElectronMomentumData(); }
-    if (ionFlag > 0 && electronFlag > 0) { fillIonAndElectronMomentumData(); }
-  } else {
-	fillFlags();
-	fillIonBasicData();
-	fillIonMomentumData(); 
-    fillElectronBasicData();
-	fillElectronMomentumData();
-    fillIonAndElectronMomentumData();
+    // histograms
+    if (flag.isShowingOnlyMasterRegionEvents()) {
+      fillFlags();
+      fillIonBasicData();
+      if (ionFlag > 0 && electronFlag > 0) { fillIonMomentumData(); }
+      fillElectronBasicData();
+      if (ionFlag > 0 && electronFlag > 0) { fillElectronMomentumData(); }
+      if (ionFlag > 0 && electronFlag > 0) { fillIonAndElectronMomentumData(); }
+    } else {
+      fillFlags();
+      fillIonBasicData();
+      fillIonMomentumData();
+      fillElectronBasicData();
+      fillElectronMomentumData();
+      fillIonAndElectronMomentumData();
+    }
   }
 }
-const Analysis::Unit &BL17Analysis::Run::getUnit() const {
+const Analysis::Unit &Analysis::Run::getUnit() const {
   return *pUnit;
 }
-const Analysis::Ions &BL17Analysis::Run::getIons() const {
+const Analysis::Ions &Analysis::Run::getIons() const {
   return *pIons;
 }
-const Analysis::Electrons &BL17Analysis::Run::getElectrons() const {
+const Analysis::Electrons &Analysis::Run::getElectrons() const {
   return *pElectrons;
 }
-
-const int& BL17Analysis::Run::getNumberOfTDCUsed() const {
-  return numberOfTDCUsed; 
+const int& Analysis::Run::getNumberOfHitsUsed() const {
+  return numberOfHits;
 }
-
-const int& BL17Analysis::Run::getNumberOfChannelsUsed() const {
-  return numberOfChannelsUsed; 
-}
-
-const int& BL17Analysis::Run::getNumberOfHitsUsed() const {
-  return numberOfHitsUsed;
-}
-void BL17Analysis::Run::fillIonBasicData() {
+void Analysis::Run::fillIonBasicData() {
   const double &i1HitX = pIons->getRealOrDummyObject(0).getLocationX(*pUnit);
   const double &i1HitY = pIons->getRealOrDummyObject(0).getLocationY(*pUnit);
   const double &i2HitX = pIons->getRealOrDummyObject(1).getLocationX(*pUnit);
@@ -276,10 +294,10 @@ void BL17Analysis::Run::fillIonBasicData() {
       i2HitPlus3HitTOF,
       i4HitTOF);
 }
-void BL17Analysis::Run::fillFlags() {
+void Analysis::Run::fillFlags() {
 
 }
-void BL17Analysis::Run::fillIonMomentumData() {
+void Analysis::Run::fillIonMomentumData() {
   const double &i1HitPx = pIons->getRealOrDummyObject(0).getMomentumX(*pUnit);
   const double &i1HitPy = pIons->getRealOrDummyObject(0).getMomentumY(*pUnit);
   const double &i1HitPz = pIons->getRealOrDummyObject(0).getMomentumZ(*pUnit);
@@ -311,7 +329,7 @@ void BL17Analysis::Run::fillIonMomentumData() {
   root1DHistogramOf4thHitIonEnergy.Fill(i4HitE);
   root1DHistogramOfIonsTotalEnergy.Fill(iTotalE);
 }
-void BL17Analysis::Run::fillElectronBasicData() {
+void Analysis::Run::fillElectronBasicData() {
   const double
       &e1HitX = pElectrons->getRealOrDummyObject(0).getLocationX(*pUnit);
   const double
@@ -348,7 +366,7 @@ void BL17Analysis::Run::fillElectronBasicData() {
   root1DHistogramOf3rdHitElectronTOF.Fill(e3HitTOF);
   root1DHistogramOf4thHitElectronTOF.Fill(e4HitTOF);
 }
-void BL17Analysis::Run::fillElectronMomentumData() {
+void Analysis::Run::fillElectronMomentumData() {
   const double
       &e1HitPx = pElectrons->getRealOrDummyObject(0).getMomentumX(*pUnit);
   const double
@@ -408,10 +426,10 @@ void BL17Analysis::Run::fillElectronMomentumData() {
                                                                   e4HitE);
   root1DHistogramOfElectronsTotalEnergy.Fill(eTotalE);
 }
-void BL17Analysis::Run::writeFlags() {
+void Analysis::Run::writeFlags() {
 
 }
-void BL17Analysis::Run::writeIonBasicData() {
+void Analysis::Run::writeIonBasicData() {
   root2DHistogramOf1stHitIonLocationX_LocationY.Write();
   root2DHistogramOf2ndHitIonLocationX_LocationY.Write();
   root2DHistogramOf3rdHitIonLocationX_LocationY.Write();
@@ -428,7 +446,7 @@ void BL17Analysis::Run::writeIonBasicData() {
   root2DHistogramOf1stHitIonTOFPlus2ndHitIonTOF_3rdHitIonTOF.Write();
   root2DHistogramOf2ndHitIonTOFPlus3rdHitIonTOF_4thHitIonTOF.Write();
 }
-void BL17Analysis::Run::writeIonMomentumData() {
+void Analysis::Run::writeIonMomentumData() {
   root2DHistogramOf1stHitIonMomentumXY.Write();
   root2DHistogramOf2ndHitIonMomentumXY.Write();
   root2DHistogramOf3rdHitIonMomentumXY.Write();
@@ -443,7 +461,7 @@ void BL17Analysis::Run::writeIonMomentumData() {
   root1DHistogramOf4thHitIonEnergy.Write();
   root1DHistogramOfIonsTotalEnergy.Write();
 }
-void BL17Analysis::Run::writeElectronBasicData() {
+void Analysis::Run::writeElectronBasicData() {
   root2DHistogramOf1stHitElectronLocationX_LocationY.Write();
   root2DHistogramOf2ndHitElectronLocationX_LocationY.Write();
   root2DHistogramOf3rdHitElectronLocationX_LocationY.Write();
@@ -455,7 +473,7 @@ void BL17Analysis::Run::writeElectronBasicData() {
   root1DHistogramOf3rdHitElectronTOF.Write();
   root1DHistogramOf4thHitElectronTOF.Write();
 }
-void BL17Analysis::Run::writeElectronMomentumData() {
+void Analysis::Run::writeElectronMomentumData() {
   root2DHistogramOf1stHitElectronMomentumXY.Write();
   root2DHistogramOf2ndHitElectronMomentumXY.Write();
   root2DHistogramOf3rdHitElectronMomentumXY.Write();
@@ -476,17 +494,20 @@ void BL17Analysis::Run::writeElectronMomentumData() {
   root2DHistogramOf3rdHitElectronEnergy_4thHitElectronEnergy.Write();
   root1DHistogramOfElectronsTotalEnergy.Write();
 }
-//void BL17Analysis::Run::fillIonAndElectronBasicData() {
+//void Analysis::Run::fillIonAndElectronBasicData() {
 //
 //}
-void BL17Analysis::Run::fillIonAndElectronMomentumData() {
+void Analysis::Run::fillIonAndElectronMomentumData() {
   const double &iSumOfTOF = pIons->getSumOfTOF(*pUnit);
   const double &iTotalE = pIons->getEnergy(*pUnit);
   const double &e1HitE = pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit);
   root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy.Fill(iSumOfTOF, e1HitE);
   root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Fill(iTotalE, e1HitE);
 }
-void BL17Analysis::Run::writeIonAndElectronMomentumData() {
+void Analysis::Run::writeIonAndElectronMomentumData() {
   root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy.Write();
   root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Write();
+}
+const size_t &Analysis::Run::getEntries() const {
+  return (const size_t &) pEventChain->GetEntries();
 }

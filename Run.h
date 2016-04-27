@@ -24,26 +24,45 @@
 #define H2_ELECTRON_ENERGY_BINSIZE_REGION 100, 0, 50
 #define H1_ELECTRON_ENERGY_BINSIZE_REGION 1000, 0, 50
 
-#include <TApplication.h>
-#include "TFile.h"
-#include "TH1F.h"
-#include "TH2F.h"
-#include "Analysis/Analysis.h"
-namespace BL17Analysis {
+#include <string>
+
+#include <TFile.h>
+#include <TChain.h>
+#include <TH1F.h>
+#include <TH2F.h>
+
+#include "OutputFlag.h"
+#include "Core/Unit.h"
+#include "Core/AnalysisTools.h"
+#include "Core/Ions.h"
+#include "Core/Electrons.h"
+#include "Core/LogWriter.h"
+
+namespace Analysis {
 class Run {
-  const int numberOfTDCUsed = 3;
-  const int numberOfChannelsUsed = 2;
-  const int numberOfHitsUsed = 4;
-  Analysis::LogWriter *pLogWriter;
+  int numberOfHits;
+  TFile *pRootFile;
+  TChain *pEventChain;
+  TChain *pAnalyzedChain;
   Analysis::Unit *pUnit;
   Analysis::AnalysisTools *pTools;
   Analysis::Ions *pIons;
   Analysis::Electrons *pElectrons;
-  bool optionOfSendingOutOfFrame;
-  bool optionOfShowingOnlyMasterRegionEvents;
-  std::fstream exportedFile;
+  Analysis::EventDataReader *pEventReader;
+  Analysis::LogWriter *pLogWriter;
+  Analysis::OutputFlag flag;
 
-  // todo: launch root gui app
+ public:
+  Run(const std::string configFilename = "Parameters.json");
+  ~Run();
+  void processEvent(const size_t raw);
+  const Analysis::Unit &getUnit() const;
+  const Analysis::Ions &getIons() const;
+  const Analysis::Electrons &getElectrons() const;
+  const int &getNumberOfHitsUsed() const;
+  const size_t &getEntries() const;
+
+ private:
   void fillFlags();
   void fillIonBasicData();
   void fillIonMomentumData();
@@ -58,7 +77,6 @@ class Run {
   void writeElectronMomentumData();
 //  void writeIonAndElectronBasicData();
   void writeIonAndElectronMomentumData();
-  TFile rootFile;
   // todo: add master spectra
   // ion
   // location
@@ -343,20 +361,6 @@ class Run {
        "Total Ion Energy vs 1st Hit Electron Energy;Total Ion Energy [eV];Electron Energy [eV]",
        H2_Ion_TOTALENERGY_BINSIZE_REGION,
        H2_ELECTRON_ENERGY_BINSIZE_REGION};
-
-
- public:
-  Run();
-  ~Run();
-  void ProcessEvent(Analysis::EventDataReader &reader,
-                    int &ionFlag,
-                    int &ElectronFlag);
-  const Analysis::Unit &getUnit() const;
-  const Analysis::Ions &getIons() const;
-  const Analysis::Electrons &getElectrons() const;
-  const int &getNumberOfTDCUsed() const;
-  const int &getNumberOfChannelsUsed() const;
-  const int &getNumberOfHitsUsed() const;
 };
 }
 
