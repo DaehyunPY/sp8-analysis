@@ -558,10 +558,10 @@ const bool Analysis::Objects::areAllMostReliableObject() const {
 const bool Analysis::Objects::areAllMostOrSecondMostReliableObject() const {
   bool b = true;
   for(int i = 0; i < getNumberOfObjects(); i++) {
+#ifdef _DEBUG
+    int f1 = getObject(i).getFlag().getResortFlag();
+#endif
     b = b && getObject(i).getFlag().isMostOrSecondMostReliable();
   }
   return b;
 }
-
-
-

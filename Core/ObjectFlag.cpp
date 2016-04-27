@@ -77,35 +77,36 @@ const bool Analysis::ObjectFlag::isOutOfMasterRegion() const {
 const bool Analysis::ObjectFlag::isWithinMasterRegion() const {
   return get1stDigit() == flagFor1stDigit_withinMasterRegion;
 }
-void Analysis::ObjectFlag::setResortFlag(const int f0) {
-  setNthNumDigit(3, 2, convertCoboldFlag(f0));
+void Analysis::ObjectFlag::setResortFlag(const int coboldFlag) {
+  setNthNumDigit(3, 2, convertCoboldFlag(coboldFlag));
 }
-const bool Analysis::ObjectFlag::isResortFlag(const int f0) const {
-  return getNthNumDigit(3, 2) == convertCoboldFlag(f0);
+const bool Analysis::ObjectFlag::isResortFlag(const int coboldFlag) const {
+  return getNthNumDigit(3, 2) == convertCoboldFlag(coboldFlag);
 }
 const unsigned int Analysis::ObjectFlag::getResortFlag() const {
   return convertToCoboldFlag(getNthNumDigit(3, 2));
 }
-unsigned int Analysis::ObjectFlag::convertCoboldFlag(const int f0) const {
-  if(f0 < flagForCobold_theRegion1) {
-    return (const unsigned int) flagFor3rd2Digit_lowerThanTheRegion;
-  } else if(f0 > flagForCobold_theRegion2) {
-    return (const unsigned int) flagFor3rd2Digit_upperThanTheRegion;
+unsigned int Analysis::ObjectFlag::convertCoboldFlag(const int coboldFlag) const {
+  if(coboldFlag < flagForResort_theRegion1) {
+    return flagFor3rd2Digit_lowerThanTheRegion;
+  } else if(coboldFlag > flagForResort_theRegion2) {
+    return flagFor3rd2Digit_upperThanTheRegion;
   } else {
-    return (const unsigned int) (f0 - flagForCobold_theRegion1 + 1);
+    return (coboldFlag - flagForResort_theRegion1 + 1);
   }
 }
-const unsigned int Analysis::ObjectFlag::convertToCoboldFlag(const unsigned int f0) const {
-  assert(f0 >= flagFor3rd2Digit_inTheRegion1);
-  assert(f0 <= flagFor3rd2Digit_inTheRegion2);
-  return f0 + flagForCobold_mostReliableRegion1 - 1;
+const unsigned int Analysis::ObjectFlag::convertToCoboldFlag(const unsigned int storedFlag) const {
+  if(!(storedFlag >= flagFor3rd2Digit_inTheRegion1 && storedFlag <= flagFor3rd2Digit_inTheRegion2)) {
+    return flagForResort_outOfTheRegion;
+  }
+  return storedFlag + flagForResort_theRegion1 - 1;
 }
 const bool Analysis::ObjectFlag::isMostReliable() const {
-  return flagForCobold_mostReliableRegion1 <= getResortFlag() &&  getResortFlag() <= flagForCobold_mostReliableRegion2;
+  return flagForResort_mostReliableRegion1 <= getResortFlag() &&  getResortFlag() <= flagForResort_mostReliableRegion2;
 }
 const bool Analysis::ObjectFlag::isMostOrSecondMostReliable() const {
-  return flagForCobold_mostReliableRegion1 <= getResortFlag() &&  getResortFlag() <= flagForCobold_secondMostReliableRegion2;
+  return flagForResort_mostReliableRegion1 <= getResortFlag() &&  getResortFlag() <= flagForResort_secondMostReliableRegion2;
 }
 const bool Analysis::ObjectFlag::isRisky() const {
-  return flagForCobold_riskyRegion1 <= getResortFlag() && getResortFlag() <= flagForCobold_riskyRegion2;
+  return flagForResort_riskyRegion1 <= getResortFlag() && getResortFlag() <= flagForResort_outOfTheRegion;
 }
