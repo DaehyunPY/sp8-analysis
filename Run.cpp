@@ -511,3 +511,12 @@ void Analysis::Run::writeIonAndElectronMomentumData() {
 const size_t &Analysis::Run::getEntries() const {
   return (const size_t &) pEventChain->GetEntries();
 }
+void Analysis::Run::createROOTObjects() {
+
+}
+void Analysis::Run::fillROOTObjects() {
+
+}
+void Analysis::Run::FlushROOTFile() {
+
+}

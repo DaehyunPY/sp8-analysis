@@ -63,6 +63,9 @@ class Run {
   const size_t &getEntries() const;
 
  private:
+  void createROOTObjects();
+  void fillROOTObjects();
+  void FlushROOTFile();
   void fillFlags();
   void fillIonBasicData();
   void fillIonMomentumData();
