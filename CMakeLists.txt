@@ -78,9 +78,13 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 ### Set source files.
 set (SOURCE_FILES
     Main.cpp
-    Run.h
     Run.cpp
-    OutputFlag.cpp OutputFlag.h)
+    Run.h
+    OutputFlag.cpp
+    OutputFlag.h
+    MyHistos.cpp
+    MyHistos.h
+    )
 
 ### Add executable.
 add_executable (AnalysisExe ${SOURCE_FILES})
