@@ -37,6 +37,7 @@
 #include "Core/Ions.h"
 #include "Core/Electrons.h"
 #include "Core/LogWriter.h"
+#include "MyHistos.h"
 
 namespace Analysis {
 class Run {
@@ -63,9 +64,12 @@ class Run {
   const size_t &getEntries() const;
 
  private:
-  void createROOTObjects();
-  void fillROOTObjects();
-  void FlushROOTFile();
+  MyHistos *pHist;
+  const int numberOfTotalHist = 10;
+  const int hist1stHitIonTOF_when2ndAnd3rdHitIonAreNotDead = 1;
+  void createHist();
+  void fillHist();
+  void flushHist();
   void fillFlags();
   void fillIonBasicData();
   void fillIonMomentumData();

@@ -75,6 +75,9 @@ Analysis::Run::Run(const std::string configFilename) {
   rootFilename += pLogWriter->getID();
   rootFilename += ".root";
   pRootFile = new TFile(rootFilename.c_str(), "update");
+  pHist = new MyHistos(false, numberOfTotalHist);
+  pHist->LinkRootFile(*pRootFile);
+  createHist();
 
   // Initialization is done
   pLogWriter->write() << "Initialization is done." << std::endl;
@@ -91,9 +94,11 @@ Analysis::Run::~Run() {
   writeElectronBasicData();
   writeElectronMomentumData();
   writeIonAndElectronMomentumData();
+  flushHist();
   pRootFile->Close();
 
   // finalization is done
+  delete pHist;
   delete pRootFile;
   delete pElectrons;
   delete pIons;
@@ -241,6 +246,7 @@ void Analysis::Run::processEvent(const size_t raw) {
       fillElectronMomentumData();
       fillIonAndElectronMomentumData();
     }
+    fillHist();
   }
 }
 const Analysis::Unit &Analysis::Run::getUnit() const {
@@ -511,12 +517,15 @@ void Analysis::Run::writeIonAndElectronMomentumData() {
 const size_t &Analysis::Run::getEntries() const {
   return (const size_t &) pEventChain->GetEntries();
 }
-void Analysis::Run::createROOTObjects() {
-
+void Analysis::Run::createHist() {
+  pHist->create1d(hist1stHitIonTOF_when2ndAnd3rdHitIonAreNotDead, "i1TOF_wheni2Andi3AreNotDead", "1st Hit Ion TOF [ns]", H1_ION_TOF_BINSIZE_REGION, "IonTOF");
 }
-void Analysis::Run::fillROOTObjects() {
-
+void Analysis::Run::fillHist() {
+  bool _2ndAnd3rdHitIonAreNotDead = (!pIons->getRealOrDummyObject(1).isDead()) && (!pIons->getRealOrDummyObject(2).isDead());
+  if(_2ndAnd3rdHitIonAreNotDead) {
+    pHist->fill1d(hist1stHitIonTOF_when2ndAnd3rdHitIonAreNotDead, pIons->getRealOrDummyObject(0).getTOF(*pUnit));
+  }
 }
-void Analysis::Run::FlushROOTFile() {
-
+void Analysis::Run::flushHist() {
+  pHist->FlushRootFile();
 }
