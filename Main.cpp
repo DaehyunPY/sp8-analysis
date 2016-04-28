@@ -42,9 +42,9 @@ int main(int argc, char * argv[]) {
       break;
     }
 #endif
-    if(currentPercentage/100 < i/totalEntries) {
+    if(currentPercentage/100.0 < i/(double)totalEntries) {
       currentPercentage++;
-      showProgressBar(currentPercentage / 100);
+      showProgressBar((const float) (currentPercentage/100.0));
     }
     run.processEvent((size_t) i);
     // TODO: Add function reading commands JOT
