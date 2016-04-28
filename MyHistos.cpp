@@ -24,13 +24,7 @@ MyHistos::MyHistos(const bool verbose,int size): fVerbose(verbose), rootfile(0)
 MyHistos::~MyHistos()
 {
 	//--delete all histos--//
-	for (int i=0;i<arsize;++i)
-	{
-		TObject * obj = hiarray[i];
-		if (obj)
-			delete obj;
-	}
-	delete [] hiarray;
+	delete[] hiarray;
 	
 	//--Close root file--//
 	if (rootfile)

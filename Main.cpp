@@ -1,6 +1,8 @@
 //
 // Created by Daehyun You on 11/29/15.
 //
+// #define ANALYSIS_DEBUG_BUILD
+
 #include <iostream>
 #include "Run.h"
 
@@ -35,6 +37,11 @@ int main(int argc, char * argv[]) {
   int currentPercentage = -1;
   const int totalEntries = (int) run.getEntries();
   for (int i=0; i<totalEntries; i++) {
+#ifdef ANALYSIS_DEBUG_BUILD
+    if(i==100) {
+      break;
+    }
+#endif
     if(currentPercentage/100 < i/totalEntries) {
       currentPercentage++;
       showProgressBar(currentPercentage / 100);
