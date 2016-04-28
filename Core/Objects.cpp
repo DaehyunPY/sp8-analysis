@@ -482,9 +482,9 @@ void Analysis::Objects::setAllOfObjectIsInFrameOfAllDataFlag() {
 const double Analysis::Objects::getSumOfTOF(const int &i1,
                                             const int &i2,
                                             const int &i3) const {
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i3).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).getFlag().isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i3).getFlag().isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
   return getRealOrDummyObject(i1).getTOF()
@@ -495,9 +495,9 @@ const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit,
                                             const int &i1,
                                             const int &i2,
                                             const int &i3) const {
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i3).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).getFlag().isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i3).getFlag().isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
   return unit.writeTime(getSumOfTOF(i1, i2, i3));
@@ -505,8 +505,8 @@ const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit,
 
 const double Analysis::Objects::getDiffOfTOF(const Unit& unit, const int& i1, const int& i2) const
 {
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).getFlag().isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
   return unit.writeTime(fabs(getRealOrDummyObject(i1).getTOF() - getRealOrDummyObject(i2).getTOF()));
@@ -529,8 +529,8 @@ const double Analysis::Objects::getSumOfTOF() const {
 
 const double Analysis::Objects::getDiffOfTOF(const int& i1, const int& i2) const
 { 
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).getFlag().isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).getFlag().isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
   return fabs(getRealOrDummyObject(i1).getTOF() - getRealOrDummyObject(i2).getTOF());
