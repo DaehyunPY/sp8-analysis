@@ -4,6 +4,23 @@
 #include <iostream>
 #include "Run.h"
 
+void showProgressBar(const float prog = 0) {
+  const int width = 50; // characters
+  std::cout << "[";
+  int pos = (int) (width * prog);
+  for (int i = 0; i < width; ++i) {
+    if(i < pos) {
+      std::cout << "=";
+    } else if(i == pos) {
+      std::cout << ">";
+    } else {
+      std::cout << " ";
+    }
+  }
+  std::cout << "] " << (int) (100*prog) << "%\r";
+  std::cout.flush();
+}
+
 int main(int argc, char * argv[]) {
 
   // set seed for random
@@ -15,8 +32,14 @@ int main(int argc, char * argv[]) {
 
   // Setup reader & writer
   Analysis::Run run(argv[1]);
-  for (size_t i=0; i<run.getEntries(); i++) {
-    run.processEvent(i);
+  int currentPercentage = -1;
+  const int totalEntries = (int) run.getEntries();
+  for (int i=0; i<totalEntries; i++) {
+    if(currentPercentage/100 < i/totalEntries) {
+      currentPercentage++;
+      showProgressBar(currentPercentage / 100);
+    }
+    run.processEvent((size_t) i);
     // TODO: Add function reading commands JOT
   }
   return 0;
