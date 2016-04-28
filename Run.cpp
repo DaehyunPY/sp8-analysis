@@ -75,9 +75,9 @@ Analysis::Run::Run(const std::string configFilename) {
   rootFilename += pLogWriter->getID();
   rootFilename += ".root";
   pRootFile = new TFile(rootFilename.c_str(), "update");
-  pHist = new MyHistos(false, numberOfTotalHist);
-  pHist->LinkRootFile(*pRootFile);
-  createHist();
+  pHistNature = new MyHistos(false, histNumberOfHistNature);
+  pHistNature->LinkRootFile(*pRootFile);
+  createHistNature();
 
   // Initialization is done
   pLogWriter->write() << "Initialization is done." << std::endl;
@@ -94,11 +94,11 @@ Analysis::Run::~Run() {
   writeElectronBasicData();
   writeElectronMomentumData();
   writeIonAndElectronMomentumData();
-  flushHist();
+  flushHistNature();
   pRootFile->Close();
 
   // finalization is done
-  delete pHist;
+  delete pHistNature;
   delete pRootFile;
   delete pElectrons;
   delete pIons;
@@ -246,7 +246,7 @@ void Analysis::Run::processEvent(const size_t raw) {
       fillElectronMomentumData();
       fillIonAndElectronMomentumData();
     }
-    fillHist();
+    fillHistNature();
   }
 }
 const Analysis::Unit &Analysis::Run::getUnit() const {
@@ -517,15 +517,27 @@ void Analysis::Run::writeIonAndElectronMomentumData() {
 const size_t &Analysis::Run::getEntries() const {
   return (const size_t &) pEventChain->GetEntries();
 }
-void Analysis::Run::createHist() {
-  pHist->create1d(hist1stHitIonTOF_when2ndAnd3rdHitIonAreNotDead, "i1TOF_wheni2Andi3AreNotDead", "1st Hit Ion TOF [ns]", H1_ION_TOF_BINSIZE_REGION, "IonTOF");
+void Analysis::Run::createHistNature() {
+  pHistNature->create1d(hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead, "h1_i1TOF_i2Andi3AreNotDead", "TOF [ns]", H1_ION_TOF_BINSIZE_REGION, dirNameOfHistNature);
+  pHistNature->create2d(hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion, "h2_i2TOF_i3TOF_i1IsInMasterRegion", "1st Hit Ion TOF [ns]", "2nd Hit Ion TOF [ns]", H2_ION_TOF_BINSIZE_REGION, H2_ION_TOF_BINSIZE_REGION, dirNameOfHistNature);
+  pHistNature->create2d(hist2_1stHitElecE_sumOf1st2ndAnd3rdHitIonTOFs_underMasterCondition, "h2_e1E_iSumTOF_master", "Energy [eV]", "Sum of TOFs [ns]", H2_ELECTRON_ENERGY_BINSIZE_REGION, H2_ION_SUMOFTOF_BINSIZE_REGION, dirNameOfHistNature);
+  pHistNature->create1d(hist1_1stHitElecE_underMasterCondition, "h1_e1E_master", "Energy [eV]", H1_ELECTRON_ENERGY_BINSIZE_REGION, dirNameOfHistNature);
 }
-void Analysis::Run::fillHist() {
-  bool _2ndAnd3rdHitIonAreNotDead = (!pIons->getRealOrDummyObject(1).isDead()) && (!pIons->getRealOrDummyObject(2).isDead());
-  if(_2ndAnd3rdHitIonAreNotDead) {
-    pHist->fill1d(hist1stHitIonTOF_when2ndAnd3rdHitIonAreNotDead, pIons->getRealOrDummyObject(0).getTOF(*pUnit));
+void Analysis::Run::fillHistNature() {
+  const bool under2ndAnd3rdHitIonAreNotDead = (!pIons->getRealOrDummyObject(1).isDead()) && (!pIons->getRealOrDummyObject(2).isDead());
+  if(under2ndAnd3rdHitIonAreNotDead) {
+    pHistNature->fill1d(hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead, pIons->getRealOrDummyObject(0).getTOF(*pUnit));
+  }
+  const bool under1stHitIonInMasterRegion = pIons->getRealOrDummyObject(0).isWithinMasterRegion();
+  if(under1stHitIonInMasterRegion) {
+    pHistNature->fill2d(hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion, pIons->getRealOrDummyObject(1).getTOF(*pUnit), pIons->getRealOrDummyObject(2).getTOF(*pUnit));
+  }
+  const bool underMasterCondition = (pIons->areAllWithinMasterRegion() && pElectrons->areAllWithinMasterRegion());
+  if(underMasterCondition) {
+    pHistNature->fill2d(hist2_1stHitElecE_sumOf1st2ndAnd3rdHitIonTOFs_underMasterCondition, pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit), pIons->getSumOfTOF(*pUnit, 1, 2, 3));
+    pHistNature->fill1d(hist1_1stHitElecE_underMasterCondition, pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit));
   }
 }
-void Analysis::Run::flushHist() {
-  pHist->FlushRootFile();
+void Analysis::Run::flushHistNature() {
+  pHistNature->FlushRootFile();
 }

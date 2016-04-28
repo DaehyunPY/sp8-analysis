@@ -64,12 +64,16 @@ class Run {
   const size_t &getEntries() const;
 
  private:
-  MyHistos *pHist;
-  const int numberOfTotalHist = 10;
-  const int hist1stHitIonTOF_when2ndAnd3rdHitIonAreNotDead = 1;
-  void createHist();
-  void fillHist();
-  void flushHist();
+  MyHistos *pHistNature;
+  const char *dirNameOfHistNature = "Nature";
+  const int histNumberOfHistNature = 4;
+  const int hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead = 0;
+  const int hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion = 1;
+  const int hist2_1stHitElecE_sumOf1st2ndAnd3rdHitIonTOFs_underMasterCondition = 2;
+  const int hist1_1stHitElecE_underMasterCondition = 3;
+  void createHistNature();
+  void fillHistNature();
+  void flushHistNature();
   void fillFlags();
   void fillIonBasicData();
   void fillIonMomentumData();
