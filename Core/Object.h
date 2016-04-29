@@ -7,7 +7,7 @@
 #define OUT_OF_FRAME -100000000
 
 namespace Analysis {
-class Object {
+class Object: public ObjectFlag {
   const double mass;
   const double charge;
   const double minOfTOF;
@@ -19,7 +19,6 @@ class Object {
   double momentumX;
   double momentumY;
   double momentumZ;
-  ObjectFlag flag;
 
  protected:
   Object(const double &m, const double &q, const double &t0, const double &t1);
@@ -34,12 +33,10 @@ class Object {
   void setMomentumX(const double &);
   void setMomentumY(const double &);
   void setMomentumZ(const double &);
-  ObjectFlag &setFlagMembers();
   const double &getMass() const;
   const double &getCharge() const;
   const double &getMinOfTOF() const;
   const double &getMaxOfTOF() const;
-  const ObjectFlag &getFlag() const;
   const double getMass(const Unit &) const;
   const double getCharge(const Unit &) const;
   const double getMinOfTOF(const Unit &) const;
@@ -98,9 +95,6 @@ class Object {
   const double getMotionalDirectionZX(const Unit &) const; // could be out out frame 
   const double getMotionalDirectionZY(const Unit &) const; // could be out out frame 
   const double getEnergy(const Unit &) const; // could be out out frame 
-
-  const bool isWithinMasterRegion() const;
-  const bool isDead() const;
 };
 }
 

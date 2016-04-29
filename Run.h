@@ -61,7 +61,7 @@ class Run {
   const Analysis::Ions &getIons() const;
   const Analysis::Electrons &getElectrons() const;
   const int &getNumberOfHitsUsed() const;
-  const long &getEntries() const;
+  const long getEntries() const;
 
  private:
   MyHistos *pHistNature;

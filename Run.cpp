@@ -142,7 +142,7 @@ void Analysis::Run::processEvent(const long raw) {
         const int &m = pIons->getNumberOfRealOrDummyObjects();
         for (int i = 0; i < m; i++) {
           if (pIons->getRealOrDummyIon(i).isDead()) {
-            pIons->setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
+            pIons->setRealOrDummyObjectMembers(i).setOutOfFrameOfBasicDataFlag();
           }
         }
       }
@@ -150,7 +150,7 @@ void Analysis::Run::processEvent(const long raw) {
         const int &m = pElectrons->getNumberOfRealOrDummyObjects();
         for (int i = 0; i < m; i++) {
           if (pElectrons->getRealOrDummyObject(i).isDead()) {
-            pElectrons->setRealOrDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
+            pElectrons->setRealOrDummyObjectMembers(i).setOutOfFrameOfBasicDataFlag();
           }
         }
       }
@@ -514,7 +514,7 @@ void Analysis::Run::writeIonAndElectronMomentumData() {
   root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy.Write();
   root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Write();
 }
-const long & Analysis::Run::getEntries() const {
+const long Analysis::Run::getEntries() const {
   return (long) pEventChain->GetEntries();
 }
 void Analysis::Run::createHistNature() {

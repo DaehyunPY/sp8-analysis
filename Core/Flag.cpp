@@ -7,7 +7,7 @@
 #include "Flag.h"
 
 Analysis::Flag::Flag() {
-  flag = init;
+  flag = initFlag;
 }
 Analysis::Flag::~Flag() {
 }
@@ -34,9 +34,6 @@ void Analysis::Flag::setFlag(const unsigned int f) {
   flag = f;
 }
 
-const int &Analysis::Flag::getFlag() const {
-  return flag;
-}
 const unsigned int Analysis::Flag::getNthDigit(const unsigned int nth,
                                                const unsigned int f) const {
   assert(nth > 0);
@@ -81,6 +78,6 @@ const unsigned int Analysis::Flag::getNthNumDigit(const unsigned int nth,
                                                   const unsigned int num) const {
   return getNthNumDigit(nth, num, flag);
 }
-void Analysis::Flag::setInit() {
-  flag = init;
+void Analysis::Flag::resetFlag() {
+  flag = initFlag;
 }

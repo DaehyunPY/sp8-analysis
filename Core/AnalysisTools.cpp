@@ -191,15 +191,10 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setLocationX(x);
   ion.setLocationY(y);
   ion.setTOF(t);
-  ion.setFlagMembers().setResortFlag((const unsigned int) f1);
+  ion.setHavingXYTData();
+  ion.setResortFlag(f1);
   if (ion.getTOF() > deadTime || ion.getTOF() < 0e0) {
-    ion.setFlagMembers().setDeadFlag();
-  } else {
-    if (ion.isWithinMasterRegion()) {
-      ion.setFlagMembers().setWithinMasterRegionFlag();
-    } else {
-      ion.setFlagMembers().setOutOfMasterRegionFlag();
-    }
+    ion.setDead();
   }
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
@@ -221,15 +216,10 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   electron.setLocationX(x);
   electron.setLocationY(y);
   electron.setTOF(t);
-  electron.setFlagMembers().setResortFlag((const unsigned int) f1);
+  electron.setHavingXYTData();
+  electron.setResortFlag(f1);
   if (electron.getTOF() > deadTime || electron.getTOF() < 0e0) {
-    electron.setFlagMembers().setDeadFlag();
-  } else {
-    if (electron.isWithinMasterRegion()) {
-      electron.setFlagMembers().setWithinMasterRegionFlag();
-    } else {
-      electron.setFlagMembers().setOutOfMasterRegionFlag();
-    }
+    electron.setDead();
   }
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
@@ -239,9 +229,10 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
   ion.setMomentumX(pxy.x);
   ion.setMomentumY(pxy.y);
   if(info) {
-      ion.setMomentumZ(pz);
+    ion.setMomentumZ(pz);
+    ion.setHavingProperPzData();
   } else {
-    ion.setFlagMembers().setDeadFlag();
+    ion.setHavingMomentumData();
   }
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(
@@ -252,9 +243,10 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   electron.setMomentumX(pxy.x);
   electron.setMomentumY(pxy.y);
   if(info) {
-      electron.setMomentumZ(pz);
+    electron.setMomentumZ(pz);
+    electron.setHavingProperPzData();
   } else {
-    electron.setFlagMembers().setDeadFlag();
+    electron.setHavingMomentumData();
   }
 }
 const int &Analysis::AnalysisTools::getEventNumber() const {
