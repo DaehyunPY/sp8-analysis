@@ -520,7 +520,7 @@ const long Analysis::Run::getEntries() const {
 void Analysis::Run::createHistNature() {
   pHistNature->create1d(hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead, "h1_i1TOF_i2Andi3AreNotDead", "TOF [ns]", H1_ION_TOF_BINSIZE_REGION, dirNameOfHistNature);
   pHistNature->create2d(hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion, "h2_i2TOF_i3TOF_i1IsInMasterRegion", "1st Hit Ion TOF [ns]", "2nd Hit Ion TOF [ns]", H2_ION_TOF_BINSIZE_REGION, H2_ION_TOF_BINSIZE_REGION, dirNameOfHistNature);
-  pHistNature->create2d(hist2_1stHitElecE_sumOf1st2ndAnd3rdHitIonTOFs_underMasterCondition, "h2_e1E_iSumTOF_master", "Energy [eV]", "Sum of TOFs [ns]", H2_ELECTRON_ENERGY_BINSIZE_REGION, H2_ION_SUMOFTOF_BINSIZE_REGION, dirNameOfHistNature);
+  pHistNature->create2d(hist2_1stHitElecE_sumOfIonTOFs_underMasterCondition, "h2_e1E_iSumTOF_master", "Energy [eV]", "Sum of TOFs [ns]", H2_ELECTRON_ENERGY_BINSIZE_REGION, H2_ION_SUMOFTOF_BINSIZE_REGION, dirNameOfHistNature);
   pHistNature->create1d(hist1_1stHitElecE_underMasterCondition, "h1_e1E_master", "Energy [eV]", H1_ELECTRON_ENERGY_BINSIZE_REGION, dirNameOfHistNature);
 }
 void Analysis::Run::fillHistNature() {
@@ -534,7 +534,7 @@ void Analysis::Run::fillHistNature() {
   }
   const bool underMasterCondition = (pIons->areAllWithinMasterRegion() && pElectrons->areAllWithinMasterRegion());
   if(underMasterCondition) {
-    pHistNature->fill2d(hist2_1stHitElecE_sumOf1st2ndAnd3rdHitIonTOFs_underMasterCondition, pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit), pIons->getSumOfTOF(*pUnit, 1, 2, 3));
+    pHistNature->fill2d(hist2_1stHitElecE_sumOfIonTOFs_underMasterCondition, pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit), pIons->getSumOfTOF(*pUnit));
     pHistNature->fill1d(hist1_1stHitElecE_underMasterCondition, pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit));
   }
 }
