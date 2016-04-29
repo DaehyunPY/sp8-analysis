@@ -56,12 +56,12 @@ class Run {
  public:
   Run(const std::string configFilename = "Parameters.json");
   ~Run();
-  void processEvent(const size_t raw);
+  void processEvent(const long raw);
   const Analysis::Unit &getUnit() const;
   const Analysis::Ions &getIons() const;
   const Analysis::Electrons &getElectrons() const;
   const int &getNumberOfHitsUsed() const;
-  const size_t &getEntries() const;
+  const long &getEntries() const;
 
  private:
   MyHistos *pHistNature;

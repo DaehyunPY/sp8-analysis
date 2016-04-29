@@ -111,9 +111,9 @@ Analysis::Run::~Run() {
   pLogWriter->write() << std::endl;
   delete pLogWriter;
 }
-void Analysis::Run::processEvent(const size_t raw) {
+void Analysis::Run::processEvent(const long raw) {
   // setup
-  pEventChain->GetEntry((Long64_t) raw);
+  pEventChain->GetEntry(raw);
 
   // count event
   pTools->loadEventCounter();
@@ -514,8 +514,8 @@ void Analysis::Run::writeIonAndElectronMomentumData() {
   root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy.Write();
   root2DHistogramOfTotalEnergy_1stHitElectronEnergy.Write();
 }
-const size_t &Analysis::Run::getEntries() const {
-  return (const size_t &) pEventChain->GetEntries();
+const long & Analysis::Run::getEntries() const {
+  return (long) pEventChain->GetEntries();
 }
 void Analysis::Run::createHistNature() {
   pHistNature->create1d(hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead, "h1_i1TOF_i2Andi3AreNotDead", "TOF [ns]", H1_ION_TOF_BINSIZE_REGION, dirNameOfHistNature);

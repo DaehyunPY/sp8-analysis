@@ -35,8 +35,8 @@ int main(int argc, char * argv[]) {
   // Setup reader & writer
   Analysis::Run run(argv[1]);
   int currentPercentage = -1;
-  const int totalEntries = (int) run.getEntries();
-  for (int i=0; i<totalEntries; i++) {
+  const long totalEntries = run.getEntries();
+  for (long i=0; i<totalEntries; i++) {
 #ifdef ANALYSIS_DEBUG_BUILD
     if(i==100) {
       break;
@@ -46,7 +46,7 @@ int main(int argc, char * argv[]) {
       currentPercentage++;
       showProgressBar((const float) (currentPercentage/100.0));
     }
-    run.processEvent((size_t) i);
+    run.processEvent(i);
     // TODO: Add function reading commands JOT
   }
   return 0;
