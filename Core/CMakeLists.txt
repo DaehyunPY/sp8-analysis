@@ -48,8 +48,3 @@ set(SOURCE_FILES
     )
 add_library(AnalysisCoreSharedLib SHARED ${SOURCE_FILES})
 add_library(AnalysisCoreStaticLib STATIC ${SOURCE_FILES})
-
-### test
-set(MAIN_FILE Test/Main.cpp)
-add_executable(AnalysisCoreTestExe ${MAIN_FILE})
-target_link_libraries(AnalysisCoreTestExe AnalysisCoreStaticLib)
