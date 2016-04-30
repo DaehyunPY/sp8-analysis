@@ -53,4 +53,3 @@ add_library(AnalysisCoreStaticLib STATIC ${SOURCE_FILES})
 set(MAIN_FILE Test/Main.cpp)
 add_executable(AnalysisCoreTestExe ${MAIN_FILE})
 target_link_libraries(AnalysisCoreTestExe AnalysisCoreStaticLib)
-
