@@ -8,6 +8,7 @@ class Unit {
  private:
   static const double kPi;
   static const double kAtomicMass;
+  static const double kSpeedOfLight;
   static const double kElectronRestMass;
   static const double kElementaryCharge;
   static const double kReducedPlanckConstant;
