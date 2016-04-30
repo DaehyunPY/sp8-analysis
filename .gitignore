@@ -9,4 +9,5 @@ CDan.sdf
 CDan.sln
 CDan.vcxproj
 include/
-Analysis/Document
+Document/
+*.DS_Store

@@ -58,8 +58,8 @@ define1 -500,500,1,ion_pzh1,,none,master,1st hit ion Pz [au];
 define2 -500,500,5,ion_pxh1,,-500,500,5,ion_pyh1,,none,always,1st hit ion Px vs Py [au]; 
 define2 -500,500,5,ion_pxh1,,-500,500,5,ion_pyh1,,none,master,1st hit ion Px vs Py [au]; 
 define2 -500,500,5,ion_pzh1,,-500,500,5,ion_pxh1,,none,always,1st hit ion Pz vs Px [au]; 
-define2 -500,500,5,ion_pzh1,,-500,500,5,ion_pxh1,,none,always,1st hit ion Pz vs Px [au]; 
-define2 -500,500,5,ion_pzh1,,-500,500,5,ion_pyh1,,none,master,1st hit ion Pz vs Py [au]; 
+define2 -500,500,5,ion_pzh1,,-500,500,5,ion_pxh1,,none,master,1st hit ion Pz vs Px [au]; 
+define2 -500,500,5,ion_pzh1,,-500,500,5,ion_pyh1,,none,always,1st hit ion Pz vs Py [au]; 
 define2 -500,500,5,ion_pzh1,,-500,500,5,ion_pyh1,,none,master,1st hit ion Pz vs Py [au]; 
 // energy 
 define1 0,50,0.05,ion_energyh1,,none,always, 1st hit ion energy [eV];
