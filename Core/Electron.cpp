@@ -5,9 +5,9 @@ Analysis::Electron::Electron(const Analysis::Unit &unit,
                              const double &t1)
     : Object(
     unit.readElectronRestMass(1e0),
-    unit.readCharge(1e0),
-    unit.readTime(t0),
-    unit.readTime(t1)) {
+    unit.readElementaryCharge(1e0),
+    unit.readNanoSec(t0),
+    unit.readNanoSec(t1)) {
   return;
 }
 Analysis::Electron::Electron(const Analysis::Unit &unit,

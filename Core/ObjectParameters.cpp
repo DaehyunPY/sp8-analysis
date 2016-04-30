@@ -27,10 +27,10 @@ Analysis::ObjectParameters::ObjectParameters(const Analysis::Unit &unit,
     : ObjectParameters(unit.readDegree(theta),
                        dx,
                        dy,
-                       unit.readTime(t1),
-                       unit.readLength(x0),
-                       unit.readLength(y0),
-                       unit.readTime(t0)) {
+                       unit.readNanoSec(t1),
+                       unit.readMilliMeter(x0),
+                       unit.readMilliMeter(y0),
+                       unit.readNanoSec(t0)) {
   return;
 }
 Analysis::ObjectParameters::ObjectParameters(const Unit &unit,
@@ -72,14 +72,14 @@ const double Analysis::ObjectParameters::getAngleOfDetector(const Analysis::Unit
   return unit.writeDegree(getAngleOfDetector());
 }
 const double Analysis::ObjectParameters::getDeadTime(const Analysis::Unit &unit) const {
-  return unit.writeTime(getDeadTime());
+  return unit.writeNanoSec(getDeadTime());
 }
 const double Analysis::ObjectParameters::getXZeroOfCOM(const Analysis::Unit &unit) const {
-  return unit.writeLength(getXZeroOfCOM());
+  return unit.writeMilliMeter(getXZeroOfCOM());
 }
 const double Analysis::ObjectParameters::getYZeroOfCOM(const Analysis::Unit &unit) const {
-  return unit.writeLength(getYZeroOfCOM());
+  return unit.writeMilliMeter(getYZeroOfCOM());
 }
 const double Analysis::ObjectParameters::getTimeZeroOfTOF(const Analysis::Unit &unit) const {
-  return unit.writeTime(getTimeZeroOfTOF());
+  return unit.writeNanoSec(getTimeZeroOfTOF());
 }

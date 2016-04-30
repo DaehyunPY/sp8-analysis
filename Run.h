@@ -37,6 +37,7 @@
 #include "Core/Ions.h"
 #include "Core/Electrons.h"
 #include "Core/LogWriter.h"
+#include "OutputHist.h"
 
 namespace Analysis {
 class Run {
@@ -55,14 +56,24 @@ class Run {
  public:
   Run(const std::string configFilename = "Parameters.json");
   ~Run();
-  void processEvent(const size_t raw);
+  void processEvent(const long raw);
   const Analysis::Unit &getUnit() const;
   const Analysis::Ions &getIons() const;
   const Analysis::Electrons &getElectrons() const;
   const int &getNumberOfHitsUsed() const;
-  const size_t &getEntries() const;
+  const long getEntries() const;
 
  private:
+  OutputHist *pHistNature;
+  const char *dirNameOfHistNature = "Nature";
+  const int histNumberOfHistNature = 4;
+  const int hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead = 0;
+  const int hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion = 1;
+  const int hist2_1stHitElecE_sumOfIonTOFs_underMasterCondition = 2;
+  const int hist1_1stHitElecE_underMasterCondition = 3;
+  void createHistNature();
+  void fillHistNature();
+  void flushHistNature();
   void fillFlags();
   void fillIonBasicData();
   void fillIonMomentumData();

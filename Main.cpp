@@ -1,8 +1,27 @@
 //
 // Created by Daehyun You on 11/29/15.
 //
+// #define ANALYSIS_DEBUG_BUILD
+
 #include <iostream>
 #include "Run.h"
+
+void showProgressBar(const float prog = 0) {
+  const int width = 50; // characters
+  std::cout << "[";
+  int pos = (int) (width * prog);
+  for (int i = 0; i < width; ++i) {
+    if(i < pos) {
+      std::cout << "=";
+    } else if(i == pos) {
+      std::cout << ">";
+    } else {
+      std::cout << " ";
+    }
+  }
+  std::cout << "] " << (int) (100*prog) << "%\r";
+  std::cout.flush();
+}
 
 int main(int argc, char * argv[]) {
 
@@ -15,7 +34,18 @@ int main(int argc, char * argv[]) {
 
   // Setup reader & writer
   Analysis::Run run(argv[1]);
-  for (size_t i=0; i<run.getEntries(); i++) {
+  int currentPercentage = -1;
+  const long totalEntries = run.getEntries();
+  for (long i=0; i<totalEntries; i++) {
+#ifdef ANALYSIS_DEBUG_BUILD
+    if(i==100) {
+      break;
+    }
+#endif
+    if(currentPercentage/100.0 < i/(double)totalEntries) {
+      currentPercentage++;
+      showProgressBar((const float) (currentPercentage/100.0));
+    }
     run.processEvent(i);
     // TODO: Add function reading commands JOT
   }

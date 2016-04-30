@@ -10,13 +10,14 @@
 
 namespace Analysis {
 class Flag {
+ protected:
   unsigned int flag;
-  const unsigned int init = 0;
+  const unsigned int initFlag = 0;
 
  protected:
   Flag();
   virtual ~Flag();
-  void setInit();
+  void resetFlag();
   const unsigned int get1stDigit(const unsigned int f) const;
   const unsigned int get1stDigit() const;
   const unsigned int get2ndDigit(const unsigned int f) const;
@@ -36,9 +37,6 @@ class Flag {
   void setNthNumDigit
       (const unsigned int nth, const unsigned int num, const unsigned int f1);
   void setFlag(const unsigned int f);
-
- public:
-  const int &getFlag() const;
 };
 }
 

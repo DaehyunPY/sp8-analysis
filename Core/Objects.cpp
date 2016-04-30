@@ -135,31 +135,31 @@ Analysis::Object &Analysis::Objects::setDummyObjectMembers(const int &i) {
 }
 const double Analysis::Objects::getLocationX(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(getLocationX());
+  return unit.writeMilliMeter(getLocationX());
 }
 const double Analysis::Objects::getLocationY(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(getLocationY());
+  return unit.writeMilliMeter(getLocationY());
 }
 const double Analysis::Objects::getMomentumX(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumX());
+  return unit.writeAuMomentum(getMomentumX());
 }
 const double Analysis::Objects::getMomentumY(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumY());
+  return unit.writeAuMomentum(getMomentumY());
 }
 const double Analysis::Objects::getMomentumZ(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumZ());
+  return unit.writeAuMomentum(getMomentumZ());
 }
 const double Analysis::Objects::getMomentum(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentum());
+  return unit.writeAuMomentum(getMomentum());
 }
 const double Analysis::Objects::getEnergy(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeEnergy(getEnergy());
+  return unit.writeElectronVolt(getEnergy());
 }
 const int &Analysis::Objects::getNumberOfRealOrDummyObjects() const {
   return numberOfHitsUsed;
@@ -181,7 +181,7 @@ const bool Analysis::Objects::existOutOfFrameOfBasicDataObject() const {
   const int &n = getNumberOfObjects();
   bool b = false;
   for (int i = 0; i < n; i++) {
-    b = b || getObject(i).getFlag().isOutOfFrameOfBasicData();
+    b = b || getObject(i).isOutOfFrameOfBasicData();
   }
   return b;
 }
@@ -190,7 +190,7 @@ const bool Analysis::Objects::existOutOfFrameOfMomentumDataObject() const {
   const int &n = getNumberOfObjects();
   bool b = false;
   for (int i = 0; i < n; i++) {
-    b = b || getObject(i).getFlag().isOutOfFrameOfMomentumData();
+    b = b || getObject(i).isOutOfFrameOfMomentumData();
   }
   return b;
 }
@@ -201,14 +201,14 @@ const bool Analysis::Objects::existDeadObject() const {
 const bool Analysis::Objects::areAllWithinMasterRegion() const {
   bool b = true;
   for (int i = 0; i < numberOfHits; i++) {
-    b = b && getObject(i).getFlag().isWithinMasterRegion();
+    b = b && getObject(i).isWithinMasterRegion();
   }
   return b;
 }
 const int Analysis::Objects::getNumberOfDeadObjects() const {
   int n = 0;
   for (int i = 0; i < numberOfHits; i++) {
-    if (getObject(i).getFlag().isDead()) {
+    if (getObject(i).isDead()) {
       n += 1;
     }
   }
@@ -217,7 +217,7 @@ const int Analysis::Objects::getNumberOfDeadObjects() const {
 const int Analysis::Objects::getNumberOfDeadDummyObjects() const {
   int n = 0;
   for (int i = numberOfHits; i < numberOfHitsUsed; i++) {
-    if (getDummyObject(i).getFlag().isDead()) {
+    if (getDummyObject(i).isDead()) {
       n += 1;
     }
   }
@@ -245,7 +245,7 @@ const double Analysis::Objects::getMomentumXY() const {
 }
 const double Analysis::Objects::getMomentumXY(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumXY());
+  return unit.writeAuMomentum(getMomentumXY());
 }
 const int Analysis::Objects::getNumberOfDummyObject() const {
   return getNumberOfRealOrDummyObjects() - getNumberOfObjects();
@@ -274,11 +274,11 @@ const double Analysis::Objects::getMotionalDirectionZX() const {
 }
 const double Analysis::Objects::getMomentumYZ(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumYZ());
+  return unit.writeAuMomentum(getMomentumYZ());
 }
 const double Analysis::Objects::getMomentumZX(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumZX());
+  return unit.writeAuMomentum(getMomentumZX());
 }
 const double Analysis::Objects::getMotionalDirectionX(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
@@ -306,8 +306,8 @@ const double Analysis::Objects::getMotionalDirectionZX(const Analysis::Unit &uni
 }
 const double Analysis::Objects::getSumOfTOF(const int &i1,
                                             const int &i2) const {
-  if (getRealOrDummyObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getRealOrDummyObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
   return getRealOrDummyObject(i1).getTOF() + getRealOrDummyObject(i2).getTOF();
@@ -315,11 +315,11 @@ const double Analysis::Objects::getSumOfTOF(const int &i1,
 const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit,
                                             const int &i1,
                                             const int &i2) const {
-  if (getRealOrDummyObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getRealOrDummyObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
-  return unit.writeTime(getSumOfTOF(i1, i2));
+  return unit.writeNanoSec(getSumOfTOF(i1, i2));
 }
 const Analysis::Object &Analysis::Objects::getRealOrDummyObject(const int &i) const {
   const Object *pObject;
@@ -349,14 +349,14 @@ Analysis::Object &Analysis::Objects::setRealOrDummyObjectMembers(const int &i) {
 void Analysis::Objects::setAllOfObjectIsOutOfFrameOfBasicDataFlag() {
   const int &n = getNumberOfObjects();
   for (int i = 0; i < n; i++) {
-    setObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
+    setObjectMembers(i).setOutOfFrameOfBasicDataFlag();
   }
 }
 
 void Analysis::Objects::setAllOfObjectIsOutOfFrameOfMomentumDataFlag() {
   const int &n = getNumberOfObjects();
   for (int i = 0; i < n; i++) {
-    setObjectMembers(i).setFlagMembers().setOutOfFrameOfMomentumDataFlag();
+    setObjectMembers(i).setOutOfFrameOfMomentumDataFlag();
   }
 }
 
@@ -364,7 +364,7 @@ void Analysis::Objects::setAllOfDummyObjectIsOutOfFrameOfBasicDataFlag() {
   const int &n = getNumberOfObjects();
   const int &m = getNumberOfDeadRealOrDummyObjects();
   for (int i = n; i < m; i++) {
-    setDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfBasicDataFlag();
+    setDummyObjectMembers(i).setOutOfFrameOfBasicDataFlag();
   }
 }
 
@@ -372,7 +372,7 @@ void Analysis::Objects::setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag() {
   const int &n = getNumberOfObjects();
   const int &m = getNumberOfDeadRealOrDummyObjects();
   for (int i = n; i < m; i++) {
-    setDummyObjectMembers(i).setFlagMembers().setOutOfFrameOfMomentumDataFlag();
+    setDummyObjectMembers(i).setOutOfFrameOfMomentumDataFlag();
   }
 }
 
@@ -443,11 +443,11 @@ const double Analysis::Objects::getMotionalDirectionZY() const {
 }
 const double Analysis::Objects::getLocationXY(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(getLocationXY());
+  return unit.writeMilliMeter(getLocationXY());
 }
 const double Analysis::Objects::getLocation(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(getLocation());
+  return unit.writeMilliMeter(getLocation());
 }
 const double Analysis::Objects::getMotionalDirectionXZ(const Analysis::Unit &unit) const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
@@ -469,22 +469,22 @@ void Analysis::Objects::setAllOfDummyObjectIsInFrameOfAllDataFlag() {
   const int &n = getNumberOfObjects();
   const int &m = getNumberOfRealOrDummyObjects();
   for(int i = n; i < m; i++) {
-    setDummyObjectMembers(i).setFlagMembers().setInFrameOfAllDataFlag();
+    setDummyObjectMembers(i).setInFrameOfAllDataFlag();
   }
 
 }
 void Analysis::Objects::setAllOfObjectIsInFrameOfAllDataFlag() {
   const int &n = getNumberOfObjects();
   for(int i = 0; i < n; i++) {
-    setObjectMembers(i).setFlagMembers().setInFrameOfAllDataFlag();
+    setObjectMembers(i).setInFrameOfAllDataFlag();
   }
 }
 const double Analysis::Objects::getSumOfTOF(const int &i1,
                                             const int &i2,
                                             const int &i3) const {
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i3).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i3).isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
   return getRealOrDummyObject(i1).getTOF()
@@ -495,21 +495,22 @@ const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit,
                                             const int &i1,
                                             const int &i2,
                                             const int &i3) const {
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i3).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i3).isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
-  return unit.writeTime(getSumOfTOF(i1, i2, i3));
+  return unit.writeNanoSec(getSumOfTOF(i1, i2, i3));
 }
 
 const double Analysis::Objects::getDiffOfTOF(const Unit& unit, const int& i1, const int& i2) const
 {
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
-  return unit.writeTime(fabs(getRealOrDummyObject(i1).getTOF() - getRealOrDummyObject(i2).getTOF()));
+  return unit.writeNanoSec(fabs(
+      getRealOrDummyObject(i1).getTOF() - getRealOrDummyObject(i2).getTOF()));
 }
 
 const double Analysis::Objects::getSumOfTOF() const {
@@ -517,7 +518,7 @@ const double Analysis::Objects::getSumOfTOF() const {
   bool itIsOutOfFrame = false;
   long double sum = 0;
   for(int i=0; i<n; i++) {
-    itIsOutOfFrame = itIsOutOfFrame || getObject(i).getFlag().isOutOfFrameOfBasicData();
+    itIsOutOfFrame = itIsOutOfFrame || getObject(i).isOutOfFrameOfBasicData();
     sum += getObject(i).getTOF();
   }
   if(itIsOutOfFrame) {
@@ -529,8 +530,8 @@ const double Analysis::Objects::getSumOfTOF() const {
 
 const double Analysis::Objects::getDiffOfTOF(const int& i1, const int& i2) const
 { 
-  if (getObject(i1).getFlag().isOutOfFrameOfBasicData()
-      || getObject(i2).getFlag().isOutOfFrameOfBasicData()) {
+  if (getRealOrDummyObject(i1).isOutOfFrameOfBasicData()
+      || getRealOrDummyObject(i2).isOutOfFrameOfBasicData()) {
     return outOfFrame;
   }
   return fabs(getRealOrDummyObject(i1).getTOF() - getRealOrDummyObject(i2).getTOF());
@@ -540,28 +541,28 @@ const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit) const {
   const int& n = getNumberOfObjects();
   bool itIsOutOfFrame = false;
   for(int i=0; i<n; i++) {
-    itIsOutOfFrame = itIsOutOfFrame || getObject(i).getFlag().isOutOfFrameOfBasicData();
+    itIsOutOfFrame = itIsOutOfFrame || getObject(i).isOutOfFrameOfBasicData();
   }
   if(itIsOutOfFrame) {
     return outOfFrame;
   } else {
-    return unit.writeTime(getSumOfTOF());
+    return unit.writeNanoSec(getSumOfTOF());
   }
 }
 const bool Analysis::Objects::areAllMostReliableObject() const {
   bool b = true;
   for(int i = 0; i < getNumberOfObjects(); i++) {
-    b = b && getObject(i).getFlag().isMostReliable();
+    b = b && getObject(i).isMostReliable();
   }
   return b;
 }
 const bool Analysis::Objects::areAllMostOrSecondMostReliableObject() const {
   bool b = true;
   for(int i = 0; i < getNumberOfObjects(); i++) {
-#ifdef _DEBUG
+#ifdef ANALYSIS_DEBUG_BUILD
     int f1 = getObject(i).getFlag().getResortFlag();
 #endif
-    b = b && getObject(i).getFlag().isMostOrSecondMostReliable();
+    b = b && getObject(i).isMostOrSecondMostReliable();
   }
   return b;
 }

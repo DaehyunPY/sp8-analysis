@@ -1,11 +1,15 @@
 cmake_minimum_required (VERSION 3.3)
 project (Analysis)
 
+if (CMAKE_BUILD_TYPE EQUAL "Debug")
+  add_definitions(-DANALYSIS_DEBUG_BUILD)
+endif (CMAKE_BUILD_TYPE EQUAL "Debug")
+
 ### Add core library.
 add_subdirectory (Core)
 
 ### Link ROOT libraries.
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
   link_libraries (pthread m dl)
   include_directories ("/usr/local/include/root")
   link_directories ("/usr/local/lib/root")
@@ -25,7 +29,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       MathCore
       Thread
   )
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
   link_libraries (pthread m dl)
   include_directories ("/usr/local/include/root")
   link_directories ("/usr/local/lib/root")
@@ -45,7 +49,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
       MathCore
       Thread
   )
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
   set (ROOTSYS "C:/root/")
   include_directories ("${ROOTSYS}/include")
   link_directories ("${ROOTSYS}/lib")
@@ -65,22 +69,26 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
       libMathCore.lib
       libThread.lib
   )
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 ### Set flags.
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
+endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 ### Set source files.
 set (SOURCE_FILES
     Main.cpp
-    Run.h
     Run.cpp
-    OutputFlag.cpp OutputFlag.h)
+    Run.h
+    OutputFlag.cpp
+    OutputFlag.h
+    OutputHist.cpp
+    OutputHist.h
+    )
 
 ### Add executable.
 add_executable (AnalysisExe ${SOURCE_FILES})

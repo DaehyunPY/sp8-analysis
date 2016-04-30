@@ -6,73 +6,60 @@
 #include "ObjectFlag.h"
 
 Analysis::ObjectFlag::ObjectFlag() : Flag() {
-  resetFlag();
   return;
 }
-Analysis::ObjectFlag::~ObjectFlag() { }
-void Analysis::ObjectFlag::resetFlag() {
-  setFlag(initialFlag);
-}
-
-void Analysis::ObjectFlag::setWithinMasterRegionFlag() {
-  if (get1stDigit() == get1stDigit(initialFlag)) {
+void Analysis::ObjectFlag::setWithinMasterRegion() {
+  if (get1stDigit() == initFlag) {
     set1stDigit(flagFor1stDigit_withinMasterRegion);
   }
 }
-
-void Analysis::ObjectFlag::setOutOfMasterRegionFlag() {
-  if (get1stDigit() == get1stDigit(initialFlag)) {
+void Analysis::ObjectFlag::setOutOfMasterRegion() {
+  if (get1stDigit() == initFlag) {
     set1stDigit(flagFor1stDigit_outOfMasterRegion);
   }
 }
-
-void Analysis::ObjectFlag::setDeadFlag() {
-  if (get1stDigit() < flagFor1stDigit_dead) {
+void Analysis::ObjectFlag::setDead() {
+  const unsigned int f0 = get1stDigit();
+  if (f0 == flagFor1stDigit_withinMasterRegion || f0 == flagFor1stDigit_outOfMasterRegion) {
     set1stDigit(flagFor1stDigit_dead);
   }
 }
-
 void Analysis::ObjectFlag::setInFrameOfAllDataFlag() {
-  if (get2ndDigit() == get2ndDigit(initialFlag)) {
-    set2ndDigit(flagFor2ndDigit_inFrameOfAllData);
+  if (getNthDigit(5) == initFlag) {
+    setNthDigit(5, flagFor5thDigit_inFrameOfAllData);
   }
 }
 
 void Analysis::ObjectFlag::setOutOfFrameOfMomentumDataFlag() {
-  if (flagFor2ndDigit_inFrameOfAllData <= get2ndDigit()
-      && get2ndDigit() < flagFor2ndDigit_outOfFrameOfMomentumData) {
-    set2ndDigit(flagFor2ndDigit_outOfFrameOfMomentumData);
+  if (flagFor5thDigit_inFrameOfAllData <= getNthDigit(5)
+      && getNthDigit(5) < flagFor5thDigit_outOfFrameOfMomentumData) {
+    setNthDigit(5, flagFor5thDigit_outOfFrameOfMomentumData);
   }
 }
 
 void Analysis::ObjectFlag::setOutOfFrameOfBasicDataFlag() {
-  if (flagFor2ndDigit_inFrameOfAllData <= get2ndDigit()
-      && get2ndDigit() < flagFor2ndDigit_outOfFrameOfBasicData) {
-    set2ndDigit(
-        flagFor2ndDigit_outOfFrameOfBasicData);
+  if (flagFor5thDigit_inFrameOfAllData <= getNthDigit(5)
+      && getNthDigit(5) < flagFor5thDigit_outOfFrameOfBasicData) {
+    setNthDigit(5, flagFor5thDigit_outOfFrameOfBasicData);
   }
 }
-
-const bool Analysis::ObjectFlag::isInitial() const {
-  return getFlag() == initialFlag;
-}
 const bool Analysis::ObjectFlag::isInFrameOfAllData() const {
-  return get2ndDigit() == flagFor2ndDigit_inFrameOfAllData;
+  return getNthDigit(5) == flagFor5thDigit_inFrameOfAllData;
 }
 const bool Analysis::ObjectFlag::isDead() const {
-  return get1stDigit() >= flagFor1stDigit_dead;
+  return get1stDigit() == flagFor1stDigit_dead;
 }
 const bool Analysis::ObjectFlag::isOutOfFrameOfBasicData() const {
-  return get2ndDigit()
-      >= flagFor2ndDigit_outOfFrameOfBasicData;
+  return getNthDigit(5)
+      >= flagFor5thDigit_outOfFrameOfBasicData;
 }
 
 const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const {
-  return get2ndDigit() >= flagFor2ndDigit_outOfFrameOfMomentumData;
+  return getNthDigit(5) >= flagFor5thDigit_outOfFrameOfMomentumData;
 }
 
-const bool Analysis::ObjectFlag::isOutOfMasterRegion() const {
-  return get1stDigit() >= flagFor1stDigit_outOfMasterRegion;
+const bool Analysis::ObjectFlag::isOutOfMasterRegionOrDead() const {
+  return (get1stDigit() == flagFor1stDigit_outOfMasterRegion) || (get1stDigit() == flagFor1stDigit_dead);
 }
 const bool Analysis::ObjectFlag::isWithinMasterRegion() const {
   return get1stDigit() == flagFor1stDigit_withinMasterRegion;
@@ -109,4 +96,35 @@ const bool Analysis::ObjectFlag::isMostOrSecondMostReliable() const {
 }
 const bool Analysis::ObjectFlag::isRisky() const {
   return flagForResort_riskyRegion1 <= getResortFlag() && getResortFlag() <= flagForResort_outOfTheRegion;
+}
+Analysis::ObjectFlag::~ObjectFlag() {
+
+}
+void Analysis::ObjectFlag::setHavingXYTData() {
+  if(get2ndDigit() == initFlag) {
+    set2ndDigit(flagFor2ndDigit_hasXYTData);
+  }
+}
+void Analysis::ObjectFlag::setHavingMomentumData() {
+  if(get2ndDigit() == flagFor2ndDigit_hasXYTData) {
+    set2ndDigit(flagFor2ndDigit_hasMomentumData);
+  }
+}
+void Analysis::ObjectFlag::setHavingProperPzData() {
+  const unsigned int f0 = get2ndDigit();
+  if(f0 == flagFor2ndDigit_hasXYTData || f0 == flagFor2ndDigit_hasMomentumData) {
+    set2ndDigit(flagFor2ndDigit_hasProperPzData);
+  }
+}
+const bool Analysis::ObjectFlag::isHavingXYTData() const {
+  const unsigned int f0 = get2ndDigit();
+  return (f0 == flagFor2ndDigit_hasXYTData) || (f0 == flagFor2ndDigit_hasMomentumData) || (f0 == flagFor2ndDigit_hasProperPzData);
+}
+const bool Analysis::ObjectFlag::isHavingMomentumData() const {
+  const unsigned int f0 = get2ndDigit();
+  return (f0 == flagFor2ndDigit_hasMomentumData) || (f0 == flagFor2ndDigit_hasProperPzData);
+}
+const bool Analysis::ObjectFlag::isHavingProperPzData() const {
+  const unsigned int f0 = get2ndDigit();
+  return (f0 == flagFor2ndDigit_hasProperPzData);
 }

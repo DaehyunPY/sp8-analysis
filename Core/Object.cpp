@@ -1,14 +1,14 @@
 #include <assert.h>
 #include "Object.h"
 
-#define ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1 if(getFlag().isOutOfFrameOfBasicData()) { return outOfFrame; }
-#define ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2 if(getFlag().isOutOfFrameOfMomentumData()) { return outOfFrame; }
+#define ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1 if(isOutOfFrameOfBasicData()) { return outOfFrame; }
+#define ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2 if(isOutOfFrameOfMomentumData()) { return outOfFrame; }
 
 Analysis::Object::Object(const double &m,
                          const double &q,
                          const double &t0,
                          const double &t1)
-    : mass(m), charge(q), minOfTOF(t0), maxOfTOF(t1) {
+    : ObjectFlag(), mass(m), charge(q), minOfTOF(t0), maxOfTOF(t1) {
   assert(getMass() >= 0e0);
   assert(getMinOfTOF() <= getMaxOfTOF());
   resetEventData();
@@ -22,7 +22,7 @@ void Analysis::Object::resetEventData() {
   momentumX = 0e0;
   momentumY = 0e0;
   momentumZ = 0e0;
-  flag.resetFlag();
+  resetFlag();
   return;
 }
 void Analysis::Object::setLocationX(const double &x) {
@@ -33,7 +33,14 @@ void Analysis::Object::setLocationY(const double &y) {
   locationY = y;
   return;
 }
-void Analysis::Object::setTOF(const double &t) { this->TOF = t; }
+void Analysis::Object::setTOF(const double &t) {
+  TOF = t;
+  if((TOF < maxOfTOF) && (TOF > minOfTOF)) {
+    setWithinMasterRegion();
+  } else {
+    setOutOfMasterRegion();
+  }
+}
 void Analysis::Object::setMomentumX(const double &px) {
   momentumX = px;
   return;
@@ -46,10 +53,7 @@ void Analysis::Object::setMomentumZ(const double &pz) {
   momentumZ = pz;
   return;
 }
-Analysis::ObjectFlag &Analysis::Object::setFlagMembers() {
-  return flag;
-}
-const double &Analysis::Object::getMass() const 
+const double &Analysis::Object::getMass() const
 { 
 	return mass; 
 }
@@ -99,12 +103,6 @@ const double Analysis::Object::getEnergy() const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return pow(getMomentum(), 2e0) / (2e0 * getMass());
 }
-const Analysis::ObjectFlag &Analysis::Object::getFlag() const {
-  return flag;
-}
-const bool Analysis::Object::isWithinMasterRegion() const {
-  return (getTOF() < getMaxOfTOF()) && (getTOF() > getMinOfTOF());
-}
 const double Analysis::Object::getMotionalDirectionX() const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return acos(getMomentumX() / getMomentum());
@@ -119,35 +117,35 @@ const double Analysis::Object::getMotionalDirectionZ() const {
 }
 const double Analysis::Object::getLocationX(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(getLocationX());
+  return unit.writeMilliMeter(getLocationX());
 }
 const double Analysis::Object::getLocationY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(getLocationY());
+  return unit.writeMilliMeter(getLocationY());
 }
 const double Analysis::Object::getTOF(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeTime(getTOF());
+  return unit.writeNanoSec(getTOF());
 }
 const double Analysis::Object::getMomentumX(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumX());
+  return unit.writeAuMomentum(getMomentumX());
 }
 const double Analysis::Object::getMomentumY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumY());
+  return unit.writeAuMomentum(getMomentumY());
 }
 const double Analysis::Object::getMomentumZ(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumZ());
+  return unit.writeAuMomentum(getMomentumZ());
 }
 const double Analysis::Object::getMomentum(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentum());
+  return unit.writeAuMomentum(getMomentum());
 }
 const double Analysis::Object::getEnergy(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeEnergy(getEnergy());
+  return unit.writeElectronVolt(getEnergy());
 }
 Analysis::Object::Object() : Object(0e0, 0e0, 0e0, 0e0) { return; }
 const double Analysis::Object::getMomentumXY() const {
@@ -156,10 +154,7 @@ const double Analysis::Object::getMomentumXY() const {
 }
 const double Analysis::Object::getMomentumXY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumXY());
-}
-const bool Analysis::Object::isDead() const {
-  return getFlag().isDead();
+  return unit.writeAuMomentum(getMomentumXY());
 }
 const double Analysis::Object::getMomentumYZ() const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
@@ -183,11 +178,11 @@ const double Analysis::Object::getMotionalDirectionZX() const {
 }
 const double Analysis::Object::getMomentumYZ(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumYZ());
+  return unit.writeAuMomentum(getMomentumYZ());
 }
 const double Analysis::Object::getMomentumZX(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeMomentum(getMomentumZX());
+  return unit.writeAuMomentum(getMomentumZX());
 }
 const double Analysis::Object::getMotionalDirectionX(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
@@ -219,7 +214,7 @@ const double Analysis::Object::getLocationXY() const {
 }
 const double Analysis::Object::getLocationXY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(getLocationXY());
+  return unit.writeMilliMeter(getLocationXY());
 }
 const double Analysis::Object::getLocation() const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
@@ -239,7 +234,7 @@ const double Analysis::Object::getLocationalDirectionY() const {
 }
 const double Analysis::Object::getLocation(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeLength(getLocation());
+  return unit.writeMilliMeter(getLocation());
 }
 const double Analysis::Object::getLocationalDirectionXY(const Analysis::Unit &unit) const {
 	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
@@ -289,11 +284,11 @@ const double Analysis::Object::getMass(const Analysis::Unit &unit) const {
   return unit.writeAtomicMass(getMass());
 }
 const double Analysis::Object::getCharge(const Analysis::Unit &unit) const {
-  return unit.writeCharge(getCharge());
+  return unit.writeElementaryCharge(getCharge());
 }
 const double Analysis::Object::getMinOfTOF(const Analysis::Unit &unit) const {
-  return unit.writeTime(getMinOfTOF());
+  return unit.writeNanoSec(getMinOfTOF());
 }
 const double Analysis::Object::getMaxOfTOF(const Analysis::Unit &unit) const {
-  return unit.writeTime(getMaxOfTOF());
+  return unit.writeNanoSec(getMaxOfTOF());
 }
