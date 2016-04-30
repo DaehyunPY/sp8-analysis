@@ -86,8 +86,8 @@ set (SOURCE_FILES
     Run.h
     OutputFlag.cpp
     OutputFlag.h
-    MyHistos.cpp
-    MyHistos.h
+    OutputHist.cpp
+    OutputHist.h
     )
 
 ### Add executable.

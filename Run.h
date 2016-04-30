@@ -37,7 +37,7 @@
 #include "Core/Ions.h"
 #include "Core/Electrons.h"
 #include "Core/LogWriter.h"
-#include "MyHistos.h"
+#include "OutputHist.h"
 
 namespace Analysis {
 class Run {
@@ -64,7 +64,7 @@ class Run {
   const long getEntries() const;
 
  private:
-  MyHistos *pHistNature;
+  OutputHist *pHistNature;
   const char *dirNameOfHistNature = "Nature";
   const int histNumberOfHistNature = 4;
   const int hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead = 0;

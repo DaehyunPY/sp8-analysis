@@ -75,8 +75,8 @@ Analysis::Run::Run(const std::string configFilename) {
   rootFilename += pLogWriter->getID();
   rootFilename += ".root";
   pRootFile = new TFile(rootFilename.c_str(), "update");
-  pHistNature = new MyHistos(false, histNumberOfHistNature);
-  pHistNature->LinkRootFile(*pRootFile);
+  pHistNature = new OutputHist(false, histNumberOfHistNature);
+  pHistNature->linkRootFile(*pRootFile);
   createHistNature();
 
   // Initialization is done
@@ -539,5 +539,5 @@ void Analysis::Run::fillHistNature() {
   }
 }
 void Analysis::Run::flushHistNature() {
-  pHistNature->FlushRootFile();
+  pHistNature->flushRootFile();
 }
