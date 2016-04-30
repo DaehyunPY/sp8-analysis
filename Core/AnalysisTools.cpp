@@ -263,9 +263,9 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
                                                    const double &t,
                                                    const int &f) const {
   this->loadEventDataInputer(ion,
-                             unit.readLength(x),
-                             unit.readLength(y),
-                             unit.readTime(t),
+                             unit.readMilliMeter(x),
+                             unit.readMilliMeter(y),
+                             unit.readNanoSec(t),
                              f);
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
@@ -275,9 +275,9 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
                                                    const double &t,
                                                    const int &f) const {
   this->loadEventDataInputer(electron,
-                             unit.readLength(x),
-                             unit.readLength(y),
-                             unit.readTime(t),
+                             unit.readMilliMeter(x),
+                             unit.readMilliMeter(y),
+                             unit.readNanoSec(t),
                              f);
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ions &ions) const {
@@ -344,12 +344,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electron
 const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
                                                    const Analysis::Ion &ion,
                                                    const double &d) const {
-  return unit.writeTime(this->calculateTOF(ion, unit.readMomentum(d)));
+  return unit.writeNanoSec(this->calculateTOF(ion, unit.readAuMomentum(d)));
 }
 const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
                                                    const Analysis::Electron &electron,
                                                    const double &d) const {
-  return unit.writeTime(this->calculateTOF(electron, unit.readMomentum(d)));
+  return unit.writeNanoSec(this->calculateTOF(electron, unit.readAuMomentum(d)));
 }
 
 const double Analysis::AnalysisTools::calculateFrequencyOfCycle(const double& m, const double& q, const double& B) const
@@ -372,7 +372,7 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(const double& m, co
 const double Analysis::AnalysisTools::calculatePeriodOfCycle(
     const Analysis::Unit &unit,
     const Analysis::Object &object) const {
-  return unit.writeTime(calculatePeriodOfCycle(object));
+  return unit.writeNanoSec(calculatePeriodOfCycle(object));
 }
 const Analysis::XY Analysis::AnalysisTools::calculateRotation(
     const XY &xy,

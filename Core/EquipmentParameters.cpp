@@ -38,16 +38,16 @@ Analysis::EquipmentParameters::EquipmentParameters(const Analysis::Unit &unit,
                                                    const double &VIon2,
                                                    const double &VIon0,
                                                    const double &B)
-    : EquipmentParameters(unit.readLength(lenD2),
-                          unit.readLength(lenD1),
-                          unit.readLength(lenL1),
-                          unit.readLength(lenL2),
-                          unit.readLength(lenL3),
-                          unit.readElectricPotential(VElec),
-                          unit.readElectricPotential(VIon1),
-                          unit.readElectricPotential(VIon2),
-                          unit.readElectricPotential(VIon0),
-                          unit.readMagnaticField(B)) {
+    : EquipmentParameters(unit.readMilliMeter(lenD2),
+                          unit.readMilliMeter(lenD1),
+                          unit.readMilliMeter(lenL1),
+                          unit.readMilliMeter(lenL2),
+                          unit.readMilliMeter(lenL3),
+                          unit.readVolt(VElec),
+                          unit.readVolt(VIon1),
+                          unit.readVolt(VIon2),
+                          unit.readVolt(VIon0),
+                          unit.readGauss(B)) {
   return;
 }
 Analysis::EquipmentParameters::EquipmentParameters(const Analysis::Unit &unit,
@@ -122,36 +122,36 @@ const double &Analysis::EquipmentParameters::getMagneticFiled() const {
   return magneticFiled;
 }
 const double Analysis::EquipmentParameters::getLengthOfD2(const Analysis::Unit &unit) const {
-  return unit.writeLength(getLengthOfD2());
+  return unit.writeMilliMeter(getLengthOfD2());
 }
 const double Analysis::EquipmentParameters::getLengthOfD1(const Analysis::Unit &unit) const {
-  return unit.writeLength(getLengthOfD1());
+  return unit.writeMilliMeter(getLengthOfD1());
 }
 const double Analysis::EquipmentParameters::getLengthOfL1(const Analysis::Unit &unit) const {
-  return unit.writeLength(getLengthOfL1());
+  return unit.writeMilliMeter(getLengthOfL1());
 }
 const double Analysis::EquipmentParameters::getLengthOfL2(const Analysis::Unit &unit) const {
-  return unit.writeLength(getLengthOfL2());
+  return unit.writeMilliMeter(getLengthOfL2());
 }
 const double Analysis::EquipmentParameters::getLengthOfL3(const Analysis::Unit &unit) const {
-  return unit.writeLength(getLengthOfL3());
+  return unit.writeMilliMeter(getLengthOfL3());
 }
 const double Analysis::EquipmentParameters::getElectricPotentialOfElectronRegion(
     const Analysis::Unit &unit) const {
-  return unit.writeElectricPotential(getElectricPotentialOfElectronRegion());
+  return unit.writeVolt(getElectricPotentialOfElectronRegion());
 }
 const double Analysis::EquipmentParameters::getElectricPotentialOfIon1st(
     const Analysis::Unit &unit) const {
-  return unit.writeElectricPotential(getElectricPotentialOfIon1st());
+  return unit.writeVolt(getElectricPotentialOfIon1st());
 }
 const double Analysis::EquipmentParameters::getElectricPotentialOfIon2nd(
     const Analysis::Unit &unit) const {
-  return unit.writeElectricPotential(getElectricPotentialOfIon2nd());
+  return unit.writeVolt(getElectricPotentialOfIon2nd());
 }
 const double Analysis::EquipmentParameters::getElectricPotentialOfIonMCP(
     const Analysis::Unit &unit) const {
-  return unit.writeElectricPotential(getElectricPotentialOfIonMCP());
+  return unit.writeVolt(getElectricPotentialOfIonMCP());
 }
 const double Analysis::EquipmentParameters::getMagneticFiled(const Analysis::Unit &unit) const {
-  return unit.writeMagnaticField(getMagneticFiled());
+  return unit.writeGauss(getMagneticFiled());
 }

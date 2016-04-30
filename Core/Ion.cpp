@@ -7,9 +7,9 @@ Analysis::Ion::Ion(const Analysis::Unit &unit,
                    const double &t1)
     : Object(
     unit.readAtomicMass(m),
-    unit.readCharge(q),
-    unit.readTime(t0),
-    unit.readTime(t1)) {
+    unit.readElementaryCharge(q),
+    unit.readNanoSec(t0),
+    unit.readNanoSec(t1)) {
   return;
 }
 Analysis::Ion::Ion(const Analysis::Unit &unit,
