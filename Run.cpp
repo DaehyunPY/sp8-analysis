@@ -75,8 +75,8 @@ Analysis::Run::Run(const std::string configFilename) {
   rootFilename += pLogWriter->getID();
   rootFilename += ".root";
   pRootFile = new TFile(rootFilename.c_str(), "update");
-  pHistNature = new OutputHist(false, histNumberOfHistNature);
-  pHistNature->linkRootFile(*pRootFile);
+  pHist = new OutputHist(false, numberOfHists);
+  pHist->linkRootFile(*pRootFile);
   createHistNature();
 
   // Initialization is done
@@ -98,7 +98,7 @@ Analysis::Run::~Run() {
   pRootFile->Close();
 
   // finalization is done
-  delete pHistNature;
+  delete pHist;
   delete pRootFile;
   delete pElectrons;
   delete pIons;
@@ -518,26 +518,26 @@ const long Analysis::Run::getEntries() const {
   return (long) pEventChain->GetEntries();
 }
 void Analysis::Run::createHistNature() {
-  pHistNature->create1d(hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead, "h1_i1TOF_i2Andi3AreNotDead", "TOF [ns]", H1_ION_TOF_BINSIZE_REGION, dirNameOfHistNature);
-  pHistNature->create2d(hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion, "h2_i2TOF_i3TOF_i1IsInMasterRegion", "1st Hit Ion TOF [ns]", "2nd Hit Ion TOF [ns]", H2_ION_TOF_BINSIZE_REGION, H2_ION_TOF_BINSIZE_REGION, dirNameOfHistNature);
-  pHistNature->create2d(hist2_1stHitElecE_sumOfIonTOFs_underMasterCondition, "h2_e1E_iSumTOF_master", "Energy [eV]", "Sum of TOFs [ns]", H2_ELECTRON_ENERGY_BINSIZE_REGION, H2_ION_SUMOFTOF_BINSIZE_REGION, dirNameOfHistNature);
-  pHistNature->create1d(hist1_1stHitElecE_underMasterCondition, "h1_e1E_master", "Energy [eV]", H1_ELECTRON_ENERGY_BINSIZE_REGION, dirNameOfHistNature);
+  pHist->create1d(hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead, "h1_i1TOF_i2Andi3AreNotDead", "TOF [ns]", H1_ION_TOF_BINSIZE_REGION, dirNameOfHistNature);
+  pHist->create2d(hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion, "h2_i2TOF_i3TOF_i1IsInMasterRegion", "1st Hit Ion TOF [ns]", "2nd Hit Ion TOF [ns]", H2_ION_TOF_BINSIZE_REGION, H2_ION_TOF_BINSIZE_REGION, dirNameOfHistNature);
+  pHist->create2d(hist2_1stHitElecE_sumOfIonTOFs_underMasterCondition, "h2_e1E_iSumTOF_master", "Energy [eV]", "Sum of TOFs [ns]", H2_ELECTRON_ENERGY_BINSIZE_REGION, H2_ION_SUMOFTOF_BINSIZE_REGION, dirNameOfHistNature);
+  pHist->create1d(hist1_1stHitElecE_underMasterCondition, "h1_e1E_master", "Energy [eV]", H1_ELECTRON_ENERGY_BINSIZE_REGION, dirNameOfHistNature);
 }
 void Analysis::Run::fillHistNature() {
   const bool under2ndAnd3rdHitIonAreNotDead = (!pIons->getRealOrDummyObject(1).isDead()) && (!pIons->getRealOrDummyObject(2).isDead());
   if(under2ndAnd3rdHitIonAreNotDead) {
-    pHistNature->fill1d(hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead, pIons->getRealOrDummyObject(0).getTOF(*pUnit));
+    pHist->fill1d(hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead, pIons->getRealOrDummyObject(0).getTOF(*pUnit));
   }
   const bool under1stHitIonInMasterRegion = pIons->getRealOrDummyObject(0).isWithinMasterRegion();
   if(under1stHitIonInMasterRegion) {
-    pHistNature->fill2d(hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion, pIons->getRealOrDummyObject(1).getTOF(*pUnit), pIons->getRealOrDummyObject(2).getTOF(*pUnit));
+    pHist->fill2d(hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion, pIons->getRealOrDummyObject(1).getTOF(*pUnit), pIons->getRealOrDummyObject(2).getTOF(*pUnit));
   }
   const bool underMasterCondition = (pIons->areAllWithinMasterRegion() && pElectrons->areAllWithinMasterRegion());
   if(underMasterCondition) {
-    pHistNature->fill2d(hist2_1stHitElecE_sumOfIonTOFs_underMasterCondition, pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit), pIons->getSumOfTOF(*pUnit));
-    pHistNature->fill1d(hist1_1stHitElecE_underMasterCondition, pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit));
+    pHist->fill2d(hist2_1stHitElecE_sumOfIonTOFs_underMasterCondition, pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit), pIons->getSumOfTOF(*pUnit));
+    pHist->fill1d(hist1_1stHitElecE_underMasterCondition, pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit));
   }
 }
 void Analysis::Run::flushHistNature() {
-  pHistNature->flushRootFile();
+  pHist->flushRootFile();
 }

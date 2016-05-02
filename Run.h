@@ -64,9 +64,11 @@ class Run {
   const long getEntries() const;
 
  private:
-  OutputHist *pHistNature;
+  OutputHist *pHist;
+  const int numberOfHists = 4;
+  const char *dirNameOfHistIon = "Ion";
+  const char *dirNameOfHistElec = "Electron";
   const char *dirNameOfHistNature = "Nature";
-  const int histNumberOfHistNature = 4;
   const int hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead = 0;
   const int hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion = 1;
   const int hist2_1stHitElecE_sumOfIonTOFs_underMasterCondition = 2;
