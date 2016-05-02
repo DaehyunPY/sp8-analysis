@@ -19,8 +19,7 @@ void Analysis::ObjectFlag::setOutOfMasterRegion() {
   }
 }
 void Analysis::ObjectFlag::setDead() {
-  const unsigned int f0 = get1stDigit();
-  if (f0 == flagFor1stDigit_withinMasterRegion || f0 == flagFor1stDigit_outOfMasterRegion) {
+  if (get1stDigit() == flagFor1stDigit_outOfMasterRegion) {
     set1stDigit(flagFor1stDigit_dead);
   }
 }
@@ -58,7 +57,7 @@ const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const {
   return getNthDigit(5) >= flagFor5thDigit_outOfFrameOfMomentumData;
 }
 
-const bool Analysis::ObjectFlag::isOutOfMasterRegionOrDead() const {
+const bool Analysis::ObjectFlag::isOutOfMasterRegion() const {
   return (get1stDigit() == flagFor1stDigit_outOfMasterRegion) || (get1stDigit() == flagFor1stDigit_dead);
 }
 const bool Analysis::ObjectFlag::isWithinMasterRegion() const {
@@ -73,7 +72,7 @@ const bool Analysis::ObjectFlag::isResortFlag(const int coboldFlag) const {
 const unsigned int Analysis::ObjectFlag::getResortFlag() const {
   return convertToCoboldFlag(getNthNumDigit(3, 2));
 }
-unsigned int Analysis::ObjectFlag::convertCoboldFlag(const int coboldFlag) const {
+const unsigned int Analysis::ObjectFlag::convertCoboldFlag(const int coboldFlag) const {
   if(coboldFlag < flagForResort_theRegion1) {
     return flagFor3rd2Digit_lowerThanTheRegion;
   } else if(coboldFlag > flagForResort_theRegion2) {
@@ -102,29 +101,85 @@ Analysis::ObjectFlag::~ObjectFlag() {
 }
 void Analysis::ObjectFlag::setHavingXYTData() {
   if(get2ndDigit() == initFlag) {
-    set2ndDigit(flagFor2ndDigit_hasXYTData);
+    set2ndDigit(flagFor2ndDigit_havingXYTData);
   }
 }
 void Analysis::ObjectFlag::setHavingMomentumData() {
-  if(get2ndDigit() == flagFor2ndDigit_hasXYTData) {
-    set2ndDigit(flagFor2ndDigit_hasMomentumData);
+  if(get2ndDigit() == flagFor2ndDigit_havingXYTData) {
+    set2ndDigit(flagFor2ndDigit_havingMomentumData);
   }
 }
 void Analysis::ObjectFlag::setHavingProperPzData() {
   const unsigned int f0 = get2ndDigit();
-  if(f0 == flagFor2ndDigit_hasXYTData || f0 == flagFor2ndDigit_hasMomentumData) {
-    set2ndDigit(flagFor2ndDigit_hasProperPzData);
+  if(f0 == flagFor2ndDigit_havingXYTData || f0 == flagFor2ndDigit_havingMomentumData) {
+    set2ndDigit(flagFor2ndDigit_havingProperPzData);
   }
 }
 const bool Analysis::ObjectFlag::isHavingXYTData() const {
   const unsigned int f0 = get2ndDigit();
-  return (f0 == flagFor2ndDigit_hasXYTData) || (f0 == flagFor2ndDigit_hasMomentumData) || (f0 == flagFor2ndDigit_hasProperPzData);
+  return (f0 == flagFor2ndDigit_havingXYTData) || (f0 == flagFor2ndDigit_havingMomentumData) || (f0 == flagFor2ndDigit_havingProperPzData);
 }
 const bool Analysis::ObjectFlag::isHavingMomentumData() const {
   const unsigned int f0 = get2ndDigit();
-  return (f0 == flagFor2ndDigit_hasMomentumData) || (f0 == flagFor2ndDigit_hasProperPzData);
+  return (f0 == flagFor2ndDigit_havingMomentumData) || (f0 == flagFor2ndDigit_havingProperPzData);
 }
 const bool Analysis::ObjectFlag::isHavingProperPzData() const {
   const unsigned int f0 = get2ndDigit();
-  return (f0 == flagFor2ndDigit_hasProperPzData);
+  return (f0 == flagFor2ndDigit_havingProperPzData);
 }
+#define ANALYSIS_OBJECTFLAG_CASESET(X) case X: set ## X(); break;
+void Analysis::ObjectFlag::setFlag(const FlagName flagName) {
+  switch(flagName) {
+    ANALYSIS_OBJECTFLAG_CASESET(WithinMasterRegion)
+    ANALYSIS_OBJECTFLAG_CASESET(OutOfMasterRegion)
+    ANALYSIS_OBJECTFLAG_CASESET(Dead)
+    ANALYSIS_OBJECTFLAG_CASESET(HavingXYTData)
+    ANALYSIS_OBJECTFLAG_CASESET(HavingMomentumData)
+    ANALYSIS_OBJECTFLAG_CASESET(HavingProperPzData)
+    default:
+      assert(false);
+      break;
+  }
+}
+void Analysis::ObjectFlag::setFlag(const FlagName flagName,
+                                   const int arg) {
+  switch(flagName) {
+    case ResortFlag:
+      setResortFlag(arg);
+      break;
+    default:
+      assert(false);
+      break;
+  }
+}
+#define ANALYSIS_OBJECTFLAG_CASEIS(X) case X: output = is ## X(); break;
+const bool Analysis::ObjectFlag::isFlag(const FlagName flagName) const {
+  bool output = false;
+  switch(flagName) {
+    ANALYSIS_OBJECTFLAG_CASEIS(WithinMasterRegion)
+    ANALYSIS_OBJECTFLAG_CASEIS(OutOfMasterRegion)
+    ANALYSIS_OBJECTFLAG_CASEIS(Dead)
+    ANALYSIS_OBJECTFLAG_CASEIS(HavingXYTData)
+    ANALYSIS_OBJECTFLAG_CASEIS(HavingMomentumData)
+    ANALYSIS_OBJECTFLAG_CASEIS(HavingProperPzData)
+    ANALYSIS_OBJECTFLAG_CASEIS(MostReliable)
+    ANALYSIS_OBJECTFLAG_CASEIS(MostOrSecondMostReliable)
+    ANALYSIS_OBJECTFLAG_CASEIS(Risky)
+    default:
+      assert(false);
+  }
+  return output;
+}
+const bool Analysis::ObjectFlag::isFlag(const FlagName flagName,
+                                        const int arg) {
+  bool output = false;
+  switch(flagName) {
+    case ResortFlag:
+      output = isResortFlag(arg);
+      break;
+    default:
+      assert(false);
+  }
+  return output;
+}
+

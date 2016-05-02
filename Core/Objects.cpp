@@ -173,10 +173,6 @@ const bool Analysis::Objects::isRealObject(const int &i) const {
   const int &n = getNumberOfObjects();
   return (i >= 0) && (i < n);
 }
-const bool Analysis::Objects::existDeadRealOrDummyObject() const {
-  return existDeadObject() || existDeadDummyObject();
-}
-
 const bool Analysis::Objects::existOutOfFrameOfBasicDataObject() const {
   const int &n = getNumberOfObjects();
   bool b = false;
@@ -185,7 +181,6 @@ const bool Analysis::Objects::existOutOfFrameOfBasicDataObject() const {
   }
   return b;
 }
-
 const bool Analysis::Objects::existOutOfFrameOfMomentumDataObject() const {
   const int &n = getNumberOfObjects();
   bool b = false;
@@ -194,21 +189,10 @@ const bool Analysis::Objects::existOutOfFrameOfMomentumDataObject() const {
   }
   return b;
 }
-
-const bool Analysis::Objects::existDeadObject() const {
-  return getNumberOfDeadObjects() != 0;
-}
-const bool Analysis::Objects::areAllWithinMasterRegion() const {
-  bool b = true;
-  for (int i = 0; i < numberOfHits; i++) {
-    b = b && getObject(i).isWithinMasterRegion();
-  }
-  return b;
-}
 const int Analysis::Objects::getNumberOfDeadObjects() const {
   int n = 0;
   for (int i = 0; i < numberOfHits; i++) {
-    if (getObject(i).isDead()) {
+    if (getObject(i).isFlag(ObjectFlag::Dead)) {
       n += 1;
     }
   }
@@ -217,7 +201,7 @@ const int Analysis::Objects::getNumberOfDeadObjects() const {
 const int Analysis::Objects::getNumberOfDeadDummyObjects() const {
   int n = 0;
   for (int i = numberOfHits; i < numberOfHitsUsed; i++) {
-    if (getDummyObject(i).isDead()) {
+    if (getDummyObject(i).isFlag(ObjectFlag::Dead)) {
       n += 1;
     }
   }
@@ -225,18 +209,6 @@ const int Analysis::Objects::getNumberOfDeadDummyObjects() const {
 }
 const int Analysis::Objects::getNumberOfDeadRealOrDummyObjects() const {
   return getNumberOfDeadObjects() + getNumberOfDeadDummyObjects();
-}
-const bool Analysis::Objects::existDeadDummyObject() const {
-  return getNumberOfDeadDummyObjects() != 0;
-}
-const bool Analysis::Objects::areAllDeadObjects() const {
-  return getNumberOfDeadObjects() == getNumberOfObjects();
-}
-const bool Analysis::Objects::areAllDeadDummyObjects() const {
-  return getNumberOfDeadDummyObjects() == getNumberOfDeadObjects();
-}
-const bool Analysis::Objects::areAllDeadRealAndDummyObjects() const {
-  return getNumberOfDeadRealOrDummyObjects() == getNumberOfRealOrDummyObjects();
 }
 const double Analysis::Objects::getMomentumXY() const {
   ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS2
@@ -549,20 +521,78 @@ const double Analysis::Objects::getSumOfTOF(const Analysis::Unit &unit) const {
     return unit.writeNanoSec(getSumOfTOF());
   }
 }
-const bool Analysis::Objects::areAllMostReliableObject() const {
-  bool b = true;
-  for(int i = 0; i < getNumberOfObjects(); i++) {
-    b = b && getObject(i).isMostReliable();
+const bool Analysis::Objects::areAllFlag(const ObjectFlag::FlagName flagName,
+                                         const OptName optName) const {
+  int n1=0, n2=0;
+  switch(optName) {
+    case Real:
+      n1 = 0;
+      n2 = numberOfHits;
+      break;
+    case Dummy:
+      n1 = numberOfHits;
+      n2 = numberOfHitsUsed;
+      break;
+    case RealOrDummy:
+      n1 = 0;
+      n2 = numberOfHitsUsed;
+      break;
+    default:
+      assert(false);
   }
-  return b;
+  if(n1>=n2) { return false; }
+  bool output = true;
+  for(int i=n1; i<n2; i++) {
+    output = output && getRealOrDummyObject(i).isFlag(flagName);
+  }
+  return output;
 }
-const bool Analysis::Objects::areAllMostOrSecondMostReliableObject() const {
-  bool b = true;
-  for(int i = 0; i < getNumberOfObjects(); i++) {
-#ifdef ANALYSIS_DEBUG_BUILD
-    int f1 = getObject(i).getFlag().getResortFlag();
-#endif
-    b = b && getObject(i).isMostOrSecondMostReliable();
+const bool Analysis::Objects::existFlag(const ObjectFlag::FlagName flagName,
+                                        const OptName optName) const {
+  int n1=0, n2=0;
+  switch(optName) {
+    case Real:
+      n1 = 0;
+      n2 = numberOfHits;
+      break;
+    case Dummy:
+      n1 = numberOfHits;
+      n2 = numberOfHitsUsed;
+      break;
+    case RealOrDummy:
+      n1 = 0;
+      n2 = numberOfHitsUsed;
+      break;
+    default:
+      assert(false);
   }
-  return b;
+  if(n1>=n2) { return false; }
+  bool output = false;
+  for(int i=n1; i<n2; i++) {
+    output = output || getRealOrDummyObject(i).isFlag(flagName);
+  }
+  return output;
+}
+void Analysis::Objects::setAllFlag(const ObjectFlag::FlagName flagName,
+                                   const OptName optName) {
+  int n1=0, n2=0;
+  switch(optName) {
+    case Real:
+      n1 = 0;
+      n2 = numberOfHits;
+      break;
+    case Dummy:
+      n1 = numberOfHits;
+      n2 = numberOfHitsUsed;
+      break;
+    case RealOrDummy:
+      n1 = 0;
+      n2 = numberOfHitsUsed;
+      break;
+    default:
+      assert(false);
+  }
+  for(int i=n1; i<n2; i++) {
+    setRealOrDummyObjectMembers(i).setFlag(flagName);
+  }
 }

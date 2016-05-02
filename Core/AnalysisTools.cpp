@@ -191,10 +191,10 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setLocationX(x);
   ion.setLocationY(y);
   ion.setTOF(t);
-  ion.setHavingXYTData();
-  ion.setResortFlag(f1);
+  ion.setFlag(ObjectFlag::HavingXYTData);
+  ion.setFlag(ObjectFlag::ResortFlag, f1);
   if (ion.getTOF() > deadTime || ion.getTOF() < 0e0) {
-    ion.setDead();
+    ion.setFlag(ObjectFlag::Dead);
   }
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
@@ -216,10 +216,10 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   electron.setLocationX(x);
   electron.setLocationY(y);
   electron.setTOF(t);
-  electron.setHavingXYTData();
-  electron.setResortFlag(f1);
+  electron.setFlag(ObjectFlag::HavingXYTData);
+  electron.setFlag(ObjectFlag::ResortFlag, f1);
   if (electron.getTOF() > deadTime || electron.getTOF() < 0e0) {
-    electron.setDead();
+    electron.setFlag(ObjectFlag::Dead);
   }
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
@@ -228,11 +228,10 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Analysis::Ion &ion) const {
   const double &pz = calculateMomentumZ(ion, info);
   ion.setMomentumX(pxy.x);
   ion.setMomentumY(pxy.y);
+  ion.setFlag(ObjectFlag::HavingMomentumData);
   if(info) {
     ion.setMomentumZ(pz);
-    ion.setHavingProperPzData();
-  } else {
-    ion.setHavingMomentumData();
+    ion.setFlag(ObjectFlag::HavingProperPzData);
   }
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(
@@ -242,11 +241,10 @@ void Analysis::AnalysisTools::loadMomentumCalculator(
   const double &pz = calculateMomentumZ(electron, info);
   electron.setMomentumX(pxy.x);
   electron.setMomentumY(pxy.y);
+  electron.setFlag(ObjectFlag::HavingMomentumData);
   if(info) {
     electron.setMomentumZ(pz);
-    electron.setHavingProperPzData();
-  } else {
-    electron.setHavingMomentumData();
+    electron.setFlag(ObjectFlag::HavingProperPzData);
   }
 }
 const int &Analysis::AnalysisTools::getEventNumber() const {

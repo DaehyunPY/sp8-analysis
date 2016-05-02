@@ -36,9 +36,9 @@ void Analysis::Object::setLocationY(const double &y) {
 void Analysis::Object::setTOF(const double &t) {
   TOF = t;
   if((TOF < maxOfTOF) && (TOF > minOfTOF)) {
-    setWithinMasterRegion();
+    setFlag(WithinMasterRegion);
   } else {
-    setOutOfMasterRegion();
+    setFlag(OutOfMasterRegion);
   }
 }
 void Analysis::Object::setMomentumX(const double &px) {

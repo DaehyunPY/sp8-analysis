@@ -6,6 +6,8 @@
 #define ANALYSIS_OBJECTFLAG_H
 
 #include <string>
+#include <map>
+
 #include "Flag.h"
 
 namespace Analysis {
@@ -13,28 +15,39 @@ class ObjectFlag: protected Flag {
  protected:
   ObjectFlag();
   virtual ~ObjectFlag();
-  // todo: make only one pulic method using string option
  public:
-//  void setFlag(const std::string str);
-//  const unsigned int getFlag(const std::string str) const;
+  enum FlagName {
+    WithinMasterRegion,
+    OutOfMasterRegion,
+    Dead,
+    HavingXYTData,
+    HavingMomentumData,
+    HavingProperPzData,
+    ResortFlag,
+    MostReliable,
+    MostOrSecondMostReliable,
+    Risky
+  };
+  void setFlag(const FlagName flagName);
+  void setFlag(const FlagName flagName, const int arg);
+  const bool isFlag(const FlagName flagName) const;
+  const bool isFlag(const FlagName flagName, const int arg);
 
  private:
   const unsigned int flagFor1stDigit_withinMasterRegion = 1;
   const unsigned int flagFor1stDigit_outOfMasterRegion = 2;
   const unsigned int flagFor1stDigit_dead = 3;
- public:
   void setWithinMasterRegion();
   void setOutOfMasterRegion();
   void setDead();
   const bool isWithinMasterRegion() const;
-  const bool isOutOfMasterRegionOrDead() const;
+  const bool isOutOfMasterRegion() const;
   const bool isDead() const;
 
  private:
-  const unsigned int flagFor2ndDigit_hasXYTData = 1;
-  const unsigned int flagFor2ndDigit_hasMomentumData = 2;
-  const unsigned int flagFor2ndDigit_hasProperPzData = 3;
- public:
+  const unsigned int flagFor2ndDigit_havingXYTData = 1;
+  const unsigned int flagFor2ndDigit_havingMomentumData = 2;
+  const unsigned int flagFor2ndDigit_havingProperPzData = 3;
   void setHavingXYTData();
   void setHavingMomentumData();
   void setHavingProperPzData();
@@ -52,26 +65,21 @@ class ObjectFlag: protected Flag {
   const unsigned int flagForResort_secondMostReliableRegion2 = 14;
   const unsigned int flagForResort_riskyRegion1 = 15;
   const unsigned int flagForResort_riskyRegion2 = 20;
-  // most reliable region: 0 to 3
-  // second most reliable region: 4 to 14
-  // risky region: 15 to 20
   const unsigned int flagFor3rd2Digit_init = 0;
   const unsigned int flagFor3rd2Digit_inTheRegion1 = 1;
-  const unsigned int flagFor3rd2Digit_inTheRegion2 = flagForResort_theRegion2 - flagForResort_theRegion1
-      + 1; // 21
+  const unsigned int flagFor3rd2Digit_inTheRegion2 = flagForResort_theRegion2 - flagForResort_theRegion1 + 1; // 21
   const unsigned int flagFor3rd2Digit_lowerThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 1;
   const unsigned int flagFor3rd2Digit_upperThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 2;
-  unsigned int convertCoboldFlag(const int coboldFlag) const;
+  const unsigned int convertCoboldFlag(const int coboldFlag) const;
   const unsigned int convertToCoboldFlag(const unsigned int storedFlag) const;
- public:
-  // flag for 3rd digit
+  const unsigned int getResortFlag() const;
   void setResortFlag(const int coboldFlag);
   const bool isResortFlag(const int coboldFlag) const;
   const bool isMostReliable() const;
   const bool isMostOrSecondMostReliable() const;
   const bool isRisky() const;
-  const unsigned int getResortFlag() const;
 
+  // delete blew
  private:
   const unsigned int flagFor5thDigit_inFrameOfAllData = 1;
   const unsigned int flagFor5thDigit_outOfFrameOfMomentumData = 2;
