@@ -77,6 +77,7 @@ Analysis::Run::Run(const std::string configFilename) {
   pRootFile = new TFile(rootFilename.c_str(), "update");
   pHist = new OutputHist(false, numberOfTotalHists);
   pHist->linkRootFile(*pRootFile);
+  createHistIon();
   createHistNature();
 
   // Initialization is done
@@ -241,6 +242,7 @@ void Analysis::Run::processEvent(const long raw) {
       fillElectronMomentumData();
       fillIonAndElectronMomentumData();
     }
+    fillHistIon();
     fillHistNature();
   }
 }
