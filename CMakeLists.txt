@@ -10,7 +10,7 @@ add_subdirectory (Core)
 
 ### Link ROOT libraries.
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-  link_libraries (pthread m dl)
+  link_libraries (m dl)
   include_directories ("/usr/local/include/root")
   link_directories ("/usr/local/lib/root")
   link_libraries (
@@ -30,7 +30,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
       Thread
   )
 elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  link_libraries (pthread m dl)
+  link_libraries (m dl)
   include_directories ("/usr/local/include/root")
   link_directories ("/usr/local/lib/root")
   link_libraries (
@@ -73,9 +73,9 @@ endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 ### Set flags.
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -m64")
 elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -m64")
 elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
