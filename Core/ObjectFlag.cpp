@@ -73,9 +73,9 @@ const unsigned int Analysis::ObjectFlag::getResortFlag() const {
   return convertToCoboldFlag(getNthNumDigit(3, 2));
 }
 const unsigned int Analysis::ObjectFlag::convertCoboldFlag(const int coboldFlag) const {
-  if(coboldFlag < flagForResort_theRegion1) {
+  if(coboldFlag < (int) flagForResort_theRegion1) {
     return flagFor3rd2Digit_lowerThanTheRegion;
-  } else if(coboldFlag > flagForResort_theRegion2) {
+  } else if(coboldFlag > (int) flagForResort_theRegion2) {
     return flagFor3rd2Digit_upperThanTheRegion;
   } else {
     return (coboldFlag - flagForResort_theRegion1 + 1);

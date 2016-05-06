@@ -39,7 +39,7 @@ void inputManager(StatusInfo &info) {
       continue;
     }
     std::cout << "You typed [" << input << "]" << std::endl;
-    if(input=="q" && info == keepRunning) {
+    if(input.compare("quit")==0 && info == keepRunning) {
       info = quitProgramSafely;
     }
   }
@@ -49,7 +49,7 @@ int main(int argc, char * argv[]) {
   // Inform
   std::cout << "The exe file which place at " << argv[0] << ", is running now. " << std::endl;
   std::cout << "The configure file which place at " << argv[1] << ", is going to be read. " << std::endl;
-  std::cout << "To quit this program safely, input 'q'. " << std::endl;
+  std::cout << "To quit this program safely, input 'quit'. " << std::endl;
 
   // Make input thread
   StatusInfo statusInfo = keepRunning;
@@ -82,11 +82,8 @@ int main(int argc, char * argv[]) {
 
   // Finish the program
   statusInfo = done;
-  if(threadForInput.joinable()) {
-    threadForInput.join();
-  } else {
-    threadForInput.~thread();
-  }
-
+  threadForInput.detach(); 
+  threadForInput.~thread();
+  std::cout << "The program is done. " << std::endl; 
   return 0;
 }

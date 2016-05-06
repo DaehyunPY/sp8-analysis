@@ -2,9 +2,17 @@
 // Created by Daehyun You on 12/30/15.
 //
 
+#ifdef _WIN32
+  #include <direct.h>
+  #define getcwd _getcwd
+  #define chdir _chdir
+#else
+  #include <unistd.h>
+#endif
+
 #include <ctime>
 #include <TChain.h>
-#include <zconf.h>
+
 #include "RUN.h"
 Analysis::Run::Run(const std::string configFilename) {
 

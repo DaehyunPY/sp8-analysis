@@ -2,7 +2,12 @@
 // Created by Daehyun You on 12/24/15.
 //
 
+//#ifdef _WIN32
+//#define localtime localtime_s
+//#endif
+
 #include <iomanip>
+
 #include "LogWriter.h"
 Analysis::LogWriter::LogWriter(const std::string &prefix) {
   auto now = std::time(nullptr);
