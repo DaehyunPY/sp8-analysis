@@ -109,17 +109,16 @@ class Objects {
   const bool isDummyObject(const int &) const;
   const bool isRealObject(const int &) const;
   const bool isRealOrDummyObject(const int &) const;
-  const bool existDeadObject() const;
-  const bool existDeadDummyObject() const;
-  const bool existDeadRealOrDummyObject() const;
-  const bool existOutOfFrameOfBasicDataObject() const; 
-  const bool existOutOfFrameOfMomentumDataObject() const; 
-  const bool areAllDeadObjects() const;
-  const bool areAllDeadDummyObjects() const;
-  const bool areAllDeadRealAndDummyObjects() const;
-  const bool areAllWithinMasterRegion() const;
-  const bool areAllMostReliableObject() const;
-  const bool areAllMostOrSecondMostReliableObject() const;
+  enum OptName {
+    Real, Dummy, RealOrDummy
+  };
+  const bool areAllFlag(const ObjectFlag::FlagName flagName, const OptName optName=Real) const;
+  const bool existFlag(const ObjectFlag::FlagName flagName, const OptName optName=Real) const;
+  void setAllFlag(const ObjectFlag::FlagName flagName, const OptName optName=Real);
+
+  // Delete blew
+  const bool existOutOfFrameOfBasicDataObject() const;
+  const bool existOutOfFrameOfMomentumDataObject() const;
 };
 }
 

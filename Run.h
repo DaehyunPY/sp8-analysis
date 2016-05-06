@@ -9,8 +9,9 @@
 #define H1_ION_TOF_BINSIZE_REGION 1000, -2000, 13000
 #define H2_ION_TOF_BINSIZE_REGION 100, 0, 10000
 #define H2_ION_SUMOFTOF_BINSIZE_REGION 300, 0, 30000
-#define H2_ION_MOMENTUM_BINSIZE_REGION 100, -250, 250
 #define H1_ION_MOMENTUM_BINSIZE_REGION 1000, -250, 250
+#define H2_ION_MOMENTUM_BINSIZE_REGION 100, -250, 250
+#define H3_ION_MOMENTUM_BINSIZE_REGION 25, -250, 250
 #define H1_ION_ENERGY_BINSIZE_REGION 1000, 0, 50
 #define H1_Ion_TOTALENERGY_BINSIZE_REGION 1500, 0, 150
 #define H2_Ion_TOTALENERGY_BINSIZE_REGION 150, 0, 150
@@ -64,16 +65,34 @@ class Run {
   const long getEntries() const;
 
  private:
-  OutputHist *pHistNature;
+  OutputHist *pHist;
+  //
+  const char *dirNameOfHistIon = "Ion";
+  const int dirIDOfHistIon = 0;
+  const int numberOfHistsIon = 2;
+  const int hist3ID_1stHistIonPx_Py_Pz = dirIDOfHistIon + 0;
+  const int hist3ID_1stHistIonPx_Py_Pz_underMasterCondition = dirIDOfHistIon + 1;
+  void createHistIon();
+  void fillHistIon();
+  //
+  const char *dirNameOfHistElec = "Electron";
+  const int dirIDOfHistElec = numberOfHistsIon;
+  const int numberOfHistsElec = 1;
+  const int hist2ID_1stHitElecE_2ndHitElecE_underMasterCondition = dirIDOfHistElec + 0;
+  //
   const char *dirNameOfHistNature = "Nature";
-  const int histNumberOfHistNature = 4;
-  const int hist1_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead = 0;
-  const int hist2_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion = 1;
-  const int hist2_1stHitElecE_sumOfIonTOFs_underMasterCondition = 2;
-  const int hist1_1stHitElecE_underMasterCondition = 3;
+  const int dirIDOfHistNature = numberOfHistsIon + numberOfHistsElec;
+  const int numberOfHistsNature = 4;
+  const int hist1ID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead = dirIDOfHistNature + 0;
+  const int hist2ID_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion = dirIDOfHistNature + 1;
+  const int hist2ID_1stHitElecE_sumOfIonTOFs_underMasterCondition = dirIDOfHistNature + 2;
+  const int hist1ID_1stHitElecE_underMasterCondition = dirIDOfHistNature + 3;
   void createHistNature();
   void fillHistNature();
-  void flushHistNature();
+  //
+  const int numberOfTotalHists = numberOfHistsIon + numberOfHistsElec + numberOfHistsNature;
+  void flushHist();
+  // delete blows;
   void fillFlags();
   void fillIonBasicData();
   void fillIonMomentumData();

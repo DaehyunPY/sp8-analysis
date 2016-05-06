@@ -4,6 +4,8 @@
 // #define ANALYSIS_DEBUG_BUILD
 
 #include <iostream>
+#include <thread>
+
 #include "Run.h"
 
 void showProgressBar(const float prog = 0) {
@@ -22,32 +24,66 @@ void showProgressBar(const float prog = 0) {
   std::cout << "] " << (int) (100*prog) << "%\r";
   std::cout.flush();
 }
-
+enum StatusInfo {
+  keepRunning,
+  quitProgramSafely,
+  done 
+};
+void inputManager(StatusInfo &info) {
+  std::string input;
+  if(info != keepRunning) { return; }
+  while (std::cin) {
+    std::cout << "Type something in:" << std::endl;
+    std::getline(std::cin, input);
+    if(input.empty()){
+      continue;
+    }
+    std::cout << "You typed [" << input << "]" << std::endl;
+    if(input.compare("quit")==0 && info == keepRunning) {
+      info = quitProgramSafely;
+    }
+  }
+  std::cout << "Our work here is done." << std::endl;
+}
 int main(int argc, char * argv[]) {
-
-  // set seed for random
-  srand((unsigned int) time(nullptr));
-
-  std::cout << "Hello world!" << std::endl;
+  // Inform
   std::cout << "The exe file which place at " << argv[0] << ", is running now. " << std::endl;
   std::cout << "The configure file which place at " << argv[1] << ", is going to be read. " << std::endl;
+  std::cout << "To quit this program safely, input 'quit'. " << std::endl;
 
-  // Setup reader & writer
-  Analysis::Run run(argv[1]);
+  // Make input thread
+  StatusInfo statusInfo = keepRunning;
+  std::thread threadForInput(inputManager, std::ref(statusInfo));
+
+  // Setup to run
+  srand((unsigned int) time(nullptr));
   int currentPercentage = -1;
+  Analysis::Run run(argv[1]);
   const long totalEntries = run.getEntries();
+
+  // Run processes
   for (long i=0; i<totalEntries; i++) {
 #ifdef ANALYSIS_DEBUG_BUILD
     if(i==100) {
       break;
     }
 #endif
+    // Show the process bar
     if(currentPercentage/100.0 < i/(double)totalEntries) {
       currentPercentage++;
       showProgressBar((const float) (currentPercentage/100.0));
     }
+    // Check input
+    if(statusInfo == quitProgramSafely) {
+      break;
+    }
     run.processEvent(i);
-    // TODO: Add function reading commands JOT
   }
+
+  // Finish the program
+  statusInfo = done;
+  threadForInput.detach(); 
+  threadForInput.~thread();
+  std::cout << "The program is done. " << std::endl; 
   return 0;
 }

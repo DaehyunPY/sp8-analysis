@@ -7,6 +7,7 @@
 
 
 #include <stdlib.h>
+#include <string>
 
 namespace Analysis {
 class Flag {
@@ -17,7 +18,10 @@ class Flag {
  protected:
   Flag();
   virtual ~Flag();
+  void setFlag(const unsigned int f);
   void resetFlag();
+
+ protected:
   const unsigned int get1stDigit(const unsigned int f) const;
   const unsigned int get1stDigit() const;
   const unsigned int get2ndDigit(const unsigned int f) const;
@@ -26,17 +30,13 @@ class Flag {
   const unsigned int get3rdDigit() const;
   const unsigned int getNthDigit(const unsigned int nth, const unsigned int f) const;
   const unsigned int getNthDigit(const unsigned int nth) const;
-  const unsigned int getNthNumDigit
-      (const unsigned int nth, const unsigned int num, const unsigned int f) const;
-  const unsigned int getNthNumDigit
-      (const unsigned int nth, const unsigned int num) const;
+  const unsigned int getNthNumDigit(const unsigned int nth, const unsigned int num, const unsigned int f) const;
+  const unsigned int getNthNumDigit(const unsigned int nth, const unsigned int num) const;
   void set1stDigit(const unsigned int f1);
   void set2ndDigit(const unsigned int f1);
   void set3ndDigit(const unsigned int f1);
   void setNthDigit(const unsigned int nth, const unsigned int f1);
-  void setNthNumDigit
-      (const unsigned int nth, const unsigned int num, const unsigned int f1);
-  void setFlag(const unsigned int f);
+  void setNthNumDigit(const unsigned int nth, const unsigned int num, const unsigned int f1);
 };
 }
 

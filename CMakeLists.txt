@@ -1,16 +1,17 @@
 cmake_minimum_required (VERSION 3.3)
 project (Analysis)
 
+### Flag for debugging 
 if (CMAKE_BUILD_TYPE EQUAL "Debug")
   add_definitions(-DANALYSIS_DEBUG_BUILD)
 endif (CMAKE_BUILD_TYPE EQUAL "Debug")
 
-### Add core library.
+### Core
 add_subdirectory (Core)
 
-### Link ROOT libraries.
+### ROOT
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-  link_libraries (pthread m dl)
+  link_libraries (m dl)
   include_directories ("/usr/local/include/root")
   link_directories ("/usr/local/lib/root")
   link_libraries (
@@ -30,7 +31,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
       Thread
   )
 elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  link_libraries (pthread m dl)
+  link_libraries (m dl)
   include_directories ("/usr/local/include/root")
   link_directories ("/usr/local/lib/root")
   link_libraries (
@@ -71,15 +72,14 @@ elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
   )
 endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
-### Set flags.
+### Analysis
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -m64")
 elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -pthread -m64")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -m64")
 elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
-
-### Set source files.
 set (SOURCE_FILES
     Main.cpp
     Run.cpp
@@ -89,7 +89,5 @@ set (SOURCE_FILES
     OutputHist.cpp
     OutputHist.h
     )
-
-### Add executable.
 add_executable (AnalysisExe ${SOURCE_FILES})
 target_link_libraries (AnalysisExe AnalysisCoreStaticLib)
