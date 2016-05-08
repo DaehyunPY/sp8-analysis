@@ -536,7 +536,7 @@ void Analysis::Run::createNatureHists() {
   pHist->create2d(histID_1stHitElecEAndSumOfIonTOFs_underMasterCondition,
                   "h2_e1E_iSumTOF_master",
                   "Energy [eV]", "Sum of TOFs [ns]",
-                  H2_ELECTRON_ENERGY, H2_ION_SUMOFTOF,
+                  H2_ELECTRON_ENERGY, H2_ION_SUMOFTOF(4),
                   dirNameOfNatureHists);
   pHist->create1d(histID_1stHitElecE_underMasterCondition,
                   "h1_e1E_master", "Energy [eV]",
@@ -566,8 +566,54 @@ void Analysis::Run::flushHist() {
   pHist->flushRootFile();
 }
 void Analysis::Run::createIonHists() {
+  pHist->create2d(histID_1stHitIonLocXY,
+                  "h2_1stHitIonLocXY",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  pHist->create2d(histID_2ndHitIonLocXY,
+                  "h2_2ndHitIonLocXY",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  pHist->create2d(histID_3rdHitIonLocXY,
+                  "h2_3rdHitIonLocXY",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  pHist->create2d(histID_4thHitIonLocXY,
+                  "h2_4thHitIonLocXY",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  pHist->create2d(histID_COMOfIonsLocXY,
+                  "h2_COMOfIonsLocXY",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  pHist->create1d(histID_1stHitIonTOF,
+                  "h1_1stHitIonTOF",
+                  "TOF [ns]",
+                  H1_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create1d(histID_2ndHitIonTOF,
+                  "h1_2ndHitIonTOF",
+                  "TOF [ns]",
+                  H1_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create1d(histID_3rdHitIonTOF,
+                  "h1_3rdHitIonTOF",
+                  "TOF [ns]",
+                  H1_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create1d(histID_4thHitIonTOF,
+                  "h1_4thHitIonTOF",
+                  "TOF [ns]",
+                  H1_ION_TOF,
+                  dirNameOfIonHist);
+
   pHist->create3d(histID_1stHistIonPxPyPz,
-                  "h3_i1Px_Py_Pz",
+                  "h3_1stHistIonPxPyPz",
                   "Momentum X [au]", "Momentum Y [au]", "Momentum Z [au]",
                   H3_ION_MOMENTUM, H3_ION_MOMENTUM, H3_ION_MOMENTUM,
                   dirNameOfIonHist);

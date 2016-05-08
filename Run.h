@@ -15,15 +15,18 @@
 #define H1_ION_TOF 1000, -2000, 13000
 #define H2_ION_TOF 100, 0, 10000
 #define H3_ION_TOF 25, 0, 10000
-#define H1_ION_SUMOFTOF 4000, 0, 30000
-#define H2_ION_SUMOFTOF 400, 0, 30000
-#define H3_ION_SUMOFTOF 100, 0, 30000
+#define H1_ION_SUMOFTOF(X) 1000*X, 0*X, 10000*X
+#define H2_ION_SUMOFTOF(X) 100*X, 0*X, 10000*X
+#define H3_ION_SUMOFTOF(X) 25*X, 0*X, 10000*X
 #define H1_ION_MOMENTUM 1000, -250, 250
 #define H2_ION_MOMENTUM 100, -250, 250
 #define H3_ION_MOMENTUM 25, -250, 250
 #define H1_ION_ENERGY 1000, 0, 50
 #define H2_ION_ENERGY 100, 0, 50
 #define H3_ION_ENERGY 25, 0, 50
+#define H1_ION_SUMOFENERGY(X) 1000*X, 0*X, 50*X
+#define H2_ION_SUMOFENERGY(X) 100*X, 0*X, 50*X
+#define H3_ION_SUMOFENERGY(X) 25*X, 0*X, 50*X
 #define H1_Ion_TOTALENERGY 4000, 0, 150
 #define H2_Ion_TOTALENERGY 400, 0, 150
 #define H3_Ion_TOTALENERGY 100, 0, 150
@@ -233,12 +236,12 @@ class Run {
   TH2F root2DHistogramOf1stHitIonTOFPlus2ndHitIonTOF_3rdHitIonTOF
       {"i1HitPlus2Hit_3HitTOF",
        "1st Hit, 2nd Hit and 3rd Hit Ion PIPIPICO;1st Hit Ion TOF + 2nd Hit Ion TOF [ns];3rd Hit Ion TOF [ns]",
-       H2_ION_SUMOFTOF,
+       H2_ION_SUMOFTOF(2),
        H2_ION_TOF};
   TH2F root2DHistogramOf2ndHitIonTOFPlus3rdHitIonTOF_4thHitIonTOF
       {"i2HitPlus3Hit_4HitTOF",
        "2nd Hit, 3rd Hit and 4th Hit Ion PIPIPICO;2nd Hit Ion TOF + 3rd Hit Ion TOF [ns];4th Hit Ion TOF [ns]",
-       H2_ION_SUMOFTOF,
+       H2_ION_SUMOFTOF(2),
        H2_ION_TOF};
   // momentum
   TH2F root2DHistogramOf1stHitIonMomentumXY
@@ -442,7 +445,7 @@ class Run {
   TH2F root2DHistogramOfSumOfIonTOF_1stHitElectronEnergy
       {"iSumTOF_e1HitE",
        "Sum of Ion TOFs vs 1st Hit Electron Energy;Sum of TOFs [ns];Energy [eV]",
-       H2_ION_SUMOFTOF,
+       H2_ION_SUMOFTOF(4),
        H2_ELECTRON_ENERGY};
   TH2F root2DHistogramOfTotalEnergy_1stHitElectronEnergy
       {"iTotalE_e1HitE",
