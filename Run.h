@@ -15,7 +15,7 @@
 #define H1_ION_LOCATION 1000, -50, 50
 #define H2_ION_LOCATION 100, -50, 50
 #define H3_ION_LOCATION 25, -50, 50
-#define H1_ION_TOF 1000, -2000, 13000
+#define H1_ION_TOF 1000, 0, 10000
 #define H2_ION_TOF 100, 0, 10000
 #define H3_ION_TOF 25, 0, 10000
 #define H1_ION_SUMOFTOF(X) 1000*X, 0*X, 10000*X
@@ -86,36 +86,67 @@ class Run {
   Run(const std::string configFilename = "Parameters.json");
   ~Run();
   void processEvent(const long raw);
+
+ public:
   const Analysis::Unit &getUnit() const;
   const Analysis::Ions &getIons() const;
   const Analysis::Electrons &getElectrons() const;
-  const int &getNumberOfHitsUsed() const;
   const long getEntries() const;
 
  private:
   OutputHist *pHist;
   //
+  const char *dirNameOfFlagHist = "Flag";
+  enum FlagHists {
+    numberOfFlagHists = 0
+  };
+  //
   const char *dirNameOfIonHist = "Ion";
   enum IonHists {
-    hist2ID_1stHitIonLocXY = 0,
-    hist2ID_2ndHitIonLocXY,
-    hist2ID_3rdHitIonLocXY,
-    hist2ID_4thHitIonLocXY,
-    hist2ID_COMOfIonsLocXY,
-    hist1ID_1stHitIonTOF,
-    hist1ID_2ndHitIonTOF,
-    hist1ID_3rdHitIonTOF,
-    hist1ID_4thHitIonTOF,
-    histID_1stAnd2ndHitIonTOF,
-    histID_2ndAnd3rdHitIonTOF,
-    histID_3rdAnd4thHitIonTOF,
-    histID_SumOf1stAnd2ndHitIonTOFAnd3rdHitIonTOF,
-    histID_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOF,
-    histID_SumOf2ndAnd3rdHitIonTOFAnd4thHitIonTOF,
-    histID_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF,
-    histID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF,
-    histID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF,
-    histID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF,
+    // Detector image
+    hist2ID_1stHitIonLocXY_notDead = numberOfFlagHists,
+    hist2ID_2ndHitIonLocXY_notDead,
+    hist2ID_3rdHitIonLocXY_notDead,
+    hist2ID_4thHitIonLocXY_notDead,
+    hist2ID_COMOfIonsLocXY_notDead,
+    hist2ID_1stHitIonLocXY_master,
+    hist2ID_2ndHitIonLocXY_master,
+    hist2ID_3rdHitIonLocXY_master,
+    hist2ID_4thHitIonLocXY_master,
+    hist2ID_COMOfIonsLocXY_master,
+    // TOF
+    hist1ID_1stHitIonTOF_notDead,
+    hist1ID_2ndHitIonTOF_notDead,
+    hist1ID_3rdHitIonTOF_notDead,
+    hist1ID_4thHitIonTOF_notDead,
+    hist1ID_1stHitIonTOF_master,
+    hist1ID_2ndHitIonTOF_master,
+    hist1ID_3rdHitIonTOF_master,
+    hist1ID_4thHitIonTOF_master,
+    // PIPICO
+    hist2ID_1stAnd2ndHitIonTOF,
+    hist2ID_2ndAnd3rdHitIonTOF,
+    hist2ID_3rdAnd4thHitIonTOF,
+    hist2ID_1stAnd2ndHitIonTOF_masterCondit,
+    hist2ID_2ndAnd3rdHitIonTOF_masterCondit,
+    hist2ID_3rdAnd4thHitIonTOF_masterCondit,
+    // PIPIPICO
+    hist2ID_SumOf1stAnd2ndHitIonTOFsAnd3rdHitIonTOF,
+    hist2ID_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs,
+    hist2ID_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF,
+    hist2ID_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs,
+    hist2ID_SumOf1stAnd2ndHitIonTOFsAnd3rdHitIonTOF_masterCondit,
+    hist2ID_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs_masterCondit,
+    hist2ID_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF_masterCondit,
+    hist2ID_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs_masterCondit,
+    // PIPIPIPICO
+    hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF,
+    hist2ID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF,
+    hist2ID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF,
+    hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF_masterCondit,
+    hist2ID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF_masterCondit,
+    hist2ID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF_masterCondit,
+    // Momentum
     histID_1stHitIonPxPy,
     histID_2ndHitIonPxPy,
     histID_3rdHitIonPxPy,
@@ -166,14 +197,14 @@ class Run {
   void fillIonMomentumData();
   void fillElectronBasicData();
   void fillElectronMomentumData();
-//  void fillIonAndElectronBasicData();
+  //  void fillIonAndElectronBasicData();
   void fillIonAndElectronMomentumData();
   void writeFlags();
   void writeIonBasicData();
   void writeIonMomentumData();
   void writeElectronBasicData();
   void writeElectronMomentumData();
-//  void writeIonAndElectronBasicData();
+  //  void writeIonAndElectronBasicData();
   void writeIonAndElectronMomentumData();
   // todo: add master spectra
   // ion

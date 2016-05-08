@@ -12,10 +12,10 @@
 
 #include <ctime>
 #include <TChain.h>
+#include <RooDataProjBinding.h>
 
 #include "RUN.h"
 Analysis::Run::Run(const std::string configFilename) {
-
   // Setup json file reader
   Analysis::JSONReader configReader(configFilename);
 
@@ -143,8 +143,6 @@ void Analysis::Run::processEvent(const long raw) {
   // make sure ion and electron data is empty, and reset flags
   pIons->resetEventData();
   pElectrons->resetEventData();
-  int ionFlag = 0;
-  int electronFlag = 0;
 
   // input event data
   pTools->loadEventDataInputer(*pIons, *pUnit, *pEventReader);
@@ -174,22 +172,7 @@ void Analysis::Run::processEvent(const long raw) {
       }
     }
 
-    // histograms
-    if (flag.isShowingOnlyMasterRegionEvents()) {
-      fillFlags();
-      fillIonBasicData();
-      if (ionFlag > 0 && electronFlag > 0) { fillIonMomentumData(); }
-      fillElectronBasicData();
-      if (ionFlag > 0 && electronFlag > 0) { fillElectronMomentumData(); }
-      if (ionFlag > 0 && electronFlag > 0) { fillIonAndElectronMomentumData(); }
-    } else {
-      fillFlags();
-      fillIonBasicData();
-      fillIonMomentumData();
-      fillElectronBasicData();
-      fillElectronMomentumData();
-      fillIonAndElectronMomentumData();
-    }
+    // Fill histograms
     fillIonHists();
     fillNatureHists();
   }
@@ -204,9 +187,6 @@ const Analysis::Ions &Analysis::Run::getIons() const {
 }
 const Analysis::Electrons &Analysis::Run::getElectrons() const {
   return *pElectrons;
-}
-const int &Analysis::Run::getNumberOfHitsUsed() const {
-  return numberOfHits;
 }
 void Analysis::Run::fillIonBasicData() {
   const double &i1HitX = pIons->getRealOrDummyObject(0).getLocationX(*pUnit);
@@ -517,51 +497,231 @@ void Analysis::Run::flushHist() {
   pHist->flushRootFile();
 }
 void Analysis::Run::createIonHists() {
-  pHist->create2d(hist2ID_1stHitIonLocXY,
+  // Detector image
+  pHist->create2d(hist2ID_1stHitIonLocXY_notDead,
                   "h2_1stHitIonLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create2d(hist2ID_2ndHitIonLocXY,
+  pHist->create2d(hist2ID_2ndHitIonLocXY_notDead,
                   "h2_2ndHitIonLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create2d(hist2ID_3rdHitIonLocXY,
+  pHist->create2d(hist2ID_3rdHitIonLocXY_notDead,
                   "h2_3rdHitIonLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create2d(hist2ID_4thHitIonLocXY,
+  pHist->create2d(hist2ID_4thHitIonLocXY_notDead,
                   "h2_4thHitIonLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create2d(hist2ID_COMOfIonsLocXY,
+  pHist->create2d(hist2ID_COMOfIonsLocXY_notDead,
                   "h2_COMOfIonsLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create1d(hist1ID_1stHitIonTOF,
+  pHist->create2d(hist2ID_1stHitIonLocXY_master,
+                  "h2_1stHitIonLocXY_masterCondit",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_2ndHitIonLocXY_master,
+                  "h2_2ndHitIonLocXY_masterCondit",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_3rdHitIonLocXY_master,
+                  "h2_3rdHitIonLocXY_masterCondit",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_4thHitIonLocXY_master,
+                  "h2_4thHitIonLocXY_masterCondit",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_COMOfIonsLocXY_master,
+                  "h2_COMOfIonsLocXY_masterCondit",
+                  "Location X [mm]", "Location Y [mm]",
+                  H2_ION_LOCATION, H2_ION_LOCATION,
+                  dirNameOfIonHist);
+  // TOF
+  pHist->create1d(hist1ID_1stHitIonTOF_notDead,
                   "h1_1stHitIonTOF",
                   "TOF [ns]",
                   H1_ION_TOF,
                   dirNameOfIonHist);
-  pHist->create1d(hist1ID_2ndHitIonTOF,
+  pHist->create1d(hist1ID_2ndHitIonTOF_notDead,
                   "h1_2ndHitIonTOF",
                   "TOF [ns]",
                   H1_ION_TOF,
                   dirNameOfIonHist);
-  pHist->create1d(hist1ID_3rdHitIonTOF,
+  pHist->create1d(hist1ID_3rdHitIonTOF_notDead,
                   "h1_3rdHitIonTOF",
                   "TOF [ns]",
                   H1_ION_TOF,
                   dirNameOfIonHist);
-  pHist->create1d(hist1ID_4thHitIonTOF,
+  pHist->create1d(hist1ID_4thHitIonTOF_notDead,
                   "h1_4thHitIonTOF",
                   "TOF [ns]",
                   H1_ION_TOF,
                   dirNameOfIonHist);
+  pHist->create1d(hist1ID_1stHitIonTOF_master,
+                  "h1_1stHitIonTOF_masterCondit",
+                  "TOF [ns]",
+                  H1_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create1d(hist1ID_2ndHitIonTOF_master,
+                  "h1_2ndHitIonTOF_masterCondit",
+                  "TOF [ns]",
+                  H1_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create1d(hist1ID_3rdHitIonTOF_master,
+                  "h1_3rdHitIonTOF_masterCondit",
+                  "TOF [ns]",
+                  H1_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create1d(hist1ID_4thHitIonTOF_master,
+                  "h1_4thHitIonTOF_masterCondit",
+                  "TOF [ns]",
+                  H1_ION_TOF,
+                  dirNameOfIonHist);
+  // PIPICO
+  pHist->create2d(hist2ID_1stAnd2ndHitIonTOF,
+                  "h2_1stAnd2ndHitIonTOF",
+                  "1st Hit Ion TOF [ns] ", "2nd Hit Ion TOF [ns]",
+                  H2_ION_TOF, H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_2ndAnd3rdHitIonTOF,
+                  "h2_2ndAnd3rdHitIonTOF",
+                  "2nd Hit Ion TOF [ns] ", "3rd Hit Ion TOF [ns]",
+                  H2_ION_TOF, H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_3rdAnd4thHitIonTOF,
+                  "h2_3rdAnd4thHitIonTOF",
+                  "3rd Hit Ion TOF [ns] ", "4th Hit Ion TOF [ns]",
+                  H2_ION_TOF, H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_1stAnd2ndHitIonTOF_masterCondit,
+                  "h2_1stAnd2ndHitIonTOF_masterCondit",
+                  "1st Hit Ion TOF [ns] ", "2nd Hit Ion TOF [ns]",
+                  H2_ION_TOF, H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_2ndAnd3rdHitIonTOF_masterCondit,
+                  "h2_2ndAnd3rdHitIonTOF_masterCondit",
+                  "2nd Hit Ion TOF [ns] ", "3rd Hit Ion TOF [ns]",
+                  H2_ION_TOF, H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_3rdAnd4thHitIonTOF_masterCondit,
+                  "h2_3rdAnd4thHitIonTOF_masterCondit",
+                  "3rd Hit Ion TOF [ns] ", "4th Hit Ion TOF [ns]",
+                  H2_ION_TOF, H2_ION_TOF,
+                  dirNameOfIonHist);
+  // PIPIPICO
+  pHist->create2d(hist2ID_SumOf1stAnd2ndHitIonTOFsAnd3rdHitIonTOF,
+                  "h2_SumOf1stAnd2ndHitIonTOFAnd3rdHitIonTOF",
+                  "Sum of 1st and 2nd hit ion TOFs [ns]",
+                  "3rd hit ion TOF [ns]",
+                  H2_ION_SUMOFTOF(2),
+                  H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs,
+                  "h2_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs",
+                  "1st hit ion TOF [ns]",
+                  "Sum of 2nd and 3rd hit ion TOFs [ns]",
+                  H2_ION_TOF,
+                  H2_ION_SUMOFTOF(2),
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF,
+                  "h2_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF",
+                  "Sum of 2nd and 3rd hit ion TOFs [ns]",
+                  "4th hit ion TOF [ns]",
+                  H2_ION_SUMOFTOF(2),
+                  H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs,
+                  "h2_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs",
+                  "2nd hit ion TOF [ns]",
+                  "Sum of 3rd and 4th hit ion TOFs [ns]",
+                  H2_ION_TOF,
+                  H2_ION_SUMOFTOF(2),
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_SumOf1stAnd2ndHitIonTOFsAnd3rdHitIonTOF_masterCondit,
+                  "h2_SumOf1stAnd2ndHitIonTOFAnd3rdHitIonTOF_masterCondit",
+                  "Sum of 1st and 2nd hit ion TOFs [ns]",
+                  "3rd hit ion TOF [ns]",
+                  H2_ION_SUMOFTOF(2),
+                  H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs_masterCondit,
+                  "h2_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs_masterCondit",
+                  "1st hit ion TOF [ns]",
+                  "Sum of 2nd and 3rd hit ion TOFs [ns]",
+                  H2_ION_TOF,
+                  H2_ION_SUMOFTOF(2),
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF_masterCondit,
+                  "h2_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF_masterCondit",
+                  "Sum of 2nd and 3rd hit ion TOFs [ns]",
+                  "4th hit ion TOF [ns]",
+                  H2_ION_SUMOFTOF(2),
+                  H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs_masterCondit,
+                  "h2_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs_masterCondit",
+                  "2nd hit ion TOF [ns]",
+                  "Sum of 3rd and 4th hit ion TOFs [ns]",
+                  H2_ION_TOF,
+                  H2_ION_SUMOFTOF(2),
+                  dirNameOfIonHist);
+  // PIPIPIPICO
+  pHist->create2d(hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF,
+                  "h2_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF",
+                  "Sum of 1st, 2nd and 3rd hit ion TOFs [ns]",
+                  "4th hit ion TOF [ns]",
+                  H2_ION_SUMOFTOF(3),
+                  H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF,
+                  "h2_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF",
+                  "Sum of 1st and 2nd hit ion TOFs [ns]",
+                  "Sum of 3rd and 4th hit ion TOFs [ns]",
+                  H2_ION_SUMOFTOF(2),
+                  H2_ION_SUMOFTOF(2),
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF,
+                  "h2_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF",
+                  "1st hit ion TOF [ns]",
+                  "Sum of 2nd, 3rd and 4th hit ion TOFs [ns]",
+                  H2_ION_TOF,
+                  H2_ION_SUMOFTOF(3),
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF_masterCondit,
+                  "h2_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF_masterCondit",
+                  "Sum of 1st, 2nd and 3rd hit ion TOFs [ns]",
+                  "4th hit ion TOF [ns]",
+                  H2_ION_SUMOFTOF(3),
+                  H2_ION_TOF,
+                  dirNameOfIonHist);
+  pHist->create2d(
+      hist2ID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF_masterCondit,
+      "h2_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF_masterCondit",
+      "Sum of 1st and 2nd hit ion TOFs [ns]",
+      "Sum of 3rd and 4th hit ion TOFs [ns]",
+      H2_ION_SUMOFTOF(2),
+      H2_ION_SUMOFTOF(2),
+      dirNameOfIonHist);
+  pHist->create2d(hist2ID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF_masterCondit,
+                  "h2_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF_masterCondit",
+                  "1st hit ion TOF [ns]",
+                  "Sum of 2nd, 3rd and 4th hit ion TOFs [ns]",
+                  H2_ION_TOF,
+                  H2_ION_SUMOFTOF(3),
+                  dirNameOfIonHist);
+  //
   pHist->create3d(hist3ID_1stHitIonPxPyPz,
                   "h3_1stHistIonPxPyPz",
                   "Momentum X [au]", "Momentum Y [au]", "Momentum Z [au]",
@@ -594,13 +754,43 @@ void Analysis::Run::createIonHists() {
                   dirNameOfIonHist);
 }
 void Analysis::Run::fillIonHists() {
-  const bool underIonMasterCondition =
-      pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
-  const bool underElecMasterCondition =
-      pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
-  const bool underMasterCondition =
-      underIonMasterCondition && underElecMasterCondition;
+  const bool isIonMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
+  const bool isElecMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
+  const bool isMaster = isIonMaster && isElecMaster;
+  const double x1 = pIons->getRealOrDummyIon(0).getLocationX(*pUnit);
+  const double y1 = pIons->getRealOrDummyIon(0).getLocationY(*pUnit);
+  const double t1 = pIons->getRealOrDummyIon(0).getTOF(*pUnit);
+  const double x2 = pIons->getRealOrDummyIon(1).getLocationX(*pUnit);
+  const double y2 = pIons->getRealOrDummyIon(1).getLocationY(*pUnit);
+  const double t2 = pIons->getRealOrDummyIon(1).getTOF(*pUnit);
+  const double x3 = pIons->getRealOrDummyIon(2).getLocationX(*pUnit);
+  const double y3 = pIons->getRealOrDummyIon(2).getLocationY(*pUnit);
+  const double t3 = pIons->getRealOrDummyIon(2).getTOF(*pUnit);
+  const double x4 = pIons->getRealOrDummyIon(3).getLocationX(*pUnit);
+  const double y4 = pIons->getRealOrDummyIon(3).getLocationY(*pUnit);
+  const double t4 = pIons->getRealOrDummyIon(3).getTOF(*pUnit);
 
+  // Detector image
+  if (!pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::Dead)) {
+    pHist->fill2d(hist2ID_1stHitIonLocXY_notDead, x1, y1);
+    pHist->fill1d(hist1ID_1stHitIonTOF_notDead, t1);
+  }
+  if (!pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::Dead)) {
+    pHist->fill2d(hist2ID_2ndHitIonLocXY_notDead, x2, y2);
+    pHist->fill1d(hist1ID_2ndHitIonTOF_notDead, t2);
+  }
+  if (isMaster) {
+    if (!pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::Dead)) {
+      pHist->fill2d(hist2ID_1stHitIonLocXY_master, x1, y1);
+      pHist->fill1d(hist1ID_1stHitIonTOF_master, t1);
+    }
+    if (!pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::Dead)) {
+      pHist->fill2d(hist2ID_2ndHitIonLocXY_master, x2, y2);
+      pHist->fill1d(hist1ID_2ndHitIonTOF_master, t2);
+    }
+  }
+
+  //
   if (pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::HavingProperPzData)) {
     pHist->fill3d(hist3ID_1stHitIonPxPyPz,
                   pIons->getIon(0).getMomentumX(*pUnit),
@@ -626,7 +816,7 @@ void Analysis::Run::fillIonHists() {
                   cos(pIons->getIon(3).getMotionalDirectionZ()));
   }
   // Under master condition
-  if (underMasterCondition) {
+  if (isMaster) {
     if (pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::HavingProperPzData)) {
       pHist->fill3d(hist3ID_1stHitIonPxPyPz_underMasterCondition,
                     pIons->getIon(0).getMomentumX(*pUnit),
