@@ -83,10 +83,10 @@ Analysis::Run::Run(const std::string configFilename) {
   rootFilename += pLogWriter->getID();
   rootFilename += ".root";
   pRootFile = new TFile(rootFilename.c_str(), "update");
-  pHist = new OutputHist(false, numberOfTotalHists);
+  pHist = new OutputHist(false, numberOfHists);
   pHist->linkRootFile(*pRootFile);
-  createHistIon();
-  createHistNature();
+  createIonHists();
+  createNatureHists();
 
   // Initialization is done
   pLogWriter->write() << "Initialization is done." << std::endl;
@@ -250,8 +250,8 @@ void Analysis::Run::processEvent(const long raw) {
       fillElectronMomentumData();
       fillIonAndElectronMomentumData();
     }
-    fillHistIon();
-    fillHistNature();
+    fillIonHists();
+    fillNatureHists();
   }
 }
 const Analysis::Unit &Analysis::Run::getUnit() const {
@@ -522,72 +522,72 @@ void Analysis::Run::writeIonAndElectronMomentumData() {
 const long Analysis::Run::getEntries() const {
   return (long) pEventChain->GetEntries();
 }
-void Analysis::Run::createHistNature() {
-  pHist->create1d(hist1ID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead,
+void Analysis::Run::createNatureHists() {
+  pHist->create1d(histID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead,
                   "h1_i1TOF_i2Andi3AreNotDead",
                   "TOF [ns]",
-                  H1_ION_TOF_BINSIZE_REGION,
-                  dirNameOfHistNature);
-  pHist->create2d(hist2ID_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion,
+                  H1_ION_TOF,
+                  dirNameOfNatureHists);
+  pHist->create2d(histID_2ndAnd3rdHitIonTOF_under1stHitIonIsInMasterRegion,
                   "h2_i2TOF_i3TOF_i1IsInMasterRegion",
                   "1st Hit Ion TOF [ns]", "2nd Hit Ion TOF [ns]",
-                  H2_ION_TOF_BINSIZE_REGION, H2_ION_TOF_BINSIZE_REGION,
-                  dirNameOfHistNature);
-  pHist->create2d(hist2ID_1stHitElecE_sumOfIonTOFs_underMasterCondition,
+                  H2_ION_TOF, H2_ION_TOF,
+                  dirNameOfNatureHists);
+  pHist->create2d(histID_1stHitElecEAndSumOfIonTOFs_underMasterCondition,
                   "h2_e1E_iSumTOF_master",
                   "Energy [eV]", "Sum of TOFs [ns]",
-                  H2_ELECTRON_ENERGY_BINSIZE_REGION, H2_ION_SUMOFTOF_BINSIZE_REGION,
-                  dirNameOfHistNature);
-  pHist->create1d(hist1ID_1stHitElecE_underMasterCondition,
+                  H2_ELECTRON_ENERGY, H2_ION_SUMOFTOF,
+                  dirNameOfNatureHists);
+  pHist->create1d(histID_1stHitElecE_underMasterCondition,
                   "h1_e1E_master", "Energy [eV]",
-                  H1_ELECTRON_ENERGY_BINSIZE_REGION,
-                  dirNameOfHistNature);
+                  H1_ELECTRON_ENERGY,
+                  dirNameOfNatureHists);
 }
-void Analysis::Run::fillHistNature() {
+void Analysis::Run::fillNatureHists() {
   const bool under2ndAnd3rdHitIonAreNotDead = (!pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead)) && (!pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead));
   if(under2ndAnd3rdHitIonAreNotDead) {
-    pHist->fill1d(hist1ID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead,
+    pHist->fill1d(histID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead,
                   pIons->getRealOrDummyObject(0).getTOF(*pUnit));
   }
   const bool under1stHitIonInMasterRegion = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
   if(under1stHitIonInMasterRegion) {
-    pHist->fill2d(hist2ID_2ndHitIonTOF_3rdHitIonTOF_under1stHitIonIsInMasterRegion,
+    pHist->fill2d(histID_2ndAnd3rdHitIonTOF_under1stHitIonIsInMasterRegion,
                   pIons->getRealOrDummyObject(1).getTOF(*pUnit), pIons->getRealOrDummyObject(2).getTOF(*pUnit));
   }
   const bool underMasterCondition = (pIons->areAllFlag(ObjectFlag::WithinMasterRegion) && pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion));
   if(underMasterCondition) {
-    pHist->fill2d(hist2ID_1stHitElecE_sumOfIonTOFs_underMasterCondition,
+    pHist->fill2d(histID_1stHitElecEAndSumOfIonTOFs_underMasterCondition,
                   pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit), pIons->getSumOfTOF(*pUnit));
-    pHist->fill1d(hist1ID_1stHitElecE_underMasterCondition,
+    pHist->fill1d(histID_1stHitElecE_underMasterCondition,
                   pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit));
   }
 }
 void Analysis::Run::flushHist() {
   pHist->flushRootFile();
 }
-void Analysis::Run::createHistIon() {
-  pHist->create3d(hist3ID_1stHistIonPx_Py_Pz,
+void Analysis::Run::createIonHists() {
+  pHist->create3d(histID_1stHistIonPxPyPz,
                   "h3_i1Px_Py_Pz",
                   "Momentum X [au]", "Momentum Y [au]", "Momentum Z [au]",
-                  H3_ION_MOMENTUM_BINSIZE_REGION, H3_ION_MOMENTUM_BINSIZE_REGION, H3_ION_MOMENTUM_BINSIZE_REGION,
-                  dirNameOfHistIon);
-  pHist->create3d(hist3ID_1stHistIonPx_Py_Pz_underMasterCondition,
+                  H3_ION_MOMENTUM, H3_ION_MOMENTUM, H3_ION_MOMENTUM,
+                  dirNameOfIonHist);
+  pHist->create3d(histID_1stHistIonPxPyPz_underMasterCondition,
                   "h3_i1Px_Py_Pz_master",
                   "Momentum X [au]", "Momentum Y [au]", "Momentum Z [au]",
-                  H3_ION_MOMENTUM_BINSIZE_REGION, H3_ION_MOMENTUM_BINSIZE_REGION, H3_ION_MOMENTUM_BINSIZE_REGION,
-                  dirNameOfHistIon);
+                  H3_ION_MOMENTUM, H3_ION_MOMENTUM, H3_ION_MOMENTUM,
+                  dirNameOfIonHist);
 }
-void Analysis::Run::fillHistIon() {
+void Analysis::Run::fillIonHists() {
   const bool underIonMasterCondition = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool underElecMasterCondition = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool underMasterCondition = underIonMasterCondition && underElecMasterCondition;
   if(pIons->getIon(0).isFlag(ObjectFlag::HavingProperPzData)) {
-    pHist->fill3d(hist3ID_1stHistIonPx_Py_Pz,
+    pHist->fill3d(histID_1stHistIonPxPyPz,
                   pIons->getIon(0).getMomentumX(*pUnit),pIons->getIon(0).getMomentumY(*pUnit), pIons->getIon(0).getMomentumZ(*pUnit));
   }
   if(underMasterCondition) {
     if(pIons->getIon(0).isFlag(ObjectFlag::HavingProperPzData)) {
-      pHist->fill3d(hist3ID_1stHistIonPx_Py_Pz_underMasterCondition,
+      pHist->fill3d(histID_1stHistIonPxPyPz_underMasterCondition,
                     pIons->getIon(0).getMomentumX(*pUnit),pIons->getIon(0).getMomentumY(*pUnit), pIons->getIon(0).getMomentumZ(*pUnit));
     }
   }

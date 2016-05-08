@@ -1,20 +1,20 @@
-cmake_minimum_required (VERSION 3.3)
-project (Analysis)
+cmake_minimum_required(VERSION 3.3)
+project(Analysis)
 
 ### Flag for debugging 
 if (CMAKE_BUILD_TYPE EQUAL "Debug")
   add_definitions(-DANALYSIS_DEBUG_BUILD)
-endif (CMAKE_BUILD_TYPE EQUAL "Debug")
+endif ()
 
 ### Core
-add_subdirectory (Core)
+add_subdirectory(Core)
 
 ### ROOT
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-  link_libraries (m dl)
-  include_directories ("/usr/local/include/root")
-  link_directories ("/usr/local/lib/root")
-  link_libraries (
+  link_libraries(m dl)
+  include_directories("/usr/local/include/root")
+  link_directories("/usr/local/lib/root")
+  link_libraries(
       Core
       RIO
       Net
@@ -31,10 +31,10 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
       Thread
   )
 elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  link_libraries (m dl)
-  include_directories ("/usr/local/include/root")
-  link_directories ("/usr/local/lib/root")
-  link_libraries (
+  link_libraries(m dl)
+  include_directories("/usr/local/include/root")
+  link_directories("/usr/local/lib/root")
+  link_libraries(
       Core
       RIO
       Net
@@ -51,10 +51,10 @@ elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
       Thread
   )
 elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
-  set (ROOTSYS "C:/root/")
-  include_directories ("${ROOTSYS}/include")
-  link_directories ("${ROOTSYS}/lib")
-  link_libraries (
+  set(ROOTSYS "C:/root/")
+  include_directories("${ROOTSYS}/include")
+  link_directories("${ROOTSYS}/lib")
+  link_libraries(
       libCore.lib
       libRIO.lib
       libNet.lib
@@ -70,17 +70,17 @@ elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
       libMathCore.lib
       libThread.lib
   )
-endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
+endif ()
 
 ### Analysis
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -m64")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -m64")
 elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -m64")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -m64")
 elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif (CMAKE_SYSTEM_NAME MATCHES "Linux")
-set (SOURCE_FILES
+endif ()
+set(SOURCE_FILES
     Main.cpp
     Run.cpp
     Run.h
@@ -89,5 +89,5 @@ set (SOURCE_FILES
     OutputHist.cpp
     OutputHist.h
     )
-add_executable (AnalysisExe ${SOURCE_FILES})
-target_link_libraries (AnalysisExe AnalysisCoreStaticLib)
+add_executable(AnalysisExe ${SOURCE_FILES})
+target_link_libraries(AnalysisExe AnalysisCoreStaticLib)
