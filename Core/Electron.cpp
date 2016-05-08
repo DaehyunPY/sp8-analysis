@@ -8,6 +8,7 @@ Analysis::Electron::Electron(const Analysis::Unit &unit,
     unit.readElementaryCharge(1e0),
     unit.readNanoSec(t0),
     unit.readNanoSec(t1)) {
+  setFlag(ElecObject);
   return;
 }
 Analysis::Electron::Electron(const Analysis::Unit &unit,
@@ -18,4 +19,7 @@ Analysis::Electron::Electron(const Analysis::Unit &unit,
   return;
 }
 Analysis::Electron::~Electron() { return; }
-Analysis::Electron::Electron() : Object() { return; }
+Analysis::Electron::Electron() : Object() {
+  setFlag(DummyObject);
+  return;
+}

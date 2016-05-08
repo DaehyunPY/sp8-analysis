@@ -26,7 +26,13 @@ class ObjectFlag: protected Flag {
     ResortFlag,
     MostReliable,
     MostOrSecondMostReliable,
-    Risky
+    Risky,
+    RealObject,
+    IonObject,
+    AnionObject,
+    CationObject,
+    ElecObject,
+    DummyObject
   };
   void setFlag(const FlagName flagName);
   void setFlag(const FlagName flagName, const int arg);
@@ -78,6 +84,26 @@ class ObjectFlag: protected Flag {
   const bool isMostReliable() const;
   const bool isMostOrSecondMostReliable() const;
   const bool isRisky() const;
+
+ private:
+  const unsigned int flagFor6thDigit_realObject = 1;
+  const unsigned int flagFor6thDigit_ionObject = 2;
+  const unsigned int flagFor6thDigit_anionObject = 3;
+  const unsigned int flagFor6thDigit_cationObject = 4;
+  const unsigned int flagFor6thDigit_elecObject = 5;
+  const unsigned int flagFor6thDigit_dummyObject = 6;
+  void setRealObject();
+  void setIonObject();
+  void setAnionObject();
+  void setCationObject();
+  void setElecObject();
+  void setDummyObject();
+  const bool isRealObject() const;
+  const bool isIonObject() const;
+  const bool isAnionObject() const;
+  const bool isCationObject() const;
+  const bool isElecObject() const;
+  const bool isDummyObject() const;
 
   // delete blew
  private:

@@ -10,6 +10,7 @@ Analysis::Ion::Ion(const Analysis::Unit &unit,
     unit.readElementaryCharge(q),
     unit.readNanoSec(t0),
     unit.readNanoSec(t1)) {
+  setFlag(IonObject);
   return;
 }
 Analysis::Ion::Ion(const Analysis::Unit &unit,
@@ -24,4 +25,7 @@ Analysis::Ion::Ion(const Analysis::Unit &unit,
   return;
 }
 Analysis::Ion::~Ion() { return; }
-Analysis::Ion::Ion() : Object() { return; }
+Analysis::Ion::Ion() : Object() {
+  setFlag(DummyObject);
+  return;
+}

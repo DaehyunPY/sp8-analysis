@@ -99,10 +99,15 @@ class AnalysisTools {
   void loadEventDataInputer(Electrons &,
                             const Unit &,
                             const EventDataReader &) const; // for ions
-  void loadMomentumCalculator(Ion &) const; // main momentum calculator
-  void loadMomentumCalculator(Electron &) const; // main momentum calculator
-  void loadMomentumCalculator(Ions &) const; // for ions
-  void loadMomentumCalculator(Electrons &) const; // for electrons
+
+ public:
+  enum OptName {
+    OnlyWithinMasterRegion, OnlyNotDead, AllRegion
+  };
+  void loadMomentumCalculator(Ion &ion, const OptName opt=OnlyWithinMasterRegion) const; // main momentum calculator
+  void loadMomentumCalculator(Electron &elec, const OptName opt=OnlyWithinMasterRegion) const; // main momentum calculator
+  void loadMomentumCalculator(Ions &ions, const OptName opt=OnlyWithinMasterRegion) const; // for ions
+  void loadMomentumCalculator(Electrons &electrons, const OptName opt=OnlyWithinMasterRegion) const; // for electrons
 };
 }
 #endif

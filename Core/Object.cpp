@@ -9,8 +9,17 @@ Analysis::Object::Object(const double &m,
                          const double &t0,
                          const double &t1)
     : ObjectFlag(), mass(m), charge(q), minOfTOF(t0), maxOfTOF(t1) {
-  assert(getMass() >= 0e0);
-  assert(getMinOfTOF() <= getMaxOfTOF());
+  if( getMass() == 0e0
+      && getCharge() == 0e0
+      && getMinOfTOF() == 0e0
+      && getMaxOfTOF() == 0e0 ) {
+    setFlag(DummyObject);
+  } else {
+    assert(getMass() > 0e0);
+    assert(getMinOfTOF() >= 0e0);
+    assert(getMinOfTOF() <= getMaxOfTOF());
+    setFlag(RealObject);
+  }
   resetEventData();
   return;
 };

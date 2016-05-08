@@ -19,7 +19,10 @@ void Analysis::ObjectFlag::setOutOfMasterRegion() {
   }
 }
 void Analysis::ObjectFlag::setDead() {
-  if (get1stDigit() == flagFor1stDigit_outOfMasterRegion) {
+  const int n = get1stDigit();
+  if (n == initFlag
+      || n == flagFor1stDigit_withinMasterRegion
+      || n == flagFor1stDigit_outOfMasterRegion) {
     set1stDigit(flagFor1stDigit_dead);
   }
 }
@@ -56,9 +59,10 @@ const bool Analysis::ObjectFlag::isOutOfFrameOfBasicData() const {
 const bool Analysis::ObjectFlag::isOutOfFrameOfMomentumData() const {
   return getNthDigit(5) >= flagFor5thDigit_outOfFrameOfMomentumData;
 }
-
 const bool Analysis::ObjectFlag::isOutOfMasterRegion() const {
-  return (get1stDigit() == flagFor1stDigit_outOfMasterRegion) || (get1stDigit() == flagFor1stDigit_dead);
+  const int n = get1stDigit();
+  return n == flagFor1stDigit_outOfMasterRegion
+      || n == flagFor1stDigit_dead;
 }
 const bool Analysis::ObjectFlag::isWithinMasterRegion() const {
   return get1stDigit() == flagFor1stDigit_withinMasterRegion;
@@ -136,6 +140,12 @@ void Analysis::ObjectFlag::setFlag(const FlagName flagName) {
     ANALYSIS_OBJECTFLAG_CASESET(HavingXYTData)
     ANALYSIS_OBJECTFLAG_CASESET(HavingMomentumData)
     ANALYSIS_OBJECTFLAG_CASESET(HavingProperPzData)
+    ANALYSIS_OBJECTFLAG_CASESET(RealObject)
+    ANALYSIS_OBJECTFLAG_CASESET(IonObject)
+    ANALYSIS_OBJECTFLAG_CASESET(AnionObject)
+    ANALYSIS_OBJECTFLAG_CASESET(CationObject)
+    ANALYSIS_OBJECTFLAG_CASESET(ElecObject)
+    ANALYSIS_OBJECTFLAG_CASESET(DummyObject)
     default:
       assert(false);
       break;
@@ -165,6 +175,12 @@ const bool Analysis::ObjectFlag::isFlag(const FlagName flagName) const {
     ANALYSIS_OBJECTFLAG_CASEIS(MostReliable)
     ANALYSIS_OBJECTFLAG_CASEIS(MostOrSecondMostReliable)
     ANALYSIS_OBJECTFLAG_CASEIS(Risky)
+    ANALYSIS_OBJECTFLAG_CASEIS(RealObject)
+    ANALYSIS_OBJECTFLAG_CASEIS(IonObject)
+    ANALYSIS_OBJECTFLAG_CASEIS(AnionObject)
+    ANALYSIS_OBJECTFLAG_CASEIS(CationObject)
+    ANALYSIS_OBJECTFLAG_CASEIS(ElecObject)
+    ANALYSIS_OBJECTFLAG_CASEIS(DummyObject)
     default:
       assert(false);
   }
@@ -182,4 +198,68 @@ const bool Analysis::ObjectFlag::isFlag(const FlagName flagName,
   }
   return output;
 }
-
+void Analysis::ObjectFlag::setRealObject() {
+  if(getNthDigit(6) == initFlag) {
+    setNthDigit(6, flagFor6thDigit_realObject);
+  }
+}
+void Analysis::ObjectFlag::setDummyObject() {
+  if(getNthDigit(6) == initFlag) {
+    setNthDigit(6, flagFor6thDigit_dummyObject);
+  }
+}
+const bool Analysis::ObjectFlag::isRealObject() const {
+  const int n = getNthDigit(6);
+  return n == flagFor6thDigit_realObject
+      || n == flagFor6thDigit_ionObject
+      || n == flagFor6thDigit_anionObject
+      || n == flagFor6thDigit_cationObject
+      || n == flagFor6thDigit_elecObject;
+}
+const bool Analysis::ObjectFlag::isDummyObject() const {
+  return getNthDigit(6) == flagFor6thDigit_dummyObject;
+}
+void Analysis::ObjectFlag::setIonObject() {
+  const int n = getNthDigit(6);
+  if(n == initFlag || n == flagFor6thDigit_realObject) {
+    setNthDigit(6, flagFor6thDigit_ionObject);
+  }
+}
+void Analysis::ObjectFlag::setAnionObject() {
+  const int n = getNthDigit(6);
+  if(n == initFlag
+      || n == flagFor6thDigit_realObject
+      || n == flagFor6thDigit_ionObject) {
+    setNthDigit(6, flagFor6thDigit_anionObject);
+  }
+}
+void Analysis::ObjectFlag::setCationObject() {
+  const int n = getNthDigit(6);
+  if(n == initFlag
+      || n == flagFor6thDigit_realObject
+      || n == flagFor6thDigit_ionObject) {
+    setNthDigit(6, flagFor6thDigit_cationObject);
+  }
+}
+void Analysis::ObjectFlag::setElecObject() {
+  const int n = getNthDigit(6);
+  if (n == initFlag
+      || n == flagFor6thDigit_realObject) {
+    setNthDigit(6, flagFor6thDigit_elecObject);
+  }
+}
+const bool Analysis::ObjectFlag::isIonObject() const {
+  const int n = getNthDigit(6);
+  return n == flagFor6thDigit_ionObject
+      || n == flagFor6thDigit_anionObject
+      || n == flagFor6thDigit_cationObject;
+}
+const bool Analysis::ObjectFlag::isAnionObject() const {
+  return getNthDigit(6) == flagFor6thDigit_anionObject;
+}
+const bool Analysis::ObjectFlag::isCationObject() const {
+  return getNthDigit(6) == flagFor6thDigit_cationObject;
+}
+const bool Analysis::ObjectFlag::isElecObject() const {
+  return getNthDigit(6) == flagFor6thDigit_elecObject;
+}

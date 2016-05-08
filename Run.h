@@ -5,6 +5,9 @@
 #ifndef BL17ANALYSIS_RUN_H
 #define BL17ANALYSIS_RUN_H
 
+#define H1_SINCOS 1000, -1, 1
+#define H2_SINCOS 100, -1, 1
+#define H3_SINCOS 25, -1, 1
 #define H1_DEGREE 1800, -180, 180
 #define H2_DEGREE 180, -180, 180
 #define H3_DEGREE 45, -180, 180
@@ -94,15 +97,15 @@ class Run {
   //
   const char *dirNameOfIonHist = "Ion";
   enum IonHists {
-    histID_1stHitIonLocXY = 0,
-    histID_2ndHitIonLocXY,
-    histID_3rdHitIonLocXY,
-    histID_4thHitIonLocXY,
-    histID_COMOfIonsLocXY,
-    histID_1stHitIonTOF,
-    histID_2ndHitIonTOF,
-    histID_3rdHitIonTOF,
-    histID_4thHitIonTOF,
+    hist2ID_1stHitIonLocXY = 0,
+    hist2ID_2ndHitIonLocXY,
+    hist2ID_3rdHitIonLocXY,
+    hist2ID_4thHitIonLocXY,
+    hist2ID_COMOfIonsLocXY,
+    hist1ID_1stHitIonTOF,
+    hist1ID_2ndHitIonTOF,
+    hist1ID_3rdHitIonTOF,
+    hist1ID_4thHitIonTOF,
     histID_1stAnd2ndHitIonTOF,
     histID_2ndAnd3rdHitIonTOF,
     histID_3rdAnd4thHitIonTOF,
@@ -121,13 +124,17 @@ class Run {
     histID_2ndHitIonPz,
     histID_3rdHitIonPz,
     histID_4thHitIonPz,
-    histID_1stHistIonPxPyPz,
-    histID_1stHistIonPxPyPz_underMasterCondition,
-    histID_1stHitIonE,
-    histID_2ndHitIonE,
-    histID_3rdHitIonE,
-    histID_4thHitIonE,
-    histID_SumOfIonsE,
+    hist3ID_1stHitIonPxPyPz,
+    hist3ID_1stHitIonPxPyPz_underMasterCondition,
+    hist2ID_1stHitIonPDirecXYAndCosPDirecZ,
+    hist2ID_2ndHitIonPDirecXYAndCosPDirecZ,
+    hist2ID_3rdHitIonPDirecXYAndCosPDirecZ,
+    hist2ID_4thHitIonPDirecXYAndCosPDirecZ,
+    hist1ID_1stHitIonE,
+    hist1ID_2ndHitIonE,
+    hist1ID_3rdHitIonE,
+    hist1ID_4thHitIonE,
+    hist1ID_SumOfIonEs,
     numberOfIonHists
   };
   void createIonHists();
@@ -135,7 +142,7 @@ class Run {
   //
   const char *dirNameOfElecHists = "Electron";
   enum ElecHists {
-    hist2ID_1stAnd2ndHitElecE_underMasterCondition = numberOfIonHists,
+    histID_1stAnd2ndHitElecE_underMasterCondition = numberOfIonHists,
     numberOfElecHists
   };
   //

@@ -3,11 +3,11 @@
 //
 
 #ifdef _WIN32
-  #include <direct.h>
-  #define getcwd _getcwd
-  #define chdir _chdir
+#include <direct.h>
+#define getcwd _getcwd
+#define chdir _chdir
 #else
-  #include <unistd.h>
+#include <unistd.h>
 #endif
 
 #include <ctime>
@@ -27,26 +27,37 @@ Analysis::Run::Run(const std::string configFilename) {
   pLogWriter->logResultOfLoadingJSONFile(configReader);
 
   // Setup ROOT files
-  if(configReader.getStringAt("setup_input.type") == "ROOT") {
-    pEventChain = new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
+  if (configReader.getStringAt("setup_input.type") == "ROOT") {
+    pEventChain =
+        new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
     pEventChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
     pLogWriter->write() << "Input file type is ROOT. " << std::endl;
-    pLogWriter->write() << "    Filenames: " << configReader.getStringAt("setup_input.filenames").c_str() << std::endl;
-    pLogWriter->write() << "    Tree Name: " << configReader.getStringAt("setup_input.tree_name").c_str() << std::endl;
+    pLogWriter->write() << "    Filenames: "
+        << configReader.getStringAt("setup_input.filenames").c_str()
+        << std::endl;
+    pLogWriter->write() << "    Tree Name: "
+        << configReader.getStringAt("setup_input.tree_name").c_str()
+        << std::endl;
     pLogWriter->write() << std::endl;
 
     // Setup event reader
     numberOfHits = configReader.getIntAt("setup_input.number_of_hits");
     pEventReader = new Analysis::EventDataReader(numberOfHits);
     char ch[2];
-    for(int i=0; i<numberOfHits; i++) {
-      for(std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY", "ElecT"}) {
+    for (int i = 0; i < numberOfHits; i++) {
+      for (std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY",
+                              "ElecT"}) {
         sprintf(ch, "%01d", i);
-        pEventChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setEventDataAt(i, str+ch)));
+        pEventChain->SetBranchAddress((str + ch).c_str(),
+                                      &(pEventReader->setEventDataAt(i,
+                                                                     str
+                                                                         + ch)));
       }
-      for(std::string str : {"IonFlag", "ElecFlag"}) {
+      for (std::string str : {"IonFlag", "ElecFlag"}) {
         sprintf(ch, "%01d", i);
-        pEventChain->SetBranchAddress((str+ch).c_str(), &(pEventReader->setFlagDataAt(i, str+ch)));
+        pEventChain->SetBranchAddress((str + ch).c_str(),
+                                      &(pEventReader->setFlagDataAt(i,
+                                                                    str + ch)));
       }
     }
   }
@@ -61,17 +72,18 @@ Analysis::Run::Run(const std::string configFilename) {
   pLogWriter->logAnalysisTools(*pUnit, *pTools, *pIons, *pElectrons);
 
   // Read output option
-  if(configReader.getBoolAt("setup_output.send_out_of_frame")) {
+  if (configReader.getBoolAt("setup_output.send_out_of_frame")) {
     flag.setSendingOutOfFrame();
   }
-  if(configReader.getBoolAt("setup_output.show_only_master_region_events")) {
+  if (configReader.getBoolAt("setup_output.show_only_master_region_events")) {
     flag.setShowingOnlyMasterRegionEvents();
   }
   pLogWriter->write() << "Output Options: " << std::endl;
   pLogWriter->write() << "    Send Out of Frame: "
       << (flag.isSendingOutOfFrame() ? "true" : "false") << std::endl;
   pLogWriter->write() << "    Show Only Master Region Events: "
-      << (flag.isShowingOnlyMasterRegionEvents() ? "true" : "false") << std::endl;
+      << (flag.isShowingOnlyMasterRegionEvents() ? "true" : "false")
+      << std::endl;
   pLogWriter->write() << std::endl;
 
   // Open ROOT file
@@ -94,7 +106,8 @@ Analysis::Run::Run(const std::string configFilename) {
 }
 Analysis::Run::~Run() {
   // counter
-  pLogWriter->write() << "Event count: " << pTools->getEventNumber() << std::endl;
+  pLogWriter->write() << "Event count: " << pTools->getEventNumber()
+      << std::endl;
 
   // root
   writeFlags();
@@ -121,10 +134,10 @@ Analysis::Run::~Run() {
   delete pLogWriter;
 }
 void Analysis::Run::processEvent(const long raw) {
-  // setup
+  // Setup event chain
   pEventChain->GetEntry(raw);
 
-  // count event
+  // Count event
   pTools->loadEventCounter();
 
   // make sure ion and electron data is empty, and reset flags
@@ -138,99 +151,26 @@ void Analysis::Run::processEvent(const long raw) {
   pTools->loadEventDataInputer(*pElectrons, *pUnit, *pEventReader);
 
   // resort option
-  if (pIons->areAllFlag(ObjectFlag::MostOrSecondMostReliable) && pElectrons->areAllFlag(ObjectFlag::MostOrSecondMostReliable)) {
-    if (flag.isSendingOutOfFrame()) {
-      pIons->setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
-      pElectrons->setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag();
-    }
-    if (flag.isSendingOutOfFrame()) {
-      // dead data, don't plot basic data(x, y, TOF)
-      { // ion
-        const int &m = pIons->getNumberOfRealOrDummyObjects();
-        for (int i = 0; i < m; i++) {
-          if (pIons->getRealOrDummyIon(i).isFlag(ObjectFlag::Dead)) {
-            pIons->setRealOrDummyObjectMembers(i).setOutOfFrameOfBasicDataFlag();
-          }
-        }
-      }
-      { // electron
-        const int &m = pElectrons->getNumberOfRealOrDummyObjects();
-        for (int i = 0; i < m; i++) {
-          if (pElectrons->getRealOrDummyObject(i).isFlag(ObjectFlag::Dead)) {
-            pElectrons->setRealOrDummyObjectMembers(i).setOutOfFrameOfBasicDataFlag();
-          }
-        }
-      }
-      // dummy data, don't plot momentum
-      // ion
-      pIons->setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
-      // electron
-      pElectrons->setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
-    }
+  if (pIons->areAllFlag(ObjectFlag::MostOrSecondMostReliable)
+      && pElectrons->areAllFlag(ObjectFlag::MostOrSecondMostReliable)) {
 
     // if all ion event data or all electron event data is dead, ignore the event
-    const bool ionsAreAllDead = pIons->areAllFlag(ObjectFlag::Dead, Objects::RealOrDummy);
-    const bool elecAreAllDead = pElectrons->areAllFlag(ObjectFlag::Dead, Objects::RealOrDummy);
-    if (ionsAreAllDead || elecAreAllDead) {
-      // don't plot basic or momentum data
-      if (flag.isSendingOutOfFrame()) {
-        pIons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
-        pElectrons->setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag();
-      }
-      if (ionsAreAllDead) {
-        ionFlag = -11;
-      } else {
-        ionFlag = -12;
-      }
-      if (elecAreAllDead) {
-        electronFlag = -11;
-      } else {
-        electronFlag = -12;
-      }
-    } else { // calculate ion or electron momentum
-      // ion
-      // if all data is not within master region, don't calculate momentum
-      const bool ionsAreAllWithinMasterRegion = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
-      if (!ionsAreAllWithinMasterRegion) {
-        // don't plot momentum data
-        if (flag.isSendingOutOfFrame()) {
-          pIons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
-        }
-        ionFlag = -20;
-      } else { // calculate ion momentum
-        pTools->loadMomentumCalculator(*pIons);
-        const bool ionsExistDeadObject = pIons->existFlag(ObjectFlag::Dead);
-        // if it couldn't calculate momentum, don't plot it
-        if (ionsExistDeadObject) {
-          if (flag.isSendingOutOfFrame()) {
-            pIons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
-          }
-          ionFlag = 1;
-        } else {
-          // succeed
-          ionFlag = 10;
-        }
-      }
+    const bool ionsAreAllDead =
+        pIons->areAllFlag(ObjectFlag::Dead, Objects::RealOrDummy);
+    const bool elecAreAllDead =
+        pElectrons->areAllFlag(ObjectFlag::Dead, Objects::RealOrDummy);
 
-      // electron
-      // if all data is not within master region, don't calculate momentum
-      const bool electronsAreAllWithinMasterRegion = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
-      if (!electronsAreAllWithinMasterRegion) {
-        // don't plot momentum data
-        if (flag.isSendingOutOfFrame()) {
-          pElectrons->setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
-        }
-        electronFlag = -20;
-      } else { // calculate electron momentum
+    // If all objects are dead, don't calculate momentum
+    if (!ionsAreAllDead) {
+      for (int i = 0; i < pIons->getNumberOfObjects(); i++) {
+        pTools->loadMomentumCalculator(*pIons);
+      }
+    }
+
+    // If all objects are dead, don't calculate momentum
+    if (!elecAreAllDead) {
+      for (int i = 0; i < pElectrons->getNumberOfObjects(); i++) {
         pTools->loadMomentumCalculator(*pElectrons);
-        const bool electronsExistDeadObject = pElectrons->existFlag(ObjectFlag::Dead);
-        // if it couldn't calculate momentum, don't plot it
-        if (electronsExistDeadObject) {
-          electronFlag = 1;
-        } else {
-          // succeed
-          electronFlag = 10;
-        }
       }
     }
 
@@ -253,6 +193,8 @@ void Analysis::Run::processEvent(const long raw) {
     fillIonHists();
     fillNatureHists();
   }
+
+  // Fill hists for resort flags
 }
 const Analysis::Unit &Analysis::Run::getUnit() const {
   return *pUnit;
@@ -263,7 +205,7 @@ const Analysis::Ions &Analysis::Run::getIons() const {
 const Analysis::Electrons &Analysis::Run::getElectrons() const {
   return *pElectrons;
 }
-const int& Analysis::Run::getNumberOfHitsUsed() const {
+const int &Analysis::Run::getNumberOfHitsUsed() const {
   return numberOfHits;
 }
 void Analysis::Run::fillIonBasicData() {
@@ -294,8 +236,10 @@ void Analysis::Run::fillIonBasicData() {
   root1DHistogramOf4thHitIonTOF.Fill(i4HitTOF);
   root2DHistogramOf1stHitIonTOF_2ndHitIonTOF.Fill(i1HitTOF, i2HitTOF);
   root2DHistogramOf2ndHitIonTOF_3rdHitIonTOF.Fill(i2HitTOF, i3HitTOF);
-  if(pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::WithinMasterRegion)) {
-    root2DHistogramOf2ndHitIonTOF_3rdHitIonTOF_under1stHitIonMaster.Fill(i2HitTOF, i3HitTOF);
+  if (pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::WithinMasterRegion)) {
+    root2DHistogramOf2ndHitIonTOF_3rdHitIonTOF_under1stHitIonMaster.Fill(
+        i2HitTOF,
+        i3HitTOF);
   }
   root2DHistogramOf3rdHitIonTOF_4thHitIonTOF.Fill(i3HitTOF, i4HitTOF);
   root2DHistogramOf1stHitIonTOFPlus2ndHitIonTOF_3rdHitIonTOF.Fill(
@@ -544,20 +488,27 @@ void Analysis::Run::createNatureHists() {
                   dirNameOfNatureHists);
 }
 void Analysis::Run::fillNatureHists() {
-  const bool under2ndAnd3rdHitIonAreNotDead = (!pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead)) && (!pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead));
-  if(under2ndAnd3rdHitIonAreNotDead) {
+  const bool under2ndAnd3rdHitIonAreNotDead =
+      (!pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead))
+          && (!pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead));
+  if (under2ndAnd3rdHitIonAreNotDead) {
     pHist->fill1d(histID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead,
                   pIons->getRealOrDummyObject(0).getTOF(*pUnit));
   }
-  const bool under1stHitIonInMasterRegion = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
-  if(under1stHitIonInMasterRegion) {
+  const bool under1stHitIonInMasterRegion =
+      pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
+  if (under1stHitIonInMasterRegion) {
     pHist->fill2d(histID_2ndAnd3rdHitIonTOF_under1stHitIonIsInMasterRegion,
-                  pIons->getRealOrDummyObject(1).getTOF(*pUnit), pIons->getRealOrDummyObject(2).getTOF(*pUnit));
+                  pIons->getRealOrDummyObject(1).getTOF(*pUnit),
+                  pIons->getRealOrDummyObject(2).getTOF(*pUnit));
   }
-  const bool underMasterCondition = (pIons->areAllFlag(ObjectFlag::WithinMasterRegion) && pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion));
-  if(underMasterCondition) {
+  const bool underMasterCondition =
+      (pIons->areAllFlag(ObjectFlag::WithinMasterRegion)
+          && pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion));
+  if (underMasterCondition) {
     pHist->fill2d(histID_1stHitElecEAndSumOfIonTOFs_underMasterCondition,
-                  pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit), pIons->getSumOfTOF(*pUnit));
+                  pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit),
+                  pIons->getSumOfTOF(*pUnit));
     pHist->fill1d(histID_1stHitElecE_underMasterCondition,
                   pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit));
   }
@@ -566,75 +517,121 @@ void Analysis::Run::flushHist() {
   pHist->flushRootFile();
 }
 void Analysis::Run::createIonHists() {
-  pHist->create2d(histID_1stHitIonLocXY,
+  pHist->create2d(hist2ID_1stHitIonLocXY,
                   "h2_1stHitIonLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create2d(histID_2ndHitIonLocXY,
+  pHist->create2d(hist2ID_2ndHitIonLocXY,
                   "h2_2ndHitIonLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create2d(histID_3rdHitIonLocXY,
+  pHist->create2d(hist2ID_3rdHitIonLocXY,
                   "h2_3rdHitIonLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create2d(histID_4thHitIonLocXY,
+  pHist->create2d(hist2ID_4thHitIonLocXY,
                   "h2_4thHitIonLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create2d(histID_COMOfIonsLocXY,
+  pHist->create2d(hist2ID_COMOfIonsLocXY,
                   "h2_COMOfIonsLocXY",
                   "Location X [mm]", "Location Y [mm]",
                   H2_ION_LOCATION, H2_ION_LOCATION,
                   dirNameOfIonHist);
-  pHist->create1d(histID_1stHitIonTOF,
+  pHist->create1d(hist1ID_1stHitIonTOF,
                   "h1_1stHitIonTOF",
                   "TOF [ns]",
                   H1_ION_TOF,
                   dirNameOfIonHist);
-  pHist->create1d(histID_2ndHitIonTOF,
+  pHist->create1d(hist1ID_2ndHitIonTOF,
                   "h1_2ndHitIonTOF",
                   "TOF [ns]",
                   H1_ION_TOF,
                   dirNameOfIonHist);
-  pHist->create1d(histID_3rdHitIonTOF,
+  pHist->create1d(hist1ID_3rdHitIonTOF,
                   "h1_3rdHitIonTOF",
                   "TOF [ns]",
                   H1_ION_TOF,
                   dirNameOfIonHist);
-  pHist->create1d(histID_4thHitIonTOF,
+  pHist->create1d(hist1ID_4thHitIonTOF,
                   "h1_4thHitIonTOF",
                   "TOF [ns]",
                   H1_ION_TOF,
                   dirNameOfIonHist);
-
-  pHist->create3d(histID_1stHistIonPxPyPz,
+  pHist->create3d(hist3ID_1stHitIonPxPyPz,
                   "h3_1stHistIonPxPyPz",
                   "Momentum X [au]", "Momentum Y [au]", "Momentum Z [au]",
                   H3_ION_MOMENTUM, H3_ION_MOMENTUM, H3_ION_MOMENTUM,
                   dirNameOfIonHist);
-  pHist->create3d(histID_1stHistIonPxPyPz_underMasterCondition,
+  pHist->create3d(hist3ID_1stHitIonPxPyPz_underMasterCondition,
                   "h3_i1Px_Py_Pz_master",
                   "Momentum X [au]", "Momentum Y [au]", "Momentum Z [au]",
                   H3_ION_MOMENTUM, H3_ION_MOMENTUM, H3_ION_MOMENTUM,
                   dirNameOfIonHist);
+  pHist->create2d(hist2ID_1stHitIonPDirecXYAndCosPDirecZ,
+                  "h2_1stHitIonPDirecXYAndCosPDirecZ",
+                  "Motional Direction XY [degree]", "Motional Direction Z [1]",
+                  H2_DEGREE, H2_SINCOS,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_2ndHitIonPDirecXYAndCosPDirecZ,
+                  "h2_2ndHitIonPDirecXYAndCosPDirecZ",
+                  "Motional Direction XY [degree]", "Motional Direction Z [1]",
+                  H2_DEGREE, H2_SINCOS,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_3rdHitIonPDirecXYAndCosPDirecZ,
+                  "h2_3rdHitIonPDirecXYAndCosPDirecZ",
+                  "Motional Direction XY [degree]", "Motional Direction Z [1]",
+                  H2_DEGREE, H2_SINCOS,
+                  dirNameOfIonHist);
+  pHist->create2d(hist2ID_4thHitIonPDirecXYAndCosPDirecZ,
+                  "h2_4thHitIonPDirecXYAndCosPDirecZ",
+                  "Motional Direction XY [degree]", "Motional Direction Z [1]",
+                  H2_DEGREE, H2_SINCOS,
+                  dirNameOfIonHist);
 }
 void Analysis::Run::fillIonHists() {
-  const bool underIonMasterCondition = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
-  const bool underElecMasterCondition = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
-  const bool underMasterCondition = underIonMasterCondition && underElecMasterCondition;
-  if(pIons->getIon(0).isFlag(ObjectFlag::HavingProperPzData)) {
-    pHist->fill3d(histID_1stHistIonPxPyPz,
-                  pIons->getIon(0).getMomentumX(*pUnit),pIons->getIon(0).getMomentumY(*pUnit), pIons->getIon(0).getMomentumZ(*pUnit));
+  const bool underIonMasterCondition =
+      pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
+  const bool underElecMasterCondition =
+      pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
+  const bool underMasterCondition =
+      underIonMasterCondition && underElecMasterCondition;
+
+  if (pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::HavingProperPzData)) {
+    pHist->fill3d(hist3ID_1stHitIonPxPyPz,
+                  pIons->getIon(0).getMomentumX(*pUnit),
+                  pIons->getIon(0).getMomentumY(*pUnit),
+                  pIons->getIon(0).getMomentumZ(*pUnit));
+    pHist->fill2d(hist2ID_1stHitIonPDirecXYAndCosPDirecZ,
+                  pIons->getIon(0).getMotionalDirectionXY(*pUnit),
+                  cos(pIons->getIon(0).getMotionalDirectionZ()));
   }
-  if(underMasterCondition) {
-    if(pIons->getIon(0).isFlag(ObjectFlag::HavingProperPzData)) {
-      pHist->fill3d(histID_1stHistIonPxPyPz_underMasterCondition,
-                    pIons->getIon(0).getMomentumX(*pUnit),pIons->getIon(0).getMomentumY(*pUnit), pIons->getIon(0).getMomentumZ(*pUnit));
+  if (pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::HavingProperPzData)) {
+    pHist->fill2d(hist2ID_2ndHitIonPDirecXYAndCosPDirecZ,
+                  pIons->getIon(1).getMotionalDirectionXY(*pUnit),
+                  cos(pIons->getIon(1).getMotionalDirectionZ()));
+  }
+  if (pIons->getRealOrDummyIon(2).isFlag(ObjectFlag::HavingProperPzData)) {
+    pHist->fill2d(hist2ID_3rdHitIonPDirecXYAndCosPDirecZ,
+                  pIons->getIon(2).getMotionalDirectionXY(*pUnit),
+                  cos(pIons->getIon(2).getMotionalDirectionZ()));
+  }
+  if (pIons->getRealOrDummyIon(3).isFlag(ObjectFlag::HavingProperPzData)) {
+    pHist->fill2d(hist2ID_4thHitIonPDirecXYAndCosPDirecZ,
+                  pIons->getIon(3).getMotionalDirectionXY(*pUnit),
+                  cos(pIons->getIon(3).getMotionalDirectionZ()));
+  }
+  // Under master condition
+  if (underMasterCondition) {
+    if (pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::HavingProperPzData)) {
+      pHist->fill3d(hist3ID_1stHitIonPxPyPz_underMasterCondition,
+                    pIons->getIon(0).getMomentumX(*pUnit),
+                    pIons->getIon(0).getMomentumY(*pUnit),
+                    pIons->getIon(0).getMomentumZ(*pUnit));
     }
   }
 }
