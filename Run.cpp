@@ -667,6 +667,8 @@ void Analysis::Run::fillIonHists() {
   const bool isIonMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool isElecMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool isMaster = isIonMaster && isElecMaster;
+  const double xCOM = pIons->getLocationX(*pUnit);
+  const double yCOM = pIons->getLocationY(*pUnit);
   const double x1 = pIons->getRealOrDummyIon(0).getLocationX(*pUnit);
   const double y1 = pIons->getRealOrDummyIon(0).getLocationY(*pUnit);
   const double t1 = pIons->getRealOrDummyIon(0).getTOF(*pUnit);
@@ -697,6 +699,10 @@ void Analysis::Run::fillIonHists() {
 	  pHist->fill2d(hist2ID_4thHitIonLocXY_notDead, x4, y4);
 	  pHist->fill1d(hist1ID_4thHitIonTOF_notDead, t4);
   }
+  // COM
+  if (isIonMaster) {
+	  pHist->fill2d(hist2ID_COMOfIonsLocXY_notDead, xCOM, yCOM);
+  }
   // PIPICO 
   if (!pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::Dead) && !pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::Dead)) {
 	  pHist->fill2d(hist2ID_1stAnd2ndHitIonTOF, t1, t2);
@@ -725,6 +731,10 @@ void Analysis::Run::fillIonHists() {
 	if (!pIons->getRealOrDummyIon(3).isFlag(ObjectFlag::Dead)) {
 		pHist->fill2d(hist2ID_4thHitIonLocXY_master, x4, y4);
 		pHist->fill1d(hist1ID_4thHitIonTOF_master, t4);
+	}
+	// COM
+	if (isIonMaster) {
+		pHist->fill2d(hist2ID_COMOfIonsLocXY_master, xCOM, yCOM);
 	}
 	// PIPICO 
 	if (!pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::Dead) && !pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::Dead)) {
