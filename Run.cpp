@@ -680,7 +680,7 @@ void Analysis::Run::fillIonHists() {
   const double y4 = pIons->getRealOrDummyIon(3).getLocationY(*pUnit);
   const double t4 = pIons->getRealOrDummyIon(3).getTOF(*pUnit);
 
-  // Detector image
+  // Detector image and TOF
   if (!pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::Dead)) {
     pHist->fill2d(hist2ID_1stHitIonLocXY_notDead, x1, y1);
     pHist->fill1d(hist1ID_1stHitIonTOF_notDead, t1);
@@ -689,7 +689,27 @@ void Analysis::Run::fillIonHists() {
     pHist->fill2d(hist2ID_2ndHitIonLocXY_notDead, x2, y2);
     pHist->fill1d(hist1ID_2ndHitIonTOF_notDead, t2);
   }
+  if (!pIons->getRealOrDummyIon(2).isFlag(ObjectFlag::Dead)) {
+	  pHist->fill2d(hist2ID_3rdHitIonLocXY_notDead, x3, y3);
+	  pHist->fill1d(hist1ID_3rdHitIonTOF_notDead, t3);
+  }
+  if (!pIons->getRealOrDummyIon(3).isFlag(ObjectFlag::Dead)) {
+	  pHist->fill2d(hist2ID_4thHitIonLocXY_notDead, x4, y4);
+	  pHist->fill1d(hist1ID_4thHitIonTOF_notDead, t4);
+  }
+  // PIPICO 
+  if (!pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::Dead) && !pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::Dead)) {
+	  pHist->fill2d(hist2ID_1stAnd2ndHitIonTOF, t1, t2);
+  }
+  if (!pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::Dead) && !pIons->getRealOrDummyIon(2).isFlag(ObjectFlag::Dead)) {
+	  pHist->fill2d(hist2ID_2ndAnd3rdHitIonTOF, t2, t3);
+  }
+  if (!pIons->getRealOrDummyIon(2).isFlag(ObjectFlag::Dead) && !pIons->getRealOrDummyIon(3).isFlag(ObjectFlag::Dead)) {
+	  pHist->fill2d(hist2ID_3rdAnd4thHitIonTOF, t3, t4);
+  }
+  // Under master condition 
   if (isMaster) {
+	// Detector image and TOF
     if (!pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::Dead)) {
       pHist->fill2d(hist2ID_1stHitIonLocXY_master, x1, y1);
       pHist->fill1d(hist1ID_1stHitIonTOF_master, t1);
@@ -698,6 +718,24 @@ void Analysis::Run::fillIonHists() {
       pHist->fill2d(hist2ID_2ndHitIonLocXY_master, x2, y2);
       pHist->fill1d(hist1ID_2ndHitIonTOF_master, t2);
     }
+	if (!pIons->getRealOrDummyIon(2).isFlag(ObjectFlag::Dead)) {
+		pHist->fill2d(hist2ID_3rdHitIonLocXY_master, x3, y3);
+		pHist->fill1d(hist1ID_3rdHitIonTOF_master, t3);
+	}
+	if (!pIons->getRealOrDummyIon(3).isFlag(ObjectFlag::Dead)) {
+		pHist->fill2d(hist2ID_4thHitIonLocXY_master, x4, y4);
+		pHist->fill1d(hist1ID_4thHitIonTOF_master, t4);
+	}
+	// PIPICO 
+	if (!pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::Dead) && !pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::Dead)) {
+		pHist->fill2d(hist2ID_1stAnd2ndHitIonTOF_masterCondit, t1, t2);
+	}
+	if (!pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::Dead) && !pIons->getRealOrDummyIon(2).isFlag(ObjectFlag::Dead)) {
+		pHist->fill2d(hist2ID_2ndAnd3rdHitIonTOF_masterCondit, t2, t3);
+	}
+	if (!pIons->getRealOrDummyIon(2).isFlag(ObjectFlag::Dead) && !pIons->getRealOrDummyIon(3).isFlag(ObjectFlag::Dead)) {
+		pHist->fill2d(hist2ID_3rdAnd4thHitIonTOF_masterCondit, t3, t4);
+	}
   }
 
   //
