@@ -5,7 +5,7 @@
 #ifndef BL17ANALYSIS_RUN_H
 #define BL17ANALYSIS_RUN_H
 
-#define SAMETITLEWITH(X) X, "X"
+#define SAMETITLEWITH(X) X, #X
 
 #define H1_SINCOS 1000, -1, 1
 #define H2_SINCOS 100, -1, 1
