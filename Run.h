@@ -48,6 +48,9 @@
 #define H1_ELECTRON_TOF 1000, -20, 130
 #define H2_ELECTRON_TOF 100, -20, 130
 #define H3_ELECTRON_TOF 25, -20, 130
+#define H1_ELECTRON_SUMOFTOF(X) 1000*X, -20*X, 130*X
+#define H2_ELECTRON_SUMOFTOF(X) 100*X, -20*X, 130*X
+#define H3_ELECTRON_SUMOFTOF(X) 25*X, -20*X, 130*X
 #define H1_ELECTRON_MOMENTUM 1000, -2.5, 2.5
 #define H2_ELECTRON_MOMENTUM 100, -2.5, 2.5
 #define H3_ELECTRON_MOMENTUM 25, -2.5, 2.5
@@ -95,11 +98,11 @@ class Run {
 
  private:
   OutputHist *pHist;
-  const char *dirNameOfFlagHist = "Flag";
+  const char *dirNameOfFlagHists = "Flag";
   enum FlagHists {
     numberOfFlagHists = 0
   };
-  const char *dirNameOfIonHist = "Ion";
+  const char *dirNameOfIonHists = "Ion";
   enum IonHists {
     // Detector image
     hist2ID_1stHitIonLocXY_notDead = numberOfFlagHists,
@@ -177,9 +180,42 @@ class Run {
   void fillIonHists();
   const char *dirNameOfElecHists = "Electron";
   enum ElecHists {
-    histID_1stAnd2ndHitElecE_underMasterCondition = numberOfIonHists,
+	// Detector image
+	hist2ID_1stHitElecLocXY_notDead = numberOfIonHists,
+	hist2ID_2ndHitElecLocXY_notDead,
+	hist2ID_3rdHitElecLocXY_notDead,
+	hist2ID_4thHitElecLocXY_notDead,
+	hist2ID_COMOfElecsLocXY_notDead,
+	hist2ID_1stHitElecLocXY_master,
+	hist2ID_2ndHitElecLocXY_master,
+	hist2ID_3rdHitElecLocXY_master,
+	hist2ID_4thHitElecLocXY_master,
+	hist2ID_COMOfElecsLocXY_master,
+      // TOF
+    hist1ID_1stHitElecTOF_raw,
+    hist1ID_2ndHitElecTOF_raw,
+    hist1ID_3rdHitElecTOF_raw,
+    hist1ID_4thHitElecTOF_raw,
+    hist1ID_1stHitElecTOF_notDead,
+    hist1ID_2ndHitElecTOF_notDead,
+    hist1ID_3rdHitElecTOF_notDead,
+    hist1ID_4thHitElecTOF_notDead,
+    hist1ID_1stHitElecTOF_master,
+    hist1ID_2ndHitElecTOF_master,
+    hist1ID_3rdHitElecTOF_master,
+    hist1ID_4thHitElecTOF_master,
+    // PIPICO
+    hist2ID_1stAnd2ndHitElecTOF_notDead,
+    hist2ID_2ndAnd3rdHitElecTOF_notDead,
+    hist2ID_3rdAnd4thHitElecTOF_notDead,
+    hist2ID_1stAnd2ndHitElecTOF_master,
+    hist2ID_2ndAnd3rdHitElecTOF_master,
+    hist2ID_3rdAnd4thHitElecTOF_master,
+    //
     numberOfElecHists
   };
+  void createElecHists(); 
+  void fillElecHists();
   const char *dirNameOfNatureHists = "Nature";
   enum NatureHists {
     histID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead = numberOfElecHists,
