@@ -5,6 +5,8 @@
 #ifndef BL17ANALYSIS_RUN_H
 #define BL17ANALYSIS_RUN_H
 
+#define SAMETITLEWITH(X) X, "X"
+
 #define H1_SINCOS 1000, -1, 1
 #define H2_SINCOS 100, -1, 1
 #define H3_SINCOS 25, -1, 1
@@ -21,6 +23,9 @@
 #define H1_ION_SUMOFTOF(X) 1000*X, 0*X, 10000*X
 #define H2_ION_SUMOFTOF(X) 100*X, 0*X, 10000*X
 #define H3_ION_SUMOFTOF(X) 25*X, 0*X, 10000*X
+#define H1_ION_DIFFOFTOF 2000, 0, 10000
+#define H2_ION_DIFFOFTOF 500, 0, 10000
+#define H3_ION_DIFFOFTOF 100, 0, 10000
 #define H1_ION_MOMENTUM 1000, -250, 250
 #define H2_ION_MOMENTUM 100, -250, 250
 #define H3_ION_MOMENTUM 25, -250, 250
@@ -108,6 +113,10 @@ class Run {
     hist2ID_4thHitIonLocXY_master,
     hist2ID_COMOfIonsLocXY_master,
     // TOF
+    hist1ID_1stHitIonTOF_raw,
+    hist1ID_2ndHitIonTOF_raw,
+    hist1ID_3rdHitIonTOF_raw,
+    hist1ID_4thHitIonTOF_raw,
     hist1ID_1stHitIonTOF_notDead,
     hist1ID_2ndHitIonTOF_notDead,
     hist1ID_3rdHitIonTOF_notDead,
@@ -117,12 +126,15 @@ class Run {
     hist1ID_3rdHitIonTOF_master,
     hist1ID_4thHitIonTOF_master,
     // PIPICO
-    hist2ID_1stAnd2ndHitIonTOF,
-    hist2ID_2ndAnd3rdHitIonTOF,
-    hist2ID_3rdAnd4thHitIonTOF,
-    hist2ID_1stAnd2ndHitIonTOF_masterCondit,
-    hist2ID_2ndAnd3rdHitIonTOF_masterCondit,
-    hist2ID_3rdAnd4thHitIonTOF_masterCondit,
+    hist2ID_1stAnd2ndHitIonTOF_notDead,
+    hist2ID_2ndAnd3rdHitIonTOF_notDead,
+    hist2ID_3rdAnd4thHitIonTOF_notDead,
+    hist2ID_1stAnd2ndHitIonTOF_rot45NotDead,
+    hist2ID_2ndAnd3rdHitIonTOF_rot45NotDead,
+    hist2ID_3rdAnd4thHitIonTOF_rot45NotDead,
+    hist2ID_1stAnd2ndHitIonTOF_master,
+    hist2ID_2ndAnd3rdHitIonTOF_master,
+    hist2ID_3rdAnd4thHitIonTOF_master,
     // PIPIPICO
     hist2ID_SumOf1stAnd2ndHitIonTOFsAnd3rdHitIonTOF,
     hist2ID_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs,
