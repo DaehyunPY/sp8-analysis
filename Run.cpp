@@ -423,35 +423,35 @@ void Analysis::Run::createIonHists() {
                   dirNameOfIonHists);
 }
 void Analysis::Run::fillIonHists() {
-  const bool dead1 = pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::Dead);
-  const bool dead2 = pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::Dead);
-  const bool dead3 = pIons->getRealOrDummyIon(2).isFlag(ObjectFlag::Dead);
-  const bool dead4 = pIons->getRealOrDummyIon(3).isFlag(ObjectFlag::Dead);
+  const bool dead1 = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
+  const bool dead2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
+  const bool dead3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
+  const bool dead4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
   const bool properP1 =
-      pIons->getRealOrDummyIon(0).isFlag(ObjectFlag::HavingProperPzData);
+      pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::HavingProperPzData);
   const bool properP2 =
-      pIons->getRealOrDummyIon(1).isFlag(ObjectFlag::HavingProperPzData);
+      pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::HavingProperPzData);
   const bool properP3 =
-      pIons->getRealOrDummyIon(2).isFlag(ObjectFlag::HavingProperPzData);
+      pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::HavingProperPzData);
   const bool properP4 =
-      pIons->getRealOrDummyIon(3).isFlag(ObjectFlag::HavingProperPzData);
+      pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::HavingProperPzData);
 
   const bool isIonMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool isElecMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool isMaster = isIonMaster && isElecMaster;
   
-  const double x1 = pIons->getRealOrDummyIon(0).getLocationX(*pUnit);
-  const double y1 = pIons->getRealOrDummyIon(0).getLocationY(*pUnit);
-  const double t1 = pIons->getRealOrDummyIon(0).getTOF(*pUnit);
-  const double x2 = pIons->getRealOrDummyIon(1).getLocationX(*pUnit);
-  const double y2 = pIons->getRealOrDummyIon(1).getLocationY(*pUnit);
-  const double t2 = pIons->getRealOrDummyIon(1).getTOF(*pUnit);
-  const double x3 = pIons->getRealOrDummyIon(2).getLocationX(*pUnit);
-  const double y3 = pIons->getRealOrDummyIon(2).getLocationY(*pUnit);
-  const double t3 = pIons->getRealOrDummyIon(2).getTOF(*pUnit);
-  const double x4 = pIons->getRealOrDummyIon(3).getLocationX(*pUnit);
-  const double y4 = pIons->getRealOrDummyIon(3).getLocationY(*pUnit);
-  const double t4 = pIons->getRealOrDummyIon(3).getTOF(*pUnit);
+  const double x1 = pIons->getRealOrDummyObject(0).getLocationX(*pUnit);
+  const double y1 = pIons->getRealOrDummyObject(0).getLocationY(*pUnit);
+  const double t1 = pIons->getRealOrDummyObject(0).getTOF(*pUnit);
+  const double x2 = pIons->getRealOrDummyObject(1).getLocationX(*pUnit);
+  const double y2 = pIons->getRealOrDummyObject(1).getLocationY(*pUnit);
+  const double t2 = pIons->getRealOrDummyObject(1).getTOF(*pUnit);
+  const double x3 = pIons->getRealOrDummyObject(2).getLocationX(*pUnit);
+  const double y3 = pIons->getRealOrDummyObject(2).getLocationY(*pUnit);
+  const double t3 = pIons->getRealOrDummyObject(2).getTOF(*pUnit);
+  const double x4 = pIons->getRealOrDummyObject(3).getLocationX(*pUnit);
+  const double y4 = pIons->getRealOrDummyObject(3).getLocationY(*pUnit);
+  const double t4 = pIons->getRealOrDummyObject(3).getTOF(*pUnit);
 
   const double xCOM = pIons->getLocationX(*pUnit);
   const double yCOM = pIons->getLocationY(*pUnit);
@@ -571,43 +571,43 @@ void Analysis::Run::createElecHists() {
   pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecLocXY_notDead),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
   pHist->create2d(SAMETITLEWITH(hist2ID_2ndHitElecLocXY_notDead),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
   pHist->create2d(SAMETITLEWITH(hist2ID_3rdHitElecLocXY_notDead),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
   pHist->create2d(SAMETITLEWITH(hist2ID_4thHitElecLocXY_notDead),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
   pHist->create2d(SAMETITLEWITH(hist2ID_COMOfElecsLocXY_notDead),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
   pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecLocXY_master),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
   pHist->create2d(SAMETITLEWITH(hist2ID_2ndHitElecLocXY_master),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
   pHist->create2d(SAMETITLEWITH(hist2ID_3rdHitElecLocXY_master),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
   pHist->create2d(SAMETITLEWITH(hist2ID_4thHitElecLocXY_master),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
   pHist->create2d(SAMETITLEWITH(hist2ID_COMOfElecsLocXY_master),
                   "Location X [mm]", "Location Y [mm]",
                   H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfIonHists);
+                  dirNameOfElecHists);
    // TOF
   pHist->create1d(SAMETITLEWITH(hist1ID_1stHitElecTOF_notDead),
                   "TOF [ns]",
@@ -668,4 +668,107 @@ void Analysis::Run::createElecHists() {
                   dirNameOfElecHists);
 }
 void Analysis::Run::fillElecHists() {
+	const bool dead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
+	const bool dead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
+	const bool dead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
+	const bool dead4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
+	const bool properP1 =
+		pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::HavingProperPzData);
+	const bool properP2 =
+		pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::HavingProperPzData);
+	const bool properP3 =
+		pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::HavingProperPzData);
+	const bool properP4 =
+		pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::HavingProperPzData);
+
+	const bool isIonMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
+	const bool isElecMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
+	const bool isMaster = isIonMaster && isElecMaster;
+
+	const double x1 = pElectrons->getRealOrDummyObject(0).getLocationX(*pUnit);
+	const double y1 = pElectrons->getRealOrDummyObject(0).getLocationY(*pUnit);
+	const double t1 = pElectrons->getRealOrDummyObject(0).getTOF(*pUnit);
+	const double x2 = pElectrons->getRealOrDummyObject(1).getLocationX(*pUnit);
+	const double y2 = pElectrons->getRealOrDummyObject(1).getLocationY(*pUnit);
+	const double t2 = pElectrons->getRealOrDummyObject(1).getTOF(*pUnit);
+	const double x3 = pElectrons->getRealOrDummyObject(2).getLocationX(*pUnit);
+	const double y3 = pElectrons->getRealOrDummyObject(2).getLocationY(*pUnit);
+	const double t3 = pElectrons->getRealOrDummyObject(2).getTOF(*pUnit);
+	const double x4 = pElectrons->getRealOrDummyObject(3).getLocationX(*pUnit);
+	const double y4 = pElectrons->getRealOrDummyObject(3).getLocationY(*pUnit);
+	const double t4 = pElectrons->getRealOrDummyObject(3).getTOF(*pUnit);
+
+	const double xCOM = pElectrons->getLocationX(*pUnit);
+	const double yCOM = pElectrons->getLocationY(*pUnit);
+	const double tSum12 = pElectrons->getSumOfTOF(*pUnit, 1, 2);
+	const double tSum23 = pElectrons->getSumOfTOF(*pUnit, 2, 3);
+	const double tSum34 = pElectrons->getSumOfTOF(*pUnit, 3, 4);
+	const double tDiff12 = pElectrons->getDiffOfTOF(*pUnit, 1, 2);
+	const double tDiff23 = pElectrons->getDiffOfTOF(*pUnit, 2, 3);
+	const double tDiff34 = pElectrons->getDiffOfTOF(*pUnit, 3, 4);
+
+	// Detector image and TOF
+	if (!dead1) {
+		pHist->fill2d(hist2ID_1stHitElecLocXY_notDead, x1, y1);
+		pHist->fill1d(hist1ID_1stHitElecTOF_notDead, t1);
+	}
+	if (!dead2) {
+		pHist->fill2d(hist2ID_2ndHitElecLocXY_notDead, x2, y2);
+		pHist->fill1d(hist1ID_2ndHitElecTOF_notDead, t2);
+	}
+	if (!dead3) {
+		pHist->fill2d(hist2ID_3rdHitElecLocXY_notDead, x3, y3);
+		pHist->fill1d(hist1ID_3rdHitElecTOF_notDead, t3);
+	}
+	if (!dead4) {
+		pHist->fill2d(hist2ID_4thHitElecLocXY_notDead, x4, y4);
+		pHist->fill1d(hist1ID_4thHitElecTOF_notDead, t4);
+	}
+	if (isElecMaster) {
+		pHist->fill2d(hist2ID_COMOfElecsLocXY_notDead, xCOM, yCOM);
+	}
+	// PIPICO 
+	if (!dead1 && !dead2) {
+		pHist->fill2d(hist2ID_1stAnd2ndHitElecTOF_notDead, t1, t2);
+	}
+	if (!dead2 && !dead3) {
+		pHist->fill2d(hist2ID_2ndAnd3rdHitElecTOF_notDead, t2, t3);
+	}
+	if (!dead3 && !dead4) {
+		pHist->fill2d(hist2ID_3rdAnd4thHitElecTOF_notDead, t3, t4);
+	}
+	// Under master condition 
+	if (isMaster) {
+		// Detector image and TOF
+		if (!dead1) {
+			pHist->fill2d(hist2ID_1stHitElecLocXY_master, x1, y1);
+			pHist->fill1d(hist1ID_1stHitElecTOF_master, t1);
+		}
+		if (!dead2) {
+			pHist->fill2d(hist2ID_2ndHitElecLocXY_master, x2, y2);
+			pHist->fill1d(hist1ID_2ndHitElecTOF_master, t2);
+		}
+		if (!dead3) {
+			pHist->fill2d(hist2ID_3rdHitElecLocXY_master, x3, y3);
+			pHist->fill1d(hist1ID_3rdHitElecTOF_master, t3);
+		}
+		if (!dead4) {
+			pHist->fill2d(hist2ID_4thHitElecLocXY_master, x4, y4);
+			pHist->fill1d(hist1ID_4thHitElecTOF_master, t4);
+		}
+		// COM
+		if (isElecMaster) {
+			pHist->fill2d(hist2ID_COMOfElecsLocXY_master, xCOM, yCOM);
+		}
+		// PIPICO 
+		if (!dead1 && !dead2) {
+			pHist->fill2d(hist2ID_1stAnd2ndHitElecTOF_master, t1, t2);
+		}
+		if (!dead2 && !dead3) {
+			pHist->fill2d(hist2ID_2ndAnd3rdHitElecTOF_master, t2, t3);
+		}
+		if (!dead3 && !dead4) {
+			pHist->fill2d(hist2ID_3rdAnd4thHitElecTOF_master, t3, t4);
+		}
+	}
 }
