@@ -658,29 +658,104 @@ void Analysis::Run::createElecHists() {
                   "3rd Hit Elec TOF [ns] ", "4th Hit Elec TOF [ns]",
                   H2_ELECTRON_TOF, H2_ELECTRON_TOF,
                   dirNameOfElecHists);
+  // FISH
+  pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecTOFAndLocXY_notDead),
+	  "TOF [ns]", "Location_xy [mm]",
+	  H2_ELECTRON_TOF, H1_ELECTRON_RADIUS,
+	  dirNameOfElecHists);
+  pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecTOFAndLocXY_master),
+	  "TOF [ns]", "Location_xy [mm]",
+	  H2_ELECTRON_TOF, H1_ELECTRON_RADIUS,
+	  dirNameOfElecHists);
   // Momentum 
   pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPxPy_notDead),
 	  "P_x [au]", "P_y [au]",
-	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM
-  );
+	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_2ndHitElecPxPy_notDead),
+	  "P_x [au]", "P_y [au]",
+	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_3rdHitElecPxPy_notDead),
+	  "P_x [au]", "P_y [au]",
+	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_4thHitElecPxPy_notDead),
+	  "P_x [au]", "P_y [au]",
+	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM);
   pHist->create1d(SAMETITLEWITH(hist1ID_1stHitElecPz_notDead),
 	  "P_z [au]",
-	  H1_ELECTRON_MOMENTUM
-  );
+	  H1_ELECTRON_MOMENTUM);
+  pHist->create1d(SAMETITLEWITH(hist1ID_2ndHitElecPz_notDead),
+	  "P_z [au]",
+	  H1_ELECTRON_MOMENTUM);
+  pHist->create1d(SAMETITLEWITH(hist1ID_3rdHitElecPz_notDead),
+	  "P_z [au]",
+	  H1_ELECTRON_MOMENTUM);
+  pHist->create1d(SAMETITLEWITH(hist1ID_4thHitElecPz_notDead),
+	  "P_z [au]",
+	  H1_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPxPy_master),
+	  "P_x [au]", "P_y [au]",
+	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_2ndHitElecPxPy_master),
+	  "P_x [au]", "P_y [au]",
+	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_3rdHitElecPxPy_master),
+	  "P_x [au]", "P_y [au]",
+	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_4thHitElecPxPy_master),
+	  "P_x [au]", "P_y [au]",
+	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM);
+  pHist->create1d(SAMETITLEWITH(hist1ID_1stHitElecPz_master),
+	  "P_z [au]",
+	  H1_ELECTRON_MOMENTUM);
+  pHist->create1d(SAMETITLEWITH(hist1ID_2ndHitElecPz_master),
+	  "P_z [au]",
+	  H1_ELECTRON_MOMENTUM);
+  pHist->create1d(SAMETITLEWITH(hist1ID_3rdHitElecPz_master),
+	  "P_z [au]",
+	  H1_ELECTRON_MOMENTUM);
+  pHist->create1d(SAMETITLEWITH(hist1ID_4thHitElecPz_master),
+	  "P_z [au]",
+	  H1_ELECTRON_MOMENTUM);
   // Momentum Direction
   pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirXYAndPXY_notDead),
 	  "Direction_xy [degree]", "P_xy [au]",
-	  H2_DEGREE, H2_ELECTRON_MOMENTUM
-  );
+	  H2_DEGREE, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirYZAndPYZ_notDead),
+	  "Direction_yz [degree]", "P_yz [au]",
+	  H2_DEGREE, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirZXAndPZX_notDead),
+	  "Direction_zx [degree]", "P_zx [au]",
+	  H2_DEGREE, H2_ELECTRON_MOMENTUM);
   pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirXYAndCosPDirZ_notDead),
 	  "Direction_xy [degree]", "Cos Direction_z [1]",
-	  H2_DEGREE, H2_SINCOS
-  );
+	  H2_DEGREE, H2_SINCOS);
+
+  pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirXYAndPXY_master),
+	  "Direction_xy [degree]", "P_xy [au]",
+	  H2_DEGREE, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirYZAndPYZ_master),
+	  "Direction_yz [degree]", "P_yz [au]",
+	  H2_DEGREE, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirZXAndPZX_master),
+	  "Direction_zx [degree]", "P_zx [au]",
+	  H2_DEGREE, H2_ELECTRON_MOMENTUM);
+  pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirXYAndCosPDirZ_master),
+	  "Direction_xy [degree]", "Cos Direction_z [1]",
+	  H2_DEGREE, H2_SINCOS);
+
   // Energy 
   pHist->create1d(SAMETITLEWITH(hist1ID_1stHitElecE),
 	  "E [eV]",
-	  H1_ELECTRON_ENERGY
-  );
+	  H1_ELECTRON_ENERGY);
+  pHist->create1d(SAMETITLEWITH(hist1ID_2ndHitElecE),
+	  "E [eV]",
+	  H1_ELECTRON_ENERGY);
+  pHist->create1d(SAMETITLEWITH(hist1ID_3rdHitElecE),
+	  "E [eV]",
+	  H1_ELECTRON_ENERGY);
+  pHist->create1d(SAMETITLEWITH(hist1ID_4thHitElecE),
+	  "E [eV]",
+	  H1_ELECTRON_ENERGY);
 }
 void Analysis::Run::fillElecHists() {
 	const bool dead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
@@ -702,6 +777,7 @@ void Analysis::Run::fillElecHists() {
 
 	const double x1 = pElectrons->getRealOrDummyObject(0).getLocationX(*pUnit);
 	const double y1 = pElectrons->getRealOrDummyObject(0).getLocationY(*pUnit);
+	const double xy1 = pElectrons->getRealOrDummyObject(0).getLocationXY(*pUnit);
 	const double t1 = pElectrons->getRealOrDummyObject(0).getTOF(*pUnit);
 	const double x2 = pElectrons->getRealOrDummyObject(1).getLocationX(*pUnit);
 	const double y2 = pElectrons->getRealOrDummyObject(1).getLocationY(*pUnit);
@@ -722,6 +798,20 @@ void Analysis::Run::fillElecHists() {
 	const double tDiff23 = pElectrons->getDiffOfTOF(*pUnit, 2, 3);
 	const double tDiff34 = pElectrons->getDiffOfTOF(*pUnit, 3, 4);
 
+	const double px1 = pElectrons->getRealOrDummyObject(0).getMomentumX(*pUnit);
+	const double py1 = pElectrons->getRealOrDummyObject(0).getMomentumY(*pUnit);
+	const double pz1 = pElectrons->getRealOrDummyObject(0).getMomentumZ(*pUnit);
+	const double pxy1 = pElectrons->getRealOrDummyObject(0).getMomentumXY(*pUnit);
+	const double pyz1 = pElectrons->getRealOrDummyObject(0).getMomentumYZ(*pUnit);
+	const double pzx1 = pElectrons->getRealOrDummyObject(0).getMomentumZX(*pUnit);
+
+	const double pDirXY1 = pElectrons->getRealOrDummyObject(0).getMotionalDirectionXY(*pUnit);
+	const double pDirYZ1 = pElectrons->getRealOrDummyObject(0).getMotionalDirectionYZ(*pUnit);
+	const double pDirZX1 = pElectrons->getRealOrDummyObject(0).getMotionalDirectionZX(*pUnit);
+	const double pDirZ1 = pElectrons->getRealOrDummyObject(0).getMotionalDirectionZ(*pUnit);
+	
+	const double e1 = pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit);
+
 	// Detector image and TOF
 	if (!dead1) {
 		pHist->fill2d(hist2ID_1stHitElecLocXY_notDead, x1, y1);
@@ -739,6 +829,7 @@ void Analysis::Run::fillElecHists() {
 		pHist->fill2d(hist2ID_4thHitElecLocXY_notDead, x4, y4);
 		pHist->fill1d(hist1ID_4thHitElecTOF_notDead, t4);
 	}
+	// TOF
 	// PIPICO 
 	if (!dead1 && !dead2) {
 		pHist->fill2d(hist2ID_1stAnd2ndHitElecTOF_notDead, t1, t2);
@@ -748,6 +839,25 @@ void Analysis::Run::fillElecHists() {
 	}
 	if (!dead3 && !dead4) {
 		pHist->fill2d(hist2ID_3rdAnd4thHitElecTOF_notDead, t3, t4);
+	}
+	// FISH 
+	if (!dead1) {
+		pHist->fill2d(hist2ID_1stHitElecTOFAndLocXY_notDead, t1, xy1);
+	}
+	// Momentum 
+	if (!dead1) {
+		pHist->fill2d(hist2ID_1stHitElecPxPy_notDead, px1, py1);
+	}
+	// Momentum Direction 
+	if (!dead1) {
+		pHist->fill2d(hist2ID_1stHitElecPDirXYAndPXY_notDead, pDirXY1, pxy1);
+		pHist->fill2d(hist2ID_1stHitElecPDirYZAndPYZ_notDead, pDirYZ1, pyz1);
+		pHist->fill2d(hist2ID_1stHitElecPDirZXAndPZX_notDead, pDirZX1, pzx1);
+		pHist->fill2d(hist2ID_1stHitElecPDirXYAndCosPDirZ_notDead, pDirZ1, pDirXY1);
+	}
+	// Energy 
+	if (!dead1) {
+		pHist->fill1d(hist1ID_1stHitElecE, e1);
 	}
 	// Under master condition 
 	if (isMaster) {
