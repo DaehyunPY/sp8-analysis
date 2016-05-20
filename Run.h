@@ -185,13 +185,12 @@ class Run {
 	hist2ID_2ndHitElecLocXY_notDead,
 	hist2ID_3rdHitElecLocXY_notDead,
 	hist2ID_4thHitElecLocXY_notDead,
-	hist2ID_COMOfElecsLocXY_notDead,
 	hist2ID_1stHitElecLocXY_master,
 	hist2ID_2ndHitElecLocXY_master,
 	hist2ID_3rdHitElecLocXY_master,
 	hist2ID_4thHitElecLocXY_master,
-	hist2ID_COMOfElecsLocXY_master,
-      // TOF
+	hist2ID_1stHitElecLocDirXY_Loc_notDead, 
+    // TOF
     hist1ID_1stHitElecTOF_raw,
     hist1ID_2ndHitElecTOF_raw,
     hist1ID_3rdHitElecTOF_raw,
@@ -211,7 +210,40 @@ class Run {
     hist2ID_1stAnd2ndHitElecTOF_master,
     hist2ID_2ndAnd3rdHitElecTOF_master,
     hist2ID_3rdAnd4thHitElecTOF_master,
-    //
+    // FISH 
+	// Momentum 
+	hist2ID_1stHitElecPxPy_notDead,
+	hist2ID_2ndHitElecPxPy_notDead,
+	hist2ID_3rdHitElecPxPy_notDead,
+	hist2ID_4thHitElecPxPy_notDead,
+	hist1ID_1stHitElecPz_notDead,
+	hist1ID_2ndHitElecPz_notDead,
+	hist1ID_3rdHitElecPz_notDead,
+	hist1ID_4thHitElecPz_notDead,
+	hist2ID_1stHitElecPxPy_master,
+  hist2ID_2ndHitElecPxPy_master,
+  hist2ID_3rdHitElecPxPy_master,
+  hist2ID_4thHitElecPxPy_master,
+  hist1ID_1stHitElecPz_master,
+  hist1ID_2ndHitElecPz_master,
+  hist1ID_3rdHitElecPz_master,
+  hist1ID_4thHitElecPz_master,
+  // Momentum Direction
+  hist2ID_1stHitElecPDirXYAndPXY_notDead,
+  hist2ID_1stHitElecPDirYZAndPYZ_notDead,
+  hist2ID_1stHitElecPDirZXAndPZX_notDead,
+	hist2ID_1stHitElecPDirXYAndCosPDirZ_notDead,
+  hist2ID_1stHitElecPDirXYAndPXY_master,
+  hist2ID_1stHitElecPDirYZAndPYZ_master,
+  hist2ID_1stHitElecPDirZXAndPZX_master,
+  hist2ID_1stHitElecPDirXYAndCosPDirZ_master,
+  // Energy 
+	hist1ID_1stHitElecE,
+	hist1ID_2ndHitElecE,
+	hist1ID_3rdHitElecE,
+	hist1ID_4thHitElecE,
+	hist1ID_SumOfElecEs,
+	//
     numberOfElecHists
   };
   void createElecHists(); 
