@@ -17,6 +17,9 @@
 #define H1_ION_LOCATION 1000, -50, 50
 #define H2_ION_LOCATION 100, -50, 50
 #define H3_ION_LOCATION 25, -50, 50
+#define H1_ION_RADIUS 1000, 0, 50
+#define H2_ION_RADIUS 100, 0, 50
+#define H3_ION_RADIUS 25, 0, 50
 #define H1_ION_TOF 2000, 0, 10000
 #define H2_ION_TOF 500, 0, 10000
 #define H3_ION_TOF 100, 0, 10000
@@ -154,6 +157,9 @@ class Run {
     hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF_masterCondit,
     hist2ID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF_masterCondit,
     hist2ID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF_masterCondit,
+	// FISH 
+	hist2ID_1stHitIonTOFAndLocXY_notDead,
+	hist2ID_1stHitIonTOFAndLocXY_master,
     // Momentum
     histID_1stHitIonPxPy,
     histID_2ndHitIonPxPy,
