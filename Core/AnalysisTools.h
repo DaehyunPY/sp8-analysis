@@ -4,8 +4,7 @@
 #define LIMITATION_NUMBER_OF_LOOP 100
 
 #include "EquipmentParameters.h"
-#include "IonParameters.h"
-#include "ElectronParameters.h"
+#include "ObjectParameters.h"
 #include "Ions.h"
 #include "Electrons.h"
 #include "EventDataReader.h"
@@ -18,14 +17,21 @@ struct XY {
   const double y;
 };
 class AnalysisTools {
+ private:
   const EquipmentParameters equipmentParameters;
-  const IonParameters ionParameters;
-  const ElectronParameters electronParameters;
+  const ObjectParameters ionParameters;
+  const ObjectParameters electronParameters;
   const std::string ID;
   int eventNumber;
-  AnalysisTools(const EquipmentParameters &,
-                const IonParameters &,
-                const ElectronParameters &,
+
+ public:
+  AnalysisTools(const Unit &, const JSONReader &);
+  ~AnalysisTools();
+
+ private:
+  AnalysisTools(const EquipmentParameters &equip,
+                const ObjectParameters &ion,
+                const ObjectParameters &elec,
                 const std::string ID = ""); // main initializer
   void resetCounter();
   const XY calculateRotation(const XY &, const double &) const;
@@ -54,11 +60,9 @@ class AnalysisTools {
                             const int &) const; // for reader
 
  public:
-  AnalysisTools(const Unit &, const JSONReader &);
-  ~AnalysisTools();
   const EquipmentParameters &getEquipmentParameters() const;
-  const IonParameters &getIonParameters() const;
-  const ElectronParameters &getElectronParameters() const;
+  const ObjectParameters &getIonParameters() const;
+  const ObjectParameters &getElectronParameters() const;
   const std::string &getID() const;
   const int &getEventNumber() const;
   void loadEventCounter();

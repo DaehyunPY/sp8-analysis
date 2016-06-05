@@ -38,10 +38,6 @@ set(SOURCE_FILES
     EquipmentParameters.h
     ObjectParameters.cpp
     ObjectParameters.h
-    IonParameters.cpp
-    IonParameters.h
-    ElectronParameters.cpp
-    ElectronParameters.h
     AnalysisTools.cpp
     AnalysisTools.h
     LogWriter.cpp

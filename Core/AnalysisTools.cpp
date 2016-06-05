@@ -1,8 +1,8 @@
 #include "AnalysisTools.h"
 
 Analysis::AnalysisTools::AnalysisTools(const EquipmentParameters &equip,
-                                       const IonParameters &ion,
-                                       const ElectronParameters &elec,
+                                       const ObjectParameters &ion,
+                                       const ObjectParameters &elec,
                                        const std::string ID)
     : equipmentParameters(equip),
       ionParameters(ion),
@@ -134,12 +134,12 @@ const Analysis::EquipmentParameters
   return this->equipmentParameters;
 }
 
-const Analysis::IonParameters &Analysis::AnalysisTools::getIonParameters()
+const Analysis::ObjectParameters &Analysis::AnalysisTools::getIonParameters()
 const {
   return this->ionParameters;
 }
 
-const Analysis::ElectronParameters
+const Analysis::ObjectParameters
 &Analysis::AnalysisTools::getElectronParameters() const {
   return this->electronParameters;
 }
@@ -147,8 +147,8 @@ void Analysis::AnalysisTools::loadEventCounter() { this->eventNumber += 1; }
 Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
                                        const Analysis::JSONReader &reader)
     : AnalysisTools(Analysis::EquipmentParameters(unit, reader),
-                    Analysis::IonParameters(unit, reader),
-                    Analysis::ElectronParameters(unit, reader),
+                    Analysis::ObjectParameters(unit, reader, "ion_parameters."),
+                    Analysis::ObjectParameters(unit, reader, "electron_parameters."),
                     reader.hasMember("ID") ? reader.getStringAt("ID") : "") {
   return;
 }

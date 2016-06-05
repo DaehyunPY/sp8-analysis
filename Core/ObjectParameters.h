@@ -30,7 +30,7 @@ class ObjectParameters {
                    const double &y0,
                    const double &t0);
 
- protected:
+ public:
   ObjectParameters(const Unit &unit, // for reader, main initialization
                    const JSONReader &reader,
                    const std::string &prefix);
