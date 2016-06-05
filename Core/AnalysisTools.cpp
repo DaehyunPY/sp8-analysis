@@ -4,10 +4,13 @@ Analysis::AnalysisTools::AnalysisTools(const EquipmentParameters &equip,
                                        const ObjectParameters &ion,
                                        const ObjectParameters &elec,
                                        const std::string ID)
-    : equipmentParameters(equip),
+    : equipParameters(equip),
       ionParameters(ion),
-      electronParameters(elec),
+      elecParameters(elec),
       ID(ID) {
+  if(elecParameters.getParameterType() == ObjectParameters::legacy_elec_parameters_not_corrected) {
+    elecParameters.correctLegacyParameters(calculateTOF(Electron(), 0));
+  }
   resetCounter();
   return;
 }
@@ -131,7 +134,7 @@ const double Analysis::AnalysisTools::calculateMomentumZ
 }
 const Analysis::EquipmentParameters
 &Analysis::AnalysisTools::getEquipmentParameters() const {
-  return this->equipmentParameters;
+  return this->equipParameters;
 }
 
 const Analysis::ObjectParameters &Analysis::AnalysisTools::getIonParameters()
@@ -141,7 +144,7 @@ const {
 
 const Analysis::ObjectParameters
 &Analysis::AnalysisTools::getElectronParameters() const {
-  return this->electronParameters;
+  return this->elecParameters;
 }
 void Analysis::AnalysisTools::loadEventCounter() { this->eventNumber += 1; }
 Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
@@ -152,7 +155,7 @@ Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
                     reader.hasMember("ID") ? reader.getStringAt("ID") : "") {
   return;
 }
-const Analysis::XY Analysis::AnalysisTools::calculateMomentumXY(
+const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateMomentumXY(
     const Object &object) const {
   const double pi = atan2(0e0, -1e0);
   const double &m = object.getMass();
@@ -185,9 +188,9 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   const double &x0 = getIonParameters().getXZeroOfCOM();
   const double &y0 = getIonParameters().getYZeroOfCOM();
   const double &t0 = getIonParameters().getTimeZeroOfTOF();
-  const XY xy = calculateRotation({x1 * dx, y1 * dy}, theta);
-  const double x = xy.x - x0;
-  const double y = xy.y - y0;
+  const XY xy = calculateRotation({x1, y1}, theta);
+  const double x = xy.x*dx - x0;
+  const double y = xy.y*dy - y0;
   const double t = t1 - t0;
   ion.setLocationX(x);
   ion.setLocationY(y);
@@ -210,9 +213,9 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   const double &x0 = getElectronParameters().getXZeroOfCOM();
   const double &y0 = getElectronParameters().getYZeroOfCOM();
   const double &t0 = getElectronParameters().getTimeZeroOfTOF();
-  const XY xy = calculateRotation({x1 * dx, y1 * dy}, theta);
-  const double x = xy.x - x0;
-  const double y = xy.y - y0;
+  const XY xy = calculateRotation({x1, y1}, theta);
+  const double x = xy.x*dx - x0;
+  const double y = xy.y*dy - y0;
   const double t = t1 - t0;
   electron.setLocationX(x);
   electron.setLocationY(y);
@@ -419,7 +422,7 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(
     const Analysis::Object &object) const {
   return unit.writeNanoSec(calculatePeriodOfCycle(object));
 }
-const Analysis::XY Analysis::AnalysisTools::calculateRotation(
+const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateRotation(
     const XY &xy,
     const double &theta) const {
   return {xy.x * cos(theta) - xy.y * sin(theta),

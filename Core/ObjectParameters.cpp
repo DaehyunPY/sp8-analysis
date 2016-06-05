@@ -1,42 +1,73 @@
 #include "ObjectParameters.h"
 
-Analysis::ObjectParameters::ObjectParameters(const double &theta,
-                                             const double &dx,
-                                             const double &dy,
-                                             const double &t1,
-                                             const double &x0,
-                                             const double &y0,
-                                             const double &t0)
-    : angleOfDetector(theta),
+Analysis::ObjectParameters::ObjectParameters(
+    const ParameterType tp,
+    const double theta,
+    const double dx,
+    const double dy,
+    const double t1,
+    const double x0,
+    const double y0,
+    const double t0)
+    : type(tp),
+      angleOfDetector(theta),
       pixelSizeOfX(dx),
       pixelSizeOfY(dy),
       deadTime(t1),
       xZeroOfCOM(x0),
       yZeroOfCOM(y0),
       timeZeroOfTOF(t0) {
-  return;
 }
-Analysis::ObjectParameters::ObjectParameters(const Analysis::Unit &unit,
-                                             const double &theta,
-                                             const double &dx,
-                                             const double &dy,
-                                             const double &t1,
-                                             const double &x0,
-                                             const double &y0,
-                                             const double &t0)
-    : ObjectParameters(unit.readDegree(theta),
-                       dx,
-                       dy,
-                       unit.readNanoSec(t1),
-                       unit.readMilliMeter(x0),
-                       unit.readMilliMeter(y0),
-                       unit.readNanoSec(t0)) {
+Analysis::ObjectParameters::ObjectParameters(
+    const Analysis::Unit &unit,
+    const std::string typeName,
+    const double theta,
+    const double dx,
+    const double dy,
+    const double t1,
+    const double x0,
+    const double y0,
+    const double t0) {
+  if(typeName.compare("legacy_ion_parameters") == 0) {
+    const double th = unit.readDegree(0);
+    ObjectParameters(
+        legacy_ion_parameters,
+        th,
+        dx,
+        dy,
+        unit.readNanoSec(t1),
+        unit.readMilliMeter(100*dx + x0),
+        unit.readMilliMeter(100*dy + y0),
+        unit.readNanoSec(2000 + t0));
+  } else if(typeName.compare("legacy_elec_parameters") == 0) {
+    const double th = unit.readDegree(-30);
+    ObjectParameters(
+        legacy_elec_parameters_not_corrected,
+        th,
+        dx,
+        dy,
+        unit.readNanoSec(t1),
+        unit.readMilliMeter(100*(cos(th)-sin(th)) + x0),
+        unit.readMilliMeter(100*(sin(th)+cos(th)) + y0),
+        unit.readNanoSec(1980 + t0));
+  } else {
+    ObjectParameters(
+        default_type,
+        unit.readDegree(theta),
+        dx,
+        dy,
+        unit.readNanoSec(t1),
+        unit.readMilliMeter(x0),
+        unit.readMilliMeter(y0),
+        unit.readNanoSec(t0));
+  }
   return;
 }
 Analysis::ObjectParameters::ObjectParameters(const Unit &unit,
                                              const JSONReader &reader,
                                              const std::string &prefix)
     : ObjectParameters(unit,
+                       reader.getStringAt(prefix + "type"),
                        reader.getDoubleAt(prefix + "angle_of_detector"),
                        reader.getDoubleAt(prefix + "pixel_size_of_x"),
                        reader.getDoubleAt(prefix + "pixel_size_of_y"),
@@ -82,4 +113,13 @@ const double Analysis::ObjectParameters::getYZeroOfCOM(const Analysis::Unit &uni
 }
 const double Analysis::ObjectParameters::getTimeZeroOfTOF(const Analysis::Unit &unit) const {
   return unit.writeNanoSec(getTimeZeroOfTOF());
+}
+void Analysis::ObjectParameters::correctLegacyParameters(const double &elecTOF) {
+  if(type==legacy_elec_parameters_not_corrected) {
+    timeZeroOfTOF -= elecTOF;
+    type = legacy_elec_parameters;
+  }
+}
+const Analysis::ObjectParameters::ParameterType Analysis::ObjectParameters::getParameterType() const {
+  return type;
 }

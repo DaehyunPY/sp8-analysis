@@ -9,30 +9,37 @@
 #include "Electrons.h"
 #include "EventDataReader.h"
 namespace Analysis {
-struct XY {
-  XY(const double &x, const double &y)
-      : x(x), y(y) {
-  }
-  const double x;
-  const double y;
-};
 class AnalysisTools {
+  // tpyes
  private:
-  const EquipmentParameters equipmentParameters;
-  const ObjectParameters ionParameters;
-  const ObjectParameters electronParameters;
-  const std::string ID;
+  struct XY {
+    XY(const double &x, const double &y)
+        : x(x), y(y) {
+    }
+    const double x;
+    const double y;
+  };
+
+  // datas
+ private:
+  EquipmentParameters equipParameters;
+  ObjectParameters ionParameters;
+  ObjectParameters elecParameters;
+  std::string ID;
   int eventNumber;
+
+ private:
+  AnalysisTools( // main initializer
+      const EquipmentParameters &equip,
+      const ObjectParameters &ion,
+      const ObjectParameters &elec,
+      const std::string ID = "");
 
  public:
   AnalysisTools(const Unit &, const JSONReader &);
   ~AnalysisTools();
 
  private:
-  AnalysisTools(const EquipmentParameters &equip,
-                const ObjectParameters &ion,
-                const ObjectParameters &elec,
-                const std::string ID = ""); // main initializer
   void resetCounter();
   const XY calculateRotation(const XY &, const double &) const;
   const double calculateDiffTOF(const Ion &, const double &) const;
@@ -66,16 +73,16 @@ class AnalysisTools {
   const std::string &getID() const;
   const int &getEventNumber() const;
   void loadEventCounter();
-  const double calculateTOF(const Ion &,
-                            const double &) const;
-  const double calculateTOF(const Unit &,
-                            const Ion &,
-                            const double &) const;
-  const double calculateTOF(const Electron &,
-                            const double &) const;
-  const double calculateTOF(const Unit &,
-                            const Electron &,
-                            const double &) const;
+  const double calculateTOF(const Ion &ion,
+                            const double &d) const;
+  const double calculateTOF(const Unit &unit,
+                            const Ion &ion,
+                            const double &d) const;
+  const double calculateTOF(const Electron &elec,
+                            const double &d) const;
+  const double calculateTOF(const Unit &unit,
+                            const Electron &elec,
+                            const double &d) const;
   const double calculateFrequencyOfCycle(const double &m,
                                          const double &q,
                                          const double &B) const;

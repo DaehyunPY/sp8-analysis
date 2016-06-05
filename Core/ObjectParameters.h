@@ -6,37 +6,54 @@
 
 namespace Analysis {
 class ObjectParameters {
+ public:
+  enum ParameterType {
+    default_type,
+    legacy_ion_parameters,
+    legacy_elec_parameters_not_corrected,
+    legacy_elec_parameters
+  };
+
  private:
-  const double angleOfDetector;
-  const double pixelSizeOfX;
-  const double pixelSizeOfY;
-  const double deadTime;
-  const double xZeroOfCOM;
-  const double yZeroOfCOM;
-  const double timeZeroOfTOF;
-  ObjectParameters(const double &theta, // base initialization
-                   const double &dx,
-                   const double &dy,
-                   const double &t1,
-                   const double &x0,
-                   const double &y0,
-                   const double &t0);
-  ObjectParameters(const Analysis::Unit &unit, // for unit
-                   const double &theta,
-                   const double &dx,
-                   const double &dy,
-                   const double &t1,
-                   const double &x0,
-                   const double &y0,
-                   const double &t0);
+  ParameterType type;
+  double angleOfDetector;
+  double pixelSizeOfX;
+  double pixelSizeOfY;
+  double deadTime;
+  double xZeroOfCOM;
+  double yZeroOfCOM;
+  double timeZeroOfTOF;
+
+ private:
+  ObjectParameters( // main initialization
+      const ParameterType tp,
+      const double theta,
+      const double dx,
+      const double dy,
+      const double t1,
+      const double x0,
+      const double y0,
+      const double t0);
+  ObjectParameters( // for unit and type
+      const Analysis::Unit &unit,
+      const std::string typeName,
+      const double theta,
+      const double dx,
+      const double dy,
+      const double t1,
+      const double x0,
+      const double y0,
+      const double t0);
 
  public:
-  ObjectParameters(const Unit &unit, // for reader, main initialization
+  ObjectParameters(const Unit &unit, // for reader
                    const JSONReader &reader,
                    const std::string &prefix);
   virtual ~ObjectParameters();
 
  public:
+  const ParameterType getParameterType() const;
+  void correctLegacyParameters(const double &elecTOF);
   const double &getAngleOfDetector() const;
   const double &getPixelSizeOfX() const;
   const double &getPixelSizeOfY() const;
@@ -44,11 +61,11 @@ class ObjectParameters {
   const double &getXZeroOfCOM() const;
   const double &getYZeroOfCOM() const;
   const double &getTimeZeroOfTOF() const;
-  const double getAngleOfDetector(const Unit &) const;
-  const double getDeadTime(const Unit &) const;
-  const double getXZeroOfCOM(const Unit &) const;
-  const double getYZeroOfCOM(const Unit &) const;
-  const double getTimeZeroOfTOF(const Unit &) const;
+  const double getAngleOfDetector(const Unit &unit) const;
+  const double getDeadTime(const Unit &unit) const;
+  const double getXZeroOfCOM(const Unit &unit) const;
+  const double getYZeroOfCOM(const Unit &unit) const;
+  const double getTimeZeroOfTOF(const Unit &unit) const;
 };
 }
 
