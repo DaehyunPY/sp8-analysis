@@ -25,6 +25,15 @@ class ObjectParameters {
   double timeZeroOfTOF;
 
  private:
+	 void inputParameters( // main initialization 
+		 const ParameterType tp,
+		 const double theta,
+		 const double dx,
+		 const double dy,
+		 const double t1,
+		 const double x0,
+		 const double y0,
+		 const double t0);
   ObjectParameters( // main initialization
       const ParameterType tp,
       const double theta,

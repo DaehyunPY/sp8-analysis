@@ -52,6 +52,7 @@ class Unit {
   Unit();
   ~Unit();
 };
+static Unit kUnit;
 }
 
 #endif

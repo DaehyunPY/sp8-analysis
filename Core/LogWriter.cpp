@@ -123,8 +123,8 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
   {
     const int &n = electrons.getNumberOfObjects();
     logFile << "        Number of Hits: " << n << std::endl;
-    const double t1 = analysisTools.calculateTOF(unit, electrons.getElectron(0), 0e0);
-    const double t2 = analysisTools.calculatePeriodOfCycle(unit, electrons.getElectron(0));
+    const double t1 = analysisTools.calculateTOF(unit, Electron(), 0e0);
+    const double t2 = analysisTools.calculatePeriodOfCycle(unit, Electron());
     logFile << "        TOF of Stopped Object: " << t1 << std::endl;
     logFile << "        Period of Cycle: " << t2 << std::endl;
   }

@@ -19,8 +19,8 @@ void Analysis::AnalysisTools::resetCounter() {
   this->eventNumber = 0;
   return;
 }
-const double Analysis::AnalysisTools::calculateTOF(const Ion &ion,
-                                                   const double &p0) const {
+const double Analysis::AnalysisTools::calculateTOF(const Ion ion,
+                                                   const double p0) const {
   const double &len1 = getEquipmentParameters().getLengthOfL1();
   const double &len2 = getEquipmentParameters().getLengthOfL2();
   const double &len3 = getEquipmentParameters().getLengthOfL3();
@@ -89,7 +89,7 @@ const double Analysis::AnalysisTools::calculateMomentumZ(const Ion &ion,
   return 0e0;
 }
 const double Analysis::AnalysisTools::calculateTOF(
-    const Analysis::Electron &electron, const double &p0) const {
+    const Analysis::Electron electron, const double p0) const {
   const double &len1 = getEquipmentParameters().getLengthOfD1();
   const double &len2 = getEquipmentParameters().getLengthOfD2();
   const double &E1 = getEquipmentParameters().getElectricFiledOfD1();
@@ -386,13 +386,13 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electron
 }
 
 const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
-                                                   const Analysis::Ion &ion,
-                                                   const double &d) const {
+                                                   const Analysis::Ion ion,
+                                                   const double d) const {
   return unit.writeNanoSec(this->calculateTOF(ion, unit.readAuMomentum(d)));
 }
 const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
-                                                   const Analysis::Electron &elec,
-                                                   const double &d) const {
+                                                   const Analysis::Electron elec,
+                                                   const double d) const {
   return unit.writeNanoSec(this->calculateTOF(elec,
                                               unit.readAuMomentum(d)));
 }

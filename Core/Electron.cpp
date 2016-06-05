@@ -19,7 +19,12 @@ Analysis::Electron::Electron(const Analysis::Unit &unit,
   return;
 }
 Analysis::Electron::~Electron() { return; }
-Analysis::Electron::Electron() : Object() {
+Analysis::Electron::Electron() 
+	: Object(
+		kUnit.readElectronRestMass(1e0),
+		kUnit.readElementaryCharge(1e0),
+		0.0, 
+		0.0) {
   setFlag(DummyObject);
   return;
 }

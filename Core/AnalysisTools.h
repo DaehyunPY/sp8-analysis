@@ -36,7 +36,7 @@ class AnalysisTools {
       const std::string ID = "");
 
  public:
-  AnalysisTools(const Unit &, const JSONReader &);
+  AnalysisTools(const Unit &unit, const JSONReader &reader);
   ~AnalysisTools();
 
  private:
@@ -73,16 +73,16 @@ class AnalysisTools {
   const std::string &getID() const;
   const int &getEventNumber() const;
   void loadEventCounter();
-  const double calculateTOF(const Ion &ion,
-                            const double &d) const;
+  const double calculateTOF(const Ion ion,
+                            const double d) const;
   const double calculateTOF(const Unit &unit,
-                            const Ion &ion,
-                            const double &d) const;
-  const double calculateTOF(const Electron &elec,
-                            const double &d) const;
+                            const Ion ion,
+                            const double d) const;
+  const double calculateTOF(const Electron elec,
+                            const double d) const;
   const double calculateTOF(const Unit &unit,
-                            const Electron &elec,
-                            const double &d) const;
+                            const Electron elec,
+                            const double d) const;
   const double calculateFrequencyOfCycle(const double &m,
                                          const double &q,
                                          const double &B) const;
