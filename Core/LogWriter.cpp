@@ -7,33 +7,30 @@
 //#endif
 
 #include <iomanip>
+#include <ctime>
+#include <locale>
+#include <chrono>
+#include <string>
 
 #include "LogWriter.h"
 Analysis::LogWriter::LogWriter(const std::string &prefix) {
-  auto now = std::time(nullptr);
-  ID = std::to_string(now);
+  std::time_t tt = std::chrono::system_clock::to_time_t (std::chrono::system_clock::now());
+  struct std::tm * ptm = std::localtime(&tt);
+  ID = std::to_string(tt);
   filename = prefix;
   if(!(prefix == "")) { filename += "-"; }
   filename += ID;
   filename += ".log";
   logFile.open(filename, std::fstream::out);
-  logFile
-      << "It is written at "
-      << std::put_time(std::localtime(&now), "%c %Z")
-      << "."
-      << std::endl;
+  logFile << "It is written at " << std::put_time(ptm,"%c") << std::endl;
   logFile << "The path is set here." << std::endl;
   logFile << std::endl;
   return;
 }
 Analysis::LogWriter::~LogWriter() {
-  auto now = std::time(nullptr);
-  logFile
-      << "It is closed at "
-      << std::put_time(std::localtime(&now), "%c %Z")
-      << "."
-      << std::endl;
-  logFile << std::endl;
+  std::time_t tt = std::chrono::system_clock::to_time_t (std::chrono::system_clock::now());
+  struct std::tm * ptm = std::localtime(&tt);
+  logFile << "It is closed at " << std::put_time(ptm,"%c") << std::endl;
   logFile.close();
 }
 const int Analysis::LogWriter::getRandomNumber() const {
