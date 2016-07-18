@@ -1,0 +1,7 @@
+0  	// number of sum calibration points for layer U
+0  	// number of sum calibration points for layer V
+0 	// number of sum calibration points for layer W (only needed for HEX-detectors)
+
+0  	// number of pos-calibration points for layer U
+0  	// number of pos-calibration points for layer V
+0 	// number of pos-calibration points for layer W (only needed for HEX-detectors)
