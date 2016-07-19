@@ -686,7 +686,25 @@ int main(int argc, char *argv[]) {
 
 
     // Branch root file
-    pRun->branchRootTree(ion_command, *ion_sorter, elec_command, *elec_sorter);
+    if (ion_sorter && elec_sorter) {
+        int number_of_ions = 0;
+        int number_of_electrons = 0;
+        if (ion_command == 1) {  // sort and write new file
+            // sort/reconstruct the detector signals and apply the sum- and NL-correction.
+            number_of_ions = ion_sorter->sort();
+            // "number_of_ions" is the number of reconstructed number of particles
+        } else {
+            number_of_ions = ion_sorter->run_without_sorting();
+        }
+        if (elec_command == 1) {  // sort and write new file
+            // sort/reconstruct the detector signals and apply the sum- and NL-correction.
+            number_of_electrons = elec_sorter->sort();
+            // "number_of_electrons" is the number of reconstructed number of particles
+        } else {
+            number_of_electrons = elec_sorter->run_without_sorting();
+        }
+        pRun->branchRootTree(number_of_ions, number_of_electrons);
+    }
 
     // Start reading event data from input file:
     // ("event" is all the data that was recorded after a trigger signal)
@@ -921,7 +939,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (ion_sorter && elec_sorter) {
-            pRun->processEvent();
+            pRun->processEvent(*ion_sorter, *elec_sorter);
         }
 
         if (outfile) { // write to output file:

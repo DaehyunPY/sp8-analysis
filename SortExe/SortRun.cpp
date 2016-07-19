@@ -21,11 +21,23 @@ bool Analysis::SortRun::isFileExist(const char *fileName) {
 }
 
 Analysis::SortRun::~SortRun() {
+    delete[] pIonDataSet;
+    delete[] pElecDataSet;
+    numberOfIons = 0;
+    numberOfElectrons = 0;
+
     pRootTree->Write();
     pRootFile->Close();
     delete pRootTree;
     delete pRootFile;
+
+    id = nullptr;
+    LMFFilename = "";
     rootFilename = "";
+    ionSorterFilename = "";
+    elecSorterFilename = "";
+    ionCalibTableFilename = "";
+    elecCalibTableFilename = "";
 }
 
 Analysis::SortRun::SortRun(const std::string configFilename) {
@@ -59,54 +71,49 @@ Analysis::SortRun::SortRun(const std::string configFilename) {
     numberOfElectrons = 0;
 }
 
-void Analysis::SortRun::processEvent() {
+void Analysis::SortRun::processEvent(const sort_class &ionSort, const sort_class &elecSort) {
+    for (int i = 0; i < numberOfIons; i++) {
+        pIonDataSet[i].x = ionSort.output_hit_array[i]->x;
+        pIonDataSet[i].y = ionSort.output_hit_array[i]->y;
+        pIonDataSet[i].t = ionSort.output_hit_array[i]->time;
+        pIonDataSet[i].flag = ionSort.output_hit_array[i]->method;
+    }
+    for (int i = 0; i < numberOfElectrons; i++) {
+        pElecDataSet[i].x = elecSort.output_hit_array[i]->x;
+        pElecDataSet[i].y = elecSort.output_hit_array[i]->y;
+        pElecDataSet[i].t = elecSort.output_hit_array[i]->time;
+        pElecDataSet[i].flag = elecSort.output_hit_array[i]->method;
+    }
     pRootTree->Fill();
 }
 
-void Analysis::SortRun::branchRootTree(const int ionCommand, sort_class &ionSort, const int elecCommand,
-                                       sort_class &elecSort) {
+void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
+    std::string str;
+
     // Ion setup
-    if (ionCommand == 1) {  // sort and write new file
-        // sort/reconstruct the detector signals and apply the sum- and NL-correction.
-        numberOfIons = ionSort.sort();
-        // "numberOfIons" is the number of reconstructed number of particles
-    } else {
-        numberOfIons = ionSort.run_without_sorting();
-    }
+    str = "Ion";
+    numberOfIons = ionNum;
+    pIonDataSet = new DataSet[numberOfIons];
     for (int i = 0; i < numberOfIons; i++) {
         char ch[2];
         sprintf(ch, "%01d", i);
-        std::string str;
-        str = "Ion";
-        pRootTree->Branch((str + "X" + ch).c_str(), &(ionSort.output_hit_array[i]->x), (str + "X" + ch + "/D").c_str());
-        pRootTree->Branch((str + "Y" + ch).c_str(), &(ionSort.output_hit_array[i]->y), (str + "Y" + ch + "/D").c_str());
-        pRootTree->Branch((str + "T" + ch).c_str(), &(ionSort.output_hit_array[i]->time),
-                          (str + "T" + ch + "/D").c_str());
-        pRootTree->Branch((str + "Flag" + ch).c_str(), &(ionSort.output_hit_array[i]->method),
-                          (str + "Flag" + ch + "/I").c_str());
+        pRootTree->Branch((str + "X" + ch).c_str(), &pIonDataSet[i].x, (str + "X" + ch + "/D").c_str());
+        pRootTree->Branch((str + "Y" + ch).c_str(), &pIonDataSet[i].y, (str + "Y" + ch + "/D").c_str());
+        pRootTree->Branch((str + "T" + ch).c_str(), &pIonDataSet[i].t, (str + "T" + ch + "/D").c_str());
+        pRootTree->Branch((str + "Flag" + ch).c_str(), &pIonDataSet[i].flag, (str + "Flag" + ch + "/I").c_str());
     }
 
     // Electron setup
-    if (elecCommand == 1) {  // sort and write new file
-        // sort/reconstruct the detector signals and apply the sum- and NL-correction.
-        numberOfElectrons = elecSort.sort();
-        // "numberOfElectrons" is the number of reconstructed number of particles
-    } else {
-        numberOfElectrons = elecSort.run_without_sorting();
-    }
+    str = "Elec";
+    numberOfElectrons = elecNum;
+    pElecDataSet = new DataSet[numberOfIons];
     for (int i = 0; i < numberOfElectrons; i++) {
         char ch[2];
         sprintf(ch, "%01d", i);
-        std::string str;
-        str = "Elec";
-        pRootTree->Branch((str + "X" + ch).c_str(), &(elecSort.output_hit_array[i]->x),
-                          (str + "X" + ch + "/D").c_str());
-        pRootTree->Branch((str + "Y" + ch).c_str(), &(elecSort.output_hit_array[i]->y),
-                          (str + "Y" + ch + "/D").c_str());
-        pRootTree->Branch((str + "T" + ch).c_str(), &(elecSort.output_hit_array[i]->time),
-                          (str + "T" + ch + "/D").c_str());
-        pRootTree->Branch((str + "Flag" + ch).c_str(), &(elecSort.output_hit_array[i]->method),
-                          (str + "Flag" + ch + "/I").c_str());
+        pRootTree->Branch((str + "X" + ch).c_str(), &pElecDataSet[i].x, (str + "X" + ch + "/D").c_str());
+        pRootTree->Branch((str + "Y" + ch).c_str(), &pElecDataSet[i].y, (str + "Y" + ch + "/D").c_str());
+        pRootTree->Branch((str + "T" + ch).c_str(), &pElecDataSet[i].t, (str + "T" + ch + "/D").c_str());
+        pRootTree->Branch((str + "Flag" + ch).c_str(), &pElecDataSet[i].flag, (str + "Flag" + ch + "/I").c_str());
     }
 }
 

@@ -20,6 +20,10 @@ namespace Analysis {
         TTree *pRootTree;
         int numberOfIons;
         int numberOfElectrons;
+        struct DataSet {
+            double x, y, t;
+            int flag;
+        } *pIonDataSet, *pElecDataSet;
 
     private:
         bool isFileExist(const char *fileName);
@@ -28,8 +32,9 @@ namespace Analysis {
         SortRun(const std::string configFilename);
         ~SortRun();
 
-        void branchRootTree(const int ionCommand, sort_class &ionSort, const int elecCommand, sort_class &elecSort);
-        void processEvent();
+        void branchRootTree(const int ionNum, const int elecNum);
+
+        void processEvent(const sort_class &ionSort, const sort_class &elecSort);
 
 		char *getLMFFilename() const; 
 
