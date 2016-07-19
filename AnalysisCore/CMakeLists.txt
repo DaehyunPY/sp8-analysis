@@ -1,49 +1,31 @@
 cmake_minimum_required(VERSION 3.3)
-project(Core)
+project(AnalysisCore)
 
-### Core
-if ((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if (MINGW OR CYGWIN)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    elseif (MSVC)
-        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-    endif ()
-endif ()
+### import JSONHandler
+add_subdirectory(JSONHandler)
+include_directories(JSONHandler/include)
+
+### main
+if((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -m64")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    # add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
 set(SOURCE_FILES
-        JSONReader.cpp
-        JSONReader.h
-        EventDataReader.cpp
-        EventDataReader.h
-        Unit.cpp
-        Unit.h
-        Flag.cpp
-        Flag.h
-        ObjectFlag.cpp
-        ObjectFlag.h
-        JSONFlag.cpp
-        JSONFlag.h
-        Object.cpp
-        Object.h
-        Objects.cpp
-        Objects.h
-        Ion.cpp
-        Ion.h
-        Ions.cpp
-        Ions.h
-        Electron.cpp
-        Electron.h
-        Electrons.cpp
-        Electrons.h
-        EquipmentParameters.cpp
-        EquipmentParameters.h
-        ObjectParameters.cpp
-        ObjectParameters.h
-        AnalysisTools.cpp
-        AnalysisTools.h
-        LogWriter.cpp
-        LogWriter.h
-        )
-add_library(AnalysisCoreSharedLib SHARED ${SOURCE_FILES})
-add_library(AnalysisCoreStaticLib STATIC ${SOURCE_FILES})
+    AnalysisTools.cpp
+    Electron.cpp
+    Electrons.cpp
+    EquipmentParameters.cpp
+    EventDataReader.cpp
+    Flag.cpp
+    Ion.cpp
+    Ions.cpp
+    LogWriter.cpp
+    Object.cpp
+    ObjectFlag.cpp
+    ObjectParameters.cpp
+    Objects.cpp
+    Unit.cpp
+    )
+add_library(AnalysisCore STATIC ${SOURCE_FILES})
+target_link_libraries(AnalysisCore JSONHandler)
