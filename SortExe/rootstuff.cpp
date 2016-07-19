@@ -1,5 +1,3 @@
-
-#include "stdlib.h"
 #include "rootstuff.h"
 //#include "TApplication.h"
 #include "TCanvas.h"

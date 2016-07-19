@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <float.h>
 
 #include "stdafx.h"
 #include "CDan.h"
@@ -102,7 +101,6 @@ extern CUserSpectrum *pUserSP;
 
 // *** Export ROOT File: Declare ***
 #include <fstream>
-#include <string>
 #include <TFile.h>
 #include <TTree.h>
 bool isFileExist(const char *fileName) {

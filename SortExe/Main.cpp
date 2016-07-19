@@ -31,11 +31,7 @@
 #define NUM_IONS 200
 #define NUM_CHANNELS 80
 
-#include "math.h"
 #include "resort64c.h"
-#include <stdio.h>
-#include "stdlib.h"
-#include "memory.h"
 
 #include "LMF_IO.h"
 
@@ -70,7 +66,7 @@ __int32 my_kbhit()
 	return c;
 }
 #else
-#include <string.h>
+
 #include <termios.h>
 __int32 my_kbhit(void)
 {
