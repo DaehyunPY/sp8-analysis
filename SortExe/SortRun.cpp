@@ -34,6 +34,7 @@ Analysis::SortRun::SortRun(const std::string configFilename) {
 
     // Change the working directory
     chdir(configReader.getStringAt("working_directory").c_str());
+    LMFFilename = configReader.getStringAt("LMF_file");
     ionSorterFilename = configReader.getStringAt("ion_sorter");
     elecSorterFilename = configReader.getStringAt("electron_sorter");
     ionCalibTableFilename = configReader.getStringAt("ion_calibration_table");
@@ -123,4 +124,8 @@ char *Analysis::SortRun::getIonCalibTableFilename() const {
 
 char *Analysis::SortRun::getElecCalibTableFilename() const {
     return (char *) elecCalibTableFilename.c_str();
+}
+
+char *Analysis::SortRun::getLMFFilename() const {
+    return (char *) LMFFilename.c_str();
 }

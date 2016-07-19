@@ -10,6 +10,7 @@ namespace Analysis {
     class SortRun {
     private:
         char id[5];
+		std::string LMFFilename = "";
         std::string rootFilename = "";
         std::string ionSorterFilename = "";
         std::string elecSorterFilename = "";
@@ -29,6 +30,8 @@ namespace Analysis {
 
         void branchRootTree(const int ionCommand, sort_class &ionSort, const int elecCommand, sort_class &elecSort);
         void processEvent();
+
+		char *getLMFFilename() const; 
 
         char *getIonSorterFilename() const;
 

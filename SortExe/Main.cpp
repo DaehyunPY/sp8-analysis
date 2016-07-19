@@ -644,7 +644,7 @@ int main(int argc, char *argv[]) {
 
 
     // open the data input file:
-    sprintf(LMF_InputFilename, "%s", argv[1]);
+    sprintf(LMF_InputFilename, "%s", run.getLMFFilename());
 
 
     if (!LMF->OpenInputLMF(LMF_InputFilename)) {

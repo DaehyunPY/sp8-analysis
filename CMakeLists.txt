@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.3)
 project(Analysis)
 
-### add sub lib
-add_subdirectory(AnalysisCore)
-add_subdirectory(JSONHandler)
-add_subdirectory(Protocols)
-
 ### link ROOT
 set(ROOTSYS "$ENV{ROOTSYS}")
 if (ROOTSYS)
@@ -74,6 +69,20 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     )
 endif()
 
+### link resort
+link_directories("./resort")
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    # link_libraries(libResort64c_x86.a)
+    link_libraries(libResort64c_x64.a)
+elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    link_libraries(resort64c_VS2010_x86.lib)
+endif ()
+
+### add sub lib
+add_subdirectory(AnalysisCore)
+add_subdirectory(JSONHandler)
+add_subdirectory(Protocols)
+
 ### compiler
 if((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -m64")
@@ -92,12 +101,6 @@ add_executable(AnalysisExe ${ANALYSISEXE_SOURCE_FILES})
 target_link_libraries(AnalysisExe AnalysisCore JSONHandler Protocols)
 
 ### SortExe
-if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    # link_libraries(resort/libResort64c_x86.a)
-    link_libraries(resort/libResort64c_x64.a)
-elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    link_libraries(resort/resort64c_VS2010_x86.lib)
-endif ()
 set(SORTEXE_SOURCE_FILES
         SortExe/LMF_IO.cpp
         SortExe/Main.cpp
