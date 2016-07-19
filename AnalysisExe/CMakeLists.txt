@@ -69,10 +69,6 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
         )
 endif()
 
-### import AnalysisCore
-add_subdirectory(AnalysisCore)
-include_directories(AnalysisCore/include)
-
 ### main
 if((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -m64")
@@ -86,4 +82,4 @@ set(SOURCE_FILES
     OutputHist.cpp
     )
 add_executable(AnalysisExe ${SOURCE_FILES})
-target_link_libraries(AnalysisExe AnalysisCore)
+target_link_libraries(AnalysisExe ../AnalysisCore/AnalysisCore)

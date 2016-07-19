@@ -2,7 +2,7 @@
 #define ANALYSIS_ELECTRON_H
 
 #include "Object.h"
-#include "JSONHandler/JSONReader.h"
+#include "../JSONHandler/JSONReader.h"
 
 namespace Analysis {
 

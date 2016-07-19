@@ -1,14 +1,6 @@
 cmake_minimum_required(VERSION 3.3)
 project(JSONHandler)
 
-### import Protocols
-if((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
-    add_subdirectory(Protocols)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    add_subdirectory(Protocols.junc)
-endif()
-
-### main
 if((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -m64")
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -19,4 +11,4 @@ set(SOURCE_FILES
     JSONReader.cpp
     )
 add_library(JSONHandler STATIC ${SOURCE_FILES})
-target_link_libraries(JSONHandler Protocols)
+target_link_libraries(JSONHandler ../Protocols/Protocols)

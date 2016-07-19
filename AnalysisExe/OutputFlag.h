@@ -6,7 +6,7 @@
 #define ANALYSIS_OUTPUTFLAG_H
 
 
-#include "Flag.h"
+#include "../Protocols/Flag.h"
 
 namespace Analysis {
 class OutputFlag: protected Flag {

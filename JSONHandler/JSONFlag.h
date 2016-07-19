@@ -5,11 +5,8 @@
 #ifndef ANALYSIS_JSONFLAG_H
 #define ANALYSIS_JSONFLAG_H
 
-#ifdef _WIN32
-#include "Protocols.junc/Flag.h"
-#else 
-#include "Protocols/Flag.h"
-#endif 
+#include "../Protocols/Flag.h"
+
 namespace Analysis {
 class JSONFlag : Flag {
  private:

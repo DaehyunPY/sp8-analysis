@@ -8,7 +8,7 @@
 #include <string>
 #include <map>
 
-#include "Flag.h"
+#include "../Protocols/Flag.h"
 
 namespace Analysis {
 class ObjectFlag: protected Flag {
