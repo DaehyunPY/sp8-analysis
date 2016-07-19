@@ -11,4 +11,3 @@ set(SOURCE_FILES
     JSONReader.cpp
     )
 add_library(JSONHandler STATIC ${SOURCE_FILES})
-target_link_libraries(JSONHandler ../Protocols/Protocols)

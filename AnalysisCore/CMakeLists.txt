@@ -22,4 +22,3 @@ set(SOURCE_FILES
     Unit.cpp
     )
 add_library(AnalysisCore STATIC ${SOURCE_FILES})
-target_link_libraries(AnalysisCore ../JSONHandler/JSONHandler)
