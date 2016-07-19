@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
-project(Sort)
-
-### Note
-# `resort` doesn't support root6 yet
+project(AnalysisExe)
 
 ### import ROOT
 set(ROOTSYS "$ENV{ROOTSYS}")
@@ -72,20 +69,21 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
         )
 endif()
 
-### link resort 
-link_directories("./")
+### import AnalysisCore
+add_subdirectory(AnalysisCore)
+include_directories(AnalysisCore/include)
+
+### main
 if((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
-    # link_libraries(libResort64c_x86.a)
-    link_libraries(libResort64c_x64.a)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -m64")
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    link_libraries(resort64c_VS2010_x86.lib)
+    # add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
-
-
-### project source
 set(SOURCE_FILES
-    sort_with_root.cpp
-    rootstuff.cpp
-    LMF_IO.cpp
+    Main.cpp
+    Run.cpp
+    OutputFlag.cpp
+    OutputHist.cpp
     )
-add_executable(SortExe ${SOURCE_FILES})
+add_executable(AnalysisExe ${SOURCE_FILES})
+target_link_libraries(AnalysisExe AnalysisCore)

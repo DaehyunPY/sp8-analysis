@@ -3,7 +3,6 @@ project(AnalysisCore)
 
 ### import JSONHandler
 add_subdirectory(JSONHandler)
-include_directories(JSONHandler/include)
 
 ### main
 if((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
