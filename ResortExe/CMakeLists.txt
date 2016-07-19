@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.3)
-project(Sort)
+project(ResortExe)
 
 ### Note
-# `resort` doesn't support root6 yet
+# Resort64c doesn't support root6 yet
 
 ### import ROOT
 set(ROOTSYS "$ENV{ROOTSYS}")
@@ -72,8 +72,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
         )
 endif()
 
-### link resort 
-link_directories("./")
+### import Resort64c
 if((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
     # link_libraries(libResort64c_x86.a)
     link_libraries(libResort64c_x64.a)
@@ -81,11 +80,10 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     link_libraries(resort64c_VS2010_x86.lib)
 endif()
 
-
-### project source
+### main
 set(SOURCE_FILES
     sort_with_root.cpp
     rootstuff.cpp
     LMF_IO.cpp
     )
-add_executable(SortExe ${SOURCE_FILES})
+add_executable(ResortExe ${SOURCE_FILES})
