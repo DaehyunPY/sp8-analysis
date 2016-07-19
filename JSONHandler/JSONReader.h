@@ -4,7 +4,11 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#ifdef _WIN32
+#include "rapidjson.junc/document.h"
+#else
 #include "rapidjson/document.h"
+#endif 
 #include "JSONFlag.h"
 
 namespace Analysis {
