@@ -6,7 +6,7 @@
 #include <iostream>
 #include <thread>
 
-#include "Run.h"
+#include "AnalysisRun.h"
 
 void showProgressBar(const float prog = 0) {
   const int width = 50; // characters
@@ -58,16 +58,11 @@ int main(int argc, char * argv[]) {
   // Setup to run
   srand((unsigned int) time(nullptr));
   int currentPercentage = -1;
-  Analysis::Run run(argv[1]);
+    Analysis::AnalysisRun run(argv[1]);
   const long totalEntries = run.getEntries();
 
   // Run processes
   for (long i=0; i<totalEntries; i++) {
-#ifdef ANALYSIS_DEBUG_BUILD
-    if(i==100) {
-      break;
-    }
-#endif
     // Show the process bar
     if(currentPercentage/100.0 < i/(double)totalEntries) {
       currentPercentage++;

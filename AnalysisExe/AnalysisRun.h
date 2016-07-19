@@ -2,8 +2,8 @@
 // Created by Daehyun You on 12/30/15.
 //
 
-#ifndef BL17ANALYSIS_RUN_H
-#define BL17ANALYSIS_RUN_H
+#ifndef ANALYSIS_ANALYSISRUN_H
+#define ANALYSIS_ANALYSISRUN_H
 
 #define SAMETITLEWITH(X) X, #X
 
@@ -80,7 +80,7 @@
 #include "OutputHist.h"
 
 namespace Analysis {
-class Run {
+	class AnalysisRun {
   int numberOfHits;
   TFile *pRootFile;
   TChain *pEventChain;
@@ -94,8 +94,9 @@ class Run {
   Analysis::OutputFlag flag;
 
  public:
-  Run(const std::string configFilename = "Parameters.json");
-  ~Run();
+		AnalysisRun(const std::string configFilename = "Parameters.json");
+
+		~AnalysisRun();
   const long getEntries() const;
   void processEvent(const long raw);
 

@@ -1448,8 +1448,8 @@ bool LMF_IO::ReadNextfADC4packet(ndigo_packet * packet, bool &bEnd_of_group_dete
 		*input_lmf >> packet->flags;		if (errorflag) return false;
 		*input_lmf >> packet->length;		if (errorflag) return false;
 		*input_lmf >> packet->timestamp;	if (errorflag) return false;
-		
-		//if (packet->flags) continue;
+
+		//if (packet->resortElecFlags) continue;
 		
 		if (packet->card >10) continue;
 

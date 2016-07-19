@@ -14,8 +14,9 @@
 #include <TChain.h>
 #include <RooDataProjBinding.h>
 
-#include "RUN.h"
-Analysis::Run::Run(const std::string configFilename) {
+#include "AnalysisRun.h"
+
+Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) {
   // Setup json file reader
   Analysis::JSONReader configReader(configFilename);
 
@@ -105,7 +106,8 @@ Analysis::Run::Run(const std::string configFilename) {
   pLogWriter->write() << "Initialization is done." << std::endl;
   pLogWriter->write() << std::endl;
 }
-Analysis::Run::~Run() {
+
+Analysis::AnalysisRun::~AnalysisRun() {
   // counter
   pLogWriter->write() << "Event count: " << pTools->getEventNumber()
       << std::endl;
@@ -128,14 +130,15 @@ Analysis::Run::~Run() {
   pLogWriter->write() << std::endl;
   delete pLogWriter;
 }
-void Analysis::Run::processEvent(const long raw) {
+
+void Analysis::AnalysisRun::processEvent(const long raw) {
   // Setup event chain
   pEventChain->GetEntry(raw);
 
   // Count event
   pTools->loadEventCounter();
 
-  // make sure ion and electron data is empty, and reset flags
+  // make sure ion and electron data is empty, and reset resortElecFlags
   pIons->resetEventData();
   pElectrons->resetEventData();
 
@@ -173,12 +176,14 @@ void Analysis::Run::processEvent(const long raw) {
     fillNatureHists();
   }
 
-  // Fill hists for resort flags
+  // Fill hists for resort resortElecFlags
 }
-const long Analysis::Run::getEntries() const {
+
+const long Analysis::AnalysisRun::getEntries() const {
   return (long) pEventChain->GetEntries();
 }
-void Analysis::Run::createNatureHists() {
+
+void Analysis::AnalysisRun::createNatureHists() {
   pHist->create1d(SAMETITLEWITH(histID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead),
                   "TOF [ns]",
                   H1_ION_TOF,
@@ -196,7 +201,8 @@ void Analysis::Run::createNatureHists() {
                   H1_ELECTRON_ENERGY,
                   dirNameOfNatureHists);
 }
-void Analysis::Run::fillNatureHists() {
+
+void Analysis::AnalysisRun::fillNatureHists() {
   const bool under2ndAnd3rdHitIonAreNotDead =
       (!pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead))
           && (!pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead));
@@ -222,10 +228,12 @@ void Analysis::Run::fillNatureHists() {
                   pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit));
   }
 }
-void Analysis::Run::flushHist() {
+
+void Analysis::AnalysisRun::flushHist() {
   pHist->flushRootFile();
 }
-void Analysis::Run::createIonHists() {
+
+void Analysis::AnalysisRun::createIonHists() {
   // Detector image
   pHist->create2d(SAMETITLEWITH(hist2ID_1stHitIonLocXY_notDead),
                   "Location X [mm]", "Location Y [mm]",
@@ -431,7 +439,8 @@ void Analysis::Run::createIonHists() {
                   H2_DEGREE, H2_SINCOS,
                   dirNameOfIonHists);
 }
-void Analysis::Run::fillIonHists() {
+
+void Analysis::AnalysisRun::fillIonHists() {
   const bool dead1 = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
   const bool dead2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
   const bool dead3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
@@ -581,7 +590,8 @@ void Analysis::Run::fillIonHists() {
     }
   }
 }
-void Analysis::Run::createElecHists() {
+
+void Analysis::AnalysisRun::createElecHists() {
   // Detector image
   pHist->create2d(SAMETITLEWITH(hist2ID_1stHitElecLocXY_notDead),
                   "Location X [mm]", "Location Y [mm]",
@@ -799,7 +809,8 @@ void Analysis::Run::createElecHists() {
 	  H1_ELECTRON_ENERGY,
     dirNameOfElecHists);
 }
-void Analysis::Run::fillElecHists() {
+
+void Analysis::AnalysisRun::fillElecHists() {
 	const bool dead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
 	const bool dead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
 	const bool dead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);

@@ -5,7 +5,6 @@ project(Analysis)
 add_subdirectory(AnalysisCore)
 add_subdirectory(JSONHandler)
 add_subdirectory(Protocols)
-add_subdirectory(SortCore)
 
 ### link ROOT
 set(ROOTSYS "$ENV{ROOTSYS}")
@@ -85,7 +84,7 @@ endif()
 ### AnalysisExe
 set(ANALYSISEXE_SOURCE_FILES
         AnalysisExe/Main.cpp
-        AnalysisExe/Run.cpp
+        AnalysisExe/AnalysisRun.cpp
         AnalysisExe/OutputFlag.cpp
         AnalysisExe/OutputHist.cpp
         )
@@ -100,9 +99,10 @@ elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
     link_libraries(resort/resort64c_VS2010_x86.lib)
 endif ()
 set(SORTEXE_SOURCE_FILES
-        SortExe/Main.cpp
-        SortExe/rootstuff.cpp
         SortExe/LMF_IO.cpp
+        SortExe/Main.cpp
+        SortExe/SortRun.cpp
+        SortExe/rootstuff.cpp
         )
 add_executable(SortExe ${SORTEXE_SOURCE_FILES})
 target_link_libraries(SortExe SortCore)

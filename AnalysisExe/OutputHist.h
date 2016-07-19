@@ -1,5 +1,5 @@
-#ifndef ANALYSIS__OUTPUTHIST_H
-#define ANALYSIS__OUTPUTHIST_H
+#ifndef ANALYSIS_OUTPUTHIST_H
+#define ANALYSIS_OUTPUTHIST_H
 
 #include <iostream>
 
