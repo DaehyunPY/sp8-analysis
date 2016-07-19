@@ -425,7 +425,8 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    Analysis::SortRun run(argv[1]);
+    Analysis::SortRun *pRun;
+    pRun = new Analysis::SortRun(argv[1]);
 
     // start the Root-Environment---------------
     char *root_argv[3];
@@ -490,25 +491,26 @@ int main(int argc, char *argv[]) {
     printf("ok\n");
 
 
-    if (!read_config_file(run.getIonSorterFilename(), ion_sorter, ion_command, ion_offset_sum_u, ion_offset_sum_v,
+    if (!read_config_file(pRun->getIonSorterFilename(), ion_sorter, ion_command, ion_offset_sum_u, ion_offset_sum_v,
                           ion_offset_sum_w, ion_w_offset, ion_pos_offset_x, ion_pos_offset_y)) {
         delete ion_sorter;
         ion_sorter = 0;
     }
     if (ion_sorter) {
         if (ion_sorter->use_sum_correction || ion_sorter->use_pos_correction) {
-            read_calibration_tables(run.getIonCalibTableFilename(), ion_sorter);
+            read_calibration_tables(pRun->getIonCalibTableFilename(), ion_sorter);
         }
     }
 
-    if (!read_config_file(run.getElecSorterFilename(), elec_sorter, elec_command, elec_offset_sum_u, elec_offset_sum_v,
+    if (!read_config_file(pRun->getElecSorterFilename(), elec_sorter, elec_command, elec_offset_sum_u,
+                          elec_offset_sum_v,
                           elec_offset_sum_w, elec_w_offset, elec_pos_offset_x, elec_pos_offset_y)) {
         delete elec_sorter;
         elec_sorter = 0;
     }
     if (elec_sorter) {
         if (elec_sorter->use_sum_correction || elec_sorter->use_pos_correction) {
-            read_calibration_tables(run.getElecCalibTableFilename(), elec_sorter);
+            read_calibration_tables(pRun->getElecCalibTableFilename(), elec_sorter);
         }
     }
 
@@ -644,7 +646,7 @@ int main(int argc, char *argv[]) {
 
 
     // open the data input file:
-    sprintf(LMF_InputFilename, "%s", run.getLMFFilename());
+    sprintf(LMF_InputFilename, "%s", pRun->getLMFFilename());
 
 
     if (!LMF->OpenInputLMF(LMF_InputFilename)) {
@@ -684,7 +686,7 @@ int main(int argc, char *argv[]) {
 
 
     // Branch root file
-    run.branchRootTree(ion_command, *ion_sorter, elec_command, *elec_sorter);
+    pRun->branchRootTree(ion_command, *ion_sorter, elec_command, *elec_sorter);
 
     // Start reading event data from input file:
     // ("event" is all the data that was recorded after a trigger signal)
@@ -919,7 +921,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (ion_sorter && elec_sorter) {
-            run.processEvent();
+            pRun->processEvent();
         }
 
         if (outfile) { // write to output file:
@@ -996,6 +998,7 @@ int main(int argc, char *argv[]) {
 
     printf("closing output file... ");
     // close the input and output file:
+    delete pRun;
     if (outfile) {
         fclose(outfile);
         outfile = 0;
@@ -1029,13 +1032,13 @@ int main(int argc, char *argv[]) {
 
     if (ion_command == 3) {   // generate and print correction tables for sum- and position-correction
         printf("ion: creating calibration tables...\n");
-        create_calibration_tables(run.getIonCalibTableFilename(), ion_sorter);
+        create_calibration_tables(pRun->getIonCalibTableFilename(), ion_sorter);
         printf("\nfinished creating calibration tables\n");
     }
 
     if (elec_command == 3) {   // generate and print correction tables for sum- and position-correction
         printf("elec: creating calibration tables...\n");
-        create_calibration_tables(run.getElecCalibTableFilename(), elec_sorter);
+        create_calibration_tables(pRun->getElecCalibTableFilename(), elec_sorter);
         printf("\nfinished creating calibration tables\n");
     }
 
