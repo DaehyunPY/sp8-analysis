@@ -31,7 +31,7 @@ Analysis::SortRun::~SortRun() {
     delete pRootTree;
     delete pRootFile;
 
-    id = nullptr;
+    // id = nullptr;
     LMFFilename = "";
     rootFilename = "";
     ionSorterFilename = "";
