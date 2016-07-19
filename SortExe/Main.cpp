@@ -34,6 +34,7 @@
 #include "../resort/resort64c.h"
 
 #include "LMF_IO.h"
+#include "SortRun.h"
 
 
 sort_class *ion_sorter;
@@ -410,11 +411,11 @@ void clean_up(TFile *rootfile) {
 }
 
 
-int main(int argc, char *argv[], char *envp[]) {
-    printf("syntax: sort_LMF filename\n");
+int main(int argc, char *argv[]) {
+    // Inform status
+    printf("syntax: SortExe filename\n");
     printf("        This file will be sorted and\n");
     printf("        a new file will be written.\n\n");
-
     if (argc < 2) {
         printf("Please provide a filename.\n");
         return 0;
@@ -424,7 +425,7 @@ int main(int argc, char *argv[], char *envp[]) {
         return 0;
     }
 
-    bool fill_histograms = true;
+    Analysis::SortRun run(argv[1]);
 
     // start the Root-Environment---------------
     char *root_argv[3];
@@ -437,13 +438,12 @@ int main(int argc, char *argv[], char *envp[]) {
     TApplication theRootApp("theRootApp", &root_argc, root_argv);
     //-----------------------------------------
 
+    bool fill_histograms = true;
     rt = new rootstuff();
-
     TFile *rootfile = rt->RecreateRootFile("output.root", "");
 
     ion_canvas = 0;
     elec_canvas = 0;
-
 
     TH1D *Hion_sum_u = 0;
     TH1D *Hion_sum_v = 0;
@@ -490,25 +490,25 @@ int main(int argc, char *argv[], char *envp[]) {
     printf("ok\n");
 
 
-    if (!read_config_file("sorter_ion.txt", ion_sorter, ion_command, ion_offset_sum_u, ion_offset_sum_v,
+    if (!read_config_file(run.getIonSorterFilename(), ion_sorter, ion_command, ion_offset_sum_u, ion_offset_sum_v,
                           ion_offset_sum_w, ion_w_offset, ion_pos_offset_x, ion_pos_offset_y)) {
         delete ion_sorter;
         ion_sorter = 0;
     }
     if (ion_sorter) {
         if (ion_sorter->use_sum_correction || ion_sorter->use_pos_correction) {
-            read_calibration_tables("ion_calibration_table.txt", ion_sorter);
+            read_calibration_tables(run.getIonCalibTableFilename(), ion_sorter);
         }
     }
 
-    if (!read_config_file("sorter_elec.txt", elec_sorter, elec_command, elec_offset_sum_u, elec_offset_sum_v,
+    if (!read_config_file(run.getElecSorterFilename(), elec_sorter, elec_command, elec_offset_sum_u, elec_offset_sum_v,
                           elec_offset_sum_w, elec_w_offset, elec_pos_offset_x, elec_pos_offset_y)) {
         delete elec_sorter;
         elec_sorter = 0;
     }
     if (elec_sorter) {
         if (elec_sorter->use_sum_correction || elec_sorter->use_pos_correction) {
-            read_calibration_tables("elec_calibration_table.txt", elec_sorter);
+            read_calibration_tables(run.getElecCalibTableFilename(), elec_sorter);
         }
     }
 
@@ -683,8 +683,8 @@ int main(int argc, char *argv[], char *envp[]) {
     while (my_kbhit()); // empty keyboard buffer
 
 
-
-
+    // Branch root file
+    run.branchRootTree(ion_command, *ion_sorter, elec_command, *elec_sorter);
 
     // Start reading event data from input file:
     // ("event" is all the data that was recorded after a trigger signal)
@@ -719,11 +719,6 @@ int main(int argc, char *argv[], char *envp[]) {
         LMF->GetNumberOfHitsArray(count);
         double timestamp_s = LMF->GetDoubleTimeStamp(); // absolute timestamp in seconds
         LMF->GetTDCDataArray((int *) TDC);
-
-
-
-
-
 
         // convert the raw TDC data to nanoseconds:
         if (ion_sorter) {
@@ -923,6 +918,9 @@ int main(int argc, char *argv[], char *envp[]) {
             }
         }
 
+        if (ion_sorter && elec_sorter) {
+            run.processEvent();
+        }
 
         if (outfile) { // write to output file:
             if (ion_sorter) {
@@ -994,15 +992,6 @@ int main(int argc, char *argv[], char *envp[]) {
 
     } // end of the big while loop
 
-
-
-
-
-
-
-
-
-
     printf("ok\n");
 
     printf("closing output file... ");
@@ -1012,7 +1001,6 @@ int main(int argc, char *argv[], char *envp[]) {
         outfile = 0;
     }
     printf("ok\n");
-
 
     if (ion_command == 2) {
         printf("calibrating ion detector... ");
@@ -1025,7 +1013,6 @@ int main(int argc, char *argv[], char *envp[]) {
                    ion_sorter->scalefactors_calibrator->best_w_offset);
         }
     }
-
 
     if (elec_command == 2) {
         printf("calibrating elec detector... ");
@@ -1042,13 +1029,13 @@ int main(int argc, char *argv[], char *envp[]) {
 
     if (ion_command == 3) {   // generate and print correction tables for sum- and position-correction
         printf("ion: creating calibration tables...\n");
-        create_calibration_tables("ion_calibration_table.txt", ion_sorter);
+        create_calibration_tables(run.getIonCalibTableFilename(), ion_sorter);
         printf("\nfinished creating calibration tables\n");
     }
 
     if (elec_command == 3) {   // generate and print correction tables for sum- and position-correction
         printf("elec: creating calibration tables...\n");
-        create_calibration_tables("elec_calibration_table.txt", elec_sorter);
+        create_calibration_tables(run.getElecCalibTableFilename(), elec_sorter);
         printf("\nfinished creating calibration tables\n");
     }
 

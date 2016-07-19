@@ -4,30 +4,39 @@
 #include <fstream>
 #include <TFile.h>
 #include <TTree.h>
-
-const int nTmp = 4;
-double resortLess[nTmp][nTmp], resortElecFlags[nTmp], resortIonFlags[nTmp];
+#include "../resort/resort64c.h"
 
 namespace Analysis {
     class SortRun {
     private:
+        char id[5];
         std::string rootFilename = "";
+        std::string ionSorterFilename = "";
+        std::string elecSorterFilename = "";
+        std::string ionCalibTableFilename = "";
+        std::string elecCalibTableFilename = "";
         TFile *pRootFile;
         TTree *pRootTree;
-        struct DataSet {
-            double x, y, t;
-            int flag;
-        } elecDataSet[nTmp], ionDataSet[nTmp];
+        int numberOfIons;
+        int numberOfElectrons;
 
     private:
         bool isFileExist(const char *fileName);
 
     public:
-        SortRun();
-
+        SortRun(const std::string configFilename);
         ~SortRun();
 
+        void branchRootTree(const int ionCommand, sort_class &ionSort, const int elecCommand, sort_class &elecSort);
         void processEvent();
+
+        char *getIonSorterFilename() const;
+
+        char *getElecSorterFilename() const;
+
+        char *getIonCalibTableFilename() const;
+
+        char *getElecCalibTableFilename() const;
     };
 }
 
