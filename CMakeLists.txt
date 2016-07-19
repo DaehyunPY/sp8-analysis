@@ -105,4 +105,4 @@ set(SORTEXE_SOURCE_FILES
         SortExe/rootstuff.cpp
         )
 add_executable(SortExe ${SORTEXE_SOURCE_FILES})
-target_link_libraries(SortExe SortCore)
+target_link_libraries(SortExe JSONHandler Protocols)
