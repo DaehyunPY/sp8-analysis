@@ -2,24 +2,16 @@
 // rootstuff.h: interface for the rootstuff class.
 //////////////////////////////////////////////////////////////////////
 
+#include <TFile.h>
+#include <TCanvas.h>
+#include <TH1D.h>
+#include <TF1.h>
+#include <TH2D.h>
+#include <TH2F.h>
+#include <TH3D.h>
+#include <TTree.h>
 
-class TCanvas;
-class TFile;
-//class TMinuit;
-class TF1;
-class TH1D;
-class TH2D;
-class TH2F;
-class TH2I;
-
-class TH3D;
-class TTree;
-
-//class TTree;
-
-
-class rootstuff
-{
+class rootstuff {
 public:
 	TFile * RecreateRootFile(char*,char*);
 	TCanvas * newCanvas(char*,char*,int,int,int,int);

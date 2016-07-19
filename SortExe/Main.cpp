@@ -20,10 +20,6 @@
 
 #include "rootstuff.h"
 
-#include "TCanvas.h"
-#include "TH1D.h"
-#include "TH2D.h"
-#include "TFile.h"
 #include "TSystem.h"
 
 #include "TApplication.h"
@@ -441,7 +437,8 @@ int main(int argc, char *argv[]) {
 
     bool fill_histograms = true;
     rt = new rootstuff();
-    TFile *rootfile = rt->RecreateRootFile("output.root", "");
+//    TFile *rootfile = rt->RecreateRootFile("output.root", "");
+    TFile *rootfile = pRun->getRootFile();
 
     ion_canvas = 0;
     elec_canvas = 0;
@@ -1016,7 +1013,6 @@ int main(int argc, char *argv[]) {
 
     printf("closing output file... ");
     // close the input and output file:
-    delete pRun;
     if (outfile) {
         fclose(outfile);
         outfile = 0;
@@ -1084,6 +1080,7 @@ int main(int argc, char *argv[]) {
     }
 
     clean_up(rootfile);
+    delete pRun;
     printf("terminating the root app.\n");
     if (rt) delete rt;
     theRootApp.Terminate();

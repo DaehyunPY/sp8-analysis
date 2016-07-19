@@ -136,3 +136,7 @@ char *Analysis::SortRun::getElecCalibTableFilename() const {
 char *Analysis::SortRun::getLMFFilename() const {
     return (char *) LMFFilename.c_str();
 }
+
+TFile *Analysis::SortRun::getRootFile() {
+    return pRootFile;
+}

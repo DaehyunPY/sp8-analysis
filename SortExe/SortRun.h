@@ -45,6 +45,8 @@ namespace Analysis {
         char *getIonCalibTableFilename() const;
 
         char *getElecCalibTableFilename() const;
+
+        TFile *getRootFile();
     };
 }
 
