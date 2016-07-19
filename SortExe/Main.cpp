@@ -31,7 +31,7 @@
 #define NUM_IONS 200
 #define NUM_CHANNELS 80
 
-#include "resort64c.h"
+#include "../resort/resort64c.h"
 
 #include "LMF_IO.h"
 
