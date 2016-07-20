@@ -697,8 +697,9 @@ int main(int argc, char *argv[]) {
             // shift all signals from the anode so that the center of the detector is at x=y=0:
             ion_sorter->shift_position_origin(+1, ion_pos_offset_x, ion_pos_offset_y);
 
-            ion_sorter->feed_calibration_data(true,
-                                              ion_w_offset); // for calibration of fv, fw, w_offset and correction tables
+			// for calibration of fv, fw, w_offset and correction tables
+            ion_sorter->feed_calibration_data(true, ion_w_offset);
+
             if (ion_sorter->scalefactors_calibrator && ion_command >= 2) {
                 if (ion_sorter->scalefactors_calibrator->map_is_full_enough()) break;
             }
@@ -717,7 +718,6 @@ int main(int argc, char *argv[]) {
                     if (fill_histograms) Hion_xy_raw->Fill(u, y);
                 }
             }
-
             if (count[ion_sorter->Cu1] > 0 && count[ion_sorter->Cu2] > 0) {
                 if (fill_histograms) Hion_u->Fill(tdc_ns[ion_sorter->Cu1][0] - tdc_ns[ion_sorter->Cu2][0]);
                 double mcp = 0.;
@@ -777,11 +777,13 @@ int main(int argc, char *argv[]) {
                 // shift the time sums to zero:
                 elec_sorter->shift_sums(+1, elec_offset_sum_u, elec_offset_sum_v);
             }
+
             // shift all signals from the anode so that the center of the detector is at x=y=0:
             elec_sorter->shift_position_origin(+1, elec_pos_offset_x, elec_pos_offset_y);
 
-            elec_sorter->feed_calibration_data(true,
-                                               elec_w_offset); // for calibration of fv, fw, w_offset and correction tables
+			// for calibration of fv, fw, w_offset and correction tables
+            elec_sorter->feed_calibration_data(true, elec_w_offset);
+
             if (elec_sorter->scalefactors_calibrator && elec_command >= 2) {
                 if (elec_sorter->scalefactors_calibrator->map_is_full_enough()) break;
             }
@@ -800,7 +802,6 @@ int main(int argc, char *argv[]) {
                     if (fill_histograms) Helec_xy_raw->Fill(u, y);
                 }
             }
-
             if (count[elec_sorter->Cu1] > 0 && count[elec_sorter->Cu2] > 0) {
                 if (fill_histograms) Helec_u->Fill(tdc_ns[elec_sorter->Cu1][0] - tdc_ns[elec_sorter->Cu2][0]);
                 double mcp = 0.;
@@ -832,8 +833,8 @@ int main(int argc, char *argv[]) {
             }
         }
 
-
         int number_of_ions = 0;
+        int number_of_electrons = 0;
         if (ion_sorter) {
             if (ion_command == 1) {  // sort and write new file
                 // sort/reconstruct the detector signals and apply the sum- and NL-correction.
@@ -847,8 +848,6 @@ int main(int argc, char *argv[]) {
                     Hion_xy->Fill(ion_sorter->output_hit_array[i]->x, ion_sorter->output_hit_array[i]->y);
             }
         }
-
-        int number_of_electrons = 0;
         if (elec_sorter) {
             if (elec_command == 1) {  // sort and write new file
                 // sort/reconstruct the detector signals and apply the sum- and NL-correction.
@@ -863,10 +862,10 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        // Process a event
+		// Write to output file
         pRun->processEvent(number_of_ions, ion_sorter, number_of_electrons, elec_sorter);
-
-        if (false) { // write to output file:
+		FILE *outfile = nullptr; 
+        if(outfile) { 
             if (ion_sorter) {
                 // the following steps are necessary to make the new output look as the old one
                 // (in respect to time offsets)
@@ -928,12 +927,11 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-//			// output TDC data
-//			FILE *outfile;
-//            for (unsigned int i = 0; i < LMF->number_of_channels; i++) {
-//                fwrite(&count[i], sizeof(int), 1, outfile);
-//                for (unsigned int j = 0; j < count[i]; j++) fwrite(&TDC[i][j], sizeof(int), 1, outfile);
-//            }
+			// output TDC data
+            for (unsigned int i = 0; i < LMF->number_of_channels; i++) {
+                fwrite(&count[i], sizeof(int), 1, outfile);
+                for (unsigned int j = 0; j < count[i]; j++) fwrite(&TDC[i][j], sizeof(int), 1, outfile);
+            }
         }
 
     } // end of the big while loop
@@ -950,7 +948,6 @@ int main(int argc, char *argv[]) {
                    ion_sorter->scalefactors_calibrator->best_w_offset);
         }
     }
-
     if (elec_command == 2) {
         printf("calibrating elec detector... ");
         elec_sorter->do_calibration();
@@ -962,35 +959,30 @@ int main(int argc, char *argv[]) {
                    elec_sorter->scalefactors_calibrator->best_w_offset);
         }
     }
-
-
     if (ion_command == 3) {   // generate and print correction tables for sum- and position-correction
         printf("ion: creating calibration tables...\n");
         create_calibration_tables(pRun->getIonCalibTableFilename(), ion_sorter);
         printf("\nfinished creating calibration tables\n");
     }
-
     if (elec_command == 3) {   // generate and print correction tables for sum- and position-correction
         printf("elec: creating calibration tables...\n");
         create_calibration_tables(pRun->getElecCalibTableFilename(), elec_sorter);
         printf("\nfinished creating calibration tables\n");
     }
 
-
+	// Update canvases
     if (ion_canvas) {
         for (__int32 i = 0; i <= 9; i++) {
             ion_canvas->cd(i)->Modified(true);
             ion_canvas->cd(i)->Update();
         }
     }
-
     if (elec_canvas) {
         for (__int32 i = 0; i <= 9; i++) {
             elec_canvas->cd(i)->Modified(true);
             elec_canvas->cd(i)->Update();
         }
     }
-
 
     printf("hit any key to exit\n");
     while (true) {
