@@ -8,8 +8,8 @@ bool Analysis::SortRun::isFileExist(const char *fileName) {
 Analysis::SortRun::~SortRun() {
     delete[] pIonDataSet;
     delete[] pElecDataSet;
-    numberOfIons = 0;
-    numberOfElectrons = 0;
+    maxNumOfIons = 0;
+    maxNumOfElecs = 0;
 
     printf("writing root tree... ");
     if (pRootTree) pRootTree->Write();
@@ -62,22 +62,25 @@ Analysis::SortRun::SortRun(const std::string configFilename) {
     pRootFile = new TFile(rootFilename.c_str(), "new");
 
     // Setup ions and electrons
-    numberOfIons = 0;
-    numberOfElectrons = 0;
+    maxNumOfIons = 0;
+    maxNumOfElecs = 0;
 }
 
-void Analysis::SortRun::processEvent(const sort_class &ionSort, const sort_class &elecSort) {
-    for (int i = 0; i < numberOfIons; i++) {
-        pIonDataSet[i].x = ionSort.output_hit_array[i]->x;
-        pIonDataSet[i].y = ionSort.output_hit_array[i]->y;
-        pIonDataSet[i].t = ionSort.output_hit_array[i]->time;
-        pIonDataSet[i].flag = ionSort.output_hit_array[i]->method;
+void Analysis::SortRun::processEvent(const int ionHitNum, const sort_class *pIonSorter, const int elecHitNum,
+                                     const sort_class *pElecSorter) {
+    numOfIons = ionHitNum < maxNumOfIons ? ionHitNum : maxNumOfIons;
+    for (int i = 0; i < numOfIons; i++) {
+        pIonDataSet[i].x = pIonSorter->output_hit_array[i]->x;
+        pIonDataSet[i].y = pIonSorter->output_hit_array[i]->y;
+        pIonDataSet[i].t = pIonSorter->output_hit_array[i]->time;
+        pIonDataSet[i].flag = pIonSorter->output_hit_array[i]->method;
     }
-    for (int i = 0; i < numberOfElectrons; i++) {
-        pElecDataSet[i].x = elecSort.output_hit_array[i]->x;
-        pElecDataSet[i].y = elecSort.output_hit_array[i]->y;
-        pElecDataSet[i].t = elecSort.output_hit_array[i]->time;
-        pElecDataSet[i].flag = elecSort.output_hit_array[i]->method;
+    numOfElecs = elecHitNum < maxNumOfElecs ? elecHitNum : maxNumOfElecs;
+    for (int i = 0; i < numOfIons; i++) {
+        pElecDataSet[i].x = pElecSorter->output_hit_array[i]->x;
+        pElecDataSet[i].y = pElecSorter->output_hit_array[i]->y;
+        pElecDataSet[i].t = pElecSorter->output_hit_array[i]->time;
+        pElecDataSet[i].flag = pElecSorter->output_hit_array[i]->method;
     }
     pRootTree->Fill();
 }
@@ -86,9 +89,10 @@ void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
     std::string str;
     // Ion setup
     str = "Ion";
-    numberOfIons = ionNum;
-    pIonDataSet = new DataSet[numberOfIons];
-    for (int i = 0; i < numberOfIons; i++) {
+    maxNumOfIons = ionNum;
+    pIonDataSet = new DataSet[maxNumOfIons];
+    pRootTree->Branch((str + "Num").c_str(), &numOfIons, (str + "Num" + "/I").c_str());
+    for (int i = 0; i < maxNumOfIons; i++) {
         char ch[2];
         sprintf(ch, "%01d", i);
         pRootTree->Branch((str + "X" + ch).c_str(), &pIonDataSet[i].x, (str + "X" + ch + "/D").c_str());
@@ -98,9 +102,10 @@ void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
     }
     // Electron setup
     str = "Elec";
-    numberOfElectrons = elecNum;
-    pElecDataSet = new DataSet[numberOfIons];
-    for (int i = 0; i < numberOfElectrons; i++) {
+    maxNumOfElecs = elecNum;
+    pElecDataSet = new DataSet[maxNumOfIons];
+    pRootTree->Branch((str + "Num").c_str(), &numOfElecs, (str + "Num" + "/I").c_str());
+    for (int i = 0; i < maxNumOfElecs; i++) {
         char ch[2];
         sprintf(ch, "%01d", i);
         pRootTree->Branch((str + "X" + ch).c_str(), &pElecDataSet[i].x, (str + "X" + ch + "/D").c_str());

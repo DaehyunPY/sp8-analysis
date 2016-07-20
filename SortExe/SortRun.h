@@ -41,8 +41,9 @@ namespace Analysis {
         std::string elecCalibTableFilename = "";
         TFile *pRootFile;
         TTree *pRootTree;
-        int numberOfIons;
-        int numberOfElectrons;
+        int maxNumOfIons;
+        int maxNumOfElecs;
+        int numOfIons, numOfElecs;
         struct DataSet {
             double x, y, t;
             int flag;
@@ -58,7 +59,8 @@ namespace Analysis {
 
         void branchRootTree(const int ionNum, const int elecNum);
 
-        void processEvent(const sort_class &ionSort, const sort_class &elecSort);
+        void processEvent(const int ionHitNum, const sort_class *pIonSorter, const int elecHitNum,
+                          const sort_class *pElecSorter);
 
         char *getLMFFilename() const;
 
