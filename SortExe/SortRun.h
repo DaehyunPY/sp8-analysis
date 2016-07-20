@@ -46,9 +46,8 @@ class SortRun: Hist {
   bool isFileExist(const char *fileName);
 
  private:
-  const int numCh = 16;
   int maxNumOfIons, numOfIons, maxNumOfElecs, numOfElecs;
-  double eMarker, TDC1stHit[numCh];
+  double eMarker;
   struct DataSet {
     double x, y, t;
     int flag;
