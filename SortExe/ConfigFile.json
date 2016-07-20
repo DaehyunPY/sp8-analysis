@@ -1,0 +1,8 @@
+{
+  "working_directory": "PATH", // output files will be saved in this dir 
+  "LMF_file": "Cobold2008Example_NeKrMixedCluster888eV_06005.lmf",
+  "ion_sorter": "IonSorter.txt",
+  "electron_sorter": "ElecSorter.txt",
+  "ion_calibration_table": "IonCalibTab.txt",
+  "electron_calibration_table": "ElecCalibTab.txt"
+}

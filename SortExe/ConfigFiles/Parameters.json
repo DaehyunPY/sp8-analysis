@@ -1,8 +1,0 @@
-{
-  "working_directory": "X:/LMFExample",
-  "LMF_file": "Cobold2008Example_NeKrMixedCluster888eV_06005.lmf",
-  "ion_sorter": "sorter_ion.txt",
-  "electron_sorter": "sorter_elec.txt",
-  "ion_calibration_table": "ion_calibration_table.txt",
-  "electron_calibration_table": "elec_calibration_table.txt"
-}
