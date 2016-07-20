@@ -1,13 +1,3 @@
 .vs
 .idea
-ipch
-Release
-Debug
-Backup
-Build/
-CDan.sdf
-CDan.sln
-CDan.vcxproj
-include/
-Document/
-*.DS_Store
+build
