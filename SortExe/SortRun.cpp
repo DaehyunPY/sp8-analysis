@@ -1,19 +1,4 @@
-#ifdef _WIN32
-#include <direct.h>
-#define getcwd _getcwd
-#define chdir _chdir
-#else
-
-#include <unistd.h>
-
-#endif
-
-#include <ctime>
-#include <TChain.h>
-#include <RooDataProjBinding.h>
-
 #include "SortRun.h"
-#include "../JSONHandler/JSONReader.h"
 
 bool Analysis::SortRun::isFileExist(const char *fileName) {
     std::ifstream file(fileName);

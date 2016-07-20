@@ -16,14 +16,10 @@
 #endif
 #endif
 
-#include <termios.h>
-#include <thread>
-
-#include "TSystem.h"
-#include "TApplication.h"
+#include <TSystem.h>
+#include <TApplication.h>
 
 #include "../resort/resort64c.h"
-
 #include "LMF_IO.h"
 #include "SortRun.h"
 
@@ -70,29 +66,6 @@ __int32 my_kbhit(void) {
     return c;
 }
 #endif
-
-enum StatusInfo {
-    keepRunning,
-    quitProgramSafely,
-    done
-};
-
-void inputManager(StatusInfo &info) {
-    std::string input;
-    if (info != keepRunning) { return; }
-    while (std::cin) {
-        std::cout << "Type something in:" << std::endl;
-        std::getline(std::cin, input);
-        if (input.empty()) {
-            continue;
-        }
-        std::cout << "You typed [" << input << "]" << std::endl;
-        if (input.compare("quit") == 0 && info == keepRunning) {
-            info = quitProgramSafely;
-        }
-    }
-    std::cout << "Our work here is done." << std::endl;
-}
 
 void readline_from_config_file(FILE *ffile, char *text, __int32 max_len) {
     int i = -1;
@@ -398,7 +371,7 @@ void clean_up2() {
         ion_canvas = 0;
     }
     if (elec_canvas) {
-        printf("closing ion canvas\n");
+        printf("closing electron canvas\n");
         elec_canvas->Close();
         delete elec_canvas;
         elec_canvas = 0;
@@ -421,10 +394,6 @@ int main(int argc, char *argv[]) {
     std::cout << "The exe file which place at " << argv[0] << ", is running now. " << std::endl;
     std::cout << "The configure file which place at " << argv[1] << ", is going to be read. " << std::endl;
     std::cout << "To quit this program safely, input 'quit'. " << std::endl;
-
-    // Make input thread
-    StatusInfo statusInfo = keepRunning;
-    std::thread threadForInput(inputManager, std::ref(statusInfo));
 
     // start the Root-Environment
     char *root_argv[3];
@@ -654,7 +623,7 @@ int main(int argc, char *argv[]) {
         printf("terminating root app.\n");
         clean_up1();
         if (pRun) delete pRun;
-        clean_up2()
+		clean_up2();
         theRootApp.Terminate();
         return false;
     }
@@ -733,10 +702,6 @@ int main(int argc, char *argv[]) {
                     }
                 }
             }
-        }
-        // Check input
-        if (statusInfo == quitProgramSafely) {
-            break;
         }
 
         // read one new event data block from the file:
@@ -1090,16 +1055,11 @@ int main(int argc, char *argv[]) {
     }
 
     // Finish the program
-    statusInfo = done;
-    threadForInput.detach();
-    threadForInput.~thread();
-
     printf("terminating the root app.\n");
     clean_up1();
     if (pRun) delete pRun;
     clean_up2();
     theRootApp.Terminate();
-
     std::cout << "The program is done. " << std::endl;
     return 0;
 }

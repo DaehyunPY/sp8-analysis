@@ -1,7 +1,17 @@
 #ifndef ANALYSIS_SORTRUN_H
 #define ANALYSIS_SORTRUN_H
 
+#ifdef _WIN32
+#include <direct.h>
+#define getcwd _getcwd
+#define chdir _chdir
+#else
+#include <unistd.h>
+#endif
+
+
 #include <fstream>
+#include <ctime>
 #include <TROOT.h>
 #include <TFile.h>
 #include <TTree.h>
@@ -13,8 +23,11 @@
 #include <TH2D.h>
 #include <TH2F.h>
 #include <TH3D.h>
+#include <TChain.h>
+#include <RooDataProjBinding.h>
 
 #include "../resort/resort64c.h"
+#include "../JSONHandler/JSONReader.h"
 
 namespace Analysis {
     class SortRun {
