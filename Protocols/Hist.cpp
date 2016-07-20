@@ -1,4 +1,4 @@
-#include "OutputHist.h"
+#include "Hist.h"
 
 Analysis::OutputHist::OutputHist(const bool verbose, int size)
     : pRootFile(0), optionForVerbose(verbose) {

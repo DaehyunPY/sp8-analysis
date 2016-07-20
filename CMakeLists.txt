@@ -5,10 +5,10 @@ project(Analysis)
 set(ROOTSYS "$ENV{ROOTSYS}")
 if (ROOTSYS)
     message(STATUS "ROOTSYS is... ${ROOTSYS}")
-else()
+else ()
     message(SEND_ERROR "ROOTSYS is not defined")
-endif()
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+endif ()
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     include_directories("${ROOTSYS}/include")
     link_directories("${ROOTSYS}/lib")
     link_libraries(m dl)
@@ -28,7 +28,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
             MathCore
             Thread
     )
-elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     include_directories("${ROOTSYS}/include/root")
     link_directories("${ROOTSYS}/lib/root")
     link_libraries(m dl)
@@ -48,7 +48,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
             MathCore
             Thread
     )
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
     include_directories("${ROOTSYS}/include")
     link_directories("${ROOTSYS}/lib")
     link_libraries(
@@ -67,7 +67,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
             libMathCore.lib
             libThread.lib
     )
-endif()
+endif ()
 
 ### link resort
 link_directories("./resort")
@@ -84,27 +84,33 @@ add_subdirectory(JSONHandler)
 add_subdirectory(Protocols)
 
 ### compiler
-if((CMAKE_SYSTEM_NAME MATCHES "Linux") OR (CMAKE_SYSTEM_NAME MATCHES "Darwin"))
+if ((CMAKE_SYSTEM_NAME MATCHES "Linux")
+        OR (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+        )
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -m64")
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
     # add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif()
+endif ()
 
 ### AnalysisExe
 set(ANALYSISEXE_SOURCE_FILES
         AnalysisExe/Main.cpp
         AnalysisExe/AnalysisRun.cpp
         AnalysisExe/OutputFlag.cpp
-        AnalysisExe/OutputHist.cpp
         )
 add_executable(AnalysisExe ${ANALYSISEXE_SOURCE_FILES})
 target_link_libraries(AnalysisExe AnalysisCore JSONHandler Protocols)
 
 ### SortExe
-set(SORTEXE_SOURCE_FILES
-        SortExe/LMF_IO.cpp
-        SortExe/Main.cpp
-        SortExe/SortRun.cpp
+if ((CMAKE_SYSTEM_NAME MATCHES "Linux")
+#        OR (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+        OR (CMAKE_SYSTEM_NAME MATCHES "Windows")
         )
-add_executable(SortExe ${SORTEXE_SOURCE_FILES})
-target_link_libraries(SortExe JSONHandler Protocols)
+    set(SORTEXE_SOURCE_FILES
+            SortExe/LMF_IO.cpp
+            SortExe/Main.cpp
+            SortExe/SortRun.cpp
+            )
+    add_executable(SortExe ${SORTEXE_SOURCE_FILES})
+    target_link_libraries(SortExe JSONHandler Protocols)
+endif ()

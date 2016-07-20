@@ -8,5 +8,6 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 set(SOURCE_FILES
     Flag.cpp
+    Hist.cpp
     )
 add_library(Protocols STATIC ${SOURCE_FILES})

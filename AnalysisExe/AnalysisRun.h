@@ -72,12 +72,12 @@
 #include <TH2F.h>
 
 #include "OutputFlag.h"
+#include "../Protocols/Hist.h"
 #include "../AnalysisCore/Unit.h"
 #include "../AnalysisCore/AnalysisTools.h"
 #include "../AnalysisCore/Ions.h"
 #include "../AnalysisCore/Electrons.h"
 #include "../AnalysisCore/LogWriter.h"
-#include "OutputHist.h"
 
 namespace Analysis {
 	class AnalysisRun {
