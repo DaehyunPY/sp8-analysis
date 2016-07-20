@@ -50,7 +50,10 @@ Analysis::SortRun::SortRun(const std::string configFilename) : Hist(false, numHi
     }
     break;
   }
+
+  // Setup ROOT
   openRootFile(rootFilename.c_str(), "NEW");
+  createHists();
 
   // Setup ions and electrons
   maxNumOfIons = 0;
@@ -74,7 +77,7 @@ void Analysis::SortRun::processEvent(const int ionHitNum, const sort_class *pIon
     pElecDataSet[i].flag = pElecSorter->output_hit_array[i]->method;
   }
   eMaker = eMkr;
-  pRootTree->Fill();
+  fillHists();
 }
 
 void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
