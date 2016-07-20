@@ -105,7 +105,6 @@ set(SORTEXE_SOURCE_FILES
         SortExe/LMF_IO.cpp
         SortExe/Main.cpp
         SortExe/SortRun.cpp
-        SortExe/rootstuff.cpp
         )
 add_executable(SortExe ${SORTEXE_SOURCE_FILES})
 target_link_libraries(SortExe JSONHandler Protocols)

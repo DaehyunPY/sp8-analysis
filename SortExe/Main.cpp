@@ -8,7 +8,6 @@
 #pragma warning(disable : 4996)
 #endif
 
-
 #ifndef LINUX
 #ifndef WIN32
 #ifndef WIN64
@@ -17,21 +16,19 @@
 #endif
 #endif
 
-
-#include "rootstuff.h"
+#include <termios.h>
+#include <thread>
 
 #include "TSystem.h"
-
 #include "TApplication.h"
-
-#define NUM_IONS 200
-#define NUM_CHANNELS 80
 
 #include "../resort/resort64c.h"
 
 #include "LMF_IO.h"
 #include "SortRun.h"
 
+#define NUM_IONS 200
+#define NUM_CHANNELS 80
 
 sort_class *ion_sorter;
 TCanvas *ion_canvas;
@@ -46,24 +43,17 @@ double elec_w_offset;
 double elec_pos_offset_x, elec_pos_offset_y;
 int elec_command;
 
-
-rootstuff *rt;
 LMF_IO *LMF;
-
 
 #ifndef LINUX
 #include "conio.h"
-__int32 my_kbhit()
-{
+__int32 my_kbhit() {
     if (!_kbhit()) return 0;
     __int32 c = _getch();
     while (_kbhit()) c = _getch(); // empty keyboard buffer
     return c;
 }
 #else
-
-#include <termios.h>
-
 __int32 my_kbhit(void) {
     struct termios term, oterm;
     __int32 fd = 0;
@@ -79,9 +69,30 @@ __int32 my_kbhit(void) {
     if (c == -1) return 0;
     return c;
 }
-
 #endif
 
+enum StatusInfo {
+    keepRunning,
+    quitProgramSafely,
+    done
+};
+
+void inputManager(StatusInfo &info) {
+    std::string input;
+    if (info != keepRunning) { return; }
+    while (std::cin) {
+        std::cout << "Type something in:" << std::endl;
+        std::getline(std::cin, input);
+        if (input.empty()) {
+            continue;
+        }
+        std::cout << "You typed [" << input << "]" << std::endl;
+        if (input.compare("quit") == 0 && info == keepRunning) {
+            info = quitProgramSafely;
+        }
+    }
+    std::cout << "Our work here is done." << std::endl;
+}
 
 void readline_from_config_file(FILE *ffile, char *text, __int32 max_len) {
     int i = -1;
@@ -125,20 +136,17 @@ void readline_from_config_file(FILE *ffile, char *text, __int32 max_len) {
     return;
 }
 
-
 int read_int(FILE *ffile) {
     char a[1024];
     readline_from_config_file(ffile, a, 1024);
     return atoi(a);
 }
 
-
 double read_double(FILE *ffile) {
     char a[1024];
     readline_from_config_file(ffile, a, 1024);
     return double(atof(a));
 }
-
 
 bool read_config_file(char *name, sort_class *&sorter, int &command, double &offset_sum_u, double &offset_sum_v,
                       double &offset_sum_w, double &w_offset, double &pos_offset_x, double &pos_offset_y) {
@@ -225,7 +233,6 @@ bool read_config_file(char *name, sort_class *&sorter, int &command, double &off
     return true;
 }
 
-
 bool read_calibration_tables(char *filename, sort_class *sorter) {
     if (!filename) return false;
     if (!sorter) return false;
@@ -282,7 +289,6 @@ bool read_calibration_tables(char *filename, sort_class *sorter) {
     }
     return true;
 }
-
 
 bool create_calibration_tables(char *filename, sort_class *sorter) {
     if (!sorter) return false;
@@ -343,8 +349,7 @@ bool create_calibration_tables(char *filename, sort_class *sorter) {
     return true;
 }
 
-
-void clean_up(TFile *rootfile) {
+void clean_up1() {
     while (my_kbhit()); // empty keyboard buffer
 
     printf("deleting the ion sorter... ");
@@ -368,7 +373,6 @@ void clean_up(TFile *rootfile) {
     }
     printf("ok \n");
 
-
     if (ion_canvas) {
         for (int i = 1; i <= 9; i++) {
             ion_canvas->cd(i);
@@ -384,14 +388,9 @@ void clean_up(TFile *rootfile) {
             gPad->Update();
         }
     }
+}
 
-    printf("writing root file... ");
-    if (rootfile) rootfile->Write();
-    printf("ok\n");
-    printf("writing root file... ");
-    if (rootfile) rootfile->Close();
-    printf("ok\n");
-
+void clean_up2() {
     if (ion_canvas) {
         printf("closing ion canvas\n");
         ion_canvas->Close();
@@ -406,7 +405,6 @@ void clean_up(TFile *rootfile) {
     }
 }
 
-
 int main(int argc, char *argv[]) {
     // Inform status
     printf("syntax: SortExe filename\n");
@@ -420,11 +418,15 @@ int main(int argc, char *argv[]) {
         printf("too many arguments\n");
         return 0;
     }
+    std::cout << "The exe file which place at " << argv[0] << ", is running now. " << std::endl;
+    std::cout << "The configure file which place at " << argv[1] << ", is going to be read. " << std::endl;
+    std::cout << "To quit this program safely, input 'quit'. " << std::endl;
 
-    Analysis::SortRun *pRun;
-    pRun = new Analysis::SortRun(argv[1]);
+    // Make input thread
+    StatusInfo statusInfo = keepRunning;
+    std::thread threadForInput(inputManager, std::ref(statusInfo));
 
-    // start the Root-Environment---------------
+    // start the Root-Environment
     char *root_argv[3];
     char argv2[50], argv3[50];
     int root_argc = 2;
@@ -433,10 +435,11 @@ int main(int argc, char *argv[]) {
     root_argv[1] = argv2;
     root_argv[2] = argv3;
     TApplication theRootApp("theRootApp", &root_argc, root_argv);
-    //-----------------------------------------
 
+    // Setup Run
+    Analysis::SortRun *pRun;
+    pRun = new Analysis::SortRun(argv[1]);
     bool fill_histograms = true;
-    rt = new rootstuff();
 //    TFile *rootfile = rt->RecreateRootFile("output.root", "");
     TFile *rootfile = pRun->getRootFile();
 
@@ -568,72 +571,72 @@ int main(int argc, char *argv[]) {
     }
 
     if (ion_sorter && fill_histograms) {
-        ion_canvas = rt->newCanvas("ion_canvas", "ion_canvas", 10, 10, 910, 910);
+        ion_canvas = pRun->newCanvas("ion_canvas", "ion_canvas", 10, 10, 910, 910);
         ion_canvas->Divide(3, 3);
         ion_canvas->cd(1);
-        Hion_sum_u = rt->newTH1D("ion_sum_u", "", 500 * 10, -250, 250.);
+        Hion_sum_u = pRun->newTH1D("ion_sum_u", "", 500 * 10, -250, 250.);
         Hion_sum_u->Draw();
         ion_canvas->cd(2);
-        Hion_sum_v = rt->newTH1D("ion_sum_v", "", 500 * 10, -250, 250.);
+        Hion_sum_v = pRun->newTH1D("ion_sum_v", "", 500 * 10, -250, 250.);
         Hion_sum_v->Draw();
         ion_canvas->cd(3);
-        Hion_sum_w = rt->newTH1D("ion_sum_w", "", 500 * 10, -250, 250.);
+        Hion_sum_w = pRun->newTH1D("ion_sum_w", "", 500 * 10, -250, 250.);
         Hion_sum_w->Draw();
         ion_canvas->cd(4);
-        Hion_u = rt->newTH1D("ion_u", "", 500 * 2, -250, 250.);
+        Hion_u = pRun->newTH1D("ion_u", "", 500 * 2, -250, 250.);
         Hion_u->Draw();
         ion_canvas->cd(5);
-        Hion_v = rt->newTH1D("ion_v", "", 500 * 2, -250, 250.);
+        Hion_v = pRun->newTH1D("ion_v", "", 500 * 2, -250, 250.);
         Hion_v->Draw();
         ion_canvas->cd(6);
-        Hion_w = rt->newTH1D("ion_w", "", 500 * 2, -250, 250.);
+        Hion_w = pRun->newTH1D("ion_w", "", 500 * 2, -250, 250.);
         Hion_w->Draw();
         ion_canvas->cd(7);
-        Hion_xy_raw = rt->newTH2D("ion_xy_raw", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
+        Hion_xy_raw = pRun->newTH2D("ion_xy_raw", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
         Hion_xy_raw->Draw();
         ion_canvas->cd(8);
-        Hion_xy = rt->newTH2D("ion_xy", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
+        Hion_xy = pRun->newTH2D("ion_xy", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
         Hion_xy->Draw();
         int s = 100;
         ion_canvas->cd(9);
-        Hion_xy_dev = rt->newTH2D("ion_xy_dev", "", s * 2, -double(s), double(s), 2 * s, -double(s), double(s), "COLZ");
+        Hion_xy_dev = pRun->newTH2D("ion_xy_dev", "", s * 2, -double(s), double(s), 2 * s, -double(s), double(s),
+                                    "COLZ");
         Hion_xy_dev->Draw();
     }
 
     if (elec_sorter && fill_histograms) {
-        elec_canvas = rt->newCanvas("elec_canvas", "elec_canvas", 10, 10, 910, 910);
+        elec_canvas = pRun->newCanvas("elec_canvas", "elec_canvas", 10, 10, 910, 910);
         elec_canvas->Divide(3, 3);
         elec_canvas->cd(1);
-        Helec_sum_u = rt->newTH1D("elec_sum_u", "", 500 * 10, -250, 250.);
+        Helec_sum_u = pRun->newTH1D("elec_sum_u", "", 500 * 10, -250, 250.);
         Helec_sum_u->Draw();
         elec_canvas->cd(2);
-        Helec_sum_v = rt->newTH1D("elec_sum_v", "", 500 * 10, -250, 250.);
+        Helec_sum_v = pRun->newTH1D("elec_sum_v", "", 500 * 10, -250, 250.);
         Helec_sum_v->Draw();
         elec_canvas->cd(3);
-        Helec_sum_w = rt->newTH1D("elec_sum_w", "", 500 * 10, -250, 250.);
+        Helec_sum_w = pRun->newTH1D("elec_sum_w", "", 500 * 10, -250, 250.);
         Helec_sum_w->Draw();
         elec_canvas->cd(4);
-        Helec_u = rt->newTH1D("elec_u", "", 500 * 2, -250, 250.);
+        Helec_u = pRun->newTH1D("elec_u", "", 500 * 2, -250, 250.);
         Helec_u->Draw();
         elec_canvas->cd(5);
-        Helec_v = rt->newTH1D("elec_v", "", 500 * 2, -250, 250.);
+        Helec_v = pRun->newTH1D("elec_v", "", 500 * 2, -250, 250.);
         Helec_v->Draw();
         elec_canvas->cd(6);
-        Helec_w = rt->newTH1D("elec_w", "", 500 * 2, -250, 250.);
+        Helec_w = pRun->newTH1D("elec_w", "", 500 * 2, -250, 250.);
         Helec_w->Draw();
         elec_canvas->cd(7);
-        Helec_xy_raw = rt->newTH2D("elec_xy_raw", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
+        Helec_xy_raw = pRun->newTH2D("elec_xy_raw", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
         Helec_xy_raw->Draw();
         elec_canvas->cd(8);
-        Helec_xy = rt->newTH2D("elec_xy", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
+        Helec_xy = pRun->newTH2D("elec_xy", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
         Helec_xy->Draw();
         int s = 100;
         elec_canvas->cd(9);
-        Helec_xy_dev = rt->newTH2D("elec_xy_dev", "", s * 2, -double(s), double(s), 2 * s, -double(s), double(s),
-                                   "COLZ");
+        Helec_xy_dev = pRun->newTH2D("elec_xy_dev", "", s * 2, -double(s), double(s), 2 * s, -double(s), double(s),
+                                     "COLZ");
         Helec_xy_dev->Draw();
     }
-
 
     gSystem->ProcessEvents(); // allow the system to show the histograms
 
@@ -645,12 +648,13 @@ int main(int argc, char *argv[]) {
     // open the data input file:
     sprintf(LMF_InputFilename, "%s", pRun->getLMFFilename());
 
-
+    // Check LMF file
     if (!LMF->OpenInputLMF(LMF_InputFilename)) {
         printf("could not open input file.\n");
-        clean_up(rootfile);
         printf("terminating root app.\n");
-        if (rt) delete rt;
+        clean_up1();
+        if (pRun) delete pRun;
+        clean_up2()
         theRootApp.Terminate();
         return false;
     }
@@ -708,10 +712,13 @@ int main(int argc, char *argv[]) {
     printf("reading event data... ");
     while (true) {
         if (LMF->GetEventNumber() % 20000 == 1) {
-            if (my_kbhit()) break;
+            if (my_kbhit()) {
+                break;
+            }
             gSystem->ProcessEvents(); // allow the system to show the histograms
             printf("\rreading event data... %2i %c  ",
-                   __int32(100 * LMF->GetEventNumber() / LMF->uint64_Numberofevents), 37);
+                   __int32(100 * LMF->GetEventNumber() / LMF->uint64_Numberofevents),
+                   37);
             if (LMF->GetEventNumber() % 60000 == 1) {
                 if (ion_canvas) {
                     for (__int32 i = 0; i <= 9; i++) {
@@ -719,7 +726,6 @@ int main(int argc, char *argv[]) {
                         ion_canvas->cd(i)->Update();
                     }
                 }
-
                 if (elec_canvas) {
                     for (__int32 i = 0; i <= 9; i++) {
                         //elec_canvas->cd(i)->Modified(true);
@@ -727,6 +733,10 @@ int main(int argc, char *argv[]) {
                     }
                 }
             }
+        }
+        // Check input
+        if (statusInfo == quitProgramSafely) {
+            break;
         }
 
         // read one new event data block from the file:
@@ -1079,11 +1089,17 @@ int main(int argc, char *argv[]) {
         if (my_kbhit()) break;
     }
 
-    clean_up(rootfile);
-    delete pRun;
+    // Finish the program
+    statusInfo = done;
+    threadForInput.detach();
+    threadForInput.~thread();
+
     printf("terminating the root app.\n");
-    if (rt) delete rt;
+    clean_up1();
+    if (pRun) delete pRun;
+    clean_up2();
     theRootApp.Terminate();
 
+    std::cout << "The program is done. " << std::endl;
     return 0;
 }
