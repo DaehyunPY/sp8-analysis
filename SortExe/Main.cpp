@@ -663,6 +663,7 @@ int main(int argc, char *argv[]) {
     if (!LMF->ReadNextEvent()) break;
 
     LMF->GetNumberOfHitsArray(count);
+//    double timestamp_s = LMF->GetDoubleTimeStamp(); // absolute timestamp in seconds
     LMF->GetTDCDataArray((int *) TDC);
 
     // convert the raw TDC data to nanoseconds:
@@ -858,15 +859,14 @@ int main(int argc, char *argv[]) {
           Helec_xy->Fill(elec_sorter->output_hit_array[i]->x, elec_sorter->output_hit_array[i]->y);
       }
     }
+    const int eMarkerCh = 16;
     double eMarker = 0;
-    if (ion_sorter && elec_sorter) {
-      if (ion_sorter->use_MCP && elec_sorter->use_MCP) {
-        double iMCP = 0;
-        double eMCP = 0;
-        if (count[ion_sorter->Cmcp] > 0) iMCP = tdc_ns[ion_sorter->Cmcp][0]; else iMCP = -1.e100;
-        if (count[elec_sorter->Cmcp] > 0) eMCP = tdc_ns[elec_sorter->Cmcp][0]; else eMCP = -1.e100;
-        eMarker = eMCP - iMCP;
+    if (elec_sorter) {
+      double mcp = 0.;
+      if (elec_sorter->use_MCP) {
+        if (count[elec_sorter->Cmcp] > 0) mcp = tdc_ns[elec_sorter->Cmcp][0]; else mcp = -1.e100;
       }
+      eMarker = mcp - TDC[eMarkerCh][0]*tdcresolution;
     }
     pRun->processEvent(number_of_ions, ion_sorter, number_of_electrons, elec_sorter, eMarker);
 

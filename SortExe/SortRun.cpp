@@ -60,8 +60,11 @@ Analysis::SortRun::SortRun(const std::string configFilename) : Hist(false, numHi
   maxNumOfElecs = 0;
 }
 
-void Analysis::SortRun::processEvent(const int ionHitNum, const sort_class *pIonSorter, const int elecHitNum,
-                                     const sort_class *pElecSorter, const double eMkr) {
+void Analysis::SortRun::processEvent(const int ionHitNum,
+                                     const sort_class *pIonSorter,
+                                     const int elecHitNum,
+                                     const sort_class *pElecSorter,
+                                     const double eMkr) {
   numOfIons = ionHitNum < maxNumOfIons ? ionHitNum : maxNumOfIons;
   for (int i = 0; i < numOfIons; i++) {
     pIonDataSet[i].x = pIonSorter->output_hit_array[i]->x;
@@ -150,7 +153,7 @@ TH2D *Analysis::SortRun::newTH2D(char *name, char *comment, int xbins, double xm
   return hist;
 }
 void Analysis::SortRun::createHists() {
-  create1d(h1_eMarker, TO_TEXT(h1_eMarker), "TOF [ns]", 2000, -5000, 1000);
+  create1d(h1_eMarker, TO_TEXT(h1_eMarker), "Time [ns]", 2000, -5000, 1000);
 }
 void Analysis::SortRun::fillHists() {
   fill1d(h1_eMarker, eMarker);

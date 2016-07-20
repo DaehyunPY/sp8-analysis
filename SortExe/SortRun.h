@@ -41,17 +41,18 @@ class SortRun: Hist {
   std::string ionCalibTableFilename = "";
   std::string elecCalibTableFilename = "";
   TTree *pRootTree;
-  int maxNumOfIons;
-  int maxNumOfElecs;
-  int numOfIons, numOfElecs;
-  double eMarker;
+
+ private:
+  bool isFileExist(const char *fileName);
+
+ private:
+  const int numCh = 16;
+  int maxNumOfIons, numOfIons, maxNumOfElecs, numOfElecs;
+  double eMarker, TDC1stHit[numCh];
   struct DataSet {
     double x, y, t;
     int flag;
   } *pIonDataSet, *pElecDataSet;
-  bool isFileExist(const char *fileName);
-
- private:
   enum HistList {
     h1_eMarker,
     numHists
@@ -63,8 +64,11 @@ class SortRun: Hist {
   SortRun(const std::string configFilename);
   ~SortRun();
   void branchRootTree(const int ionNum, const int elecNum);
-  void processEvent(const int ionHitNum, const sort_class *pIonSorter, const int elecHitNum,
-                    const sort_class *pElecSorter, const double eMkr);
+  void processEvent(const int ionHitNum,
+                    const sort_class *pIonSorter,
+                    const int elecHitNum,
+                    const sort_class *pElecSorter,
+                    const double eMkr);
   char *getLMFFilename() const;
   char *getIonSorterFilename() const;
   char *getElecSorterFilename() const;
