@@ -1,21 +1,20 @@
 #include "Hist.h"
 
-Analysis::OutputHist::OutputHist(const bool verbose, int size)
-    : pRootFile(0), optionForVerbose(verbose) {
+Analysis::Hist::Hist(const bool verbose, int size)
+    : pRootFile(nullptr), optionForVerbose(verbose) {
   arraySize = size;
   ppHistArray = new TObject *[arraySize];
-  for (int i = 0; i < arraySize; ++i)
+  for (int i = 0; i < arraySize; ++i) {
     ppHistArray[i] = 0;
+  }
 }
-Analysis::OutputHist::~OutputHist() {
-  //--delete all histos--//
+Analysis::Hist::~Hist() {
   delete[] ppHistArray;
-
-  //--Close root file--//
-  if (pRootFile)
+  if (pRootFile) {
     pRootFile->Close();
+  }
 }
-void Analysis::OutputHist::openRootFile(const TString &name) {
+void Analysis::Hist::openRootFile(const TString &name) {
   pRootFile = TFile::Open(name.Data(), "RECREATE");
   if (!pRootFile) {
     std::cout << " could not be opened, please delete the file!" << std::endl;
@@ -24,7 +23,7 @@ void Analysis::OutputHist::openRootFile(const TString &name) {
   if (optionForVerbose)
     std::cout << "Histograms will be written to: " << name << std::endl;
 }
-void Analysis::OutputHist::resetAll() {
+void Analysis::Hist::resetAll() {
   if (optionForVerbose) std::cout << "reset all histos" << std::endl;
   //--write histos to directory--//
   pRootFile->cd();
@@ -43,7 +42,7 @@ void Analysis::OutputHist::resetAll() {
     }
   }
 }
-void Analysis::OutputHist::flushRootFile() {
+void Analysis::Hist::flushRootFile() {
   if (optionForVerbose) std::cout << "flushing root file" << std::endl;
   //--write histos to directory--//
   pRootFile->cd();
@@ -110,29 +109,29 @@ TDirectory *getDir(TFile *rootfile, TString dirName) {
   rootfile->cd("/");
   return direc;
 }
-void Analysis::OutputHist::fill3d(const int id,
-                                  const double fillX,
-                                  const double fillY,
-                                  const double fillZ,
-                                  const double weight) {
+void Analysis::Hist::fill3d(const int id,
+                            const double fillX,
+                            const double fillY,
+                            const double fillZ,
+                            const double weight) {
   dynamic_cast<TH3D *>(ppHistArray[id])->Fill(fillX, fillY, fillZ, weight);
 }
-TH1 *Analysis::OutputHist::create3d(int id,
-                                    const char *name,
-                                    const char *titleX,
-                                    const char *titleY,
-                                    const char *titleZ,
-                                    int nXbins,
-                                    double xLow,
-                                    double xUp,
-                                    int nYbins,
-                                    double yLow,
-                                    double yUp,
-                                    int nZbins,
-                                    double zLow,
-                                    double zUp,
-                                    const char *dir,
-                                    bool alreadylocked) {
+TH1 *Analysis::Hist::create3d(int id,
+                              const char *name,
+                              const char *titleX,
+                              const char *titleY,
+                              const char *titleZ,
+                              int nXbins,
+                              double xLow,
+                              double xUp,
+                              int nYbins,
+                              double yLow,
+                              double yUp,
+                              int nZbins,
+                              double zLow,
+                              double zUp,
+                              const char *dir,
+                              bool alreadylocked) {
   //check if hist already exists, if so return it//
   pHist3 = dynamic_cast<TH3D *>(ppHistArray[id]);
   if (pHist3) return pHist3;
@@ -178,25 +177,25 @@ TH1 *Analysis::OutputHist::create3d(int id,
   return pHist3;
 }
 
-void Analysis::OutputHist::fill(int id,
-                                const char *name,
-                                double fillX,
-                                double fillY,
-                                double fillZ,
-                                const char *titleX,
-                                const char *titleY,
-                                const char *titleZ,
-                                int nXbins,
-                                double xLow,
-                                double xUp,
-                                int nYbins,
-                                double yLow,
-                                double yUp,
-                                int nZbins,
-                                double zLow,
-                                double zUp,
-                                const char *dir,
-                                double weight) {
+void Analysis::Hist::fill(int id,
+                          const char *name,
+                          double fillX,
+                          double fillY,
+                          double fillZ,
+                          const char *titleX,
+                          const char *titleY,
+                          const char *titleZ,
+                          int nXbins,
+                          double xLow,
+                          double xUp,
+                          int nYbins,
+                          double yLow,
+                          double yUp,
+                          int nZbins,
+                          double zLow,
+                          double zUp,
+                          const char *dir,
+                          double weight) {
   pHist3 = dynamic_cast<TH3D *>(ppHistArray[id]);
 
   //--if the histo does not exist create it first--//
@@ -231,20 +230,20 @@ void Analysis::OutputHist::fill(int id,
   pHist3->Fill(fillX, fillY, fillZ, weight);
 
 }
-void Analysis::OutputHist::fill2d(const int id,
-                                  const double fillX,
-                                  const double fillY,
-                                  const double weight) {
+void Analysis::Hist::fill2d(const int id,
+                            const double fillX,
+                            const double fillY,
+                            const double weight) {
   dynamic_cast<TH2D *>(ppHistArray[id])->Fill(fillX, fillY, weight);
 }
-void Analysis::OutputHist::plot2d(int id, int binX, int binY, double content) {
+void Analysis::Hist::plot2d(int id, int binX, int binY, double content) {
   dynamic_cast<TH2D *>(ppHistArray[id])->SetBinContent(binX, binY, content);
 }
-TH1 *Analysis::OutputHist::create2d(int id, const char *name,
-                                    const char *titleX, const char *titleY,
-                                    int nXbins, double xLow, double xUp,
-                                    int nYbins, double yLow, double yUp,
-                                    const char *dir, bool alreadylocked) {
+TH1 *Analysis::Hist::create2d(int id, const char *name,
+                              const char *titleX, const char *titleY,
+                              int nXbins, double xLow, double xUp,
+                              int nYbins, double yLow, double yUp,
+                              const char *dir, bool alreadylocked) {
   //check if hist already exists, if so return it//
   pHist2 = dynamic_cast<TH2D *>(ppHistArray[id]);
   if (pHist2) return pHist2;
@@ -276,20 +275,20 @@ TH1 *Analysis::OutputHist::create2d(int id, const char *name,
     std::cout << "create 2D: " << dir << "/" << pHist2->GetName() << std::endl;
   return pHist2;
 }
-void Analysis::OutputHist::fill(int id,
-                                const char *name,
-                                double fillX,
-                                double fillY,
-                                const char *titleX,
-                                const char *titleY,
-                                int nXbins,
-                                double xLow,
-                                double xUp,
-                                int nYbins,
-                                double yLow,
-                                double yUp,
-                                const char *dir,
-                                double weight) {
+void Analysis::Hist::fill(int id,
+                          const char *name,
+                          double fillX,
+                          double fillY,
+                          const char *titleX,
+                          const char *titleY,
+                          int nXbins,
+                          double xLow,
+                          double xUp,
+                          int nYbins,
+                          double yLow,
+                          double yUp,
+                          const char *dir,
+                          double weight) {
   pHist2 = dynamic_cast<TH2D *>(ppHistArray[id]);
 
 
@@ -320,25 +319,25 @@ void Analysis::OutputHist::fill(int id,
   //--now fill it--//
   pHist2->Fill(fillX, fillY, weight);
 }
-void Analysis::OutputHist::fill1d(const int id,
-                                  const double fillX,
-                                  const double weight) {
+void Analysis::Hist::fill1d(const int id,
+                            const double fillX,
+                            const double weight) {
   dynamic_cast<TH1D *>(ppHistArray[id])->Fill(fillX, weight);
 }
-void Analysis::OutputHist::fill1d(const int id,
-                                  const double *pX,
-                                  const double weight) {
-  if(pX != nullptr) {
+void Analysis::Hist::fill1d(const int id,
+                            const double *pX,
+                            const double weight) {
+  if (pX != nullptr) {
     fill1d(id, *pX, weight);
   }
 }
-void Analysis::OutputHist::plot1d(int id, int binX, double content) {
+void Analysis::Hist::plot1d(int id, int binX, double content) {
   dynamic_cast<TH1D *>(ppHistArray[id])->SetBinContent(binX, content);
 }
-TH1 *Analysis::OutputHist::create1d(int id, const char *name,
-                                    const char *titleX,
-                                    int nXbins, double xLow, double xUp,
-                                    const char *dir, bool alreadylocked) {
+TH1 *Analysis::Hist::create1d(int id, const char *name,
+                              const char *titleX,
+                              int nXbins, double xLow, double xUp,
+                              const char *dir, bool alreadylocked) {
   //check if hist already exists, if so return it//
   pHist1 = dynamic_cast<TH1D *>(ppHistArray[id]);
   if (pHist1) return pHist1;
@@ -366,15 +365,15 @@ TH1 *Analysis::OutputHist::create1d(int id, const char *name,
     std::cout << "create 1D: " << dir << "/" << pHist1->GetName() << std::endl;
   return pHist1;
 }
-void Analysis::OutputHist::fill(int id,
-                                const char *name,
-                                double fillX,
-                                const char *titleX,
-                                int nXbins,
-                                double xLow,
-                                double xUp,
-                                const char *dir,
-                                double weight) {
+void Analysis::Hist::fill(int id,
+                          const char *name,
+                          double fillX,
+                          const char *titleX,
+                          int nXbins,
+                          double xLow,
+                          double xUp,
+                          const char *dir,
+                          double weight) {
   pHist1 = dynamic_cast<TH1D *>(ppHistArray[id]);
 
   //--if the histo does not exist create it first--//
@@ -400,45 +399,45 @@ void Analysis::OutputHist::fill(int id,
   //--now fill it--//
   pHist1->Fill(fillX, weight);
 }
-void Analysis::OutputHist::linkRootFile(TFile &RootFile) {
+void Analysis::Hist::linkRootFile(TFile &RootFile) {
   pRootFile = &RootFile;
 }
-void Analysis::OutputHist::plot3d(int id,
-                                  int binX,
-                                  int binY,
-                                  int binZ,
-                                  double content) {
+void Analysis::Hist::plot3d(int id,
+                            int binX,
+                            int binY,
+                            int binZ,
+                            double content) {
   dynamic_cast<TH3D *>(ppHistArray[id])->SetBinContent(binX,
                                                        binY,
                                                        binZ,
                                                        content);
 }
-const bool Analysis::OutputHist::isVerbose() const {
+const bool Analysis::Hist::isVerbose() const {
   return optionForVerbose;
 }
-TH3 *Analysis::OutputHist::getHist3d(int id) const {
+TH3 *Analysis::Hist::getHist3d(int id) const {
   return dynamic_cast<TH3 *>(ppHistArray[id]);
 }
-TH2 *Analysis::OutputHist::getHist2d(int id) const {
+TH2 *Analysis::Hist::getHist2d(int id) const {
   return dynamic_cast<TH2 *>(ppHistArray[id]);
 }
-TH1 *Analysis::OutputHist::getHist1d(int id) const {
+TH1 *Analysis::Hist::getHist1d(int id) const {
   return dynamic_cast<TH1 *>(ppHistArray[id]);
 }
-void Analysis::OutputHist::fill2d(const int id,
-                                  const double *pX,
-                                  const double *pY,
-                                  const double weight) {
-  if(pX != nullptr && pY != nullptr) {
+void Analysis::Hist::fill2d(const int id,
+                            const double *pX,
+                            const double *pY,
+                            const double weight) {
+  if (pX != nullptr && pY != nullptr) {
     fill2d(id, *pX, *pY, weight);
   }
 }
-void Analysis::OutputHist::fill3d(const int id,
-                                  const double *pX,
-                                  const double *pY,
-                                  const double *pZ,
-                                  const double weight) {
-  if(pX != nullptr && pY != nullptr && pZ != nullptr) {
+void Analysis::Hist::fill3d(const int id,
+                            const double *pX,
+                            const double *pY,
+                            const double *pZ,
+                            const double weight) {
+  if (pX != nullptr && pY != nullptr && pZ != nullptr) {
     fill3d(id, *pX, *pY, *pZ, weight);
   }
 }

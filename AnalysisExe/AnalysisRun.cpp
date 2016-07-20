@@ -96,7 +96,7 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) {
   rootFilename += pLogWriter->getID();
   rootFilename += ".root";
   pRootFile = new TFile(rootFilename.c_str(), "update");
-  pHist = new OutputHist(false, numberOfHists);
+  pHist = new Hist(false, numberOfHists);
   pHist->linkRootFile(*pRootFile);
   createIonHists();
   createElecHists();
@@ -109,8 +109,7 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) {
 
 Analysis::AnalysisRun::~AnalysisRun() {
   // counter
-  pLogWriter->write() << "Event count: " << pTools->getEventNumber()
-      << std::endl;
+  pLogWriter->write() << "Event count: " << pTools->getEventNumber() << std::endl;
 
   // root
   flushHist();

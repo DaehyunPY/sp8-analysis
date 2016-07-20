@@ -11,8 +11,10 @@
 #include <TH3.h>
 #include <TGraph.h>
 
+#define TO_TEXT(X) #X
+
 namespace Analysis {
-class OutputHist {
+class Hist {
  private:
   TH1D *pHist1; // pointer to a 1d Histogram
   TH2D *pHist2; // pointer to a 2d Histogram
@@ -23,15 +25,15 @@ class OutputHist {
   const bool optionForVerbose; // a flag that tells wether this should do output
 
  public:
-  OutputHist(const bool v, int NbrMaxHistos = 100000);
-  ~OutputHist();
+  Hist(const bool verbose = false, int NbrMaxHistos = 100000);
+  virtual ~Hist();
 
+ public:
   void flushRootFile();
   void resetAll();
   void openRootFile(const TString &RootFileName);
   void linkRootFile(TFile &RootFile);
   const bool isVerbose() const;
-
   void fill(int id, const char *name,
             double fillX, double fillY, double fillZ,
             const char *titleX, const char *titleY, const char *titleZ,
@@ -55,7 +57,6 @@ class OutputHist {
               const double weight = 1); // fill fast 3d histos
   void plot3d(int id, int binX, int binY, int binZ, double content);
   TH3 *getHist3d(int id) const;
-
   void fill(int id, const char *name,
             double fillX, double fillY,
             const char *titleX, const char *titleY,
@@ -77,7 +78,6 @@ class OutputHist {
               const double weight = 1); // fill fast 2d histos
   void plot2d(int id, int binX, int binY, double content); // set bin contents
   TH2 *getHist2d(int id) const;
-
   void fill(int id, const char *name,
             double fillX,
             const char *titleX,
