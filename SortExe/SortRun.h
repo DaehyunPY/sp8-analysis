@@ -70,11 +70,7 @@ namespace Analysis {
 
         char *getElecCalibTableFilename() const;
 
-        TFile *getRootFile();
-
     public:
-        TFile *RecreateRootFile(char *name, char *comment);
-
         TCanvas *newCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy);
 
         void SetGreyScale(int number_of_contours);

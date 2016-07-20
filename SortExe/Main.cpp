@@ -409,8 +409,6 @@ int main(int argc, char *argv[]) {
     Analysis::SortRun *pRun;
     pRun = new Analysis::SortRun(argv[1]);
     bool fill_histograms = true;
-//    TFile *rootfile = rt->RecreateRootFile("output.root", "");
-    TFile *rootfile = pRun->getRootFile();
 
     ion_canvas = 0;
     elec_canvas = 0;

@@ -84,7 +84,6 @@ void Analysis::SortRun::processEvent(const sort_class &ionSort, const sort_class
 
 void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
     std::string str;
-
     // Ion setup
     str = "Ion";
     numberOfIons = ionNum;
@@ -97,7 +96,6 @@ void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
         pRootTree->Branch((str + "T" + ch).c_str(), &pIonDataSet[i].t, (str + "T" + ch + "/D").c_str());
         pRootTree->Branch((str + "Flag" + ch).c_str(), &pIonDataSet[i].flag, (str + "Flag" + ch + "/I").c_str());
     }
-
     // Electron setup
     str = "Elec";
     numberOfElectrons = elecNum;
@@ -130,15 +128,6 @@ char *Analysis::SortRun::getElecCalibTableFilename() const {
 
 char *Analysis::SortRun::getLMFFilename() const {
     return (char *) LMFFilename.c_str();
-}
-
-TFile *Analysis::SortRun::getRootFile() {
-    return pRootFile;
-}
-
-TFile *Analysis::SortRun::RecreateRootFile(char *name, char *comment) {
-    TFile *m_RootFile = new TFile(name, "RECREATE", comment);
-    return m_RootFile;
 }
 
 TCanvas *Analysis::SortRun::newCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy) {
