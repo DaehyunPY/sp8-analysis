@@ -176,7 +176,6 @@ void Analysis::SortRun::color(int color_palette_id, int number_of_contours) {
         if (color->GetNumber() > highestIndex) {
             coltab->Remove(color);
             delete color;
-            color = 0;
         }
     }
 

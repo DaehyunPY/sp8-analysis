@@ -1,4 +1,3 @@
-
 #include "LMF_IO.h"
 
 #ifndef LINUX

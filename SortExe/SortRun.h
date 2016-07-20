@@ -9,7 +9,6 @@
 #include <unistd.h>
 #endif
 
-
 #include <fstream>
 #include <ctime>
 #include <TROOT.h>
@@ -25,7 +24,6 @@
 #include <TH3D.h>
 #include <TChain.h>
 #include <RooDataProjBinding.h>
-
 #include "../resort/resort64c.h"
 #include "../JSONHandler/JSONReader.h"
 

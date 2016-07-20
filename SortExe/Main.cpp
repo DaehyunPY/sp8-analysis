@@ -70,7 +70,7 @@ __int32 my_kbhit(void) {
 #endif
 
 void readline_from_config_file(FILE *ffile, char *text, __int32 max_len) {
-    int i = -1;
+    int i;
     text[0] = 0;
 
     while (true) {
@@ -105,10 +105,10 @@ void readline_from_config_file(FILE *ffile, char *text, __int32 max_len) {
                 text[i + 1] = 0;
             }
         }
-        if (real_numbers_found) break;
+		if (real_numbers_found) {
+			break;
+		}
     }
-
-    return;
 }
 
 int read_int(FILE *ffile) {
@@ -214,7 +214,7 @@ bool read_calibration_tables(char *filename, sort_class *sorter) {
 
     FILE *infile_handle = fopen(filename, "rt");
     if (!infile_handle) return false;
-    int points = 0;
+    int points;
 
     points = read_int(infile_handle);
     for (int j = 0; j < points; ++j) {
@@ -260,7 +260,6 @@ bool read_calibration_tables(char *filename, sort_class *sorter) {
 
     if (infile_handle) {
         fclose(infile_handle);
-        infile_handle = 0;
     }
     return true;
 }
@@ -320,12 +319,12 @@ bool create_calibration_tables(char *filename, sort_class *sorter) {
         }
     }
     fclose(fo);
-    fo = 0;
     return true;
 }
 
 void clean_up1() {
-    while (my_kbhit()); // empty keyboard buffer
+    while (my_kbhit()) {
+    } // empty keyboard buffer
 
     printf("deleting the ion sorter... ");
     if (ion_sorter) {
@@ -395,7 +394,7 @@ int main(int argc, char *argv[]) {
     }
     std::cout << "The exe file which place at " << argv[0] << ", is running now. " << std::endl;
     std::cout << "The configure file which place at " << argv[1] << ", is going to be read. " << std::endl;
-    std::cout << "To quit this program safely, input 'quit'. " << std::endl;
+    std::cout << "To quit this program safely, hit anykey. " << std::endl;
 
     // start the Root-Environment
     char *root_argv[3];
@@ -441,14 +440,14 @@ int main(int argc, char *argv[]) {
     int TDC[NUM_CHANNELS][NUM_IONS];
     double tdc_ns[NUM_CHANNELS][NUM_IONS];
     unsigned int count[NUM_CHANNELS];
-    ion_command = elec_command = -1;
+	ion_command = -1; 
+	elec_command = -1;
 
     // The "command"-value is set in the first line of "elec_sorter.txt" and "ion_sorter.txt"
     // 0 = only convert to new file format
     // 1 = sort and write new file
     // 2 = calibrate fv, fw, w_offset
     // 3 = create calibration table files
-
 
     // create the sorter:
     printf("creating the ion sorter... ");
@@ -611,10 +610,6 @@ int main(int argc, char *argv[]) {
 
     // open input and output data files:
     char LMF_InputFilename[500];
-    char OutputFilename[500];
-
-
-    // open the data input file:
     sprintf(LMF_InputFilename, "%s", pRun->getLMFFilename());
 
     // Check LMF file
@@ -627,33 +622,10 @@ int main(int argc, char *argv[]) {
         theRootApp.Terminate();
         return false;
     }
-
     printf("data file is open for reading\n");
-
-    FILE *outfile = 0;
-    sprintf(OutputFilename, "%s.sorted", LMF_InputFilename);
-    if (ion_command == 0 || ion_command == 1 || elec_command == 0 || elec_command == 1) {
-        outfile = fopen(OutputFilename, "wb");
-        if (!outfile) {
-            printf("could not open output file.\n");
-            outfile = 0;
-            return false;
-        }
-        if (ferror(outfile)) {
-            printf("could not open output file.\n");
-            outfile = 0;
-            return false;
-        }
+	// empty keyboard buffer
+    while (my_kbhit()) {
     }
-
-    if (outfile) printf("new data file is open for writing\n");
-
-    // now start to read the input file:
-    LMF->number_of_channels = LMF->number_of_channels;
-    if (outfile) fwrite(&LMF->number_of_channels, sizeof(unsigned int), 1, outfile);
-
-    while (my_kbhit()); // empty keyboard buffer
-
 
     // Branch root file
     pRun->branchRootTree(4, 4);
@@ -691,7 +663,6 @@ int main(int argc, char *argv[]) {
         if (!LMF->ReadNextEvent()) break;
 
         LMF->GetNumberOfHitsArray(count);
-        double timestamp_s = LMF->GetDoubleTimeStamp(); // absolute timestamp in seconds
         LMF->GetTDCDataArray((int *) TDC);
 
         // convert the raw TDC data to nanoseconds:
@@ -895,7 +866,7 @@ int main(int argc, char *argv[]) {
         // Process a event
         pRun->processEvent(number_of_ions, ion_sorter, number_of_electrons, elec_sorter);
 
-        if (outfile) { // write to output file:
+        if (false) { // write to output file:
             if (ion_sorter) {
                 // the following steps are necessary to make the new output look as the old one
                 // (in respect to time offsets)
@@ -957,22 +928,15 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            for (unsigned int i = 0; i < LMF->number_of_channels; i++) {
-                fwrite(&count[i], sizeof(int), 1, outfile);
-                for (unsigned int j = 0; j < count[i]; j++) fwrite(&TDC[i][j], sizeof(int), 1, outfile);
-            }
+//			// output TDC data
+//			FILE *outfile;
+//            for (unsigned int i = 0; i < LMF->number_of_channels; i++) {
+//                fwrite(&count[i], sizeof(int), 1, outfile);
+//                for (unsigned int j = 0; j < count[i]; j++) fwrite(&TDC[i][j], sizeof(int), 1, outfile);
+//            }
         }
 
     } // end of the big while loop
-
-    printf("ok\n");
-
-    printf("closing output file... ");
-    // close the input and output file:
-    if (outfile) {
-        fclose(outfile);
-        outfile = 0;
-    }
     printf("ok\n");
 
     if (ion_command == 2) {
