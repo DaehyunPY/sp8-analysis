@@ -82,9 +82,8 @@
 #define H3_ELECTRON_ENERGY 25, 0, 50
 
 namespace Analysis {
-class AnalysisRun {
+class AnalysisRun: Hist {
   int numberOfHits;
-  TFile *pRootFile;
   TChain *pEventChain;
   TChain *pAnalyzedChain;
   Analysis::Unit *pUnit;
@@ -272,7 +271,6 @@ class AnalysisRun {
   void fillNatureHists();
 
   const int numberOfHists = numberOfNatureHists;
-  void flushHist();
 };
 }
 

@@ -8,12 +8,7 @@ bool Analysis::SortRun::isFileExist(const char *fileName) {
 Analysis::SortRun::~SortRun() {
   printf("writing root file... ");
   if (pRootTree) pRootTree->Write();
-  if (pRootFile) pRootFile->Write();
-  printf("ok\n");
-
-  printf("Closing root file... ");
   flushRootFile();
-  if (pRootFile) pRootFile->Close();
   printf("ok\n");
 
   if (pIonDataSet) delete[] pIonDataSet;
@@ -22,7 +17,6 @@ Analysis::SortRun::~SortRun() {
   maxNumOfElecs = 0;
   eMaker = 0;
   if (pRootTree) delete pRootTree;
-  if (pRootFile) delete pRootFile;
   // id = nullptr;
   LMFFilename = "";
   rootFilename = "";
@@ -56,7 +50,7 @@ Analysis::SortRun::SortRun(const std::string configFilename) : Hist(false, numHi
     }
     break;
   }
-  pRootFile = new TFile(rootFilename.c_str(), "new");
+  openRootFile(rootFilename.c_str(), "NEW");
 
   // Setup ions and electrons
   maxNumOfIons = 0;

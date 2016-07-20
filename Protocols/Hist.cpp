@@ -4,18 +4,16 @@ Analysis::Hist::Hist(const bool verbose, int size)
     : pRootFile(nullptr), optionForVerbose(verbose) {
   arraySize = size;
   ppHistArray = new TObject *[arraySize];
-  for (int i = 0; i < arraySize; ++i) {
-    ppHistArray[i] = 0;
-  }
+  for (int i = 0; i < arraySize; ++i) ppHistArray[i] = 0;
 }
 Analysis::Hist::~Hist() {
   delete[] ppHistArray;
-  if (pRootFile) {
-    pRootFile->Close();
-  }
+  printf("Closing root file... ");
+  if (pRootFile) pRootFile->Close();
+  printf("ok\n");
 }
-void Analysis::Hist::openRootFile(const TString &name) {
-  pRootFile = TFile::Open(name.Data(), "RECREATE");
+void Analysis::Hist::openRootFile(const TString name, const TString arg) {
+  pRootFile = TFile::Open(name.Data(), arg.Data());
   if (!pRootFile) {
     std::cout << " could not be opened, please delete the file!" << std::endl;
     exit(1);
@@ -177,59 +175,6 @@ TH1 *Analysis::Hist::create3d(int id,
   return pHist3;
 }
 
-void Analysis::Hist::fill(int id,
-                          const char *name,
-                          double fillX,
-                          double fillY,
-                          double fillZ,
-                          const char *titleX,
-                          const char *titleY,
-                          const char *titleZ,
-                          int nXbins,
-                          double xLow,
-                          double xUp,
-                          int nYbins,
-                          double yLow,
-                          double yUp,
-                          int nZbins,
-                          double zLow,
-                          double zUp,
-                          const char *dir,
-                          double weight) {
-  pHist3 = dynamic_cast<TH3D *>(ppHistArray[id]);
-
-  //--if the histo does not exist create it first--//
-  if (!pHist3) {
-    create3d(id, name,
-             titleX, titleY, titleZ,
-             nXbins, xLow, xUp,
-             nYbins, yLow, yUp,
-             nZbins, zLow, zUp,
-             dir, true);
-  }
-
-    //if the histogram exists, but has no entries, we want to resize and rebin it//
-  else if ((!pHist3->GetEntries())
-      && ((nXbins != pHist3->GetXaxis()->GetNbins())
-          || (xLow != pHist3->GetXaxis()->GetXmin())
-          || (xUp != pHist3->GetXaxis()->GetXmax()) ||
-          (nYbins != pHist3->GetYaxis()->GetNbins())
-          || (yLow != pHist3->GetYaxis()->GetXmin())
-          || (yUp != pHist3->GetYaxis()->GetXmax()) ||
-          (nZbins != pHist3->GetZaxis()->GetNbins())
-          || (zLow != pHist3->GetZaxis()->GetXmin())
-          || (zUp != pHist3->GetZaxis()->GetXmax())))
-    pHist3->SetBins(nXbins, xLow, xUp, nYbins, yLow, yUp, nZbins, zLow, zUp);
-
-    //--if the histogram exists, check also if given name is the one of the histogram--//
-  else if (strcmp(pHist3->GetName(), name))
-    std::cout << "name doesn't match(" << id << ") is:" << pHist3->GetName()
-        << " should be:" << name << std::endl;
-
-  //--now fill it--//
-  pHist3->Fill(fillX, fillY, fillZ, weight);
-
-}
 void Analysis::Hist::fill2d(const int id,
                             const double fillX,
                             const double fillY,
@@ -274,50 +219,6 @@ TH1 *Analysis::Hist::create2d(int id, const char *name,
   if (optionForVerbose)
     std::cout << "create 2D: " << dir << "/" << pHist2->GetName() << std::endl;
   return pHist2;
-}
-void Analysis::Hist::fill(int id,
-                          const char *name,
-                          double fillX,
-                          double fillY,
-                          const char *titleX,
-                          const char *titleY,
-                          int nXbins,
-                          double xLow,
-                          double xUp,
-                          int nYbins,
-                          double yLow,
-                          double yUp,
-                          const char *dir,
-                          double weight) {
-  pHist2 = dynamic_cast<TH2D *>(ppHistArray[id]);
-
-
-  //--if the histo does not exist create it first--//
-  if (!pHist2) {
-    create2d(id, name,
-             titleX, titleY,
-             nXbins, xLow, xUp,
-             nYbins, yLow, yUp,
-             dir, true);
-  }
-
-    //if the histogram exists, but has no entries, we want to resize and rebin it//
-  else if ((!pHist2->GetEntries())
-      && ((nXbins != pHist2->GetXaxis()->GetNbins())
-          || (xLow != pHist2->GetXaxis()->GetXmin())
-          || (xUp != pHist2->GetXaxis()->GetXmax()) ||
-          (nYbins != pHist2->GetYaxis()->GetNbins())
-          || (yLow != pHist2->GetYaxis()->GetXmin())
-          || (yUp != pHist2->GetYaxis()->GetXmax())))
-    pHist2->SetBins(nXbins, xLow, xUp, nYbins, yLow, yUp);
-
-    //--if the histogram exists, check also if given name is the one of the histogram--//
-  else if (strcmp(pHist2->GetName(), name))
-    std::cout << "name doesn't match(" << id << ") is:" << pHist2->GetName()
-        << " should be:" << name << std::endl;
-
-  //--now fill it--//
-  pHist2->Fill(fillX, fillY, weight);
 }
 void Analysis::Hist::fill1d(const int id,
                             const double fillX,
@@ -364,40 +265,6 @@ TH1 *Analysis::Hist::create1d(int id, const char *name,
   if (optionForVerbose)
     std::cout << "create 1D: " << dir << "/" << pHist1->GetName() << std::endl;
   return pHist1;
-}
-void Analysis::Hist::fill(int id,
-                          const char *name,
-                          double fillX,
-                          const char *titleX,
-                          int nXbins,
-                          double xLow,
-                          double xUp,
-                          const char *dir,
-                          double weight) {
-  pHist1 = dynamic_cast<TH1D *>(ppHistArray[id]);
-
-  //--if the histo does not exist create it first--//
-  if (!pHist1) {
-    create1d(id, name,
-             titleX,
-             nXbins, xLow, xUp,
-             dir, true);
-  }
-
-    //if the histogram exists, but has no entries, we want to resize and rebin it//
-  else if ((!pHist1->GetEntries())
-      && ((nXbins != pHist1->GetXaxis()->GetNbins())
-          || (xLow != pHist1->GetXaxis()->GetXmin())
-          || (xUp != pHist1->GetXaxis()->GetXmax())))
-    pHist1->SetBins(nXbins, xLow, xUp);
-
-    //--if the histogram exists, check also if given name is the one of the histogram--//
-  else if (strcmp(pHist1->GetName(), name))
-    std::cout << "name doesn't match(" << id << ") is:" << pHist1->GetName()
-        << " should be:" << name << std::endl;
-
-  //--now fill it--//
-  pHist1->Fill(fillX, weight);
 }
 void Analysis::Hist::linkRootFile(TFile &RootFile) {
   pRootFile = &RootFile;

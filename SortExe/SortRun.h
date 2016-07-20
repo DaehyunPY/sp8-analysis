@@ -34,14 +34,13 @@ namespace Analysis {
 class SortRun: Hist {
  private:
   char id[5];
-  TFile *pRootFile;
-  TTree *pRootTree;
   std::string LMFFilename = "";
   std::string rootFilename = "";
   std::string ionSorterFilename = "";
   std::string elecSorterFilename = "";
   std::string ionCalibTableFilename = "";
   std::string elecCalibTableFilename = "";
+  TTree *pRootTree;
   int maxNumOfIons;
   int maxNumOfElecs;
   int numOfIons, numOfElecs;

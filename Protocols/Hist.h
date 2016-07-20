@@ -31,17 +31,11 @@ class Hist {
  public:
   void flushRootFile();
   void resetAll();
-  void openRootFile(const TString &RootFileName);
+  void openRootFile(const TString name, const TString arg="RECREATE");
   void linkRootFile(TFile &RootFile);
   const bool isVerbose() const;
-  void fill(int id, const char *name,
-            double fillX, double fillY, double fillZ,
-            const char *titleX, const char *titleY, const char *titleZ,
-            int nXbins, double xLow, double xUp,
-            int nYbins, double yLow, double yUp,
-            int nZbins, double zLow, double zUp,
-            const char *dir = "",
-            double weight = 1); // fill function for 3d histos
+
+  // 3d
   TH1 *create3d(int id, const char *name,
                 const char *titleX, const char *titleY, const char *titleZ,
                 int nXbins, double xLow, double xUp,
@@ -57,13 +51,8 @@ class Hist {
               const double weight = 1); // fill fast 3d histos
   void plot3d(int id, int binX, int binY, int binZ, double content);
   TH3 *getHist3d(int id) const;
-  void fill(int id, const char *name,
-            double fillX, double fillY,
-            const char *titleX, const char *titleY,
-            int nXbins, double xLow, double xUp,
-            int nYbins, double yLow, double yUp,
-            const char *dir = "",
-            double weight = 1); // fill function for 2d histos
+
+  // 2d
   TH1 *create2d(int id, const char *name,
                 const char *titleX, const char *titleY,
                 int nXbins, double xLow, double xUp,
@@ -78,12 +67,8 @@ class Hist {
               const double weight = 1); // fill fast 2d histos
   void plot2d(int id, int binX, int binY, double content); // set bin contents
   TH2 *getHist2d(int id) const;
-  void fill(int id, const char *name,
-            double fillX,
-            const char *titleX,
-            int nXbins, double xLow, double xUp,
-            const char *dir = "",
-            double weight = 1); // fill function for 1d histos
+
+  // fill function for 1d histos
   TH1 *create1d(int id, const char *name,
                 const char *titleX,
                 int nXbins, double xLow, double xUp,
