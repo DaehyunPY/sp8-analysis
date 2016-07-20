@@ -44,7 +44,7 @@ class SortRun: Hist {
   int maxNumOfIons;
   int maxNumOfElecs;
   int numOfIons, numOfElecs;
-  double eMaker;
+  double eMarker;
   struct DataSet {
     double x, y, t;
     int flag;
@@ -53,7 +53,7 @@ class SortRun: Hist {
 
  private:
   enum HistList {
-    h1_eMaker,
+    h1_eMarker,
     numHists
   };
   void createHists();

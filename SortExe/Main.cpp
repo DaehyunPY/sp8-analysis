@@ -808,8 +808,7 @@ int main(int argc, char *argv[]) {
         if (elec_sorter->use_MCP) {
           if (count[elec_sorter->Cmcp] > 0) mcp = tdc_ns[elec_sorter->Cmcp][0]; else mcp = -1.e100;
         }
-        if (fill_histograms)
-          Helec_sum_u->Fill(tdc_ns[elec_sorter->Cu1][0] + tdc_ns[elec_sorter->Cu2][0] - 2 * mcp);
+        if (fill_histograms) Helec_sum_u->Fill(tdc_ns[elec_sorter->Cu1][0] + tdc_ns[elec_sorter->Cu2][0] - 2 * mcp);
       }
       if (count[elec_sorter->Cv1] > 0 && count[elec_sorter->Cv2] > 0) {
         if (fill_histograms) Helec_v->Fill(tdc_ns[elec_sorter->Cv1][0] - tdc_ns[elec_sorter->Cv2][0]);
@@ -817,8 +816,7 @@ int main(int argc, char *argv[]) {
         if (elec_sorter->use_MCP) {
           if (count[elec_sorter->Cmcp] > 0) mcp = tdc_ns[elec_sorter->Cmcp][0]; else mcp = -1.e100;
         }
-        if (fill_histograms)
-          Helec_sum_v->Fill(tdc_ns[elec_sorter->Cv1][0] + tdc_ns[elec_sorter->Cv2][0] - 2 * mcp);
+        if (fill_histograms) Helec_sum_v->Fill(tdc_ns[elec_sorter->Cv1][0] + tdc_ns[elec_sorter->Cv2][0] - 2 * mcp);
       }
       if (elec_sorter->use_HEX) {
         if (count[elec_sorter->Cw1] > 0 && count[elec_sorter->Cw2] > 0) {
@@ -827,15 +825,12 @@ int main(int argc, char *argv[]) {
           if (elec_sorter->use_MCP) {
             if (count[elec_sorter->Cmcp] > 0) mcp = tdc_ns[elec_sorter->Cmcp][0]; else mcp = -1.e100;
           }
-          if (fill_histograms)
-            Helec_sum_w->Fill(tdc_ns[elec_sorter->Cw1][0] + tdc_ns[elec_sorter->Cw2][0] - 2 * mcp);
+          if (fill_histograms) Helec_sum_w->Fill(tdc_ns[elec_sorter->Cw1][0] + tdc_ns[elec_sorter->Cw2][0] - 2 * mcp);
         }
       }
     }
 
     int number_of_ions = 0;
-    int number_of_electrons = 0;
-    double eMaker = tdc_ns[6][0] - tdc_ns[15][0];
     if (ion_sorter) {
       if (ion_command == 1) {  // sort and write new file
         // sort/reconstruct the detector signals and apply the sum- and NL-correction.
@@ -849,6 +844,7 @@ int main(int argc, char *argv[]) {
           Hion_xy->Fill(ion_sorter->output_hit_array[i]->x, ion_sorter->output_hit_array[i]->y);
       }
     }
+    int number_of_electrons = 0;
     if (elec_sorter) {
       if (elec_command == 1) {  // sort and write new file
         // sort/reconstruct the detector signals and apply the sum- and NL-correction.
@@ -862,7 +858,17 @@ int main(int argc, char *argv[]) {
           Helec_xy->Fill(elec_sorter->output_hit_array[i]->x, elec_sorter->output_hit_array[i]->y);
       }
     }
-    pRun->processEvent(number_of_ions, ion_sorter, number_of_electrons, elec_sorter, eMaker);
+    double eMarker = 0;
+    if (ion_sorter && elec_sorter) {
+      if (ion_sorter->use_MCP && elec_sorter->use_MCP) {
+        double iMCP = 0;
+        double eMCP = 0;
+        if (count[ion_sorter->Cmcp] > 0) iMCP = tdc_ns[ion_sorter->Cmcp][0]; else iMCP = -1.e100;
+        if (count[elec_sorter->Cmcp] > 0) eMCP = tdc_ns[elec_sorter->Cmcp][0]; else eMCP = -1.e100;
+        eMarker = eMCP - iMCP;
+      }
+    }
+    pRun->processEvent(number_of_ions, ion_sorter, number_of_electrons, elec_sorter, eMarker);
 
     // Write to output file
     FILE *outfile = nullptr;

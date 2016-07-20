@@ -15,7 +15,7 @@ Analysis::SortRun::~SortRun() {
   if (pElecDataSet) delete[] pElecDataSet;
   maxNumOfIons = 0;
   maxNumOfElecs = 0;
-  eMaker = 0;
+  eMarker = 0;
   if (pRootTree) delete pRootTree;
   // id = nullptr;
   LMFFilename = "";
@@ -76,7 +76,7 @@ void Analysis::SortRun::processEvent(const int ionHitNum, const sort_class *pIon
     pElecDataSet[i].t = pElecSorter->output_hit_array[i]->time;
     pElecDataSet[i].flag = pElecSorter->output_hit_array[i]->method;
   }
-  eMaker = eMkr;
+  eMarker = eMkr;
   fillHists();
 }
 
@@ -150,8 +150,8 @@ TH2D *Analysis::SortRun::newTH2D(char *name, char *comment, int xbins, double xm
   return hist;
 }
 void Analysis::SortRun::createHists() {
-  create1d(h1_eMaker, TO_TEXT(h1_eMaker), "TOF [ns]", 2000, -5000, 1000);
+  create1d(h1_eMarker, TO_TEXT(h1_eMarker), "TOF [ns]", 2000, -5000, 1000);
 }
 void Analysis::SortRun::fillHists() {
-  fill1d(h1_eMaker, eMaker);
+  fill1d(h1_eMarker, eMarker);
 }
