@@ -27,13 +27,11 @@
 #define NUM_CHANNELS 80
 
 sort_class *ion_sorter;
-TCanvas *ion_canvas;
 double ion_offset_sum_u, ion_offset_sum_v, ion_offset_sum_w;
 double ion_w_offset, ion_pos_offset_x, ion_pos_offset_y;
 int ion_command;
 
 sort_class *elec_sorter;
-TCanvas *elec_canvas;
 double elec_offset_sum_u, elec_offset_sum_v, elec_offset_sum_w;
 double elec_w_offset;
 double elec_pos_offset_x, elec_pos_offset_y;
@@ -322,61 +320,27 @@ bool create_calibration_tables(char *filename, sort_class *sorter) {
   return true;
 }
 
-void clean_up1() {
+void cleanUp() {
   while (my_kbhit()) {
   } // empty keyboard buffer
-
   printf("deleting the ion sorter... ");
   if (ion_sorter) {
     delete ion_sorter;
     ion_sorter = 0;
   }
   printf("ok \n");
-
   printf("deleting the elec sorter... ");
   if (elec_sorter) {
     delete elec_sorter;
     elec_sorter = 0;
   }
   printf("ok \n");
-
   printf("deleting the LMF reader instance... ");
   if (LMF) {
     delete LMF;
     LMF = 0;
   }
   printf("ok \n");
-
-  if (ion_canvas) {
-    for (int i = 1; i <= 9; i++) {
-      ion_canvas->cd(i);
-      gPad->Modified(true);
-      gPad->Update();
-    }
-  }
-
-  if (elec_canvas) {
-    for (int i = 1; i <= 9; i++) {
-      elec_canvas->cd(i);
-      gPad->Modified(true);
-      gPad->Update();
-    }
-  }
-}
-
-void clean_up2() {
-  if (ion_canvas) {
-    printf("closing ion canvas\n");
-    ion_canvas->Close();
-    delete ion_canvas;
-    ion_canvas = 0;
-  }
-  if (elec_canvas) {
-    printf("closing electron canvas\n");
-    elec_canvas->Close();
-    delete elec_canvas;
-    elec_canvas = 0;
-  }
 }
 
 int main(int argc, char *argv[]) {
@@ -410,29 +374,6 @@ int main(int argc, char *argv[]) {
   Analysis::SortRun *pRun;
   pRun = new Analysis::SortRun(argv[1]);
   bool fill_histograms = true;
-
-  ion_canvas = 0;
-  elec_canvas = 0;
-
-  TH1D *Hion_sum_u = 0;
-  TH1D *Hion_sum_v = 0;
-  TH1D *Hion_sum_w = 0;
-  TH1D *Hion_u = 0;
-  TH1D *Hion_v = 0;
-  TH1D *Hion_w = 0;
-  TH2D *Hion_xy_raw = 0;
-  TH2D *Hion_xy = 0;
-  TH2D *Hion_xy_dev = 0;
-
-  TH1D *Helec_sum_u = 0;
-  TH1D *Helec_sum_v = 0;
-  TH1D *Helec_sum_w = 0;
-  TH1D *Helec_u = 0;
-  TH1D *Helec_v = 0;
-  TH1D *Helec_w = 0;
-  TH2D *Helec_xy_raw = 0;
-  TH2D *Helec_xy = 0;
-  TH2D *Helec_xy_dev = 0;
 
   LMF = new LMF_IO(NUM_CHANNELS, NUM_IONS);
 
@@ -538,73 +479,10 @@ int main(int argc, char *argv[]) {
     printf("ok\n");
   }
 
-  if (ion_sorter && fill_histograms) {
-    ion_canvas = pRun->newCanvas("ion_canvas", "ion_canvas", 10, 10, 910, 910);
-    ion_canvas->Divide(3, 3);
-    ion_canvas->cd(1);
-    Hion_sum_u = pRun->newTH1D("ion_sum_u", "", 500 * 10, -250, 250.);
-    Hion_sum_u->Draw();
-    ion_canvas->cd(2);
-    Hion_sum_v = pRun->newTH1D("ion_sum_v", "", 500 * 10, -250, 250.);
-    Hion_sum_v->Draw();
-    ion_canvas->cd(3);
-    Hion_sum_w = pRun->newTH1D("ion_sum_w", "", 500 * 10, -250, 250.);
-    Hion_sum_w->Draw();
-    ion_canvas->cd(4);
-    Hion_u = pRun->newTH1D("ion_u", "", 500 * 2, -250, 250.);
-    Hion_u->Draw();
-    ion_canvas->cd(5);
-    Hion_v = pRun->newTH1D("ion_v", "", 500 * 2, -250, 250.);
-    Hion_v->Draw();
-    ion_canvas->cd(6);
-    Hion_w = pRun->newTH1D("ion_w", "", 500 * 2, -250, 250.);
-    Hion_w->Draw();
-    ion_canvas->cd(7);
-    Hion_xy_raw = pRun->newTH2D("ion_xy_raw", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
-    Hion_xy_raw->Draw();
-    ion_canvas->cd(8);
-    Hion_xy = pRun->newTH2D("ion_xy", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
-    Hion_xy->Draw();
-    int s = 100;
-    ion_canvas->cd(9);
-    Hion_xy_dev = pRun->newTH2D("ion_xy_dev", "", s * 2, -double(s), double(s), 2 * s, -double(s), double(s),
-                                "COLZ");
-    Hion_xy_dev->Draw();
-  }
-
-  if (elec_sorter && fill_histograms) {
-    elec_canvas = pRun->newCanvas("elec_canvas", "elec_canvas", 10, 10, 910, 910);
-    elec_canvas->Divide(3, 3);
-    elec_canvas->cd(1);
-    Helec_sum_u = pRun->newTH1D("elec_sum_u", "", 500 * 10, -250, 250.);
-    Helec_sum_u->Draw();
-    elec_canvas->cd(2);
-    Helec_sum_v = pRun->newTH1D("elec_sum_v", "", 500 * 10, -250, 250.);
-    Helec_sum_v->Draw();
-    elec_canvas->cd(3);
-    Helec_sum_w = pRun->newTH1D("elec_sum_w", "", 500 * 10, -250, 250.);
-    Helec_sum_w->Draw();
-    elec_canvas->cd(4);
-    Helec_u = pRun->newTH1D("elec_u", "", 500 * 2, -250, 250.);
-    Helec_u->Draw();
-    elec_canvas->cd(5);
-    Helec_v = pRun->newTH1D("elec_v", "", 500 * 2, -250, 250.);
-    Helec_v->Draw();
-    elec_canvas->cd(6);
-    Helec_w = pRun->newTH1D("elec_w", "", 500 * 2, -250, 250.);
-    Helec_w->Draw();
-    elec_canvas->cd(7);
-    Helec_xy_raw = pRun->newTH2D("elec_xy_raw", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
-    Helec_xy_raw->Draw();
-    elec_canvas->cd(8);
-    Helec_xy = pRun->newTH2D("elec_xy", "", 120 * 4, -60, 60., 120 * 4, -60, 60., "COLZ");
-    Helec_xy->Draw();
-    int s = 100;
-    elec_canvas->cd(9);
-    Helec_xy_dev = pRun->newTH2D("elec_xy_dev", "", s * 2, -double(s), double(s), 2 * s, -double(s), double(s),
-                                 "COLZ");
-    Helec_xy_dev->Draw();
-  }
+  printf("creating ROOT canvases... ");
+  if (ion_sorter && fill_histograms) pRun->createC1();
+  if (elec_sorter && fill_histograms) pRun->createC2();
+  printf("ok\n");
 
   gSystem->ProcessEvents(); // allow the system to show the histograms
 
@@ -616,9 +494,8 @@ int main(int argc, char *argv[]) {
   if (!LMF->OpenInputLMF(LMF_InputFilename)) {
     printf("could not open input file.\n");
     printf("terminating root app.\n");
-    clean_up1();
-    if (pRun) delete pRun;
-    clean_up2();
+    cleanUp();
+	if (pRun) delete pRun;
     theRootApp.Terminate();
     return false;
   }
@@ -643,18 +520,8 @@ int main(int argc, char *argv[]) {
              __int32(100 * LMF->GetEventNumber() / LMF->uint64_Numberofevents),
              37);
       if (LMF->GetEventNumber() % 60000 == 1) {
-        if (ion_canvas) {
-          for (__int32 i = 0; i <= 9; i++) {
-            //ion_canvas->cd(i)->Modified(true);
-            ion_canvas->cd(i)->Update();
-          }
-        }
-        if (elec_canvas) {
-          for (__int32 i = 0; i <= 9; i++) {
-            //elec_canvas->cd(i)->Modified(true);
-            elec_canvas->cd(i)->Update();
-          }
-        }
+		  pRun->updateC1();
+		  pRun->updateC2();
       }
     }
 
@@ -705,47 +572,50 @@ int main(int argc, char *argv[]) {
         if (ion_sorter->scalefactors_calibrator->map_is_full_enough()) break;
       }
       if (ion_sorter->use_HEX && fill_histograms)
-        Hion_xy_dev->Fill(ion_sorter->scalefactors_calibrator->binx -
-                              ion_sorter->scalefactors_calibrator->detector_map_size / 2,
-                          ion_sorter->scalefactors_calibrator->biny -
-                              ion_sorter->scalefactors_calibrator->detector_map_size / 2,
-                          ion_sorter->scalefactors_calibrator->detector_map_devi_fill);
+        pRun->fill2d(Analysis::SortRun::h2_ionXYDev, 
+			ion_sorter->scalefactors_calibrator->binx - ion_sorter->scalefactors_calibrator->detector_map_size / 2.0,
+			ion_sorter->scalefactors_calibrator->biny - ion_sorter->scalefactors_calibrator->detector_map_size / 2.0, 
+			ion_sorter->scalefactors_calibrator->detector_map_devi_fill);
 
       if (count[ion_sorter->Cu1] > 0 && count[ion_sorter->Cu2] > 0) {
         if (count[ion_sorter->Cv1] > 0 && count[ion_sorter->Cv2] > 0) {
           double u = ion_sorter->fu * (tdc_ns[ion_sorter->Cu1][0] - tdc_ns[ion_sorter->Cu2][0]);
           double v = ion_sorter->fv * (tdc_ns[ion_sorter->Cv1][0] - tdc_ns[ion_sorter->Cv2][0]);
           double y = (u - 2. * v) * 0.577350269; // 0.557 = 1/sqrt(3)
-          if (fill_histograms) Hion_xy_raw->Fill(u, y);
+          if (fill_histograms) 
+			  pRun->fill2d(Analysis::SortRun::h2_ionXYRaw, u, y);
         }
       }
       if (count[ion_sorter->Cu1] > 0 && count[ion_sorter->Cu2] > 0) {
-        if (fill_histograms) Hion_u->Fill(tdc_ns[ion_sorter->Cu1][0] - tdc_ns[ion_sorter->Cu2][0]);
+        if (fill_histograms) 
+			pRun->fill1d(Analysis::SortRun::h1_ionU, tdc_ns[ion_sorter->Cu1][0] - tdc_ns[ion_sorter->Cu2][0]);
         double mcp = 0.;
         if (ion_sorter->use_MCP) {
           if (count[ion_sorter->Cmcp] > 0) mcp = tdc_ns[ion_sorter->Cmcp][0]; else mcp = -1.e100;
         }
         if (fill_histograms)
-          Hion_sum_u->Fill(tdc_ns[ion_sorter->Cu1][0] + tdc_ns[ion_sorter->Cu2][0] - 2 * mcp);
+          pRun->fill1d(Analysis::SortRun::h1_ionTimesumU, tdc_ns[ion_sorter->Cu1][0] + tdc_ns[ion_sorter->Cu2][0] - 2 * mcp);
       }
       if (count[ion_sorter->Cv1] > 0 && count[ion_sorter->Cv2] > 0) {
-        if (fill_histograms) Hion_v->Fill(tdc_ns[ion_sorter->Cv1][0] - tdc_ns[ion_sorter->Cv2][0]);
+        if (fill_histograms) 
+			pRun->fill1d(Analysis::SortRun::h1_ionV, tdc_ns[ion_sorter->Cv1][0] - tdc_ns[ion_sorter->Cv2][0]);
         double mcp = 0.;
         if (ion_sorter->use_MCP) {
           if (count[ion_sorter->Cmcp] > 0) mcp = tdc_ns[ion_sorter->Cmcp][0]; else mcp = -1.e100;
         }
         if (fill_histograms)
-          Hion_sum_v->Fill(tdc_ns[ion_sorter->Cv1][0] + tdc_ns[ion_sorter->Cv2][0] - 2 * mcp);
+          pRun->fill1d(Analysis::SortRun::h1_ionTimesumV, tdc_ns[ion_sorter->Cv1][0] + tdc_ns[ion_sorter->Cv2][0] - 2 * mcp);
       }
       if (ion_sorter->use_HEX) {
         if (count[ion_sorter->Cw1] > 0 && count[ion_sorter->Cw2] > 0) {
-          if (fill_histograms) Hion_w->Fill(tdc_ns[ion_sorter->Cw1][0] - tdc_ns[ion_sorter->Cw2][0]);
+          if (fill_histograms) 
+			  pRun->fill1d(Analysis::SortRun::h1_ionW, tdc_ns[ion_sorter->Cw1][0] - tdc_ns[ion_sorter->Cw2][0]);
           double mcp = 0.;
           if (ion_sorter->use_MCP) {
             if (count[ion_sorter->Cmcp] > 0) mcp = tdc_ns[ion_sorter->Cmcp][0]; else mcp = -1.e100;
           }
           if (fill_histograms)
-            Hion_sum_w->Fill(tdc_ns[ion_sorter->Cw1][0] + tdc_ns[ion_sorter->Cw2][0] - 2 * mcp);
+            pRun->fill1d(Analysis::SortRun::h1_ionTimesumW, tdc_ns[ion_sorter->Cw1][0] + tdc_ns[ion_sorter->Cw2][0] - 2 * mcp);
         }
       }
     }
@@ -789,44 +659,50 @@ int main(int argc, char *argv[]) {
         if (elec_sorter->scalefactors_calibrator->map_is_full_enough()) break;
       }
       if (elec_sorter->use_HEX && fill_histograms)
-        Helec_xy_dev->Fill(elec_sorter->scalefactors_calibrator->binx -
-                               elec_sorter->scalefactors_calibrator->detector_map_size / 2,
-                           elec_sorter->scalefactors_calibrator->biny -
-                               elec_sorter->scalefactors_calibrator->detector_map_size / 2,
-                           elec_sorter->scalefactors_calibrator->detector_map_devi_fill);
+		  pRun->fill2d(Analysis::SortRun::h2_elecXYDev, 
+			  elec_sorter->scalefactors_calibrator->binx - elec_sorter->scalefactors_calibrator->detector_map_size / 2.0,
+			  elec_sorter->scalefactors_calibrator->biny - elec_sorter->scalefactors_calibrator->detector_map_size / 2.0,
+			  elec_sorter->scalefactors_calibrator->detector_map_devi_fill);
 
       if (count[elec_sorter->Cu1] > 0 && count[elec_sorter->Cu2] > 0) {
         if (count[elec_sorter->Cv1] > 0 && count[elec_sorter->Cv2] > 0) {
           double u = elec_sorter->fu * (tdc_ns[elec_sorter->Cu1][0] - tdc_ns[elec_sorter->Cu2][0]);
           double v = elec_sorter->fv * (tdc_ns[elec_sorter->Cv1][0] - tdc_ns[elec_sorter->Cv2][0]);
           double y = (u - 2. * v) * 0.577350269; // 0.557 = 1/sqrt(3)
-          if (fill_histograms) Helec_xy_raw->Fill(u, y);
+          if (fill_histograms) 
+			  pRun->fill2d(Analysis::SortRun::h2_elecXYRaw, u, y);
         }
       }
       if (count[elec_sorter->Cu1] > 0 && count[elec_sorter->Cu2] > 0) {
-        if (fill_histograms) Helec_u->Fill(tdc_ns[elec_sorter->Cu1][0] - tdc_ns[elec_sorter->Cu2][0]);
+        if (fill_histograms) 
+			pRun->fill1d(Analysis::SortRun::h1_elecU, tdc_ns[elec_sorter->Cu1][0] - tdc_ns[elec_sorter->Cu2][0]);
         double mcp = 0.;
         if (elec_sorter->use_MCP) {
           if (count[elec_sorter->Cmcp] > 0) mcp = tdc_ns[elec_sorter->Cmcp][0]; else mcp = -1.e100;
         }
-        if (fill_histograms) Helec_sum_u->Fill(tdc_ns[elec_sorter->Cu1][0] + tdc_ns[elec_sorter->Cu2][0] - 2 * mcp);
+        if (fill_histograms) 
+			pRun->fill1d(Analysis::SortRun::h1_elecTimesumU, tdc_ns[elec_sorter->Cu1][0] + tdc_ns[elec_sorter->Cu2][0] - 2 * mcp);
       }
       if (count[elec_sorter->Cv1] > 0 && count[elec_sorter->Cv2] > 0) {
-        if (fill_histograms) Helec_v->Fill(tdc_ns[elec_sorter->Cv1][0] - tdc_ns[elec_sorter->Cv2][0]);
+        if (fill_histograms) 
+			pRun->fill1d(Analysis::SortRun::h1_elecV, tdc_ns[elec_sorter->Cv1][0] - tdc_ns[elec_sorter->Cv2][0]);
         double mcp = 0.;
         if (elec_sorter->use_MCP) {
           if (count[elec_sorter->Cmcp] > 0) mcp = tdc_ns[elec_sorter->Cmcp][0]; else mcp = -1.e100;
         }
-        if (fill_histograms) Helec_sum_v->Fill(tdc_ns[elec_sorter->Cv1][0] + tdc_ns[elec_sorter->Cv2][0] - 2 * mcp);
+        if (fill_histograms) 
+			pRun->fill1d(Analysis::SortRun::h1_elecTimesumV, tdc_ns[elec_sorter->Cv1][0] + tdc_ns[elec_sorter->Cv2][0] - 2 * mcp);
       }
       if (elec_sorter->use_HEX) {
         if (count[elec_sorter->Cw1] > 0 && count[elec_sorter->Cw2] > 0) {
-          if (fill_histograms) Helec_w->Fill(tdc_ns[elec_sorter->Cw1][0] - tdc_ns[elec_sorter->Cw2][0]);
+          if (fill_histograms) 
+			  pRun->fill1d(Analysis::SortRun::h1_elecW, tdc_ns[elec_sorter->Cw1][0] - tdc_ns[elec_sorter->Cw2][0]);
           double mcp = 0.;
           if (elec_sorter->use_MCP) {
             if (count[elec_sorter->Cmcp] > 0) mcp = tdc_ns[elec_sorter->Cmcp][0]; else mcp = -1.e100;
           }
-          if (fill_histograms) Helec_sum_w->Fill(tdc_ns[elec_sorter->Cw1][0] + tdc_ns[elec_sorter->Cw2][0] - 2 * mcp);
+          if (fill_histograms) 
+			  pRun->fill1d(Analysis::SortRun::h1_elecTimesumW, tdc_ns[elec_sorter->Cw1][0] + tdc_ns[elec_sorter->Cw2][0] - 2 * mcp);
         }
       }
     }
@@ -842,7 +718,7 @@ int main(int argc, char *argv[]) {
       }
       for (int i = 0; i < number_of_ions; i++) {
         if (fill_histograms)
-          Hion_xy->Fill(ion_sorter->output_hit_array[i]->x, ion_sorter->output_hit_array[i]->y);
+          pRun->fill2d(Analysis::SortRun::h2_ionXY, ion_sorter->output_hit_array[i]->x, ion_sorter->output_hit_array[i]->y);
       }
     }
     int number_of_electrons = 0;
@@ -856,7 +732,7 @@ int main(int argc, char *argv[]) {
       }
       for (int i = 0; i < number_of_electrons; i++) {
         if (fill_histograms)
-          Helec_xy->Fill(elec_sorter->output_hit_array[i]->x, elec_sorter->output_hit_array[i]->y);
+          pRun->fill2d(Analysis::SortRun::h2_elecXY, elec_sorter->output_hit_array[i]->x, elec_sorter->output_hit_array[i]->y);
       }
     }
     const int eMarkerCh = 16;
@@ -978,17 +854,10 @@ int main(int argc, char *argv[]) {
   }
 
   // Update canvases
-  if (ion_canvas) {
-    for (__int32 i = 0; i <= 9; i++) {
-      ion_canvas->cd(i)->Modified(true);
-      ion_canvas->cd(i)->Update();
-    }
-  }
-  if (elec_canvas) {
-    for (__int32 i = 0; i <= 9; i++) {
-      elec_canvas->cd(i)->Modified(true);
-      elec_canvas->cd(i)->Update();
-    }
+  {
+	  bool tBool = true;
+	  pRun->updateC1(&tBool);
+	  pRun->updateC2(&tBool);
   }
 
   printf("hit any key to exit\n");
@@ -1000,9 +869,8 @@ int main(int argc, char *argv[]) {
 
   // Finish the program
   printf("terminating the root app.\n");
-  clean_up1();
-  if (pRun) delete pRun;
-  clean_up2();
+  cleanUp();
+	if (pRun) delete pRun;
   theRootApp.Terminate();
   std::cout << "The program is done. " << std::endl;
   return 0;

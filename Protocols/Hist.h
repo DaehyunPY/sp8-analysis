@@ -12,6 +12,7 @@
 #include <TGraph.h>
 
 #define TO_TEXT(X) #X
+#define SAME_TITLE_WITH_VALNAME(X) X, #X
 
 namespace Analysis {
 class Hist {
@@ -68,19 +69,19 @@ class Hist {
   void plot2d(int id, int binX, int binY, double content); // set bin contents
   TH2 *getHist2d(int id) const;
 
-  // fill function for 1d histos
+  // 1d
   TH1 *create1d(int id, const char *name,
                 const char *titleX,
                 int nXbins, double xLow, double xUp,
                 const char *dir = "",
-                bool alreadylocked = false); // create 1d histos
+                bool alreadylocked = false);
   void fill1d(const int id,
               const double fillX,
-              const double weight = 1); // fill fast 1d histos
+              const double weight = 1);
   void fill1d(const int id,
               const double *pX,
               const double weight = 1);
-  void plot1d(int id, int binX, double content); // set bin contents
+  void plot1d(int id, int binX, double content);
   TH1 *getHist1d(int id) const;
 };
 }

@@ -7,6 +7,8 @@ bool Analysis::SortRun::isFileExist(const char *fileName) {
 
 Analysis::SortRun::~SortRun() {
   printf("writing root file... ");
+  closeC1();
+  closeC2();
   if (pRootTree) pRootTree->Write();
   flushRootFile();
   printf("ok\n");
@@ -138,23 +140,113 @@ TCanvas *Analysis::SortRun::newCanvas(char *name, char *titel, int xposition, in
   canvaspointer = new TCanvas(name, titel, xposition, yposition, pixelsx, pixelsy);
   return canvaspointer;
 }
-
-TH1D *Analysis::SortRun::newTH1D(char *name, char *comment, int bins, double xmin, double xmax) {
-  TH1D *hist;
-  hist = new TH1D(name, comment, bins, xmin, xmax);
-  return hist;
-}
-
-TH2D *Analysis::SortRun::newTH2D(char *name, char *comment, int xbins, double xmin, double xmax, int ybins, double ymin,
-                                 double ymax, char *option) {
-  TH2D *hist;
-  hist = new TH2D(name, comment, xbins, xmin, xmax, ybins, ymin, ymax);
-  hist->SetOption(option);
-  return hist;
-}
 void Analysis::SortRun::createHists() {
-  create1d(h1_eMarker, TO_TEXT(h1_eMarker), "Time [ns]", 2000, -5000, 1000);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_eMarker), "Time [ns]", 2000, -5000, 1000);
 }
 void Analysis::SortRun::fillHists() {
   fill1d(h1_eMarker, eMarker);
 }
+void Analysis::SortRun::createC1() {
+	closeC1();
+	create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumU), "Time [ns]", 500 * 10, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumV), "Time [ns]", 500 * 10, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumW), "Time [ns]", 500 * 10, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_ionU), "Time [ns]", 500 * 2, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_ionV), "Time [ns]", 500 * 2, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_ionW), "Time [ns]", 500 * 2, -250, 250);
+	create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYRaw), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
+	create2d(SAME_TITLE_WITH_VALNAME(h2_ionXY), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
+	create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYDev), "Time [ns]", "Time [ns]", 100 * 2, -100, 100, 100 * 2, -100, 100);
+	pC1 = newCanvas("ion_canvas", "ion_canvas", 10, 10, 910, 910);
+	pC1->Divide(3, 3);
+	pC1->cd(1);
+	getHist1d(h1_ionTimesumU)->Draw();
+	pC1->cd(2); 
+	getHist1d(h1_ionTimesumV)->Draw();
+	pC1->cd(3); 
+	getHist1d(h1_ionTimesumW)->Draw();
+	pC1->cd(4);
+	getHist1d(h1_ionU)->Draw();
+	pC1->cd(5);
+	getHist1d(h1_ionV)->Draw();
+	pC1->cd(6);
+	getHist1d(h1_ionW)->Draw();
+	pC1->cd(7);
+	getHist2d(h2_ionXYRaw)->Draw();
+	pC1->cd(8);
+	getHist2d(h2_ionXY)->Draw();
+	pC1->cd(9);
+	getHist2d(h2_ionXYDev)->Draw();
+}
+void Analysis::SortRun::createC2() {
+	closeC2();
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumU), "Time [ns]", 500*10, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumV), "Time [ns]", 500 * 10, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumW), "Time [ns]", 500 * 10, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecU), "Time [ns]", 500 * 2, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecV), "Time [ns]", 500 * 2, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecW), "Time [ns]", 500 * 2, -250, 250);
+	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYRaw), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
+	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXY), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
+	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYDev), "Time [ns]", "Time [ns]", 100 * 2, -100, 100, 100 * 2, -100, 100);
+	pC1 = newCanvas("elec_canvas", "elec_canvas", 10, 10, 910, 910);
+	pC1->Divide(3, 3);
+	pC1->cd(1);
+	getHist1d(h1_elecTimesumU)->Draw();
+	pC1->cd(2); 
+	getHist1d(h1_elecTimesumV)->Draw();
+	pC1->cd(3); 
+	getHist1d(h1_elecTimesumW)->Draw();
+	pC1->cd(4);
+	getHist1d(h1_elecU)->Draw();
+	pC1->cd(5);
+	getHist1d(h1_elecV)->Draw();
+	pC1->cd(6);
+	getHist1d(h1_elecW)->Draw();
+	pC1->cd(7);
+	getHist2d(h2_elecXYRaw)->Draw();
+	pC1->cd(8);
+	getHist2d(h2_elecXY)->Draw();
+	pC1->cd(9);
+	getHist2d(h2_elecXYDev)->Draw();
+}
+bool Analysis::SortRun::existC1() const {
+	return pC1;
+}
+bool Analysis::SortRun::existC2() const {
+	return pC2;
+}
+void Analysis::SortRun::updateC1(const bool *pMdf) {
+	if (existC1()) {
+		for (int i = 1; i <= 9; i++) {
+			if (pMdf) pC1->cd(i)->Modified(*pMdf);
+			pC1->cd(i)->Update();
+		}
+	}
+}
+void Analysis::SortRun::updateC2(const bool *pMdf) {
+	if (existC2()) {
+		for (int i = 1; i <= 9; i++) {
+			if (pMdf) pC2->cd(i)->Modified(*pMdf);
+			pC2->cd(i)->Update();
+		}
+	}
+}
+void Analysis::SortRun::closeC1() {
+	if(existC1()) {
+		updateC1();
+		pC1->Close();
+		delete pC1;
+		pC1 = nullptr;
+	}
+}
+void Analysis::SortRun::closeC2() {
+	if(existC2()) {
+		updateC1();
+		pC2->Close();
+		delete pC2;
+		pC2 = nullptr;
+	}
+}
+
+

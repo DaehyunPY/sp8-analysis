@@ -1,7 +1,11 @@
 #include "Hist.h"
 
 Analysis::Hist::Hist(const bool verbose, int size)
-    : pRootFile(nullptr), optionForVerbose(verbose) {
+    : optionForVerbose(verbose) {
+	pHist1 = nullptr; 
+	pHist2 = nullptr; 
+	pHist3 = nullptr; 
+	pRootFile = nullptr; 
   arraySize = size;
   ppHistArray = new TObject *[arraySize];
   for (int i = 0; i < arraySize; ++i) ppHistArray[i] = 0;
@@ -136,8 +140,7 @@ TH1 *Analysis::Hist::create3d(int id,
 
   TDirectory
       *saveDir = gDirectory;        //save a pointer to the current directory
-  getDir(pRootFile,
-         dir)->cd();                //change to directory that this histo need to be created in
+  getDir(pRootFile, dir)->cd();                //change to directory that this histo need to be created in
 
   //--create a 3D histogram--//
   pHist3 = new TH3D(name,

@@ -31,7 +31,7 @@
 #include "../Protocols/Hist.h"
 
 namespace Analysis {
-class SortRun: Hist {
+class SortRun: public Hist {
  private:
   char id[5];
   std::string LMFFilename = "";
@@ -52,10 +52,31 @@ class SortRun: Hist {
     double x, y, t;
     int flag;
   } *pIonDataSet, *pElecDataSet;
+
+private:
+	TCanvas *pC1=nullptr, *pC2=nullptr;
+public:
+	bool existC1() const;
+	void createC1();
+	void updateC1(const bool *mdf=nullptr);
+	void closeC1();
+	bool existC2() const;
+	void createC2(); 
+	void updateC2(const bool *mdf=nullptr);
+	void closeC2();
+
+public:
   enum HistList {
+	  h1_ionTimesumU, h1_ionTimesumV, h1_ionTimesumW, 
+	  h1_ionU, h1_ionV, h1_ionW, 
+	  h2_ionXYRaw, h2_ionXY, h2_ionXYDev,
+	  h1_elecTimesumU, h1_elecTimesumV, h1_elecTimesumW, 
+	  h1_elecU, h1_elecV, h1_elecW,
+	  h2_elecXYRaw, h2_elecXY, h2_elecXYDev,
     h1_eMarker,
     numHists
   };
+private:
   void createHists();
   void fillHists();
 
@@ -74,9 +95,6 @@ class SortRun: Hist {
   char *getIonCalibTableFilename() const;
   char *getElecCalibTableFilename() const;
   TCanvas *newCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy);
-  TH1D *newTH1D(char *name, char *comment, int bins, double xmin, double xmax);
-  TH2D *newTH2D(char *name, char *comment, int xbins, double xmin, double xmax, int ybins, double ymin,
-                double ymax, char *option);
 };
 }
 
