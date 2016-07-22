@@ -50,12 +50,13 @@ void inputManager(StatusInfo &info) {
 
 int main(int argc, char *argv[]) {
     // Inform status
-    printf("syntax: AnalysisExe filename\n");
     if (argc < 2) {
+		printf("syntax: AnalysisExe filename\n");
         printf("Please provide a filename.\n");
         return 0;
     }
     if (argc > 2) {
+		printf("syntax: AnalysisExe filename\n");
         printf("too many arguments\n");
         return 0;
     }

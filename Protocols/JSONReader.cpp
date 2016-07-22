@@ -66,7 +66,6 @@ const double Analysis::JSONReader::getDoubleAt(const std::string str, const int 
 		pV = &((*pV)[i]);
 	}
 	assert(pV->IsNumber());
-	assert(pV->IsDouble());
 	return pV->GetDouble();
 }
 const rapidjson::Document &Analysis::JSONReader::getDocument() const {

@@ -17,8 +17,10 @@ Analysis::SortRun::~SortRun() {
   if (pElecDataSet) delete[] pElecDataSet;
 }
 
-Analysis::SortRun::SortRun(const std::string prfx, const int iNum, const int eNum) 
-	: Hist(false, numHists), prefix(prfx), maxNumOfIons(iNum), maxNumOfElecs(eNum) {
+Analysis::SortRun::SortRun(const std::string prfx, 
+	const int iNum, const int eNum, const RmBunch rm) 
+	: Hist(false, numHists), 
+	prefix(prfx), maxNumOfIons(iNum), maxNumOfElecs(eNum), rmBunch(rm) {
   // Create id
   for (int i = 0; i < 10000; i++) {
     sprintf(id, "%04d", i);
@@ -37,28 +39,23 @@ Analysis::SortRun::SortRun(const std::string prfx, const int iNum, const int eNu
   createHists();
 }
 
-void Analysis::SortRun::processEvent(const int ionHitNum,
-                                     const sort_class *pIonSorter,
-                                     const int elecHitNum,
-                                     const sort_class *pElecSorter,
-                                     const double eMkr) {
+void Analysis::SortRun::fillTreeAndHists(
+	const int ionHitNum,
+	const DataSet *pIons,
+	const int elecHitNum,
+    const DataSet *pElecs,
+    const double eMarker) {
+  DataSet emptySet = {0,0,0,0};
   numOfIons = ionHitNum < maxNumOfIons ? ionHitNum : maxNumOfIons;
-  for (int i = 0; i < numOfIons; i++) {
-    pIonDataSet[i].x = pIonSorter->output_hit_array[i]->x;
-    pIonDataSet[i].y = pIonSorter->output_hit_array[i]->y;
-    pIonDataSet[i].t = pIonSorter->output_hit_array[i]->time;
-    pIonDataSet[i].flag = pIonSorter->output_hit_array[i]->method;
-  }
+  for (int i = 0; i < numOfIons; i++) pIonDataSet[i] = pIons[i];
+  for (int i = numOfIons; i < maxNumOfIons; i++) pIonDataSet[i] = emptySet;
   numOfElecs = elecHitNum < maxNumOfElecs ? elecHitNum : maxNumOfElecs;
-  for (int i = 0; i < numOfIons; i++) {
-    pElecDataSet[i].x = pElecSorter->output_hit_array[i]->x;
-    pElecDataSet[i].y = pElecSorter->output_hit_array[i]->y;
-    pElecDataSet[i].t = pElecSorter->output_hit_array[i]->time;
-    pElecDataSet[i].flag = pElecSorter->output_hit_array[i]->method;
+  for (int i = 0; i < numOfElecs; i++) pElecDataSet[i] = pElecs[i];
+  for (int i = numOfElecs; i < maxNumOfElecs; i++) pElecDataSet[i] = emptySet;
+  if (!(rmBunch.isInTheRegion(eMarker))) {
+	  fill1d(h1_eMarker, eMarker);
+	  if (existTree()) pRootTree->Fill();
   }
-  eMarker = eMkr;
-  fillTree();
-  fillHists();
 }
 const bool Analysis::SortRun::existTree() const {
 	return pRootTree ? true : false;
@@ -92,11 +89,6 @@ void Analysis::SortRun::createTree() {
     pRootTree->Branch((str + "Flag" + ch).c_str(), &pElecDataSet[i].flag, (str + "Flag" + ch + "/I").c_str());
   }
 }
-void Analysis::SortRun::fillTree() {
-	if (existTree()) {
-		pRootTree->Fill();
-	}
-}
 TCanvas *Analysis::SortRun::createCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy) {
   TCanvas *canvaspointer;
   canvaspointer = new TCanvas(name, titel, xposition, yposition, pixelsx, pixelsy);
@@ -104,9 +96,6 @@ TCanvas *Analysis::SortRun::createCanvas(char *name, char *titel, int xposition,
 }
 void Analysis::SortRun::createHists() {
   create1d(SAME_TITLE_WITH_VALNAME(h1_eMarker), "Time [ns]", 2000, -5000, 1000);
-}
-void Analysis::SortRun::fillHists() {
-  fill1d(h1_eMarker, eMarker);
 }
 void Analysis::SortRun::createC1() {
 	closeC1();
@@ -226,7 +215,6 @@ void Analysis::SortRun::closeC2() {
 }
 void Analysis::SortRun::closeTree() {
 	if(existTree()) {
-		fillTree();
 		pRootTree->Write();
 		delete pRootTree;
 		pRootTree = nullptr;

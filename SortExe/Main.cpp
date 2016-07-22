@@ -299,8 +299,6 @@ bool create_calibration_tables(const char *filename, sort_class *sorter) {
 }
 
 void cleanUpSorters() {
-  while (my_kbhit()) {
-  } // empty keyboard buffer
   printf("deleting the ion sorter... ");
   if (ionSorter) {
     delete ionSorter;
@@ -358,9 +356,19 @@ int main(int argc, char *argv[]) {
 
 	// Change dir
 	chdir(pReader->getStringAt("working_directory").c_str());
-	const bool isDrawingCanvases = pReader->getBoolAt("draw_canvases");
 	Analysis::SortRun *pRun;
-	const int eMarkerCh = pReader->getIntAt("electron_marker_channel");
+
+	// Read options
+	const bool isDrawingCanvases = pReader->getBoolAt("draw_canvases");
+	const int maxElecHits = pReader->getIntAt("maxium_of_electron_hits");
+	const int maxIonHits = pReader->getIntAt("maxium_of_ion_hits");
+	Analysis::SortRun::RmBunch rmBunch;
+	rmBunch.ch = pReader->getIntAt("delete_beam_bunch.electron_marker_channel");
+	rmBunch.isOn = pReader->getBoolAt("delete_beam_bunch.is_on"); 
+	if (rmBunch.isOn) {
+		rmBunch.region1 = pReader->getDoubleAt("delete_beam_bunch.bunch_region", 0);
+		rmBunch.region2 = pReader->getDoubleAt("delete_beam_bunch.bunch_region", 1);
+	}
 
 	// Setup LMF files
 	int numLMF = pReader->getListSizeAt("LMF_files");
@@ -485,7 +493,12 @@ int main(int argc, char *argv[]) {
 
 
   // Open LMF file
+  bool theLoopIsOn = true;
   for (int iLMF = 0; iLMF < numLMF; iLMF++) {
+	  // Check keyboard hit
+	  if (!theLoopIsOn) break;
+
+	  // Read a LMF file 
 	  pLMF = new LMF_IO(NUM_CHANNELS, NUM_IONS);
 	  bool readSuccessfully;
 	  readSuccessfully = pLMF->OpenInputLMF(pLMFFilenames[iLMF]);
@@ -494,10 +507,8 @@ int main(int argc, char *argv[]) {
 		  break;
 	  }
 	  std::cout << "A LMF file " << pLMFFilenames[iLMF] << " is open for reading." << std::endl;
-	  // empty keyboard buffer
-//	  while (my_kbhit());
 
-	  pRun = new Analysis::SortRun("ResortLess", 4, 4);
+	  pRun = new Analysis::SortRun("ResortLess", maxIonHits, maxElecHits, rmBunch);
 	  std::cout << "A root file is open for output." << std::endl;
 	  // Setup ROOT canvases
 	  if (isDrawingCanvases) {
@@ -514,6 +525,7 @@ int main(int argc, char *argv[]) {
 	  while (true) {
 		  if (pLMF->GetEventNumber() % 20000 == 1) {
 			  if (my_kbhit()) {
+				  theLoopIsOn = false;
 				  break;
 			  }
 			  gSystem->ProcessEvents(); // allow the system to show the histograms
@@ -710,7 +722,9 @@ int main(int argc, char *argv[]) {
 			  }
 		  }
 
+		  // Fill the tree and hists
 		  int number_of_ions = 0;
+		  int number_of_electrons = 0;
 		  if (ionSorter) {
 			  if (ion_command == 1) {  // sort and write new file
 				// sort/reconstruct the detector signals and apply the sum- and NL-correction.
@@ -725,7 +739,6 @@ int main(int argc, char *argv[]) {
 					  pRun->fill2d(Analysis::SortRun::h2_ionXY, ionSorter->output_hit_array[i]->x, ionSorter->output_hit_array[i]->y);
 			  }
 		  }
-		  int number_of_electrons = 0;
 		  if (elecSorter) {
 			  if (elec_command == 1) {  // sort and write new file
 				// sort/reconstruct the detector signals and apply the sum- and NL-correction.
@@ -746,9 +759,26 @@ int main(int argc, char *argv[]) {
 			  if (elecSorter->use_MCP) {
 				  if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
 			  }
-			  eMarker = mcp - TDC[eMarkerCh][0] * TDCResolution;
+			  eMarker = mcp - TDC[rmBunch.ch][0] * TDCResolution;
 		  }
-		  pRun->processEvent(number_of_ions, ionSorter, number_of_electrons, elecSorter, eMarker);
+		  Analysis::SortRun::DataSet *pIons, *pElecs;
+		  pIons = new Analysis::SortRun::DataSet[number_of_ions];
+		  pElecs = new Analysis::SortRun::DataSet[number_of_electrons];
+		  for (int i=0; i<number_of_ions; i++) {
+			  pIons[i].x = ionSorter->output_hit_array[i]->x;
+			  pIons[i].y = ionSorter->output_hit_array[i]->y;
+			  pIons[i].t = ionSorter->output_hit_array[i]->time;
+			  pIons[i].flag = ionSorter->output_hit_array[i]->method;
+		  }
+		  for (int i=0; i<number_of_electrons; i++) {
+			  pElecs[i].x = elecSorter->output_hit_array[i]->x;
+			  pElecs[i].y = elecSorter->output_hit_array[i]->y;
+			  pElecs[i].t = elecSorter->output_hit_array[i]->time;
+			  pElecs[i].flag = elecSorter->output_hit_array[i]->method;
+		  }
+		  pRun->fillTreeAndHists(number_of_ions, pIons, number_of_electrons, pElecs, eMarker);
+		  delete[] pIons;
+		  delete[] pElecs;
 
 		  // Write to output file
 		  FILE *outfile = nullptr;

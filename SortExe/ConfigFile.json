@@ -1,8 +1,17 @@
 {
   "working_directory": "PATH", // output files will be saved in this dir 
-  "LMF_files": "Cobold2008Example_NeKrMixedCluster888eV_06005.lmf",
+  "LMF_files": [
+    "LMF_FILENAME1", 
+    "LMF_FILENAME2"
+  ],
   "draw_canvases": false,
-  "electron_marker_channel": 16, // counting starts at 1
+  "maxium_of_electron_hits": 4,
+  "maxium_of_ion_hits": 4,
+  "delete_beam_bunch": {
+    "is_on": true,
+    "electron_marker_channel": 16, // counting starts at 1
+    "bunch_region": [-2285, -1600],
+  },
   "electron_calibration_table": "ElecCalibTab.txt", 
   "electron_sorter": {
     "mode": 1, // -1=detector does not exist, 0=only convert to new file format, 1=sort, 2=calibrate fu,fv,fw,w_offset, 3=generate correction tables and write them to disk

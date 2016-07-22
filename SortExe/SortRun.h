@@ -37,17 +37,32 @@ class SortRun: public Hist {
   const std::string prefix;
   std::string rootFilename;
 
- private:
-  bool isFileExist(const char *fileName);
-
- private:
-	 const int maxNumOfIons, maxNumOfElecs;
-  int numOfIons, numOfElecs;
-  double eMarker;
+ public:
+	struct RmBunch {
+		bool isOn;
+		int ch;
+		double region1, region2;
+		bool isInTheRegion(const double bunch) const {
+			if (isOn) {
+				return (region1 <= bunch) && (bunch <= region2);
+			} else return false;
+		}
+	};
   struct DataSet {
     double x, y, t;
     int flag;
-  } *pIonDataSet, *pElecDataSet;
+  };
+
+public:
+  SortRun(const std::string pref, 
+	  const int iNum, const int eNum, const RmBunch rm);
+  ~SortRun();
+
+ private:
+  const int maxNumOfIons, maxNumOfElecs;
+  int numOfIons, numOfElecs;
+  const RmBunch rmBunch;
+  DataSet *pIonDataSet, *pElecDataSet;
 
 private:
 	TCanvas *pC1=nullptr, *pC2=nullptr;
@@ -67,9 +82,7 @@ private:
   TTree *pRootTree=nullptr;
   const bool existTree() const;
   void createTree();
-  void fillTree();
   void closeTree();
-  void fillHists();
   void createHists();
 public:
   enum HistList {
@@ -82,15 +95,15 @@ public:
     h1_eMarker,
     numHists
   };
-  void processEvent(const int ionHitNum,
-                    const sort_class *pIonSorter,
-                    const int elecHitNum,
-                    const sort_class *pElecSorter,
-                    const double eMkr);
+  void fillTreeAndHists(
+	  const int ionHitNum,
+	  const DataSet *pIon,
+	  const int elecHitNum,
+      const DataSet *pElec,
+      const double eMarker);
 
- public:
-  SortRun(const std::string pref, const int iNum, const int eNum);
-  ~SortRun();
+private:
+  bool isFileExist(const char *fileName);
   TCanvas *createCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy);
 };
 }
