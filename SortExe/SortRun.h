@@ -36,7 +36,6 @@ class SortRun: public Hist {
   char id[5];
   const std::string prefix;
   std::string rootFilename;
-  TTree *pRootTree;
 
  private:
   bool isFileExist(const char *fileName);
@@ -52,16 +51,26 @@ class SortRun: public Hist {
 
 private:
 	TCanvas *pC1=nullptr, *pC2=nullptr;
-public:
-	bool existC1() const;
-	void createC1();
-	void updateC1(const bool *mdf=nullptr);
+	const bool existC1() const;
+	const bool existC2() const;
 	void closeC1();
-	bool existC2() const;
-	void createC2(); 
-	void updateC2(const bool *mdf=nullptr);
 	void closeC2();
+public:
+	void createC1();
+	void updateC1();
+	void updateC1(const bool mdf);
+	void createC2();
+	void updateC2();
+	void updateC2(const bool mdf);
 
+private:
+  TTree *pRootTree=nullptr;
+  const bool existTree() const;
+  void createTree();
+  void fillTree();
+  void closeTree();
+  void fillHists();
+  void createHists();
 public:
   enum HistList {
 	  h1_ionTimesumU, h1_ionTimesumV, h1_ionTimesumW, 
@@ -73,20 +82,16 @@ public:
     h1_eMarker,
     numHists
   };
-private:
-  void branchRootTree();
-  void createHists();
-  void fillHists();
-
- public:
-  SortRun(const std::string pref, const int iNum, const int eNum);
-  ~SortRun();
   void processEvent(const int ionHitNum,
                     const sort_class *pIonSorter,
                     const int elecHitNum,
                     const sort_class *pElecSorter,
                     const double eMkr);
-  TCanvas *newCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy);
+
+ public:
+  SortRun(const std::string pref, const int iNum, const int eNum);
+  ~SortRun();
+  TCanvas *createCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy);
 };
 }
 

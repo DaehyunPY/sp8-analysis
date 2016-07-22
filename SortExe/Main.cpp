@@ -359,12 +359,12 @@ int main(int argc, char *argv[]) {
 	// Change dir
 	chdir(pReader->getStringAt("working_directory").c_str());
 	const bool isDrawingCanvases = pReader->getBoolAt("draw_canvases");
-	Analysis::SortRun *pRun = nullptr;
+	Analysis::SortRun *pRun;
 	const int eMarkerCh = pReader->getIntAt("electron_marker_channel");
 
 	// Setup LMF files
 	int numLMF = pReader->getListSizeAt("LMF_files");
-	std::string *pLMFFilenames;
+	std::string *pLMFFilenames = nullptr;
 	if (numLMF==-1) {
 		numLMF = 1;
 		pLMFFilenames = new std::string[numLMF];
@@ -483,14 +483,6 @@ int main(int argc, char *argv[]) {
     printf("ok\n");
   }
 
-  // Setup ROOT canvases
-  if (isDrawingCanvases) {
-	  printf("creating ROOT canvases... ");
-	  if (ionSorter) pRun->createC1();
-	  if (elecSorter) pRun->createC2();
-	  printf("ok\n");
-  }
-  gSystem->ProcessEvents(); // allow the system to show the histograms
 
   // Open LMF file
   for (int iLMF = 0; iLMF < numLMF; iLMF++) {
@@ -503,10 +495,18 @@ int main(int argc, char *argv[]) {
 	  }
 	  std::cout << "A LMF file " << pLMFFilenames[iLMF] << " is open for reading." << std::endl;
 	  // empty keyboard buffer
-	  while (my_kbhit());
+//	  while (my_kbhit());
 
 	  pRun = new Analysis::SortRun("ResortLess", 4, 4);
 	  std::cout << "A root file is open for output." << std::endl;
+	  // Setup ROOT canvases
+	  if (isDrawingCanvases) {
+		  printf("creating ROOT canvases... ");
+		  if (ionSorter) pRun->createC1();
+		  if (elecSorter) pRun->createC2();
+		  printf("ok\n");
+	  }
+	  gSystem->ProcessEvents(); // allow the system to show the histograms
 
 	  // Start reading event data from input file:
 	  // ("event" is all the data that was recorded after a trigger signal)
@@ -863,9 +863,8 @@ int main(int argc, char *argv[]) {
 
 	  // Update canvases
 	  {
-		  bool tBool = true;
-		  pRun->updateC1(&tBool);
-		  pRun->updateC2(&tBool);
+		  pRun->updateC1(true);
+		  pRun->updateC2(true);
 	  }
 
 	  // Close IO file

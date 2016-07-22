@@ -9,16 +9,12 @@ Analysis::SortRun::~SortRun() {
   printf("writing root file... ");
   closeC1();
   closeC2();
-  if (pRootTree) pRootTree->Write();
+  closeTree();
   flushRootFile();
   printf("ok\n");
 
   if (pIonDataSet) delete[] pIonDataSet;
   if (pElecDataSet) delete[] pElecDataSet;
-  eMarker = 0;
-  if (pRootTree) delete pRootTree;
-  // id = nullptr;
-  rootFilename = "";
 }
 
 Analysis::SortRun::SortRun(const std::string prfx, const int iNum, const int eNum) 
@@ -37,8 +33,7 @@ Analysis::SortRun::SortRun(const std::string prfx, const int iNum, const int eNu
 
   // Setup ROOT
   openRootFile(rootFilename.c_str(), "NEW");
-  pRootTree = new TTree("resortedData", "Resorted Data");
-  branchRootTree();
+  createTree();
   createHists();
 }
 
@@ -62,10 +57,15 @@ void Analysis::SortRun::processEvent(const int ionHitNum,
     pElecDataSet[i].flag = pElecSorter->output_hit_array[i]->method;
   }
   eMarker = eMkr;
+  fillTree();
   fillHists();
 }
-
-void Analysis::SortRun::branchRootTree() {
+const bool Analysis::SortRun::existTree() const {
+	return pRootTree ? true : false;
+}
+void Analysis::SortRun::createTree() {
+	closeTree();
+  pRootTree = new TTree("resortedData", "Resorted Data");
   std::string str;
   // Ion setup
   str = "Ion";
@@ -92,7 +92,12 @@ void Analysis::SortRun::branchRootTree() {
     pRootTree->Branch((str + "Flag" + ch).c_str(), &pElecDataSet[i].flag, (str + "Flag" + ch + "/I").c_str());
   }
 }
-TCanvas *Analysis::SortRun::newCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy) {
+void Analysis::SortRun::fillTree() {
+	if (existTree()) {
+		pRootTree->Fill();
+	}
+}
+TCanvas *Analysis::SortRun::createCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy) {
   TCanvas *canvaspointer;
   canvaspointer = new TCanvas(name, titel, xposition, yposition, pixelsx, pixelsy);
   return canvaspointer;
@@ -114,7 +119,7 @@ void Analysis::SortRun::createC1() {
 	create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYRaw), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
 	create2d(SAME_TITLE_WITH_VALNAME(h2_ionXY), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
 	create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYDev), "Time [ns]", "Time [ns]", 100 * 2, -100, 100, 100 * 2, -100, 100);
-	pC1 = newCanvas("ion_canvas", "ion_canvas", 10, 10, 910, 910);
+	pC1 = createCanvas("ion_canvas", "ion_canvas", 10, 10, 910, 910);
 	pC1->Divide(3, 3);
 	pC1->cd(1);
 	getHist1d(h1_ionTimesumU)->Draw();
@@ -146,7 +151,7 @@ void Analysis::SortRun::createC2() {
 	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYRaw), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
 	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXY), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
 	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYDev), "Time [ns]", "Time [ns]", 100 * 2, -100, 100, 100 * 2, -100, 100);
-	pC1 = newCanvas("elec_canvas", "elec_canvas", 10, 10, 910, 910);
+	pC1 = createCanvas("elec_canvas", "elec_canvas", 10, 10, 910, 910);
 	pC1->Divide(3, 3);
 	pC1->cd(1);
 	getHist1d(h1_elecTimesumU)->Draw();
@@ -167,24 +172,38 @@ void Analysis::SortRun::createC2() {
 	pC1->cd(9);
 	getHist2d(h2_elecXYDev)->Draw();
 }
-bool Analysis::SortRun::existC1() const {
-	return pC1;
+const bool Analysis::SortRun::existC1() const {
+	return pC1 ? true : false;
 }
-bool Analysis::SortRun::existC2() const {
-	return pC2;
+const bool Analysis::SortRun::existC2() const {
+	return pC2 ? true : false;
 }
-void Analysis::SortRun::updateC1(const bool *pMdf) {
+void Analysis::SortRun::updateC1() {
 	if (existC1()) {
 		for (int i = 1; i <= 9; i++) {
-			if (pMdf) pC1->cd(i)->Modified(*pMdf);
 			pC1->cd(i)->Update();
 		}
 	}
 }
-void Analysis::SortRun::updateC2(const bool *pMdf) {
+void Analysis::SortRun::updateC1(const bool mdf) {
+	if (existC1()) {
+		for (int i = 1; i <= 9; i++) {
+			pC1->cd(i)->Modified(mdf);
+			pC1->cd(i)->Update();
+		}
+	}
+}
+void Analysis::SortRun::updateC2() {
 	if (existC2()) {
 		for (int i = 1; i <= 9; i++) {
-			if (pMdf) pC2->cd(i)->Modified(*pMdf);
+			pC2->cd(i)->Update();
+		}
+	}
+}
+void Analysis::SortRun::updateC2(const bool mdf) {
+	if (existC2()) {
+		for (int i = 1; i <= 9; i++) {
+			pC2->cd(i)->Modified(mdf);
 			pC2->cd(i)->Update();
 		}
 	}
@@ -205,5 +224,11 @@ void Analysis::SortRun::closeC2() {
 		pC2 = nullptr;
 	}
 }
-
-
+void Analysis::SortRun::closeTree() {
+	if(existTree()) {
+		fillTree();
+		pRootTree->Write();
+		delete pRootTree;
+		pRootTree = nullptr;
+	}
+}
