@@ -15,25 +15,18 @@ Analysis::SortRun::~SortRun() {
 
   if (pIonDataSet) delete[] pIonDataSet;
   if (pElecDataSet) delete[] pElecDataSet;
-  maxNumOfIons = 0;
-  maxNumOfElecs = 0;
   eMarker = 0;
   if (pRootTree) delete pRootTree;
   // id = nullptr;
-  LMFFilename = "";
   rootFilename = "";
 }
 
-Analysis::SortRun::SortRun(const JSONReader &reader) : Hist(false, numHists) {
-  // Change the working directory
-  chdir(reader.getStringAt("working_directory").c_str());
-  LMFFilename = reader.getStringAt("LMF_file");
-
+Analysis::SortRun::SortRun(const std::string prfx, const int iNum, const int eNum) 
+	: Hist(false, numHists), prefix(prfx), maxNumOfIons(iNum), maxNumOfElecs(eNum) {
   // Create id
-  pRootTree = new TTree("resortedData", "Resorted Data");
   for (int i = 0; i < 10000; i++) {
     sprintf(id, "%04d", i);
-    rootFilename = "resortLess";
+    rootFilename = prfx;
     rootFilename += id;
     rootFilename += ".root";
     if (isFileExist(rootFilename.c_str())) {
@@ -44,11 +37,9 @@ Analysis::SortRun::SortRun(const JSONReader &reader) : Hist(false, numHists) {
 
   // Setup ROOT
   openRootFile(rootFilename.c_str(), "NEW");
+  pRootTree = new TTree("resortedData", "Resorted Data");
+  branchRootTree();
   createHists();
-
-  // Setup ions and electrons
-  maxNumOfIons = 0;
-  maxNumOfElecs = 0;
 }
 
 void Analysis::SortRun::processEvent(const int ionHitNum,
@@ -74,11 +65,10 @@ void Analysis::SortRun::processEvent(const int ionHitNum,
   fillHists();
 }
 
-void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
+void Analysis::SortRun::branchRootTree() {
   std::string str;
   // Ion setup
   str = "Ion";
-  maxNumOfIons = ionNum;
   pIonDataSet = new DataSet[maxNumOfIons];
   pRootTree->Branch((str + "Num").c_str(), &numOfIons, (str + "Num/I").c_str());
   for (int i = 0; i < maxNumOfIons; i++) {
@@ -91,7 +81,6 @@ void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
   }
   // Electron setup
   str = "Elec";
-  maxNumOfElecs = elecNum;
   pElecDataSet = new DataSet[maxNumOfIons];
   pRootTree->Branch((str + "Num").c_str(), &numOfElecs, (str + "Num/I").c_str());
   for (int i = 0; i < maxNumOfElecs; i++) {
@@ -102,9 +91,6 @@ void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
     pRootTree->Branch((str + "T" + ch).c_str(), &pElecDataSet[i].t, (str + "T" + ch + "/D").c_str());
     pRootTree->Branch((str + "Flag" + ch).c_str(), &pElecDataSet[i].flag, (str + "Flag" + ch + "/I").c_str());
   }
-}
-char *Analysis::SortRun::getLMFFilename() const {
-  return (char *) LMFFilename.c_str();
 }
 TCanvas *Analysis::SortRun::newCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy) {
   TCanvas *canvaspointer;

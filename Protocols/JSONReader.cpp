@@ -122,6 +122,6 @@ const int Analysis::JSONReader::getListSizeAt(const std::string str) const {
 	if(pV->IsArray()) {
 		return pV->Size();
 	} else {
-		return 0;
+		return -1;
 	}
 }

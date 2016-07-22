@@ -34,15 +34,16 @@ namespace Analysis {
 class SortRun: public Hist {
  private:
   char id[5];
-  std::string LMFFilename = "";
-  std::string rootFilename = "";
+  const std::string prefix;
+  std::string rootFilename;
   TTree *pRootTree;
 
  private:
   bool isFileExist(const char *fileName);
 
  private:
-  int maxNumOfIons, numOfIons, maxNumOfElecs, numOfElecs;
+	 const int maxNumOfIons, maxNumOfElecs;
+  int numOfIons, numOfElecs;
   double eMarker;
   struct DataSet {
     double x, y, t;
@@ -73,21 +74,18 @@ public:
     numHists
   };
 private:
+  void branchRootTree();
   void createHists();
   void fillHists();
 
  public:
-  SortRun(const JSONReader &reader);
+  SortRun(const std::string pref, const int iNum, const int eNum);
   ~SortRun();
-  void branchRootTree(const int ionNum, const int elecNum);
   void processEvent(const int ionHitNum,
                     const sort_class *pIonSorter,
                     const int elecHitNum,
                     const sort_class *pElecSorter,
                     const double eMkr);
-  char *getLMFFilename() const;
-  char *getIonCalibTableFilename() const;
-  char *getElecCalibTableFilename() const;
   TCanvas *newCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy);
 };
 }
