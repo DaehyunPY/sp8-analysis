@@ -1,8 +1,88 @@
 {
   "working_directory": "PATH", // output files will be saved in this dir 
   "LMF_file": "Cobold2008Example_NeKrMixedCluster888eV_06005.lmf",
-  "ion_sorter": "IonSorter.txt",
-  "electron_sorter": "ElecSorter.txt",
+  "electron_calibration_table": "ElecCalibTab.txt", 
+  "electron_sorter": {
+    "mode": 1, // -1=detector does not exist, 0=only convert to new file format, 1=sort, 2=calibrate fu,fv,fw,w_offset, 3=generate correction tables and write them to disk
+    "is_hexanode_used": true,
+    "common_start_mode": true, // for TDC8HP and fADC always use true
+    "TDC_channel": { // counting starts at 1
+        "u1": 1,
+        "u2": 2,
+        "v1": 3,
+        "v2": 4,
+        "w1": 6, // HEX only
+        "w2": 5, // HEX only
+        "MCP": 7, // 0 if not used
+    }, 
+    "offset_setup": {
+        "shift_of_timesum_u": -214.2, // [ns]
+        "shift_of_timesum_v": -218.9, // [ns]
+        "shift_of_timesum_w": -218.8, // [ns] HEX only
+        "shift_of_position_x": 0.0, 
+        "shift_of_position_y": 0.0, 
+        "halfwidth_of_timesum_u": 5.0, // [ns]
+        "halfwidth_of_timesum_v": 5.0, // [ns]
+        "halfwidth_of_timesum_w": 5.0, // [ns] HEX only
+    }, 
+    "scalefactors": {
+        "u": 0.62, 
+        "v": 0.598, 
+        "w": 0.5915, // HEX only 
+        "offset_w": -2.875, // [ns] HEX only 
+    }, 
+    "runtime": 173.0,
+    // "runtime": {
+    //     "u": 173.0, // [ns]
+    //     "v": 173.0, // [ns]
+    //     "w": 173.0, // [ns]
+    // },
+    "radius_of_active_MCP_area": 63.0, // [mm] always a bit larger than the real radius
+    "deadtime_of_signals_from_the_anode": 20.0,
+    "deadtime_of_signals_from_time_MCP": 20.0,
+    "use_position_depended_correction_of_timesums": false,
+    "use_position_depended_NL_correction_of_position": false,
+  },
   "ion_calibration_table": "IonCalibTab.txt",
-  "electron_calibration_table": "ElecCalibTab.txt"
+  "ion_sorter": {
+    "mode": 1, // -1=detector does not exist, 0=only convert to new file format, 1=sort, 2=calibrate fu,fv,fw,w_offset, 3=generate correction tables and write them to disk
+    "is_hexanode_used": true,
+    "common_start_mode": true, // start=0, stop=1 // for TDC8HP and fADC always use 0
+    "TDC_channel": { // counting starts at 1
+        "u1": 10,
+        "u2": 11,
+        "v1": 12,
+        "v2": 13,
+        "w1": 15, // HEX only
+        "w2": 14, // HEX only
+        "MCP": 16, // 0 if not used
+    }, 
+    "offset_setup": {
+        "shift_of_timesum_u": -130.4, // [ns]
+        "shift_of_timesum_v": -122.6, // [ns]
+        "shift_of_timesum_w": -130.0, // [ns] HEX only
+        "shift_of_position_x": 0.0, 
+        "shift_of_position_y": 0.0, 
+        "halfwidth_of_timesum_u": 5.0, // [ns]
+        "halfwidth_of_timesum_v": 5.0, // [ns]
+        "halfwidth_of_timesum_w": 5.0, // [ns] HEX only
+    }, 
+    "scalefactors": {
+        "u": 0.66, 
+        "v": 0.7125, 
+        "w": 1.675, // HEX only 
+        "offset_w": 1.675, // [ns] HEX only 
+    }, 
+    "runtime": 119.0,
+    // "runtime": {
+    //     "u": 119.0, // [ns]
+    //     "v": 119.0, // [ns]
+    //     "w": 119.0, // [ns]
+    // },
+    "radius_of_active_MCP_area": 43.0, // [mm] always a bit larger than the real radius
+    "deadtime_of_signals_from_the_anode": 20.0,
+    "deadtime_of_signals_from_time_MCP": 20.0,
+    "use_position_depended_correction_of_timesums": false,
+    "use_position_depended_NL_correction_of_position": false,
+  },
 }

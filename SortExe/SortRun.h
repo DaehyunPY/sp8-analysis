@@ -36,10 +36,6 @@ class SortRun: public Hist {
   char id[5];
   std::string LMFFilename = "";
   std::string rootFilename = "";
-  std::string ionSorterFilename = "";
-  std::string elecSorterFilename = "";
-  std::string ionCalibTableFilename = "";
-  std::string elecCalibTableFilename = "";
   TTree *pRootTree;
 
  private:
@@ -81,7 +77,7 @@ private:
   void fillHists();
 
  public:
-  SortRun(const std::string configFilename);
+  SortRun(const JSONReader &reader);
   ~SortRun();
   void branchRootTree(const int ionNum, const int elecNum);
   void processEvent(const int ionHitNum,
@@ -90,8 +86,6 @@ private:
                     const sort_class *pElecSorter,
                     const double eMkr);
   char *getLMFFilename() const;
-  char *getIonSorterFilename() const;
-  char *getElecSorterFilename() const;
   char *getIonCalibTableFilename() const;
   char *getElecCalibTableFilename() const;
   TCanvas *newCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy);

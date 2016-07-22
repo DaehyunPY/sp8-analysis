@@ -22,23 +22,12 @@ Analysis::SortRun::~SortRun() {
   // id = nullptr;
   LMFFilename = "";
   rootFilename = "";
-  ionSorterFilename = "";
-  elecSorterFilename = "";
-  ionCalibTableFilename = "";
-  elecCalibTableFilename = "";
 }
 
-Analysis::SortRun::SortRun(const std::string configFilename) : Hist(false, numHists) {
-  // Setup json file reader
-  Analysis::JSONReader configReader(configFilename);
-
+Analysis::SortRun::SortRun(const JSONReader &reader) : Hist(false, numHists) {
   // Change the working directory
-  chdir(configReader.getStringAt("working_directory").c_str());
-  LMFFilename = configReader.getStringAt("LMF_file");
-  ionSorterFilename = configReader.getStringAt("ion_sorter");
-  elecSorterFilename = configReader.getStringAt("electron_sorter");
-  ionCalibTableFilename = configReader.getStringAt("ion_calibration_table");
-  elecCalibTableFilename = configReader.getStringAt("electron_calibration_table");
+  chdir(reader.getStringAt("working_directory").c_str());
+  LMFFilename = reader.getStringAt("LMF_file");
 
   // Create id
   pRootTree = new TTree("resortedData", "Resorted Data");
@@ -114,27 +103,9 @@ void Analysis::SortRun::branchRootTree(const int ionNum, const int elecNum) {
     pRootTree->Branch((str + "Flag" + ch).c_str(), &pElecDataSet[i].flag, (str + "Flag" + ch + "/I").c_str());
   }
 }
-
-char *Analysis::SortRun::getIonSorterFilename() const {
-  return (char *) ionSorterFilename.c_str();
-}
-
-char *Analysis::SortRun::getElecSorterFilename() const {
-  return (char *) elecSorterFilename.c_str();
-}
-
-char *Analysis::SortRun::getIonCalibTableFilename() const {
-  return (char *) ionCalibTableFilename.c_str();
-}
-
-char *Analysis::SortRun::getElecCalibTableFilename() const {
-  return (char *) elecCalibTableFilename.c_str();
-}
-
 char *Analysis::SortRun::getLMFFilename() const {
   return (char *) LMFFilename.c_str();
 }
-
 TCanvas *Analysis::SortRun::newCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy) {
   TCanvas *canvaspointer;
   canvaspointer = new TCanvas(name, titel, xposition, yposition, pixelsx, pixelsy);
