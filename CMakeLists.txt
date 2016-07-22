@@ -80,7 +80,6 @@ endif ()
 
 ### add sub lib
 add_subdirectory(AnalysisCore)
-add_subdirectory(JSONHandler)
 add_subdirectory(Protocols)
 
 ### compiler
@@ -99,7 +98,7 @@ set(ANALYSISEXE_SOURCE_FILES
         AnalysisExe/OutputFlag.cpp
         )
 add_executable(AnalysisExe ${ANALYSISEXE_SOURCE_FILES})
-target_link_libraries(AnalysisExe AnalysisCore JSONHandler Protocols)
+target_link_libraries(AnalysisExe AnalysisCore Protocols)
 
 ### SortExe
 if ((CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -112,5 +111,5 @@ if ((CMAKE_SYSTEM_NAME MATCHES "Linux")
             SortExe/SortRun.cpp
             )
     add_executable(SortExe ${SORTEXE_SOURCE_FILES})
-    target_link_libraries(SortExe JSONHandler Protocols)
+    target_link_libraries(SortExe Protocols)
 endif ()

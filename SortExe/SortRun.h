@@ -27,8 +27,8 @@
 #include <TChain.h>
 #include <RooDataProjBinding.h>
 #include "../resort/resort64c.h"
-#include "../JSONHandler/JSONReader.h"
 #include "../Protocols/Hist.h"
+#include "../Protocols/JSONReader.h"
 
 namespace Analysis {
 class SortRun: public Hist {

@@ -2,7 +2,7 @@
 #define ANALYSIS_EQUIPMENTPARAMETERS_H
 
 #include "Unit.h"
-#include "../JSONHandler/JSONReader.h"
+#include "../Protocols/JSONReader.h"
 
 namespace Analysis {
 class EquipmentParameters {

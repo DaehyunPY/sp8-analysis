@@ -39,7 +39,7 @@ double elec_w_offset;
 double elec_pos_offset_x, elec_pos_offset_y;
 int elec_command;
 
-LMF_IO *LMF;
+LMF_IO *pLMF;
 
 #ifndef LINUX
 #include "conio.h"
@@ -314,9 +314,9 @@ void cleanUp() {
   }
   printf("ok \n");
   printf("deleting the LMF reader instance... ");
-  if (LMF) {
-    delete LMF;
-    LMF = 0;
+  if (pLMF) {
+    delete pLMF;
+    pLMF = 0;
   }
   printf("ok \n");
 }
@@ -367,9 +367,9 @@ int main(int argc, char *argv[]) {
 	pRun = new Analysis::SortRun(*pReader);
 	bool fill_histograms = true;
 
-	LMF = new LMF_IO(NUM_CHANNELS, NUM_IONS);
+	pLMF = new LMF_IO(NUM_CHANNELS, NUM_IONS);
 
-	double tdcresolution = 0.025; // 25ps tdc bin size
+	double TDCResolution = 0.025; // 25ps tdc bin size
 	int TDC[NUM_CHANNELS][NUM_IONS];
 	double tdc_ns[NUM_CHANNELS][NUM_IONS];
 	unsigned int count[NUM_CHANNELS];
@@ -434,7 +434,7 @@ int main(int argc, char *argv[]) {
   // initialization of the sorters:
   if (ionSorter) {
     printf("init ion sorter... ");
-    ionSorter->TDC_resolution_ns = tdcresolution;
+    ionSorter->TDC_resolution_ns = TDCResolution;
     ionSorter->tdc_array_row_length = NUM_IONS;
     ionSorter->count = (int *) count;
     ionSorter->tdc_pointer = &tdc_ns[0][0];
@@ -456,7 +456,7 @@ int main(int argc, char *argv[]) {
 
   if (elecSorter) {
     printf("init electron sorter... ");
-    elecSorter->TDC_resolution_ns = tdcresolution;
+    elecSorter->TDC_resolution_ns = TDCResolution;
     elecSorter->tdc_array_row_length = NUM_IONS;
     elecSorter->count = (int *) count;
     elecSorter->tdc_pointer = &tdc_ns[0][0];
@@ -483,12 +483,12 @@ int main(int argc, char *argv[]) {
 
   gSystem->ProcessEvents(); // allow the system to show the histograms
 
-  // open input and output data files:
+  // Open input and output data files:
   char LMF_InputFilename[500];
   sprintf(LMF_InputFilename, "%s", pRun->getLMFFilename());
 
   // Check LMF file
-  if (!LMF->OpenInputLMF(LMF_InputFilename)) {
+  if (!pLMF->OpenInputLMF(LMF_InputFilename)) {
     printf("could not open input file.\n");
     printf("terminating root app.\n");
     cleanUp();
@@ -508,47 +508,47 @@ int main(int argc, char *argv[]) {
   // ("event" is all the data that was recorded after a trigger signal)
   printf("reading event data... ");
   while (true) {
-    if (LMF->GetEventNumber() % 20000 == 1) {
+    if (pLMF->GetEventNumber() % 20000 == 1) {
       if (my_kbhit()) {
         break;
       }
       gSystem->ProcessEvents(); // allow the system to show the histograms
       printf("\rreading event data... %2i %c  ",
-             __int32(100 * LMF->GetEventNumber() / LMF->uint64_Numberofevents),
+             __int32(100 * pLMF->GetEventNumber() / pLMF->uint64_Numberofevents),
              37);
-      if (LMF->GetEventNumber() % 60000 == 1) {
+      if (pLMF->GetEventNumber() % 60000 == 1) {
 		  pRun->updateC1();
 		  pRun->updateC2();
       }
     }
 
     // read one new event data block from the file:
-    memset(count, 0, LMF->number_of_channels * sizeof(int));
-    if (!LMF->ReadNextEvent()) break;
+    memset(count, 0, pLMF->number_of_channels * sizeof(int));
+    if (!pLMF->ReadNextEvent()) break;
 
-    LMF->GetNumberOfHitsArray(count);
-//    double timestamp_s = LMF->GetDoubleTimeStamp(); // absolute timestamp in seconds
-    LMF->GetTDCDataArray((int *) TDC);
+    pLMF->GetNumberOfHitsArray(count);
+//    double timestamp_s = pLMF->GetDoubleTimeStamp(); // absolute timestamp in seconds
+    pLMF->GetTDCDataArray((int *) TDC);
 
     // convert the raw TDC data to nanoseconds:
     if (ionSorter) {
       if (ionSorter->Cmcp > -1) {
         for (unsigned int i = 0; i < count[ionSorter->Cmcp]; ++i)
-          tdc_ns[ionSorter->Cmcp][i] = double(TDC[ionSorter->Cmcp][i]) * tdcresolution;
+          tdc_ns[ionSorter->Cmcp][i] = double(TDC[ionSorter->Cmcp][i]) * TDCResolution;
       }
       for (unsigned int i = 0; i < count[ionSorter->Cu1]; ++i)
-        tdc_ns[ionSorter->Cu1][i] = double(TDC[ionSorter->Cu1][i]) * tdcresolution;
+        tdc_ns[ionSorter->Cu1][i] = double(TDC[ionSorter->Cu1][i]) * TDCResolution;
       for (unsigned int i = 0; i < count[ionSorter->Cu2]; ++i)
-        tdc_ns[ionSorter->Cu2][i] = double(TDC[ionSorter->Cu2][i]) * tdcresolution;
+        tdc_ns[ionSorter->Cu2][i] = double(TDC[ionSorter->Cu2][i]) * TDCResolution;
       for (unsigned int i = 0; i < count[ionSorter->Cv1]; ++i)
-        tdc_ns[ionSorter->Cv1][i] = double(TDC[ionSorter->Cv1][i]) * tdcresolution;
+        tdc_ns[ionSorter->Cv1][i] = double(TDC[ionSorter->Cv1][i]) * TDCResolution;
       for (unsigned int i = 0; i < count[ionSorter->Cv2]; ++i)
-        tdc_ns[ionSorter->Cv2][i] = double(TDC[ionSorter->Cv2][i]) * tdcresolution;
+        tdc_ns[ionSorter->Cv2][i] = double(TDC[ionSorter->Cv2][i]) * TDCResolution;
       if (ionSorter->use_HEX) {
         for (unsigned int i = 0; i < count[ionSorter->Cw1]; ++i)
-          tdc_ns[ionSorter->Cw1][i] = double(TDC[ionSorter->Cw1][i]) * tdcresolution;
+          tdc_ns[ionSorter->Cw1][i] = double(TDC[ionSorter->Cw1][i]) * TDCResolution;
         for (unsigned int i = 0; i < count[ionSorter->Cw2]; ++i)
-          tdc_ns[ionSorter->Cw2][i] = double(TDC[ionSorter->Cw2][i]) * tdcresolution;
+          tdc_ns[ionSorter->Cw2][i] = double(TDC[ionSorter->Cw2][i]) * TDCResolution;
       }
       if (ionSorter->use_HEX) {
         // shift the time sums to zero:
@@ -620,21 +620,21 @@ int main(int argc, char *argv[]) {
     if (elecSorter) {
       if (elecSorter->Cmcp > -1) {
         for (unsigned int i = 0; i < count[elecSorter->Cmcp]; ++i)
-          tdc_ns[elecSorter->Cmcp][i] = double(TDC[elecSorter->Cmcp][i]) * tdcresolution;
+          tdc_ns[elecSorter->Cmcp][i] = double(TDC[elecSorter->Cmcp][i]) * TDCResolution;
       }
       for (unsigned int i = 0; i < count[elecSorter->Cu1]; ++i)
-        tdc_ns[elecSorter->Cu1][i] = double(TDC[elecSorter->Cu1][i]) * tdcresolution;
+        tdc_ns[elecSorter->Cu1][i] = double(TDC[elecSorter->Cu1][i]) * TDCResolution;
       for (unsigned int i = 0; i < count[elecSorter->Cu2]; ++i)
-        tdc_ns[elecSorter->Cu2][i] = double(TDC[elecSorter->Cu2][i]) * tdcresolution;
+        tdc_ns[elecSorter->Cu2][i] = double(TDC[elecSorter->Cu2][i]) * TDCResolution;
       for (unsigned int i = 0; i < count[elecSorter->Cv1]; ++i)
-        tdc_ns[elecSorter->Cv1][i] = double(TDC[elecSorter->Cv1][i]) * tdcresolution;
+        tdc_ns[elecSorter->Cv1][i] = double(TDC[elecSorter->Cv1][i]) * TDCResolution;
       for (unsigned int i = 0; i < count[elecSorter->Cv2]; ++i)
-        tdc_ns[elecSorter->Cv2][i] = double(TDC[elecSorter->Cv2][i]) * tdcresolution;
+        tdc_ns[elecSorter->Cv2][i] = double(TDC[elecSorter->Cv2][i]) * TDCResolution;
       if (elecSorter->use_HEX) {
         for (unsigned int i = 0; i < count[elecSorter->Cw1]; ++i)
-          tdc_ns[elecSorter->Cw1][i] = double(TDC[elecSorter->Cw1][i]) * tdcresolution;
+          tdc_ns[elecSorter->Cw1][i] = double(TDC[elecSorter->Cw1][i]) * TDCResolution;
         for (unsigned int i = 0; i < count[elecSorter->Cw2]; ++i)
-          tdc_ns[elecSorter->Cw2][i] = double(TDC[elecSorter->Cw2][i]) * tdcresolution;
+          tdc_ns[elecSorter->Cw2][i] = double(TDC[elecSorter->Cw2][i]) * TDCResolution;
       }
       if (elecSorter->use_HEX) {
         // shift the time sums to zero:
@@ -739,7 +739,7 @@ int main(int argc, char *argv[]) {
       if (elecSorter->use_MCP) {
         if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
       }
-      eMarker = mcp - TDC[eMarkerCh][0]*tdcresolution;
+      eMarker = mcp - TDC[eMarkerCh][0]*TDCResolution;
     }
     pRun->processEvent(number_of_ions, ionSorter, number_of_electrons, elecSorter, eMarker);
 
@@ -760,21 +760,21 @@ int main(int argc, char *argv[]) {
         // convert the times from nanoseconds back to raw channels:
         if (ionSorter->Cmcp > -1) {
           for (unsigned int i = 0; i < count[ionSorter->Cmcp]; ++i)
-            TDC[ionSorter->Cmcp][i] = int(tdc_ns[ionSorter->Cmcp][i] / tdcresolution);
+            TDC[ionSorter->Cmcp][i] = int(tdc_ns[ionSorter->Cmcp][i] / TDCResolution);
         }
         for (unsigned int i = 0; i < count[ionSorter->Cu1]; ++i)
-          TDC[ionSorter->Cu1][i] = int(tdc_ns[ionSorter->Cu1][i] / tdcresolution);
+          TDC[ionSorter->Cu1][i] = int(tdc_ns[ionSorter->Cu1][i] / TDCResolution);
         for (unsigned int i = 0; i < count[ionSorter->Cu2]; ++i)
-          TDC[ionSorter->Cu2][i] = int(tdc_ns[ionSorter->Cu2][i] / tdcresolution);
+          TDC[ionSorter->Cu2][i] = int(tdc_ns[ionSorter->Cu2][i] / TDCResolution);
         for (unsigned int i = 0; i < count[ionSorter->Cv1]; ++i)
-          TDC[ionSorter->Cv1][i] = int(tdc_ns[ionSorter->Cv1][i] / tdcresolution);
+          TDC[ionSorter->Cv1][i] = int(tdc_ns[ionSorter->Cv1][i] / TDCResolution);
         for (unsigned int i = 0; i < count[ionSorter->Cv2]; ++i)
-          TDC[ionSorter->Cv2][i] = int(tdc_ns[ionSorter->Cv2][i] / tdcresolution);
+          TDC[ionSorter->Cv2][i] = int(tdc_ns[ionSorter->Cv2][i] / TDCResolution);
         if (ionSorter->use_HEX) {
           for (unsigned int i = 0; i < count[ionSorter->Cw1]; ++i)
-            TDC[ionSorter->Cw1][i] = int(tdc_ns[ionSorter->Cw1][i] / tdcresolution);
+            TDC[ionSorter->Cw1][i] = int(tdc_ns[ionSorter->Cw1][i] / TDCResolution);
           for (unsigned int i = 0; i < count[ionSorter->Cw2]; ++i)
-            TDC[ionSorter->Cw2][i] = int(tdc_ns[ionSorter->Cw2][i] / tdcresolution);
+            TDC[ionSorter->Cw2][i] = int(tdc_ns[ionSorter->Cw2][i] / TDCResolution);
         }
       }
 
@@ -789,26 +789,26 @@ int main(int argc, char *argv[]) {
         // convert the times from nanoseconds back to raw channels:
         if (elecSorter->Cmcp > -1) {
           for (unsigned int i = 0; i < count[elecSorter->Cmcp]; ++i)
-            TDC[elecSorter->Cmcp][i] = int(tdc_ns[elecSorter->Cmcp][i] / tdcresolution);
+            TDC[elecSorter->Cmcp][i] = int(tdc_ns[elecSorter->Cmcp][i] / TDCResolution);
         }
         for (unsigned int i = 0; i < count[elecSorter->Cu1]; ++i)
-          TDC[elecSorter->Cu1][i] = int(tdc_ns[elecSorter->Cu1][i] / tdcresolution);
+          TDC[elecSorter->Cu1][i] = int(tdc_ns[elecSorter->Cu1][i] / TDCResolution);
         for (unsigned int i = 0; i < count[elecSorter->Cu2]; ++i)
-          TDC[elecSorter->Cu2][i] = int(tdc_ns[elecSorter->Cu2][i] / tdcresolution);
+          TDC[elecSorter->Cu2][i] = int(tdc_ns[elecSorter->Cu2][i] / TDCResolution);
         for (unsigned int i = 0; i < count[elecSorter->Cv1]; ++i)
-          TDC[elecSorter->Cv1][i] = int(tdc_ns[elecSorter->Cv1][i] / tdcresolution);
+          TDC[elecSorter->Cv1][i] = int(tdc_ns[elecSorter->Cv1][i] / TDCResolution);
         for (unsigned int i = 0; i < count[elecSorter->Cv2]; ++i)
-          TDC[elecSorter->Cv2][i] = int(tdc_ns[elecSorter->Cv2][i] / tdcresolution);
+          TDC[elecSorter->Cv2][i] = int(tdc_ns[elecSorter->Cv2][i] / TDCResolution);
         if (elecSorter->use_HEX) {
           for (unsigned int i = 0; i < count[elecSorter->Cw1]; ++i)
-            TDC[elecSorter->Cw1][i] = int(tdc_ns[elecSorter->Cw1][i] / tdcresolution);
+            TDC[elecSorter->Cw1][i] = int(tdc_ns[elecSorter->Cw1][i] / TDCResolution);
           for (unsigned int i = 0; i < count[elecSorter->Cw2]; ++i)
-            TDC[elecSorter->Cw2][i] = int(tdc_ns[elecSorter->Cw2][i] / tdcresolution);
+            TDC[elecSorter->Cw2][i] = int(tdc_ns[elecSorter->Cw2][i] / TDCResolution);
         }
       }
 
       // output TDC data
-      for (unsigned int i = 0; i < LMF->number_of_channels; i++) {
+      for (unsigned int i = 0; i < pLMF->number_of_channels; i++) {
         fwrite(&count[i], sizeof(int), 1, outfile);
         for (unsigned int j = 0; j < count[i]; j++) fwrite(&TDC[i][j], sizeof(int), 1, outfile);
       }

@@ -1,6 +1,6 @@
 #include "JSONReader.h"
 
-Analysis::JSONReader::JSONReader(const std::string &f) {
+Analysis::JSONReader::JSONReader(const std::string f) {
   filename = f;
   std::stringstream stringStream;
   std::fstream fileStream;
@@ -30,8 +30,7 @@ Analysis::JSONReader::JSONReader(const std::string &f) {
   return;
 }
 Analysis::JSONReader::~JSONReader() { }
-const rapidjson::Value &Analysis::JSONReader::getValue(std::string str1)
-const {
+const rapidjson::Value &Analysis::JSONReader::getValue(std::string str1) const {
   std::string str0;
   std::size_t found;
   const rapidjson::Value *value;
@@ -48,21 +47,40 @@ const {
   assert(value->HasMember(str1.c_str()));
   return (*value)[str1.c_str()];
 }
-const int Analysis::JSONReader::getIntAt(const std::string &str) const {
-  assert(getValue(str).IsNumber());
-  assert(getValue(str).IsInt());
-  return getValue(str).GetInt();
+const int Analysis::JSONReader::getIntAt(const std::string str, const int i) const {
+	const rapidjson::Value *pV = &getValue(str);
+	if(i != -1) { 
+		assert(i >= 0);
+		assert(pV->IsArray());
+		pV = &((*pV)[i]);
+	}
+	assert(pV->IsNumber());
+	assert(pV->IsInt());
+	return pV->GetInt();
 }
-const double Analysis::JSONReader::getDoubleAt(const std::string &str) const {
-  assert(getValue(str).IsNumber());
-  return getValue(str).GetDouble();
+const double Analysis::JSONReader::getDoubleAt(const std::string str, const int i) const {
+	const rapidjson::Value *pV = &getValue(str);
+	if(i != -1) { 
+		assert(i >= 0);
+		assert(pV->IsArray());
+		pV = &((*pV)[i]);
+	}
+	assert(pV->IsNumber());
+	assert(pV->IsDouble());
+	return pV->GetDouble();
 }
 const rapidjson::Document &Analysis::JSONReader::getDocument() const {
   return document;
 }
-const bool Analysis::JSONReader::getBoolAt(const std::string &str) const {
-  assert(getValue(str).IsBool());
-  return getValue(str).GetBool();
+const bool Analysis::JSONReader::getBoolAt(const std::string str, const int i) const {
+	const rapidjson::Value *pV = &getValue(str);
+	if(i != -1) { 
+		assert(i >= 0);
+		assert(pV->IsArray());
+		pV = &((*pV)[i]);
+	}
+	assert(pV->IsBool());
+	return pV->GetBool();
 }
 const std::string &Analysis::JSONReader::getFilename() const {
   return filename;
@@ -73,9 +91,15 @@ const Analysis::JSONFlag &Analysis::JSONReader::getFlag() const {
 Analysis::JSONFlag &Analysis::JSONReader::setFlagMembers() {
   return flag;
 }
-const std::string Analysis::JSONReader::getStringAt(const std::string &str) const {
-  assert(getValue(str).IsString());
-  return getValue(str).GetString();
+const std::string Analysis::JSONReader::getStringAt(const std::string str, const int i) const {
+	const rapidjson::Value *pV = &getValue(str);
+	if(i != -1) { 
+		assert(i >= 0);
+		assert(pV->IsArray());
+		pV = &((*pV)[i]);
+	}
+	assert(pV->IsString());
+	return pV->GetString();
 }
 const bool Analysis::JSONReader::hasMember(std::string str1) const {
   std::string str0;
@@ -92,4 +116,12 @@ const bool Analysis::JSONReader::hasMember(std::string str1) const {
     found = str1.find(".");
   }
   return value->HasMember(str1.c_str());
+}
+const int Analysis::JSONReader::getListSizeAt(const std::string str) const {
+	const rapidjson::Value *pV = &getValue(str);
+	if(pV->IsArray()) {
+		return pV->Size();
+	} else {
+		return 0;
+	}
 }

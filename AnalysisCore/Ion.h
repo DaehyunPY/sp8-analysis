@@ -2,7 +2,7 @@
 #define ANALYSIS_ION_H
 
 #include "Object.h"
-#include "../JSONHandler/JSONReader.h"
+#include "../Protocols/JSONReader.h"
 
 namespace Analysis {
 class Ion: public Object {

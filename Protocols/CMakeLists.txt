@@ -9,5 +9,7 @@ endif()
 set(SOURCE_FILES
     Flag.cpp
     Hist.cpp
+    JSONFlag.cpp
+    JSONReader.cpp
     )
 add_library(Protocols STATIC ${SOURCE_FILES})
