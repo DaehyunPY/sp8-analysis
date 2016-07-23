@@ -95,10 +95,6 @@ TCanvas *Analysis::SortRun::createCanvas(char *name, char *titel, int xposition,
   return canvaspointer;
 }
 void Analysis::SortRun::createHists() {
-  create1d(SAME_TITLE_WITH_VALNAME(h1_eMarker), "Time [ns]", 2000, -5000, 1000);
-}
-void Analysis::SortRun::createC1() {
-	closeC1();
 	create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumU), "Time [ns]", 500 * 10, -250, 250);
 	create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumV), "Time [ns]", 500 * 10, -250, 250);
 	create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumW), "Time [ns]", 500 * 10, -250, 250);
@@ -108,6 +104,21 @@ void Analysis::SortRun::createC1() {
 	create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYRaw), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
 	create2d(SAME_TITLE_WITH_VALNAME(h2_ionXY), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
 	create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYDev), "Time [ns]", "Time [ns]", 100 * 2, -100, 100, 100 * 2, -100, 100);
+
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumU), "Time [ns]", 500*10, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumV), "Time [ns]", 500 * 10, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumW), "Time [ns]", 500 * 10, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecU), "Time [ns]", 500 * 2, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecV), "Time [ns]", 500 * 2, -250, 250);
+	create1d(SAME_TITLE_WITH_VALNAME(h1_elecW), "Time [ns]", 500 * 2, -250, 250);
+	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYRaw), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
+	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXY), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
+	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYDev), "Time [ns]", "Time [ns]", 100 * 2, -100, 100, 100 * 2, -100, 100);
+
+  create1d(SAME_TITLE_WITH_VALNAME(h1_eMarker), "Time [ns]", 2000, -5000, 1000);
+}
+void Analysis::SortRun::createC1() {
+	closeC1();
 	pC1 = createCanvas("ion_canvas", "ion_canvas", 10, 10, 910, 910);
 	pC1->Divide(3, 3);
 	pC1->cd(1);
@@ -131,15 +142,6 @@ void Analysis::SortRun::createC1() {
 }
 void Analysis::SortRun::createC2() {
 	closeC2();
-	create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumU), "Time [ns]", 500*10, -250, 250);
-	create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumV), "Time [ns]", 500 * 10, -250, 250);
-	create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumW), "Time [ns]", 500 * 10, -250, 250);
-	create1d(SAME_TITLE_WITH_VALNAME(h1_elecU), "Time [ns]", 500 * 2, -250, 250);
-	create1d(SAME_TITLE_WITH_VALNAME(h1_elecV), "Time [ns]", 500 * 2, -250, 250);
-	create1d(SAME_TITLE_WITH_VALNAME(h1_elecW), "Time [ns]", 500 * 2, -250, 250);
-	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYRaw), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
-	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXY), "Time [ns]", "Time [ns]", 120 * 4, -60, 60, 120 * 4, -60, 60);
-	create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYDev), "Time [ns]", "Time [ns]", 100 * 2, -100, 100, 100 * 2, -100, 100);
 	pC1 = createCanvas("elec_canvas", "elec_canvas", 10, 10, 910, 910);
 	pC1->Divide(3, 3);
 	pC1->cd(1);

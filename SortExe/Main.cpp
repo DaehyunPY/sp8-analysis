@@ -583,53 +583,49 @@ int main(int argc, char *argv[]) {
 			  ionSorter->feed_calibration_data(true, ion_w_offset);
 
 			  if (ionSorter->scalefactors_calibrator && ion_command >= 2) {
-				  if (ionSorter->scalefactors_calibrator->map_is_full_enough()) break;
+				  if (ionSorter->scalefactors_calibrator->map_is_full_enough()) {
+					  theLoopIsOn = false;
+					  break;
+				  }
 			  }
-			  if (ionSorter->use_HEX && isDrawingCanvases)
-				  pRun->fill2d(Analysis::SortRun::h2_ionXYDev,
-					  ionSorter->scalefactors_calibrator->binx - ionSorter->scalefactors_calibrator->detector_map_size / 2.0,
-					  ionSorter->scalefactors_calibrator->biny - ionSorter->scalefactors_calibrator->detector_map_size / 2.0,
-					  ionSorter->scalefactors_calibrator->detector_map_devi_fill);
+			  if (ionSorter->use_HEX)
+					pRun->fill2d(Analysis::SortRun::h2_ionXYDev,
+						ionSorter->scalefactors_calibrator->binx - ionSorter->scalefactors_calibrator->detector_map_size / 2.0,
+						ionSorter->scalefactors_calibrator->biny - ionSorter->scalefactors_calibrator->detector_map_size / 2.0,
+						ionSorter->scalefactors_calibrator->detector_map_devi_fill);
 
 			  if (count[ionSorter->Cu1] > 0 && count[ionSorter->Cu2] > 0) {
-				  if (count[ionSorter->Cv1] > 0 && count[ionSorter->Cv2] > 0) {
-					  double u = ionSorter->fu * (tdc_ns[ionSorter->Cu1][0] - tdc_ns[ionSorter->Cu2][0]);
-					  double v = ionSorter->fv * (tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0]);
-					  double y = (u - 2. * v) * 0.577350269; // 0.557 = 1/sqrt(3)
-					  if (isDrawingCanvases)
-						  pRun->fill2d(Analysis::SortRun::h2_ionXYRaw, u, y);
-				  }
+					if (count[ionSorter->Cv1] > 0 && count[ionSorter->Cv2] > 0) {
+						double u = ionSorter->fu * (tdc_ns[ionSorter->Cu1][0] - tdc_ns[ionSorter->Cu2][0]);
+						double v = ionSorter->fv * (tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0]);
+						double y = (u - 2. * v) * 0.577350269; // 0.557 = 1/sqrt(3)
+						pRun->fill2d(Analysis::SortRun::h2_ionXYRaw, u, y);
+					}
 			  }
 			  if (count[ionSorter->Cu1] > 0 && count[ionSorter->Cu2] > 0) {
-				  if (isDrawingCanvases)
-					  pRun->fill1d(Analysis::SortRun::h1_ionU, tdc_ns[ionSorter->Cu1][0] - tdc_ns[ionSorter->Cu2][0]);
-				  double mcp = 0.;
-				  if (ionSorter->use_MCP) {
-					  if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
-				  }
-				  if (isDrawingCanvases)
-					  pRun->fill1d(Analysis::SortRun::h1_ionTimesumU, tdc_ns[ionSorter->Cu1][0] + tdc_ns[ionSorter->Cu2][0] - 2 * mcp);
+					pRun->fill1d(Analysis::SortRun::h1_ionU, tdc_ns[ionSorter->Cu1][0] - tdc_ns[ionSorter->Cu2][0]);
+					double mcp = 0.;
+					if (ionSorter->use_MCP) {
+						if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
+					}
+					pRun->fill1d(Analysis::SortRun::h1_ionTimesumU, tdc_ns[ionSorter->Cu1][0] + tdc_ns[ionSorter->Cu2][0] - 2 * mcp);
 			  }
 			  if (count[ionSorter->Cv1] > 0 && count[ionSorter->Cv2] > 0) {
-				  if (isDrawingCanvases)
-					  pRun->fill1d(Analysis::SortRun::h1_ionV, tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0]);
-				  double mcp = 0.;
-				  if (ionSorter->use_MCP) {
-					  if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
-				  }
-				  if (isDrawingCanvases)
-					  pRun->fill1d(Analysis::SortRun::h1_ionTimesumV, tdc_ns[ionSorter->Cv1][0] + tdc_ns[ionSorter->Cv2][0] - 2 * mcp);
+					pRun->fill1d(Analysis::SortRun::h1_ionV, tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0]);
+					double mcp = 0.;
+					if (ionSorter->use_MCP) {
+						if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
+					}
+					pRun->fill1d(Analysis::SortRun::h1_ionTimesumV, tdc_ns[ionSorter->Cv1][0] + tdc_ns[ionSorter->Cv2][0] - 2 * mcp);
 			  }
 			  if (ionSorter->use_HEX) {
 				  if (count[ionSorter->Cw1] > 0 && count[ionSorter->Cw2] > 0) {
-					  if (isDrawingCanvases)
-						  pRun->fill1d(Analysis::SortRun::h1_ionW, tdc_ns[ionSorter->Cw1][0] - tdc_ns[ionSorter->Cw2][0]);
-					  double mcp = 0.;
-					  if (ionSorter->use_MCP) {
-						  if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
-					  }
-					  if (isDrawingCanvases)
-						  pRun->fill1d(Analysis::SortRun::h1_ionTimesumW, tdc_ns[ionSorter->Cw1][0] + tdc_ns[ionSorter->Cw2][0] - 2 * mcp);
+						pRun->fill1d(Analysis::SortRun::h1_ionW, tdc_ns[ionSorter->Cw1][0] - tdc_ns[ionSorter->Cw2][0]);
+						double mcp = 0.;
+						if (ionSorter->use_MCP) {
+							if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
+						}
+						pRun->fill1d(Analysis::SortRun::h1_ionTimesumW, tdc_ns[ionSorter->Cw1][0] + tdc_ns[ionSorter->Cw2][0] - 2 * mcp);
 				  }
 			  }
 		  }
@@ -671,9 +667,12 @@ int main(int argc, char *argv[]) {
 			  elecSorter->feed_calibration_data(true, elec_w_offset);
 
 			  if (elecSorter->scalefactors_calibrator && elec_command >= 2) {
-				  if (elecSorter->scalefactors_calibrator->map_is_full_enough()) break;
+				  if (elecSorter->scalefactors_calibrator->map_is_full_enough()) {
+					  theLoopIsOn = false;
+					  break;
+				  }
 			  }
-			  if (elecSorter->use_HEX && isDrawingCanvases)
+			  if (elecSorter->use_HEX)
 				  pRun->fill2d(Analysis::SortRun::h2_elecXYDev,
 					  elecSorter->scalefactors_calibrator->binx - elecSorter->scalefactors_calibrator->detector_map_size / 2.0,
 					  elecSorter->scalefactors_calibrator->biny - elecSorter->scalefactors_calibrator->detector_map_size / 2.0,
@@ -681,42 +680,35 @@ int main(int argc, char *argv[]) {
 
 			  if (count[elecSorter->Cu1] > 0 && count[elecSorter->Cu2] > 0) {
 				  if (count[elecSorter->Cv1] > 0 && count[elecSorter->Cv2] > 0) {
-					  double u = elecSorter->fu * (tdc_ns[elecSorter->Cu1][0] - tdc_ns[elecSorter->Cu2][0]);
-					  double v = elecSorter->fv * (tdc_ns[elecSorter->Cv1][0] - tdc_ns[elecSorter->Cv2][0]);
-					  double y = (u - 2. * v) * 0.577350269; // 0.557 = 1/sqrt(3)
-					  if (isDrawingCanvases)
-						  pRun->fill2d(Analysis::SortRun::h2_elecXYRaw, u, y);
+					double u = elecSorter->fu * (tdc_ns[elecSorter->Cu1][0] - tdc_ns[elecSorter->Cu2][0]);
+					double v = elecSorter->fv * (tdc_ns[elecSorter->Cv1][0] - tdc_ns[elecSorter->Cv2][0]);
+					double y = (u - 2. * v) * 0.577350269; // 0.557 = 1/sqrt(3)
+					pRun->fill2d(Analysis::SortRun::h2_elecXYRaw, u, y);
 				  }
 			  }
 			  if (count[elecSorter->Cu1] > 0 && count[elecSorter->Cu2] > 0) {
-				  if (isDrawingCanvases)
 					  pRun->fill1d(Analysis::SortRun::h1_elecU, tdc_ns[elecSorter->Cu1][0] - tdc_ns[elecSorter->Cu2][0]);
 				  double mcp = 0.;
 				  if (elecSorter->use_MCP) {
 					  if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
 				  }
-				  if (isDrawingCanvases)
 					  pRun->fill1d(Analysis::SortRun::h1_elecTimesumU, tdc_ns[elecSorter->Cu1][0] + tdc_ns[elecSorter->Cu2][0] - 2 * mcp);
 			  }
 			  if (count[elecSorter->Cv1] > 0 && count[elecSorter->Cv2] > 0) {
-				  if (isDrawingCanvases)
 					  pRun->fill1d(Analysis::SortRun::h1_elecV, tdc_ns[elecSorter->Cv1][0] - tdc_ns[elecSorter->Cv2][0]);
 				  double mcp = 0.;
 				  if (elecSorter->use_MCP) {
 					  if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
 				  }
-				  if (isDrawingCanvases)
 					  pRun->fill1d(Analysis::SortRun::h1_elecTimesumV, tdc_ns[elecSorter->Cv1][0] + tdc_ns[elecSorter->Cv2][0] - 2 * mcp);
 			  }
 			  if (elecSorter->use_HEX) {
 				  if (count[elecSorter->Cw1] > 0 && count[elecSorter->Cw2] > 0) {
-					  if (isDrawingCanvases)
 						  pRun->fill1d(Analysis::SortRun::h1_elecW, tdc_ns[elecSorter->Cw1][0] - tdc_ns[elecSorter->Cw2][0]);
 					  double mcp = 0.;
 					  if (elecSorter->use_MCP) {
 						  if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
 					  }
-					  if (isDrawingCanvases)
 						  pRun->fill1d(Analysis::SortRun::h1_elecTimesumW, tdc_ns[elecSorter->Cw1][0] + tdc_ns[elecSorter->Cw2][0] - 2 * mcp);
 				  }
 			  }
@@ -735,7 +727,6 @@ int main(int argc, char *argv[]) {
 				  number_of_ions = ionSorter->run_without_sorting();
 			  }
 			  for (int i = 0; i < number_of_ions; i++) {
-				  if (isDrawingCanvases)
 					  pRun->fill2d(Analysis::SortRun::h2_ionXY, ionSorter->output_hit_array[i]->x, ionSorter->output_hit_array[i]->y);
 			  }
 		  }
@@ -749,7 +740,6 @@ int main(int argc, char *argv[]) {
 				  number_of_electrons = elecSorter->run_without_sorting();
 			  }
 			  for (int i = 0; i < number_of_electrons; i++) {
-				  if (isDrawingCanvases)
 					  pRun->fill2d(Analysis::SortRun::h2_elecXY, elecSorter->output_hit_array[i]->x, elecSorter->output_hit_array[i]->y);
 			  }
 		  }
@@ -864,7 +854,6 @@ int main(int argc, char *argv[]) {
 				  2. * ionSorter->scalefactors_calibrator->best_fw,
 				  ionSorter->scalefactors_calibrator->best_w_offset);
 		  }
-		  break;
 	  }
 	  if (elec_command == 2) {
 		  printf("calibrating elec detector... ");
@@ -876,19 +865,16 @@ int main(int argc, char *argv[]) {
 				  2. * elecSorter->scalefactors_calibrator->best_fw,
 				  elecSorter->scalefactors_calibrator->best_w_offset);
 		  }
-		  break;
 	  }
 	  if (ion_command == 3) {   // generate and print correction tables for sum- and position-correction
 		  printf("ion: creating calibration tables...\n");
 		  create_calibration_tables(ionCalibTabFilename.c_str(), ionSorter);
 		  printf("\nfinished creating calibration tables\n");
-		  break;
 	  }
 	  if (elec_command == 3) {   // generate and print correction tables for sum- and position-correction
 		  printf("elec: creating calibration tables...\n");
 		  create_calibration_tables(elecClibTabFilename.c_str(), elecSorter);
 		  printf("\nfinished creating calibration tables\n");
-		  break;
 	  }
 
 	  // Update canvases
