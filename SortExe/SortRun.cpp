@@ -39,7 +39,7 @@ Analysis::SortRun::SortRun(const std::string prfx,
   createHists();
 }
 
-void Analysis::SortRun::fillTreeAndHists(
+void Analysis::SortRun::fillTree(
 	const int ionHitNum,
 	const DataSet *pIons,
 	const int elecHitNum,

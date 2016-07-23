@@ -766,7 +766,7 @@ int main(int argc, char *argv[]) {
 			  pElecs[i].t = elecSorter->output_hit_array[i]->time;
 			  pElecs[i].flag = elecSorter->output_hit_array[i]->method;
 		  }
-		  pRun->fillTreeAndHists(number_of_ions, pIons, number_of_electrons, pElecs, eMarker);
+		  pRun->fillTree(number_of_ions, pIons, number_of_electrons, pElecs, eMarker);
 		  delete[] pIons;
 		  delete[] pElecs;
 

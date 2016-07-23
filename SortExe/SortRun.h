@@ -95,7 +95,7 @@ public:
     h1_eMarker,
     numHists
   };
-  void fillTreeAndHists(
+  void fillTree(
 	  const int ionHitNum,
 	  const DataSet *pIon,
 	  const int elecHitNum,
