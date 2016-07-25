@@ -132,7 +132,7 @@ void Analysis::SortRun::createHists() {
 
 #define __TIMESUM_TITLE_BIN_REGION__ "Time [ns]", 5000, -250, 250
 #define __TIMEDELAY_TITLE_BIN_REGION__ "Time [ns]", 1000, -250, 250
-#define __AFTERCALIB_TITLE_BIN_REGION__(X) "Time1 [ns]", "Time1 [ns]", X*8, X, X, X*8, X, X
+#define __AFTERCALIB_TITLE_BIN_REGION__(X) "Time1 [ns]", "Time1 [ns]", X*8, -X, X, X*8, -X, X
   create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumU), __TIMESUM_TITLE_BIN_REGION__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumV), __TIMESUM_TITLE_BIN_REGION__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumW), __TIMESUM_TITLE_BIN_REGION__);
