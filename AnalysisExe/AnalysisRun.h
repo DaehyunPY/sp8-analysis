@@ -254,7 +254,7 @@ class AnalysisRun: Hist {
     hist1ID_4thHitElecE,
     hist1ID_SumOfElecEs,
     //
-    numberOfElecHists
+        numberOfElecHists
   };
   void createElecHists();
   void fillElecHists();
