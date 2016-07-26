@@ -46,19 +46,13 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) {
     pEventReader = new Analysis::EventDataReader(numberOfHits);
     char ch[2];
     for (int i = 0; i < numberOfHits; i++) {
-      for (std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY",
-                              "ElecT"}) {
+      for (std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY", "ElecT"}) {
         sprintf(ch, "%01d", i);
-        pEventChain->SetBranchAddress((str + ch).c_str(),
-                                      &(pEventReader->setEventDataAt(i,
-                                                                     str
-                                                                         + ch)));
+        pEventChain->SetBranchAddress((str + ch).c_str(), &(pEventReader->setEventDataAt(i, str + ch)));
       }
       for (std::string str : {"IonFlag", "ElecFlag"}) {
         sprintf(ch, "%01d", i);
-        pEventChain->SetBranchAddress((str + ch).c_str(),
-                                      &(pEventReader->setFlagDataAt(i,
-                                                                    str + ch)));
+        pEventChain->SetBranchAddress((str + ch).c_str(), &(pEventReader->setFlagDataAt(i, str + ch)));
       }
     }
   }

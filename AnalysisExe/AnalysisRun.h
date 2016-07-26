@@ -95,7 +95,7 @@ class AnalysisRun: Hist {
   Analysis::OutputFlag flag;
 
  public:
-  AnalysisRun(const std::string configFilename = "Parameters.json");
+  AnalysisRun(const std::string configFilename);
   ~AnalysisRun();
   const long getEntries() const;
   void processEvent(const long raw);
