@@ -2,22 +2,10 @@
 // Created by Daehyun You on 12/30/15.
 //
 
-#ifdef _WIN32
-#include <direct.h>
-#define getcwd _getcwd
-#define chdir _chdir
-#else
-#include <unistd.h>
-#endif
-
-#include <ctime>
-#include <TChain.h>
-#include <RooDataProjBinding.h>
-
 #include "AnalysisRun.h"
 
-Analysis::AnalysisRun::AnalysisRun(const std::string configFilename): 
-	Hist(false, numberOfHists) {
+Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) :
+    Hist(false, numberOfHists) {
   // Setup json file reader
   Analysis::JSONReader configReader(configFilename);
 
@@ -92,9 +80,7 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename):
   rootFilename += pLogWriter->getID();
   rootFilename += ".root";
   openRootFile(rootFilename.c_str(), "NEW");
-  createIonHists();
-  createElecHists();
-  createNatureHists();
+  createHists();
   std::cout << "ok" << std::endl;
 
   // Initialization is done
@@ -162,9 +148,7 @@ void Analysis::AnalysisRun::processEvent(const long raw) {
     }
 
     // Fill histograms
-    fillIonHists();
-	fillElecHists();
-    fillNatureHists();
+    fillHists();
   }
 
   // Fill hists for resort resortElecFlags
@@ -174,290 +158,94 @@ const long Analysis::AnalysisRun::getEntries() const {
   return (long) pEventChain->GetEntries();
 }
 
-void Analysis::AnalysisRun::createNatureHists() {
-  create1d(SAMETITLEWITH(histID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead),
-                  "TOF [ns]",
-                  H1_ION_TOF,
-                  dirNameOfNatureHists);
-  create2d(SAMETITLEWITH(histID_2ndAnd3rdHitIonTOF_under1stHitIonIsInMasterRegion),
-                  "1st Hit Ion TOF [ns]", "2nd Hit Ion TOF [ns]",
-                  H2_ION_TOF, H2_ION_TOF,
-                  dirNameOfNatureHists);
-  create2d(SAMETITLEWITH(histID_1stHitElecEAndSumOfIonTOFs_underMasterCondition),
-                  "Energy [eV]", "Sum of TOFs [ns]",
-                  H2_ELECTRON_ENERGY, H2_ION_SUMOFTOF(4),
-                  dirNameOfNatureHists);
-  create1d(SAMETITLEWITH(histID_1stHitElecE_underMasterCondition),
-                  "Energy [eV]",
-                  H1_ELECTRON_ENERGY,
-                  dirNameOfNatureHists);
-}
+void Analysis::AnalysisRun::createHists() {
+  // IonImage
+#define __IONIMAGE__ "Location X [mm]", "Location Y [mm]", 100, -50, 50, 100, -50, 50, "IonImage"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage), __IONIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage_master), __IONIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage), __IONIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage_master), __IONIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage), __IONIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage_master), __IONIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage), __IONIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage_master), __IONIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage), __IONIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage_master), __IONIMAGE__);
 
-void Analysis::AnalysisRun::fillNatureHists() {
-  const bool under2ndAnd3rdHitIonAreNotDead =
-      (!pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead))
-          && (!pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead));
-  if (under2ndAnd3rdHitIonAreNotDead) {
-    fill1d(histID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead,
-                  pIons->getRealOrDummyObject(0).outputTOF());
-  }
-  const bool under1stHitIonInMasterRegion =
-      pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
-  if (under1stHitIonInMasterRegion) {
-    fill2d(histID_2ndAnd3rdHitIonTOF_under1stHitIonIsInMasterRegion,
-                  pIons->getRealOrDummyObject(1).outputTOF(),
-                  pIons->getRealOrDummyObject(2).outputTOF());
-  }
-  const bool underMasterCondition =
-      (pIons->areAllFlag(ObjectFlag::WithinMasterRegion)
-          && pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion));
-  if (underMasterCondition) {
-    fill2d(histID_1stHitElecEAndSumOfIonTOFs_underMasterCondition,
-                  pElectrons->getRealOrDummyObject(0).outputE(),
-                  pIons->outputTotalTOF());
-    fill1d(histID_1stHitElecE_underMasterCondition,
-                  pElectrons->getRealOrDummyObject(0).outputE());
-  }
-}
+  // IonTOF
+#define __IONTOF1__ "TOF [ns]", 2000, 0, 10000, "IonTOF"
+#define __IONTOF2__ "TOF 1 [ns]", "TOF 2 [ns]", 500, 0, 10000, 500, 0, 10000, "IonTOF"
+#define __IONTOF3__ "Sum of TOFs [ns]", "Diff of TOFs [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
+#define __IONTOF4__ "TOF 1 [ns]", "TOF 2 [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF), __IONTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF_master), __IONTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hTOF), __IONTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hTOF_master), __IONTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hTOF), __IONTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hTOF_master), __IONTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hTOF), __IONTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hTOF_master), __IONTOF1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO), __IONTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO_master), __IONTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO), __IONTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO_master), __IONTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO), __IONTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO_master), __IONTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO_master), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO_master), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO_master), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO_master), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO_master), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO_master), __IONTOF4__);
 
-void Analysis::AnalysisRun::createIonHists() {
-  // Detector image
-  create2d(SAMETITLEWITH(hist2ID_1stHitIonLocXY_notDead),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndHitIonLocXY_notDead),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdHitIonLocXY_notDead),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_4thHitIonLocXY_notDead),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_COMOfIonsLocXY_notDead),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitIonLocXY_master),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndHitIonLocXY_master),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdHitIonLocXY_master),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_4thHitIonLocXY_master),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_COMOfIonsLocXY_master),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ION_LOCATION, H2_ION_LOCATION,
-                  dirNameOfIonHists);
-  // TOF
-  create1d(SAMETITLEWITH(hist1ID_1stHitIonTOF_notDead),
-                  "TOF [ns]",
-                  H1_ION_TOF,
-                  dirNameOfIonHists);
-  create1d(SAMETITLEWITH(hist1ID_2ndHitIonTOF_notDead),
-                  "TOF [ns]",
-                  H1_ION_TOF,
-                  dirNameOfIonHists);
-  create1d(SAMETITLEWITH(hist1ID_3rdHitIonTOF_notDead),
-                  "TOF [ns]",
-                  H1_ION_TOF,
-                  dirNameOfIonHists);
-  create1d(SAMETITLEWITH(hist1ID_4thHitIonTOF_notDead),
-                  "TOF [ns]",
-                  H1_ION_TOF,
-                  dirNameOfIonHists);
-  create1d(SAMETITLEWITH(hist1ID_1stHitIonTOF_master),
-                  "TOF [ns]",
-                  H1_ION_TOF,
-                  dirNameOfIonHists);
-  create1d(SAMETITLEWITH(hist1ID_2ndHitIonTOF_master),
-                  "TOF [ns]",
-                  H1_ION_TOF,
-                  dirNameOfIonHists);
-  create1d(SAMETITLEWITH(hist1ID_3rdHitIonTOF_master),
-                  "TOF [ns]",
-                  H1_ION_TOF,
-                  dirNameOfIonHists);
-  create1d(SAMETITLEWITH(hist1ID_4thHitIonTOF_master),
-                  "TOF [ns]",
-                  H1_ION_TOF,
-                  dirNameOfIonHists);
-  // PIPICO
-  create2d(SAMETITLEWITH(hist2ID_1stAnd2ndHitIonTOF_notDead),
-                  "1st Hit Ion TOF [ns] ", "2nd Hit Ion TOF [ns]",
-                  H2_ION_TOF, H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndAnd3rdHitIonTOF_notDead),
-                  "2nd Hit Ion TOF [ns] ", "3rd Hit Ion TOF [ns]",
-                  H2_ION_TOF, H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdAnd4thHitIonTOF_notDead),
-                  "3rd Hit Ion TOF [ns] ", "4th Hit Ion TOF [ns]",
-                  H2_ION_TOF, H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_1stAnd2ndHitIonTOF_rot45NotDead),
-                  "Sum of 1st and 2nd Hit Ion TOF [ns] ", "Diff of 1st and 2nd Hit Ion TOF [ns]",
-                  H2_ION_SUMOFTOF(2), H2_ION_DIFFOFTOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndAnd3rdHitIonTOF_rot45NotDead),
-                  "Sum of 2nd and 3rd Hit Ion TOF [ns] ", "Diff of 2nd and 3rd Hit Ion TOF [ns]",
-                  H2_ION_SUMOFTOF(2), H2_ION_DIFFOFTOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdAnd4thHitIonTOF_rot45NotDead),
-                  "Sum of 3rd and 4th Hit Ion TOF [ns] ", "Diff of 3rd and 4th Hit Ion TOF [ns]",
-                  H2_ION_SUMOFTOF(2), H2_ION_DIFFOFTOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_1stAnd2ndHitIonTOF_master),
-                  "1st Hit Ion TOF [ns] ", "2nd Hit Ion TOF [ns]",
-                  H2_ION_TOF, H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndAnd3rdHitIonTOF_master),
-                  "2nd Hit Ion TOF [ns] ", "3rd Hit Ion TOF [ns]",
-                  H2_ION_TOF, H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdAnd4thHitIonTOF_master),
-                  "3rd Hit Ion TOF [ns] ", "4th Hit Ion TOF [ns]",
-                  H2_ION_TOF, H2_ION_TOF,
-                  dirNameOfIonHists);
-  // PIPIPICO
-  create2d(SAMETITLEWITH(hist2ID_SumOf1stAnd2ndHitIonTOFsAnd3rdHitIonTOF),
-                  "Sum of 1st and 2nd hit ion TOFs [ns]", "3rd hit ion TOF [ns]",
-                  H2_ION_SUMOFTOF(2), H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs),
-                  "1st hit ion TOF [ns]", "Sum of 2nd and 3rd hit ion TOFs [ns]",
-                  H2_ION_TOF, H2_ION_SUMOFTOF(2),
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF),
-                  "Sum of 2nd and 3rd hit ion TOFs [ns]", "4th hit ion TOF [ns]",
-                  H2_ION_SUMOFTOF(2), H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs),
-                  "2nd hit ion TOF [ns]", "Sum of 3rd and 4th hit ion TOFs [ns]",
-                  H2_ION_TOF, H2_ION_SUMOFTOF(2),
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_SumOf1stAnd2ndHitIonTOFsAnd3rdHitIonTOF_masterCondit),
-                  "Sum of 1st and 2nd hit ion TOFs [ns]", "3rd hit ion TOF [ns]",
-                  H2_ION_SUMOFTOF(2), H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs_masterCondit),
-                  "1st hit ion TOF [ns]", "Sum of 2nd and 3rd hit ion TOFs [ns]",
-                  H2_ION_TOF, H2_ION_SUMOFTOF(2),
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF_masterCondit),
-                  "Sum of 2nd and 3rd hit ion TOFs [ns]", "4th hit ion TOF [ns]",
-                  H2_ION_SUMOFTOF(2), H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs_masterCondit),
-                  "2nd hit ion TOF [ns]", "Sum of 3rd and 4th hit ion TOFs [ns]",
-                  H2_ION_TOF, H2_ION_SUMOFTOF(2),
-                  dirNameOfIonHists);
-  // PIPIPIPICO
-  create2d(SAMETITLEWITH(hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF),
-                  "Sum of 1st, 2nd and 3rd hit ion TOFs [ns]", "4th hit ion TOF [ns]",
-                  H2_ION_SUMOFTOF(3), H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF),
-                  "Sum of 1st and 2nd hit ion TOFs [ns]", "Sum of 3rd and 4th hit ion TOFs [ns]",
-                  H2_ION_SUMOFTOF(2), H2_ION_SUMOFTOF(2),
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF),
-                  "1st hit ion TOF [ns]", "Sum of 2nd, 3rd and 4th hit ion TOFs [ns]",
-                  H2_ION_TOF, H2_ION_SUMOFTOF(3),
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF_masterCondit),
-                  "Sum of 1st, 2nd and 3rd hit ion TOFs [ns]", "4th hit ion TOF [ns]",
-                  H2_ION_SUMOFTOF(3), H2_ION_TOF,
-                  dirNameOfIonHists);
-  create2d(
-      SAMETITLEWITH(hist2ID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF_masterCondit),
-      "Sum of 1st and 2nd hit ion TOFs [ns]", "Sum of 3rd and 4th hit ion TOFs [ns]",
-      H2_ION_SUMOFTOF(2), H2_ION_SUMOFTOF(2),
-      dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF_masterCondit),
-                  "1st hit ion TOF [ns]", "Sum of 2nd, 3rd and 4th hit ion TOFs [ns]",
-                  H2_ION_TOF, H2_ION_SUMOFTOF(3),
-                  dirNameOfIonHists);
-  // Ion FISH
-#define __ION_XYFISH_TITLE_BIN_REGION_DIR__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 400, -50, 50, "IonFish"
-#define __ION_RFISH_TITLE_BIN_REGION_DIR__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 200, 0, 50, "IonFish"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_always), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_notDead), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_master), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_always), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_notDead), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_master), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_always), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_notDead), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_master), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  // IonFISH
+#define __IONFISH1__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 400, -50, 50, "IonFish"
+#define __IONFISH2__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 200, 0, 50, "IonFish"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_master), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_master), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish), __IONFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_master), __IONFISH2__);
 
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_always), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_notDead), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_master), __ION_RFISH_TITLE_BIN_REGION_DIR__);
-  // Momentum
-  create3d(SAMETITLEWITH(hist3ID_1stHitIonPxPyPz),
-                  "Momentum X [au]", "Momentum Y [au]", "Momentum Z [au]",
-                  H3_ION_MOMENTUM, H3_ION_MOMENTUM, H3_ION_MOMENTUM,
-                  dirNameOfIonHists);
-  create3d(SAMETITLEWITH(hist3ID_1stHitIonPxPyPz_underMasterCondition),
-                  "Momentum X [au]", "Momentum Y [au]", "Momentum Z [au]",
-                  H3_ION_MOMENTUM, H3_ION_MOMENTUM, H3_ION_MOMENTUM,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitIonPDirecXYAndCosPDirecZ),
-                  "Motional Direction XY [degree]", "Motional Direction Z [1]",
-                  H2_DEGREE, H2_SINCOS,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndHitIonPDirecXYAndCosPDirecZ),
-                  "Motional Direction XY [degree]", "Motional Direction Z [1]",
-                  H2_DEGREE, H2_SINCOS,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdHitIonPDirecXYAndCosPDirecZ),
-                  "Motional Direction XY [degree]", "Motional Direction Z [1]",
-                  H2_DEGREE, H2_SINCOS,
-                  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_4thHitIonPDirecXYAndCosPDirecZ),
-                  "Motional Direction XY [degree]", "Motional Direction Z [1]",
-                  H2_DEGREE, H2_SINCOS,
-                  dirNameOfIonHists);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_master), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_master), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish), __IONFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_master), __IONFISH2__);
+
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_master), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_master), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish), __IONFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_master), __IONFISH2__);
+
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_master), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_master), __IONFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish), __IONFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_master), __IONFISH2__);
+
+  // IonMomentum
+#define __IONMOMENTUM__ "Direction XY [degree]", "Direction Z [1]", 180, -180, 180, 100, -1, 1, "IonMomentum"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist), __IONMOMENTUM__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_master), __IONMOMENTUM__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist), __IONMOMENTUM__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_master), __IONMOMENTUM__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist), __IONMOMENTUM__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_master), __IONMOMENTUM__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist), __IONMOMENTUM__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_master), __IONMOMENTUM__);
+
   // IonEnergy
 #define __IONENERGY1__ "Energy [eV]", 1000, 0, 50, "IonEnergy"
 #define __IONENERGY2__ "Energy 1 [eV]", "Energy 2 [eV]", 200, 0, 50, 200, 0, 50, "IonEnergy"
@@ -469,581 +257,495 @@ void Analysis::AnalysisRun::createIonHists() {
   create1d(SAME_TITLE_WITH_VALNAME(h1_i3hE_master), __IONENERGY1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i4hE), __IONENERGY1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i4hE_master), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTtE), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTtE_master), __IONENERGY1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hE_i2hE), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hE_i2hE_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hE_i3hE), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hE_i3hE_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hE_i4hE), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hE_i4hE_master), __IONENERGY2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalE), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalE_master), __IONENERGY1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hE), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hE_master), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hE), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hE_master), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE_master), __IONENERGY2__);
 
-// KER
-#define __KER_TITLE_BIN_REGION_DIR__ "KER [eV]", "Electron Kinetic Energy [eV]", 1000, 0, 100, 500, 0, 50, "KER"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE), __KER_TITLE_BIN_REGION_DIR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE_master), __KER_TITLE_BIN_REGION_DIR__);
+  // ElecImage
+#define __ELECIMAGE__ "Location X [mm]", "Location Y [mm]", 100, -75, 75, 100, -75, 75, "ElecImage"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_eh1Image), __ELECIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_eh1Image_master), __ELECIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_eh2Image), __ELECIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_eh2Image_master), __ELECIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_eh3Image), __ELECIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_eh3Image_master), __ELECIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_eh4Image), __ELECIMAGE__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_eh4Image_master), __ELECIMAGE__);
+
+  // ElecTOF
+#define __ELECTOF1__ "TOF [ns]", 1000, -20, 130, "ElecTOF"
+#define __ELECTOF2__ "TOF 1 [ns]", "TOF 2 [ns]", 200, -20, 130, 200, -20, 130, "ElecTOF"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hTOF), __ELECTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hTOF_master), __ELECTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hTOF), __ELECTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hTOF_master), __ELECTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hTOF), __ELECTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hTOF_master), __ELECTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hTOF), __ELECTOF1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hTOF_master), __ELECTOF1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1h2hPEPECO), __ELECTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1h2hPEPECO_master), __ELECTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2h3hPEPECO), __ELECTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2h3hPEPECO_master), __ELECTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3h4hPEPECO), __ELECTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3h4hPEPECO_master), __ELECTOF2__);
+
+  // ElecFish
+#define __ELECFISH1__ "TOF [ns]", "Location [mm]", 200, -20, 130, 300, -75, 75, "ElecFish"
+#define __ELECFISH2__ "TOF [ns]", "Location [mm]", 200, -20, 130, 150, 0, 75, "ElecFish"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hXFish), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hXFish_master), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hYFish), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hYFish_master), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hRFish), __ELECFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hRFish_master), __ELECFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hXFish), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hXFish_master), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hYFish), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hYFish_master), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hRFish), __ELECFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hRFish_master), __ELECFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hXFish), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hXFish_master), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hYFish), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hYFish_master), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hRFish), __ELECFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hRFish_master), __ELECFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hXFish), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hXFish_master), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hYFish), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hYFish_master), __ELECFISH1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hRFish), __ELECFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hRFish_master), __ELECFISH2__);
+
+  // ElecMomentum
+#define __ELECMOMENTUM1__ "Direction [degree]", "Momentum [au]", 180, -180, 180, 1500, 0, 3, "ElecMomentum"
+#define __ELECMOMENTUM2__ "Direction XY [degree]", "Direction Z [1]", 180, -180, 180, 100, -1, 1, "ElecMomentum"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist), __ELECMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist_master), __ELECMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist), __ELECMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist_master), __ELECMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist), __ELECMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist_master), __ELECMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_master), __ELECMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist), __ELECMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist_master), __ELECMOMENTUM2__);
+
+  // ElecEnergy
+#define __ELECENERGY__ "Energy [eV]", 1000, 0, 50, "ElecEnergy"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE), __ELECENERGY__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE_master), __ELECENERGY__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE), __ELECENERGY__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE_master), __ELECENERGY__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE), __ELECENERGY__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE_master), __ELECENERGY__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE), __ELECENERGY__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE_master), __ELECENERGY__);
+
+// IonElecCorr
+#define __IONELECCORR__ "KER [eV]", "Electron Kinetic Energy [eV]", 1000, 0, 100, 500, 0, 50, "IonElecCorr"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE), __IONELECCORR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE_master), __IONELECCORR__);
+
+  // Others
+#define __OTHERS__ "Others"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF_i2h3hNotDead),
+           "TOF [ns]", 2000, 0, 10000, __OTHERS__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO_i1hMaster),
+           "TOF 1 [ns]", "TOF 2 [ns]", 500, 0, 10000, 500, 0, 10000, __OTHERS__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hE_iTotalTOF_master),
+           "Energy [eV]", "Sum of TOFs [ns]", 100, 0, 50, 2000, 0, 20000, __OTHERS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE_master),
+           "Energy [eV]", 1000, 0, 50, __OTHERS__);
 }
 
-void Analysis::AnalysisRun::fillIonHists() {
-  const bool dead1 = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
-  const bool dead2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
-  const bool dead3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
-  const bool dead4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
-  const bool isIonMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
-  const bool isElecMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
-  const bool isMaster = isIonMaster && isElecMaster;
-  
-  const double * const x1 = pIons->getRealOrDummyObject(0).outputLocX();
-  const double * const y1 = pIons->getRealOrDummyObject(0).outputLocY();
-  const double * const r1 = pIons->getRealOrDummyObject(0).outputLocR();
-  const double * const t1 = pIons->getRealOrDummyObject(0).outputTOF();
-  const double * const x2 = pIons->getRealOrDummyObject(1).outputLocX();
-  const double * const y2 = pIons->getRealOrDummyObject(1).outputLocY();
-  const double * const r2 = pIons->getRealOrDummyObject(1).outputLocR();
-  const double * const t2 = pIons->getRealOrDummyObject(1).outputTOF();
-  const double * const x3 = pIons->getRealOrDummyObject(2).outputLocX();
-  const double * const y3 = pIons->getRealOrDummyObject(2).outputLocY();
-  const double * const r3 = pIons->getRealOrDummyObject(2).outputLocR();
-  const double * const t3 = pIons->getRealOrDummyObject(2).outputTOF();
-  const double * const x4 = pIons->getRealOrDummyObject(3).outputLocX();
-  const double * const y4 = pIons->getRealOrDummyObject(3).outputLocY();
-  const double * const r4 = pIons->getRealOrDummyObject(3).outputLocR();
-  const double * const t4 = pIons->getRealOrDummyObject(3).outputTOF();
+void Analysis::AnalysisRun::fillHists() {
+  const bool iDead1 = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
+  const bool iDead2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
+  const bool iDead3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
+  const bool iDead4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
+  const bool eDead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
+  const bool eDead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
+  const bool eDead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
+  const bool eDead4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
 
-  const double * const xCOM = pIons->outputCOMLocX();
-  const double * const yCOM = pIons->outputCOMLocY();
-  const double * const tSum12 = pIons->outputSumOf2TOFs(0, 1);
-  const double * const tSum23 = pIons->outputSumOf2TOFs(1, 2);
-  const double * const tSum34 = pIons->outputSumOf2TOFs(2, 3);
-  const double * const tDiff12 = pIons->outputDiffOfTOFs(0, 1);
-  const double * const tDiff23 = pIons->outputDiffOfTOFs(1, 2);
-  const double * const tDiff34 = pIons->outputDiffOfTOFs(2, 3);
+  const bool iMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
+  const bool eMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
+  const bool master = iMaster && eMaster;
 
-  const double * const px1 = pIons->getRealOrDummyObject(0).outputPX();
-  const double * const py1 = pIons->getRealOrDummyObject(0).outputPY();
-  const double * const pxy1 = pIons->getRealOrDummyObject(0).outputPXY();
-  const double * const pz1 = pIons->getRealOrDummyObject(0).outputPZ();
-  const double * const cpz1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
-  const double * const px2 = pIons->getRealOrDummyObject(1).outputPX();
-  const double * const py2 = pIons->getRealOrDummyObject(1).outputPY();
-  const double * const pxy2 = pIons->getRealOrDummyObject(1).outputPXY();
-  const double * const pz2 = pIons->getRealOrDummyObject(1).outputPZ();
-  const double * const cpz2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
-  const double * const px3 = pIons->getRealOrDummyObject(2).outputPX();
-  const double * const py3 = pIons->getRealOrDummyObject(2).outputPY();
-  const double * const pxy3 = pIons->getRealOrDummyObject(2).outputPXY();
-  const double * const pz3 = pIons->getRealOrDummyObject(2).outputPZ();
-  const double * const cpz3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
-  const double * const px4 = pIons->getRealOrDummyObject(3).outputPX();
-  const double * const py4 = pIons->getRealOrDummyObject(3).outputPY();
-  const double * const pxy4 = pIons->getRealOrDummyObject(3).outputPXY();
-  const double * const pz4 = pIons->getRealOrDummyObject(3).outputPZ();
-  const double * const cpz4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
+  const double *const iX1 = pIons->getRealOrDummyObject(0).outputLocX();
+  const double *const iY1 = pIons->getRealOrDummyObject(0).outputLocY();
+  const double *const iR1 = pIons->getRealOrDummyObject(0).outputLocR();
+  const double *const iT1 = pIons->getRealOrDummyObject(0).outputTOF();
+  const double *const iX2 = pIons->getRealOrDummyObject(1).outputLocX();
+  const double *const iY2 = pIons->getRealOrDummyObject(1).outputLocY();
+  const double *const iR2 = pIons->getRealOrDummyObject(1).outputLocR();
+  const double *const iT2 = pIons->getRealOrDummyObject(1).outputTOF();
+  const double *const iX3 = pIons->getRealOrDummyObject(2).outputLocX();
+  const double *const iY3 = pIons->getRealOrDummyObject(2).outputLocY();
+  const double *const iR3 = pIons->getRealOrDummyObject(2).outputLocR();
+  const double *const iT3 = pIons->getRealOrDummyObject(2).outputTOF();
+  const double *const iX4 = pIons->getRealOrDummyObject(3).outputLocX();
+  const double *const iY4 = pIons->getRealOrDummyObject(3).outputLocY();
+  const double *const iR4 = pIons->getRealOrDummyObject(3).outputLocR();
+  const double *const iT4 = pIons->getRealOrDummyObject(3).outputTOF();
 
-  const double * const e1 = pIons->getRealOrDummyIon(0).outputE();
-  const double * const e2 = pIons->getRealOrDummyIon(1).outputE();
-  const double * const e3 = pIons->getRealOrDummyIon(2).outputE();
-  const double * const e4 = pIons->getRealOrDummyIon(3).outputE();
-  const double * const eT = pIons->outputE();
+  const double *const iCOMX = pIons->outputCOMLocX();
+  const double *const iCOMY = pIons->outputCOMLocY();
+  const double *const iTTotal = pIons->outputTotalTOF();
+  const double *const iT12 = pIons->outputSumOf2TOFs(0, 1);
+  const double *const iT23 = pIons->outputSumOf2TOFs(1, 2);
+  const double *const iT34 = pIons->outputSumOf2TOFs(2, 3);
+  const double *const iTDiff12 = pIons->outputDiffOfTOFs(0, 1);
+  const double *const iTDiff23 = pIons->outputDiffOfTOFs(1, 2);
+  const double *const iTDiff34 = pIons->outputDiffOfTOFs(2, 3);
 
-  const double * const eE1 = pElectrons->getRealOrDummyElectron(0).outputE();
+  const double *const eX1 = pElectrons->getRealOrDummyObject(0).outputLocX();
+  const double *const eY1 = pElectrons->getRealOrDummyObject(0).outputLocY();
+  const double *const eR1 = pElectrons->getRealOrDummyObject(0).outputLocR();
+  const double *const eT1 = pElectrons->getRealOrDummyObject(0).outputTOF();
+  const double *const eX2 = pElectrons->getRealOrDummyObject(1).outputLocX();
+  const double *const eY2 = pElectrons->getRealOrDummyObject(1).outputLocY();
+  const double *const eR2 = pElectrons->getRealOrDummyObject(1).outputLocR();
+  const double *const eT2 = pElectrons->getRealOrDummyObject(1).outputTOF();
+  const double *const eX3 = pElectrons->getRealOrDummyObject(2).outputLocX();
+  const double *const eY3 = pElectrons->getRealOrDummyObject(2).outputLocY();
+  const double *const eR3 = pElectrons->getRealOrDummyObject(2).outputLocR();
+  const double *const eT3 = pElectrons->getRealOrDummyObject(2).outputTOF();
+  const double *const eX4 = pElectrons->getRealOrDummyObject(3).outputLocX();
+  const double *const eY4 = pElectrons->getRealOrDummyObject(3).outputLocY();
+  const double *const eR4 = pElectrons->getRealOrDummyObject(3).outputLocR();
+  const double *const eT4 = pElectrons->getRealOrDummyObject(3).outputTOF();
 
-  // Detector image and TOF
-  if (!dead1) {
-    fill2d(hist2ID_1stHitIonLocXY_notDead, x1, y1);
-    fill1d(hist1ID_1stHitIonTOF_notDead, t1);
+  const double *const eCOMX = pElectrons->outputCOMLocX();
+  const double *const eCOMY = pElectrons->outputCOMLocY();
+  const double *const eT12 = pElectrons->outputSumOf2TOFs(0, 1);
+  const double *const eT23 = pElectrons->outputSumOf2TOFs(1, 2);
+  const double *const eT34 = pElectrons->outputSumOf2TOFs(2, 3);
+  const double *const eTDiff12 = pElectrons->outputDiffOfTOFs(0, 1);
+  const double *const eTDiff23 = pElectrons->outputDiffOfTOFs(1, 2);
+  const double *const eTDiff34 = pElectrons->outputDiffOfTOFs(2, 3);
+
+  const double *const iPX1 = pIons->getRealOrDummyObject(0).outputPX();
+  const double *const iPY1 = pIons->getRealOrDummyObject(0).outputPY();
+  const double *const iPXY1 = pIons->getRealOrDummyObject(0).outputPXY();
+  const double *const iPZ1 = pIons->getRealOrDummyObject(0).outputPZ();
+  const double *const iCosPDirZ1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
+  const double *const iPX2 = pIons->getRealOrDummyObject(1).outputPX();
+  const double *const iPY2 = pIons->getRealOrDummyObject(1).outputPY();
+  const double *const iPXY2 = pIons->getRealOrDummyObject(1).outputPXY();
+  const double *const iPZ2 = pIons->getRealOrDummyObject(1).outputPZ();
+  const double *const iCosPDirZ2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
+  const double *const iPX3 = pIons->getRealOrDummyObject(2).outputPX();
+  const double *const iPY3 = pIons->getRealOrDummyObject(2).outputPY();
+  const double *const iPXY3 = pIons->getRealOrDummyObject(2).outputPXY();
+  const double *const iPZ3 = pIons->getRealOrDummyObject(2).outputPZ();
+  const double *const iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
+  const double *const iPX4 = pIons->getRealOrDummyObject(3).outputPX();
+  const double *const iPY4 = pIons->getRealOrDummyObject(3).outputPY();
+  const double *const iPXY4 = pIons->getRealOrDummyObject(3).outputPXY();
+  const double *const iPZ4 = pIons->getRealOrDummyObject(3).outputPZ();
+  const double *const iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
+
+  const double *const ePX1 = pElectrons->getRealOrDummyObject(0).outputPX();
+  const double *const ePY1 = pElectrons->getRealOrDummyObject(0).outputPY();
+  const double *const ePZ1 = pElectrons->getRealOrDummyObject(0).outputPZ();
+  const double *const ePXY1 = pElectrons->getRealOrDummyObject(0).outputPXY();
+  const double *const ePYZ1 = pElectrons->getRealOrDummyObject(0).outputPYZ();
+  const double *const ePZX1 = pElectrons->getRealOrDummyObject(0).outputPZX();
+  const double *const ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirX();
+  const double *const ePDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
+  const double *const ePDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
+  const double *const eCosPDirZ1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
+  const double *const ePX2 = pElectrons->getRealOrDummyObject(1).outputPX();
+  const double *const ePY2 = pElectrons->getRealOrDummyObject(1).outputPY();
+  const double *const ePZ2 = pElectrons->getRealOrDummyObject(1).outputPZ();
+  const double *const ePXY2 = pElectrons->getRealOrDummyObject(1).outputPXY();
+  const double *const ePYZ2 = pElectrons->getRealOrDummyObject(1).outputPYZ();
+  const double *const ePZX2 = pElectrons->getRealOrDummyObject(1).outputPZX();
+  const double *const ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirX();
+  const double *const ePDirYZ2 = pElectrons->getRealOrDummyObject(1).outputPDirYZ();
+  const double *const ePDirZX2 = pElectrons->getRealOrDummyObject(1).outputPDirZX();
+  const double *const eCosPDirZ2 = pElectrons->getRealOrDummyObject(1).outputCosPDirZ();
+  const double *const ePX3 = pElectrons->getRealOrDummyObject(2).outputPX();
+  const double *const ePY3 = pElectrons->getRealOrDummyObject(2).outputPY();
+  const double *const ePZ3 = pElectrons->getRealOrDummyObject(2).outputPZ();
+  const double *const ePXY3 = pElectrons->getRealOrDummyObject(2).outputPXY();
+  const double *const ePYZ3 = pElectrons->getRealOrDummyObject(2).outputPYZ();
+  const double *const ePZX3 = pElectrons->getRealOrDummyObject(2).outputPZX();
+  const double *const ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirX();
+  const double *const ePDirYZ3 = pElectrons->getRealOrDummyObject(2).outputPDirYZ();
+  const double *const ePDirZX3 = pElectrons->getRealOrDummyObject(2).outputPDirZX();
+  const double *const eCosPDirZ3 = pElectrons->getRealOrDummyObject(2).outputCosPDirZ();
+  const double *const ePX4 = pElectrons->getRealOrDummyObject(3).outputPX();
+  const double *const ePY4 = pElectrons->getRealOrDummyObject(3).outputPY();
+  const double *const ePZ4 = pElectrons->getRealOrDummyObject(3).outputPZ();
+  const double *const ePXY4 = pElectrons->getRealOrDummyObject(3).outputPXY();
+  const double *const ePYZ4 = pElectrons->getRealOrDummyObject(3).outputPYZ();
+  const double *const ePZX4 = pElectrons->getRealOrDummyObject(3).outputPZX();
+  const double *const ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirX();
+  const double *const ePDirYZ4 = pElectrons->getRealOrDummyObject(3).outputPDirYZ();
+  const double *const ePDirZX4 = pElectrons->getRealOrDummyObject(3).outputPDirZX();
+  const double *const eCosPDirZ4 = pElectrons->getRealOrDummyObject(3).outputCosPDirZ();
+
+  const double *const iE1 = pIons->getRealOrDummyIon(0).outputE();
+  const double *const iE2 = pIons->getRealOrDummyIon(1).outputE();
+  const double *const iE3 = pIons->getRealOrDummyIon(2).outputE();
+  const double *const iE4 = pIons->getRealOrDummyIon(3).outputE();
+  const double *const iETotal = pIons->outputE();
+
+  const double *const eE1 = pElectrons->getRealOrDummyElectron(0).outputE();
+  const double *const eE2 = pElectrons->getRealOrDummyElectron(1).outputE();
+  const double *const eE3 = pElectrons->getRealOrDummyElectron(2).outputE();
+  const double *const eE4 = pElectrons->getRealOrDummyElectron(3).outputE();
+  const double *const eETotal = pElectrons->outputE();
+
+  // IonImage
+  fill2d(h2_i1hImage, iX1, iY1);
+  fill2d(h2_i2hImage, iX2, iY2);
+  fill2d(h2_i3hImage, iX3, iY3);
+  fill2d(h2_i4hImage, iX4, iY4);
+  fill2d(h2_iCOMImage, iCOMX, iCOMY);
+  if (master) {
+    fill2d(h2_i1hImage_master, iX1, iY1);
+    fill2d(h2_i2hImage_master, iX2, iY2);
+    fill2d(h2_i3hImage_master, iX3, iY3);
+    fill2d(h2_i4hImage_master, iX4, iY4);
+    fill2d(h2_iCOMImage_master, iCOMX, iCOMY);
   }
-  if (!dead2) {
-    fill2d(hist2ID_2ndHitIonLocXY_notDead, x2, y2);
-    fill1d(hist1ID_2ndHitIonTOF_notDead, t2);
+
+  // IonTOF
+  fill1d(h1_i1hTOF, iT1);
+  fill1d(h1_i2hTOF, iT2);
+  fill1d(h1_i3hTOF, iT3);
+  fill1d(h1_i4hTOF, iT4);
+  fill1d(h1_iTotalTOF, iTTotal);
+  fill2d(h2_i1h2hPIPICO, iT1, iT2);
+  fill2d(h2_i2h3hPIPICO, iT2, iT3);
+  fill2d(h2_i3h4hPIPICO, iT3, iT4);
+  fill2d(h2_i1h2hRotPIPICO, iT12, iTDiff12);
+  fill2d(h2_i1h2hRotPIPICO, iT23, iTDiff23);
+  fill2d(h2_i1h2hRotPIPICO, iT34, iTDiff34);
+  if (master) {
+    fill1d(h1_i1hTOF_master, iT1);
+    fill1d(h1_i2hTOF_master, iT2);
+    fill1d(h1_i3hTOF_master, iT3);
+    fill1d(h1_i4hTOF_master, iT4);
+    fill1d(h1_iTotalTOF_master, iTTotal);
+    fill2d(h2_i1h2hPIPICO_master, iT1, iT2);
+    fill2d(h2_i2h3hPIPICO_master, iT2, iT3);
+    fill2d(h2_i3h4hPIPICO_master, iT3, iT4);
+    fill2d(h2_i1h2hRotPIPICO_master, iT12, iTDiff12);
+    fill2d(h2_i1h2hRotPIPICO_master, iT23, iTDiff23);
+    fill2d(h2_i1h2hRotPIPICO_master, iT34, iTDiff34);
   }
-  if (!dead3) {
-	  fill2d(hist2ID_3rdHitIonLocXY_notDead, x3, y3);
-	  fill1d(hist1ID_3rdHitIonTOF_notDead, t3);
+
+// IonFish
+  fill2d(h2_i1hXFish, iT1, iX1);
+  fill2d(h2_i1hYFish, iT1, iY1);
+  fill2d(h2_i1hRFish, iT1, iR1);
+  fill2d(h2_i2hXFish, iT2, iX2);
+  fill2d(h2_i2hYFish, iT2, iY2);
+  fill2d(h2_i2hRFish, iT2, iR2);
+  fill2d(h2_i3hXFish, iT3, iX3);
+  fill2d(h2_i3hYFish, iT3, iY3);
+  fill2d(h2_i3hRFish, iT3, iR3);
+  fill2d(h2_i4hXFish, iT4, iX4);
+  fill2d(h2_i4hYFish, iT4, iY4);
+  fill2d(h2_i4hRFish, iT4, iR4);
+  if (master) {
+    fill2d(h2_i1hXFish_master, iT1, iX1);
+    fill2d(h2_i1hYFish_master, iT1, iY1);
+    fill2d(h2_i1hRFish_master, iT1, iR1);
+    fill2d(h2_i2hXFish_master, iT2, iX2);
+    fill2d(h2_i2hYFish_master, iT2, iY2);
+    fill2d(h2_i2hRFish_master, iT2, iR2);
+    fill2d(h2_i3hXFish_master, iT3, iX3);
+    fill2d(h2_i3hYFish_master, iT3, iY3);
+    fill2d(h2_i3hRFish_master, iT3, iR3);
+    fill2d(h2_i4hXFish_master, iT4, iX4);
+    fill2d(h2_i4hYFish_master, iT4, iY4);
+    fill2d(h2_i4hRFish_master, iT4, iR4);
   }
-  if (!dead4) {
-	  fill2d(hist2ID_4thHitIonLocXY_notDead, x4, y4);
-	  fill1d(hist1ID_4thHitIonTOF_notDead, t4);
+
+// IonMomentum
+  fill2d(h2_i1hPDirDist, iPXY1, iCosPDirZ1);
+  fill2d(h2_i2hPDirDist, iPXY2, iCosPDirZ2);
+  fill2d(h2_i3hPDirDist, iPXY3, iCosPDirZ3);
+  fill2d(h2_i4hPDirDist, iPXY4, iCosPDirZ4);
+  if (master) {
+    fill2d(h2_i1hPDirDist_master, iPXY1, iCosPDirZ1);
+    fill2d(h2_i2hPDirDist_master, iPXY2, iCosPDirZ2);
+    fill2d(h2_i3hPDirDist_master, iPXY3, iCosPDirZ3);
+    fill2d(h2_i4hPDirDist_master, iPXY4, iCosPDirZ4);
   }
-  if (isIonMaster) {
-	  fill2d(hist2ID_COMOfIonsLocXY_notDead, xCOM, yCOM);
+
+// IonEnergy
+  fill1d(h1_i1hE, iE1);
+  fill1d(h1_i2hE, iE2);
+  fill1d(h1_i3hE, iE3);
+  fill1d(h1_i4hE, iE4);
+  fill1d(h1_iTotalE, iETotal);
+  fill2d(h2_i1h2hE, iE1, iE2);
+  fill2d(h2_i2h3hE, iE2, iE3);
+  fill2d(h2_i3h4hE, iE3, iE4);
+  if (master) {
+    fill1d(h1_i1hE_master, iE1);
+    fill1d(h1_i2hE_master, iE2);
+    fill1d(h1_i3hE_master, iE3);
+    fill1d(h1_i4hE_master, iE4);
+    fill1d(h1_iTotalE_master, iETotal);
+    fill2d(h2_i1h2hE_master, iE1, iE2);
+    fill2d(h2_i2h3hE_master, iE2, iE3);
+    fill2d(h2_i3h4hE_master, iE3, iE4);
   }
-  if (isMaster) {
-	  if (!dead1) {
-		  fill2d(hist2ID_1stHitIonLocXY_master, x1, y1);
-		  fill1d(hist1ID_1stHitIonTOF_master, t1);
-	  }
-	  if (!dead2) {
-		  fill2d(hist2ID_2ndHitIonLocXY_master, x2, y2);
-		  fill1d(hist1ID_2ndHitIonTOF_master, t2);
-	  }
-	  if (!dead3) {
-		  fill2d(hist2ID_3rdHitIonLocXY_master, x3, y3);
-		  fill1d(hist1ID_3rdHitIonTOF_master, t3);
-	  }
-	  if (!dead4) {
-		  fill2d(hist2ID_4thHitIonLocXY_master, x4, y4);
-		  fill1d(hist1ID_4thHitIonTOF_master, t4);
-	  }
-	  if (isIonMaster) {
-		  fill2d(hist2ID_COMOfIonsLocXY_master, xCOM, yCOM);
-	  }
+
+  // ElecImage
+  fill2d(h2_eh1Image, eX1, eY1);
+  fill2d(h2_eh2Image, eX2, eY2);
+  fill2d(h2_eh3Image, eX3, eY3);
+  fill2d(h2_eh4Image, eX4, eY4);
+  if (master) {
+    fill2d(h2_eh1Image_master, eX1, eY1);
+    fill2d(h2_eh2Image_master, eX2, eY2);
+    fill2d(h2_eh3Image_master, eX3, eY3);
+    fill2d(h2_eh4Image_master, eX4, eY4);
   }
-  // PIPICO 
-  if (!dead1 && !dead2) {
-	  fill2d(hist2ID_1stAnd2ndHitIonTOF_notDead, t1, t2);
-    fill2d(hist2ID_1stAnd2ndHitIonTOF_rot45NotDead, tSum12, tDiff12);
+
+  // ElecTOF
+  fill1d(h1_e1hTOF, eT1);
+  fill1d(h1_e2hTOF, eT2);
+  fill1d(h1_e3hTOF, eT3);
+  fill1d(h1_e4hTOF, eT4);
+  fill2d(h2_e1h2hPEPECO, eT1, eT2);
+  fill2d(h2_e2h3hPEPECO, eT2, eT3);
+  fill2d(h2_e3h4hPEPECO, eT3, eT4);
+  if (master) {
+    fill1d(h1_e1hTOF_master, eT1);
+    fill1d(h1_e2hTOF_master, eT2);
+    fill1d(h1_e3hTOF_master, eT3);
+    fill1d(h1_e4hTOF_master, eT4);
+    fill2d(h2_e1h2hPEPECO_master, eT1, eT2);
+    fill2d(h2_e2h3hPEPECO_master, eT2, eT3);
+    fill2d(h2_e3h4hPEPECO_master, eT3, eT4);
   }
-  if (!dead2 && !dead3) {
-	  fill2d(hist2ID_2ndAnd3rdHitIonTOF_notDead, t2, t3);
-    fill2d(hist2ID_1stAnd2ndHitIonTOF_rot45NotDead, tSum23, tDiff23);
+
+  // ElecFish
+  fill2d(h2_e1hXFish, eT1, eX1);
+  fill2d(h2_e1hYFish, eT1, eY1);
+  fill2d(h2_e1hXFish, eT1, eX1);
+  fill2d(h2_e2hYFish, eT2, eY2);
+  fill2d(h2_e2hRFish, eT2, eR2);
+  fill2d(h2_e2hXFish, eT2, eX2);
+  fill2d(h2_e3hYFish, eT3, eY3);
+  fill2d(h2_e3hRFish, eT3, eR3);
+  fill2d(h2_e3hXFish, eT3, eX3);
+  fill2d(h2_e4hYFish, eT4, eY4);
+  fill2d(h2_e4hRFish, eT4, eR4);
+  fill2d(h2_e4hRFish, eT4, eR4);
+  if (master) {
+    fill2d(h2_e1hXFish_master, eT1, eX1);
+    fill2d(h2_e1hYFish_master, eT1, eY1);
+    fill2d(h2_e1hXFish_master, eT1, eX1);
+    fill2d(h2_e2hYFish_master, eT2, eY2);
+    fill2d(h2_e2hRFish_master, eT2, eR2);
+    fill2d(h2_e2hXFish_master, eT2, eX2);
+    fill2d(h2_e3hYFish_master, eT3, eY3);
+    fill2d(h2_e3hRFish_master, eT3, eR3);
+    fill2d(h2_e3hXFish_master, eT3, eX3);
+    fill2d(h2_e4hYFish_master, eT4, eY4);
+    fill2d(h2_e4hRFish_master, eT4, eR4);
+    fill2d(h2_e4hRFish_master, eT4, eR4);
   }
-  if (!dead3 && !dead4) {
-	  fill2d(hist2ID_3rdAnd4thHitIonTOF_notDead, t3, t4);
-    fill2d(hist2ID_1stAnd2ndHitIonTOF_rot45NotDead, tSum34, tDiff34);
+
+  // ElecMomentum
+  fill2d(h2_e1hPDirDistXY, ePDirXY1, ePXY1);
+  fill2d(h2_e1hPDirDistYZ, ePDirYZ1, ePYZ1);
+  fill2d(h2_e1hPDirDistZX, ePDirZX1, ePZX1);
+  fill2d(h2_e1hPDirDist, ePDirXY1, eCosPDirZ1);
+  fill2d(h2_e2hPDirDistXY, ePDirXY2, ePXY2);
+  fill2d(h2_e2hPDirDistYZ, ePDirYZ2, ePYZ2);
+  fill2d(h2_e2hPDirDistZX, ePDirZX2, ePZX2);
+  fill2d(h2_e2hPDirDist, ePDirXY2, eCosPDirZ2);
+  fill2d(h2_e3hPDirDistXY, ePDirXY3, ePXY3);
+  fill2d(h2_e3hPDirDistYZ, ePDirYZ3, ePYZ3);
+  fill2d(h2_e3hPDirDistZX, ePDirZX3, ePZX3);
+  fill2d(h2_e3hPDirDist, ePDirXY3, eCosPDirZ3);
+  fill2d(h2_e4hPDirDistXY, ePDirXY4, ePXY4);
+  fill2d(h2_e4hPDirDistYZ, ePDirYZ4, ePYZ4);
+  fill2d(h2_e4hPDirDistZX, ePDirZX4, ePZX4);
+  fill2d(h2_e4hPDirDist, ePDirXY4, eCosPDirZ4);
+  if (master) {
+    fill2d(h2_e1hPDirDistXY_master, ePDirXY1, ePXY1);
+    fill2d(h2_e1hPDirDistYZ_master, ePDirYZ1, ePYZ1);
+    fill2d(h2_e1hPDirDistZX_master, ePDirZX1, ePZX1);
+    fill2d(h2_e1hPDirDist_master, ePDirXY1, eCosPDirZ1);
+    fill2d(h2_e2hPDirDistXY_master, ePDirXY2, ePXY2);
+    fill2d(h2_e2hPDirDistYZ_master, ePDirYZ2, ePYZ2);
+    fill2d(h2_e2hPDirDistZX_master, ePDirZX2, ePZX2);
+    fill2d(h2_e2hPDirDist_master, ePDirXY2, eCosPDirZ2);
+    fill2d(h2_e3hPDirDistXY_master, ePDirXY3, ePXY3);
+    fill2d(h2_e3hPDirDistYZ_master, ePDirYZ3, ePYZ3);
+    fill2d(h2_e3hPDirDistZX_master, ePDirZX3, ePZX3);
+    fill2d(h2_e3hPDirDist_master, ePDirXY3, eCosPDirZ3);
+    fill2d(h2_e4hPDirDistXY_master, ePDirXY4, ePXY4);
+    fill2d(h2_e4hPDirDistYZ_master, ePDirYZ4, ePYZ4);
+    fill2d(h2_e4hPDirDistZX_master, ePDirZX4, ePZX4);
+    fill2d(h2_e4hPDirDist_master, ePDirXY4, eCosPDirZ4);
   }
-  if (isMaster) {
-	if (!dead1 && !dead2) {
-		fill2d(hist2ID_1stAnd2ndHitIonTOF_master, t1, t2);
-	}
-	if (!dead2 && !dead3) {
-		fill2d(hist2ID_2ndAnd3rdHitIonTOF_master, t2, t3);
-	}
-	if (!dead3 && !dead4) {
-		fill2d(hist2ID_3rdAnd4thHitIonTOF_master, t3, t4);
-	}
+
+  // ElecEnergy
+  fill1d(h1_e1hE, eE1);
+  fill1d(h1_e2hE, eE2);
+  fill1d(h1_e3hE, eE3);
+  fill1d(h1_e4hE, eE4);
+  fill1d(h1_eTotalE, eETotal);
+
+  // IonElecCorr
+  fill2d(h2_iKER_e1hE, iETotal, eE1);
+  if (master) {
+    fill2d(h2_iKER_e1hE_master, iETotal, eE1);
   }
-  // FISH
-  fill2d(h2_i1hXFish_always, t1, x1);
-  if (!dead1) fill2d(h2_i1hXFish_notDead, t1, x1);
-  if (!dead1 && isMaster) fill2d(h2_i1hXFish_master, t1, x1);
-  fill2d(h2_i1hYFish_always, t1, y1);
-  if (!dead1) fill2d(h2_i1hYFish_notDead, t1, y1);
-  if (!dead1 && isMaster) fill2d(h2_i1hYFish_master, t1, y1);
-  fill2d(h2_i1hRFish_always, t1, r1);
-  if (!dead1) fill2d(h2_i1hRFish_notDead, t1, r1);
-  if (!dead1 && isMaster) fill2d(h2_i1hRFish_master, t1, r1);
 
-  fill2d(h2_i2hXFish_always, t2, x2);
-  if (!dead2) fill2d(h2_i2hXFish_notDead, t2, x2);
-  if (!dead2 && isMaster) fill2d(h2_i2hXFish_master, t2, x2);
-  fill2d(h2_i2hYFish_always, t2, y2);
-  if (!dead2) fill2d(h2_i2hYFish_notDead, t2, y2);
-  if (!dead2 && isMaster) fill2d(h2_i2hYFish_master, t2, y2);
-  fill2d(h2_i2hRFish_always, t2, r2);
-  if (!dead2) fill2d(h2_i2hRFish_notDead, t2, r2);
-  if (!dead2 && isMaster) fill2d(h2_i2hRFish_master, t2, r2);
-
-  fill2d(h2_i3hXFish_always, t3, x3);
-  if (!dead3) fill2d(h2_i3hXFish_notDead, t3, x3);
-  if (!dead3 && isMaster) fill2d(h2_i3hXFish_master, t3, x3);
-  fill2d(h2_i3hYFish_always, t3, y3);
-  if (!dead3) fill2d(h2_i3hYFish_notDead, t3, y3);
-  if (!dead3 && isMaster) fill2d(h2_i3hYFish_master, t3, y3);
-  fill2d(h2_i3hRFish_always, t3, r3);
-  if (!dead3) fill2d(h2_i3hRFish_notDead, t3, r3);
-  if (!dead3 && isMaster) fill2d(h2_i3hRFish_master, t3, r3);
-
-  fill2d(h2_i4hXFish_always, t4, x4);
-  if (!dead4) fill2d(h2_i4hXFish_notDead, t4, x4);
-  if (!dead4 && isMaster) fill2d(h2_i4hXFish_master, t4, x4);
-  fill2d(h2_i4hYFish_always, t4, y4);
-  if (!dead4) fill2d(h2_i4hYFish_notDead, t4, y4);
-  if (!dead4 && isMaster) fill2d(h2_i4hYFish_master, t4, y4);
-  fill2d(h2_i4hRFish_always, t4, r4);
-  if (!dead4) fill2d(h2_i4hRFish_notDead, t4, r4);
-  if (!dead4 && isMaster) fill2d(h2_i4hRFish_master, t4, r4);
-
-  // Momentum 
-  fill3d(hist3ID_1stHitIonPxPyPz, px1, py1, pz1);
-  fill2d(hist2ID_1stHitIonPDirecXYAndCosPDirecZ, pxy1, cpz1);
-  fill2d(hist2ID_2ndHitIonPDirecXYAndCosPDirecZ, pxy2, cpz2);
-  fill2d(hist2ID_3rdHitIonPDirecXYAndCosPDirecZ, pxy3, cpz3);
-  fill2d(hist2ID_4thHitIonPDirecXYAndCosPDirecZ, pxy4, cpz4);
-  if (isMaster) fill3d(hist3ID_1stHitIonPxPyPz_underMasterCondition, px1, py2, pz1);
-
-  // IonEnergy 
-  fill1d(h1_i1hE, e1);
-  fill1d(h1_i2hE, e2);
-  fill1d(h1_i3hE, e3);
-  fill1d(h1_i4hE, e4);
-  fill1d(h1_iTtE, eT);
-  fill2d(h2_i1hE_i2hE, e1, e2);
-  fill2d(h2_i2hE_i3hE, e2, e3);
-  fill2d(h2_i3hE_i4hE, e3, e4);
-  if (isMaster) {
-	  fill1d(h1_i1hE_master, e1);
-	  fill1d(h1_i2hE_master, e2);
-	  fill1d(h1_i3hE_master, e3);
-	  fill1d(h1_i4hE_master, e4);
-	  fill1d(h1_iTtE_master, eT);
-  fill2d(h2_i1hE_i2hE_master, e1, e2);
-  fill2d(h2_i2hE_i3hE_master, e2, e3);
-  fill2d(h2_i3hE_i4hE_master, e3, e4);
+  // Others
+  const bool ii2h3hNotDead = (!pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead))
+      && (!pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead));
+  if (ii2h3hNotDead) {
+    fill1d(h1_i1hTOF_i2h3hNotDead, iT1);
   }
-  
-  // KER
-  fill2d(h2_iKER_e1hE, eT, eE1);
-  if (isMaster)
-  {
-	  fill2d(h2_iKER_e1hE_master, eT, eE1);
+  const bool i1hMaster = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
+  if (i1hMaster) {
+    fill2d(h2_i2h3hPIPICO_i1hMaster, iT2, iT3);
   }
-}
-
-void Analysis::AnalysisRun::createElecHists() {
-  // Detector image
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecLocXY_notDead),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndHitElecLocXY_notDead),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdHitElecLocXY_notDead),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_4thHitElecLocXY_notDead),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecLocXY_master),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndHitElecLocXY_master),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdHitElecLocXY_master),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_4thHitElecLocXY_master),
-                  "Location X [mm]", "Location Y [mm]",
-                  H2_ELECTRON_LOCATION, H2_ELECTRON_LOCATION,
-                  dirNameOfElecHists);
-   // TOF
-  create1d(SAMETITLEWITH(hist1ID_1stHitElecTOF_notDead),
-                  "TOF [ns]",
-                  H1_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_2ndHitElecTOF_notDead),
-                  "TOF [ns]",
-                  H1_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_3rdHitElecTOF_notDead),
-                  "TOF [ns]",
-                  H1_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_4thHitElecTOF_notDead),
-                  "TOF [ns]",
-                  H1_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_1stHitElecTOF_master),
-                  "TOF [ns]",
-                  H1_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_2ndHitElecTOF_master),
-                  "TOF [ns]",
-                  H1_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_3rdHitElecTOF_master),
-                  "TOF [ns]",
-                  H1_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_4thHitElecTOF_master),
-                  "TOF [ns]",
-                  H1_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  // PIPICO
-  create2d(SAMETITLEWITH(hist2ID_1stAnd2ndHitElecTOF_notDead),
-                  "1st Hit Elec TOF [ns] ", "2nd Hit Elec TOF [ns]",
-                  H2_ELECTRON_TOF, H2_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndAnd3rdHitElecTOF_notDead),
-                  "2nd Hit Elec TOF [ns] ", "3rd Hit Elec TOF [ns]",
-                  H2_ELECTRON_TOF, H2_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdAnd4thHitElecTOF_notDead),
-                  "3rd Hit Elec TOF [ns] ", "4th Hit Elec TOF [ns]",
-                  H2_ELECTRON_TOF, H2_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stAnd2ndHitElecTOF_master),
-                  "1st Hit Elec TOF [ns] ", "2nd Hit Elec TOF [ns]",
-                  H2_ELECTRON_TOF, H2_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndAnd3rdHitElecTOF_master),
-                  "2nd Hit Elec TOF [ns] ", "3rd Hit Elec TOF [ns]",
-                  H2_ELECTRON_TOF, H2_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdAnd4thHitElecTOF_master),
-                  "3rd Hit Elec TOF [ns] ", "4th Hit Elec TOF [ns]",
-                  H2_ELECTRON_TOF, H2_ELECTRON_TOF,
-                  dirNameOfElecHists);
-  // FISH
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecTOFAndLocXY_notDead),
-	  "TOF [ns]", "Location_xy [mm]",
-	  H2_ELECTRON_TOF, H2_ELECTRON_RADIUS,
-	  dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecTOFAndLocXY_master),
-	  "TOF [ns]", "Location_xy [mm]",
-	  H2_ELECTRON_TOF, H2_ELECTRON_RADIUS,
-	  dirNameOfElecHists);
-  // Momentum 
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPxPy_notDead),
-	  "P_x [au]", "P_y [au]",
-	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndHitElecPxPy_notDead),
-	  "P_x [au]", "P_y [au]",
-	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdHitElecPxPy_notDead),
-	  "P_x [au]", "P_y [au]",
-	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_4thHitElecPxPy_notDead),
-	  "P_x [au]", "P_y [au]",
-	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_1stHitElecPz_notDead),
-	  "P_z [au]",
-	  H1_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_2ndHitElecPz_notDead),
-	  "P_z [au]",
-	  H1_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_3rdHitElecPz_notDead),
-	  "P_z [au]",
-	  H1_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_4thHitElecPz_notDead),
-	  "P_z [au]",
-	  H1_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPxPy_master),
-	  "P_x [au]", "P_y [au]",
-	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_2ndHitElecPxPy_master),
-	  "P_x [au]", "P_y [au]",
-	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_3rdHitElecPxPy_master),
-	  "P_x [au]", "P_y [au]",
-	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_4thHitElecPxPy_master),
-	  "P_x [au]", "P_y [au]",
-	  H2_ELECTRON_MOMENTUM, H2_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_1stHitElecPz_master),
-	  "P_z [au]",
-	  H1_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_2ndHitElecPz_master),
-	  "P_z [au]",
-	  H1_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_3rdHitElecPz_master),
-	  "P_z [au]",
-	  H1_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_4thHitElecPz_master),
-	  "P_z [au]",
-	  H1_ELECTRON_MOMENTUM,
-    dirNameOfElecHists);
-  // Momentum Direction
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirXYAndPXY_notDead),
-	  "Direction_xy [degree]", "P_xy [au]",
-	  H2_DEGREE, H1_ELECTRON_NORMOFMOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirYZAndPYZ_notDead),
-	  "Direction_yz [degree]", "P_yz [au]",
-	  H2_DEGREE, H1_ELECTRON_NORMOFMOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirZXAndPZX_notDead),
-	  "Direction_zx [degree]", "P_zx [au]",
-	  H2_DEGREE, H1_ELECTRON_NORMOFMOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirXYAndCosPDirZ_notDead),
-	  "Direction_xy [degree]", "Cos Direction_z [1]",
-	  H2_DEGREE, H2_SINCOS,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirXYAndPXY_master),
-	  "Direction_xy [degree]", "P_xy [au]",
-	  H2_DEGREE, H1_ELECTRON_NORMOFMOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirYZAndPYZ_master),
-	  "Direction_yz [degree]", "P_yz [au]",
-	  H2_DEGREE, H1_ELECTRON_NORMOFMOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirZXAndPZX_master),
-	  "Direction_zx [degree]", "P_zx [au]",
-	  H2_DEGREE, H1_ELECTRON_NORMOFMOMENTUM,
-    dirNameOfElecHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitElecPDirXYAndCosPDirZ_master),
-	  "Direction_xy [degree]", "Cos Direction_z [1]",
-	  H2_DEGREE, H2_SINCOS,
-    dirNameOfElecHists);
-
-  // Energy 
-  create1d(SAMETITLEWITH(hist1ID_1stHitElecE),
-	  "E [eV]",
-	  H1_ELECTRON_ENERGY,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_2ndHitElecE),
-	  "E [eV]",
-	  H1_ELECTRON_ENERGY,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_3rdHitElecE),
-	  "E [eV]",
-	  H1_ELECTRON_ENERGY,
-    dirNameOfElecHists);
-  create1d(SAMETITLEWITH(hist1ID_4thHitElecE),
-	  "E [eV]",
-	  H1_ELECTRON_ENERGY,
-    dirNameOfElecHists);
-}
-
-void Analysis::AnalysisRun::fillElecHists() {
-	const bool dead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
-	const bool dead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
-	const bool dead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
-	const bool dead4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
-	const bool isIonMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
-	const bool isElecMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
-	const bool isMaster = isIonMaster && isElecMaster;
-
-	const double * const x1 = pElectrons->getRealOrDummyObject(0).outputLocX();
-	const double * const y1 = pElectrons->getRealOrDummyObject(0).outputLocY();
-	const double * const r1 = pElectrons->getRealOrDummyObject(0).outputLocR();
-	const double * const t1 = pElectrons->getRealOrDummyObject(0).outputTOF();
-	const double * const x2 = pElectrons->getRealOrDummyObject(1).outputLocX();
-	const double * const y2 = pElectrons->getRealOrDummyObject(1).outputLocY();
-  const double * const r2 = pElectrons->getRealOrDummyObject(1).outputLocR();
-	const double * const t2 = pElectrons->getRealOrDummyObject(1).outputTOF();
-	const double * const x3 = pElectrons->getRealOrDummyObject(2).outputLocX();
-	const double * const y3 = pElectrons->getRealOrDummyObject(2).outputLocY();
-  const double * const r3 = pElectrons->getRealOrDummyObject(2).outputLocR();
-	const double * const t3 = pElectrons->getRealOrDummyObject(2).outputTOF();
-	const double * const x4 = pElectrons->getRealOrDummyObject(3).outputLocX();
-	const double * const y4 = pElectrons->getRealOrDummyObject(3).outputLocY();
-  const double * const r4 = pElectrons->getRealOrDummyObject(3).outputLocR();
-	const double * const t4 = pElectrons->getRealOrDummyObject(3).outputTOF();
-
-	const double * const xCOM = pElectrons->outputCOMLocX();
-	const double * const yCOM = pElectrons->outputCOMLocY();
-	const double * const tSum12 = pElectrons->outputSumOf2TOFs(0, 1);
-	const double * const tSum23 = pElectrons->outputSumOf2TOFs(1, 2);
-	const double * const tSum34 = pElectrons->outputSumOf2TOFs(2, 3);
-	const double * const tDiff12 = pElectrons->outputDiffOfTOFs(0, 1);
-	const double * const tDiff23 = pElectrons->outputDiffOfTOFs(1, 2);
-	const double * const tDiff34 = pElectrons->outputDiffOfTOFs(2, 3);
-
-	const double * const px1 = pElectrons->getRealOrDummyObject(0).outputPX();
-	const double * const py1 = pElectrons->getRealOrDummyObject(0).outputPY();
-	const double * const pz1 = pElectrons->getRealOrDummyObject(0).outputPZ();
-	const double * const pxy1 = pElectrons->getRealOrDummyObject(0).outputPXY();
-	const double * const pyz1 = pElectrons->getRealOrDummyObject(0).outputPYZ();
-	const double * const pzx1 = pElectrons->getRealOrDummyObject(0).outputPZX();
-
-	const double * const pDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirX();
-	const double * const pDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
-	const double * const pDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
-	const double * const cpz1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
-	
-	const double * const e1 = pElectrons->getRealOrDummyObject(0).outputE();
-  const double * const e2 = pElectrons->getRealOrDummyObject(1).outputE();
-  const double * const e3 = pElectrons->getRealOrDummyObject(2).outputE();
-  const double * const e4 = pElectrons->getRealOrDummyObject(3).outputE();
-
-	// Detector image and TOF
-	if (!dead1) {
-		fill2d(hist2ID_1stHitElecLocXY_notDead, x1, y1);
-		fill1d(hist1ID_1stHitElecTOF_notDead, t1);
-	}
-	if (!dead2) {
-		fill2d(hist2ID_2ndHitElecLocXY_notDead, x2, y2);
-		fill1d(hist1ID_2ndHitElecTOF_notDead, t2);
-	}
-	if (!dead3) {
-		fill2d(hist2ID_3rdHitElecLocXY_notDead, x3, y3);
-		fill1d(hist1ID_3rdHitElecTOF_notDead, t3);
-	}
-	if (!dead4) {
-		fill2d(hist2ID_4thHitElecLocXY_notDead, x4, y4);
-		fill1d(hist1ID_4thHitElecTOF_notDead, t4);
-	}
-	if (isMaster) {
-		if (!dead1) {
-			fill2d(hist2ID_1stHitElecLocXY_master, x1, y1);
-			fill1d(hist1ID_1stHitElecTOF_master, t1);
-		}
-		if (!dead2) {
-			fill2d(hist2ID_2ndHitElecLocXY_master, x2, y2);
-			fill1d(hist1ID_2ndHitElecTOF_master, t2);
-		}
-		if (!dead3) {
-			fill2d(hist2ID_3rdHitElecLocXY_master, x3, y3);
-			fill1d(hist1ID_3rdHitElecTOF_master, t3);
-		}
-		if (!dead4) {
-			fill2d(hist2ID_4thHitElecLocXY_master, x4, y4);
-			fill1d(hist1ID_4thHitElecTOF_master, t4);
-		}
-	}
-	// PIPICO 
-	if (!dead1 && !dead2) {
-		fill2d(hist2ID_1stAnd2ndHitElecTOF_notDead, t1, t2);
-	}
-	if (!dead2 && !dead3) {
-		fill2d(hist2ID_2ndAnd3rdHitElecTOF_notDead, t2, t3);
-	}
-	if (!dead3 && !dead4) {
-		fill2d(hist2ID_3rdAnd4thHitElecTOF_notDead, t3, t4);
-	}
-	if (isMaster) { 
-		if (!dead1 && !dead2) {
-			fill2d(hist2ID_1stAnd2ndHitElecTOF_master, t1, t2);
-		}
-		if (!dead2 && !dead3) {
-			fill2d(hist2ID_2ndAnd3rdHitElecTOF_master, t2, t3);
-		}
-		if (!dead3 && !dead4) {
-			fill2d(hist2ID_3rdAnd4thHitElecTOF_master, t3, t4);
-		}
-	}
-	// FISH 
-	if (!dead1) {
-		fill2d(hist2ID_1stHitElecTOFAndLocXY_notDead, t1, r1);
-	}
-	if (isMaster) {
-		if (!dead1) {
-			fill2d(hist2ID_1stHitElecTOFAndLocXY_master, t1, r1);
-		}
-	}
-	// Momentum 
-		fill2d(hist2ID_1stHitElecPxPy_notDead, px1, py1);
-		fill1d(hist1ID_1stHitElecPz_notDead, pz1);
-	if (isMaster) {
-			fill2d(hist2ID_1stHitElecPxPy_master, px1, py1);
-			fill1d(hist1ID_1stHitElecPz_master, pz1);
-	}
-	// Momentum Direction 
-		fill2d(hist2ID_1stHitElecPDirXYAndPXY_notDead, pDirXY1, pxy1);
-		fill2d(hist2ID_1stHitElecPDirYZAndPYZ_notDead, pDirYZ1, pyz1);
-		fill2d(hist2ID_1stHitElecPDirZXAndPZX_notDead, pDirZX1, pzx1);
-		fill2d(hist2ID_1stHitElecPDirXYAndCosPDirZ_notDead, pDirXY1, cpz1);
-	if (isMaster) {
-			fill2d(hist2ID_1stHitElecPDirXYAndPXY_master, pDirXY1, pxy1);
-			fill2d(hist2ID_1stHitElecPDirYZAndPYZ_master, pDirYZ1, pyz1);
-			fill2d(hist2ID_1stHitElecPDirZXAndPZX_master, pDirZX1, pzx1);
-			fill2d(hist2ID_1stHitElecPDirXYAndCosPDirZ_master, pDirXY1, cpz1);
-	}
-	// Energy 
-		fill1d(hist1ID_1stHitElecE, e1);
+  if (master) {
+    fill2d(h2_e1hE_iTotalTOF_master, eE1, iTTotal);
+  }
 }
