@@ -101,7 +101,6 @@ class AnalysisRun: Hist {
   void processEvent(const long raw);
 
  private:
-  Hist *pHist;
   const char *dirNameOfFlagHists = "Flag";
   enum FlagHists {
     numberOfFlagHists = 0
@@ -109,7 +108,7 @@ class AnalysisRun: Hist {
   const char *dirNameOfIonHists = "Ion";
   enum IonHists {
     // Detector image
-        hist2ID_1stHitIonLocXY_notDead = numberOfFlagHists,
+    hist2ID_1stHitIonLocXY_notDead = numberOfFlagHists,
     hist2ID_2ndHitIonLocXY_notDead,
     hist2ID_3rdHitIonLocXY_notDead,
     hist2ID_4thHitIonLocXY_notDead,
@@ -120,7 +119,7 @@ class AnalysisRun: Hist {
     hist2ID_4thHitIonLocXY_master,
     hist2ID_COMOfIonsLocXY_master,
     // TOF
-        hist1ID_1stHitIonTOF_raw,
+    hist1ID_1stHitIonTOF_raw,
     hist1ID_2ndHitIonTOF_raw,
     hist1ID_3rdHitIonTOF_raw,
     hist1ID_4thHitIonTOF_raw,
@@ -133,7 +132,7 @@ class AnalysisRun: Hist {
     hist1ID_3rdHitIonTOF_master,
     hist1ID_4thHitIonTOF_master,
     // PIPICO
-        hist2ID_1stAnd2ndHitIonTOF_notDead,
+    hist2ID_1stAnd2ndHitIonTOF_notDead,
     hist2ID_2ndAnd3rdHitIonTOF_notDead,
     hist2ID_3rdAnd4thHitIonTOF_notDead,
     hist2ID_1stAnd2ndHitIonTOF_rot45NotDead,
@@ -143,7 +142,7 @@ class AnalysisRun: Hist {
     hist2ID_2ndAnd3rdHitIonTOF_master,
     hist2ID_3rdAnd4thHitIonTOF_master,
     // PIPIPICO
-        hist2ID_SumOf1stAnd2ndHitIonTOFsAnd3rdHitIonTOF,
+    hist2ID_SumOf1stAnd2ndHitIonTOFsAnd3rdHitIonTOF,
     hist2ID_1stHitIonTOFAndSumOf2ndAnd3rdHitIonTOFs,
     hist2ID_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF,
     hist2ID_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs,
@@ -152,17 +151,17 @@ class AnalysisRun: Hist {
     hist2ID_SumOf2ndAnd3rdHitIonTOFsAnd4thHitIonTOF_masterCondit,
     hist2ID_2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOFs_masterCondit,
     // PIPIPIPICO
-        hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF,
+    hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF,
     hist2ID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF,
     hist2ID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF,
     hist2ID_SumOf1st2ndAnd3rdHitIonTOFAnd4thHitIonTOF_masterCondit,
     hist2ID_SumOf1stAnd2ndHitIonTOFAndSumOf3rdAnd4thHitIonTOF_masterCondit,
     hist2ID_1stHitIonTOFAndSumOf2nd3rdAnd4thHitIonTOF_masterCondit,
     // FISH
-        hist2ID_1stHitIonTOFAndLocXY_notDead,
+    hist2ID_1stHitIonTOFAndLocXY_notDead,
     hist2ID_1stHitIonTOFAndLocXY_master,
     // Momentum
-        histID_1stHitIonPxPy,
+    histID_1stHitIonPxPy,
     histID_2ndHitIonPxPy,
     histID_3rdHitIonPxPy,
     histID_4thHitIonPxPy,
@@ -189,7 +188,7 @@ class AnalysisRun: Hist {
   const char *dirNameOfElecHists = "Electron";
   enum ElecHists {
     // Detector image
-        hist2ID_1stHitElecLocXY_notDead = numberOfIonHists,
+    hist2ID_1stHitElecLocXY_notDead = numberOfIonHists,
     hist2ID_2ndHitElecLocXY_notDead,
     hist2ID_3rdHitElecLocXY_notDead,
     hist2ID_4thHitElecLocXY_notDead,
@@ -199,7 +198,7 @@ class AnalysisRun: Hist {
     hist2ID_4thHitElecLocXY_master,
     hist2ID_1stHitElecLocDirXY_Loc_notDead,
     // TOF
-        hist1ID_1stHitElecTOF_raw,
+    hist1ID_1stHitElecTOF_raw,
     hist1ID_2ndHitElecTOF_raw,
     hist1ID_3rdHitElecTOF_raw,
     hist1ID_4thHitElecTOF_raw,
@@ -212,17 +211,17 @@ class AnalysisRun: Hist {
     hist1ID_3rdHitElecTOF_master,
     hist1ID_4thHitElecTOF_master,
     // PIPICO
-        hist2ID_1stAnd2ndHitElecTOF_notDead,
+    hist2ID_1stAnd2ndHitElecTOF_notDead,
     hist2ID_2ndAnd3rdHitElecTOF_notDead,
     hist2ID_3rdAnd4thHitElecTOF_notDead,
     hist2ID_1stAnd2ndHitElecTOF_master,
     hist2ID_2ndAnd3rdHitElecTOF_master,
     hist2ID_3rdAnd4thHitElecTOF_master,
     // FISH
-        hist2ID_1stHitElecTOFAndLocXY_notDead,
+    hist2ID_1stHitElecTOFAndLocXY_notDead,
     hist2ID_1stHitElecTOFAndLocXY_master,
     // Momentum
-        hist2ID_1stHitElecPxPy_notDead,
+    hist2ID_1stHitElecPxPy_notDead,
     hist2ID_2ndHitElecPxPy_notDead,
     hist2ID_3rdHitElecPxPy_notDead,
     hist2ID_4thHitElecPxPy_notDead,
@@ -239,7 +238,7 @@ class AnalysisRun: Hist {
     hist1ID_3rdHitElecPz_master,
     hist1ID_4thHitElecPz_master,
     // Momentum Direction
-        hist2ID_1stHitElecPDirXYAndPXY_notDead,
+    hist2ID_1stHitElecPDirXYAndPXY_notDead,
     hist2ID_1stHitElecPDirYZAndPYZ_notDead,
     hist2ID_1stHitElecPDirZXAndPZX_notDead,
     hist2ID_1stHitElecPDirXYAndCosPDirZ_notDead,
@@ -248,13 +247,13 @@ class AnalysisRun: Hist {
     hist2ID_1stHitElecPDirZXAndPZX_master,
     hist2ID_1stHitElecPDirXYAndCosPDirZ_master,
     // Energy
-        hist1ID_1stHitElecE,
+    hist1ID_1stHitElecE,
     hist1ID_2ndHitElecE,
     hist1ID_3rdHitElecE,
     hist1ID_4thHitElecE,
     hist1ID_SumOfElecEs,
     //
-        numberOfElecHists
+    numberOfElecHists
   };
   void createElecHists();
   void fillElecHists();
@@ -265,12 +264,11 @@ class AnalysisRun: Hist {
     histID_2ndAnd3rdHitIonTOF_under1stHitIonIsInMasterRegion,
     histID_1stHitElecEAndSumOfIonTOFs_underMasterCondition,
     histID_1stHitElecE_underMasterCondition,
-    numberOfNatureHists
+    numberOfNatureHists,
+	numberOfHists = numberOfNatureHists
   };
   void createNatureHists();
   void fillNatureHists();
-
-  const int numberOfHists = numberOfNatureHists;
 };
 }
 

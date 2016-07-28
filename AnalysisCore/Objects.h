@@ -5,6 +5,8 @@
 #ifndef ANALYSIS_OBJECTS_H
 #define ANALYSIS_OBJECTS_H
 
+#include <assert.h>
+#include <iostream>
 #include "Object.h"
 
 namespace Analysis {

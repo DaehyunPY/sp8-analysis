@@ -2,7 +2,6 @@
 // Created by Daehyun You on 12/4/15.
 //
 
-#include <assert.h>
 #include "Objects.h"
 
 #define ANALYSIS_OBJECTS_RETURN_OUT_OF_FRAME_IF_IT_IS1 if(existOutOfFrameOfBasicDataObject()) { return outOfFrame; }

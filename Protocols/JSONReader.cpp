@@ -31,6 +31,7 @@ Analysis::JSONReader::JSONReader(const std::string f) {
 }
 Analysis::JSONReader::~JSONReader() { }
 const rapidjson::Value &Analysis::JSONReader::getValue(std::string str1) const {
+//	std::cout << str1 << std::endl;
   std::string str0;
   std::size_t found;
   const rapidjson::Value *value;

@@ -196,10 +196,8 @@ TH1 *Analysis::Hist::create2d(int id, const char *name,
   pHist2 = dynamic_cast<TH2D *>(ppHistArray[id]);
   if (pHist2) return pHist2;
 
-  TDirectory
-      *saveDir = gDirectory;        //save a pointer to the current directory
-  getDir(pRootFile,
-         dir)->cd();                //change to directory that this histo need to be created in
+  TDirectory *saveDir = gDirectory;        //save a pointer to the current directory
+  getDir(pRootFile, dir)->cd();                //change to directory that this histo need to be created in
 
   //--create a 2D histogram--//
   pHist2 = new TH2D(name, name, nXbins, xLow, xUp, nYbins, yLow, yUp);

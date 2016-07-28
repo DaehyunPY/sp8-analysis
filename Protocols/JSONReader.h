@@ -1,6 +1,7 @@
 #ifndef ANALYSIS_JSONREADER_H
 #define ANALYSIS_JSONREADER_H
 
+#include <iostream>
 #include <sstream>
 #include <fstream>
 #include <string>
