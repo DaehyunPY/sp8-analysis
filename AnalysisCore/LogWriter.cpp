@@ -106,10 +106,6 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
     for (int i = 0; i < n; i++) {
       const std::string name = getObjectName(i);
       logFile << "        " << name.c_str() << ":" << std::endl;
-      logFile << "            Mass: " << ions.getIon(i).getMass(unit) << std::endl;
-      logFile << "            Charge: " << ions.getIon(i).getCharge(unit) << std::endl;
-      logFile << "            Maximum of TOF: " << ions.getIon(i).getMaxOfTOF(unit) << std::endl;
-      logFile << "            Minimum of TOF: " << ions.getIon(i).getMinOfTOF(unit) << std::endl;
       const double t1 = analysisTools.calculateTOF(unit, ions.getIon(i), 0e0);
       const double t2 = analysisTools.calculatePeriodOfCycle(unit, ions.getIon(0));
       logFile << "            TOF of Stopped Object: " << t1 << std::endl;

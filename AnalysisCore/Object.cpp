@@ -1,8 +1,4 @@
-#include <assert.h>
 #include "Object.h"
-
-#define ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1 if(isOutOfFrameOfBasicData()) { return outOfFrame; }
-#define ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2 if(isOutOfFrameOfMomentumData()) { return outOfFrame; }
 
 Analysis::Object::Object(const double &m,
                          const double &q,
@@ -74,230 +70,205 @@ const double &Analysis::Object::getMinOfTOF() const { return minOfTOF; }
 const double &Analysis::Object::getMaxOfTOF() const { return maxOfTOF; }
 const double &Analysis::Object::getLocationX() const
 {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
 	return locationX;
 }
 const double &Analysis::Object::getLocationY() const
 {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
 	return locationY;
 }
 const double &Analysis::Object::getTOF() const
 {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
 	return TOF;
 }
 const double &Analysis::Object::getMomentumX() const
 {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
 	return momentumX;
 }
 const double &Analysis::Object::getMomentumY() const
 {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
 	return momentumY;
 }
 const double &Analysis::Object::getMomentumZ() const
 {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
 	return momentumZ;
 }
 const double Analysis::Object::getMomentum() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return pow(pow(getMomentumX(), 2e0)
                  + pow(getMomentumY(), 2e0)
                  + pow(getMomentumZ(), 2e0), 0.5e0);
 }
 const double Analysis::Object::getEnergy() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return pow(getMomentum(), 2e0) / (2e0 * getMass());
 }
 const double Analysis::Object::getMotionalDirectionX() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return acos(getMomentumX() / getMomentum());
 }
 const double Analysis::Object::getMotionalDirectionY() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return acos(getMomentumY() / getMomentum());
 }
 const double Analysis::Object::getMotionalDirectionZ() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return acos(getMomentumZ() / getMomentum());
-}
-const double Analysis::Object::getLocationX(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeMilliMeter(getLocationX());
-}
-const double Analysis::Object::getLocationY(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeMilliMeter(getLocationY());
-}
-const double Analysis::Object::getTOF(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeNanoSec(getTOF());
-}
-const double Analysis::Object::getMomentumX(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeAuMomentum(getMomentumX());
-}
-const double Analysis::Object::getMomentumY(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeAuMomentum(getMomentumY());
-}
-const double Analysis::Object::getMomentumZ(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeAuMomentum(getMomentumZ());
-}
-const double Analysis::Object::getMomentum(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeAuMomentum(getMomentum());
-}
-const double Analysis::Object::getEnergy(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeElectronVolt(getEnergy());
 }
 Analysis::Object::Object() : Object(0e0, 0e0, 0e0, 0e0) { return; }
 const double Analysis::Object::getMomentumXY() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return pow(pow(getMomentumX(), 2e0) + pow(getMomentumY(), 2e0), 0.5e0);
 }
-const double Analysis::Object::getMomentumXY(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeAuMomentum(getMomentumXY());
-}
 const double Analysis::Object::getMomentumYZ() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return pow(pow(getMomentumY(),2e0) + pow(getMomentumZ(),2e0), 0.5e0);
 }
 const double Analysis::Object::getMomentumZX() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return pow(pow(getMomentumZ(),2e0) + pow(getMomentumX(),2e0), 0.5e0);
 }
 const double Analysis::Object::getMotionalDirectionXY() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return atan2(getMomentumY(), getMomentumX());
 }
 const double Analysis::Object::getMotionalDirectionYZ() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return atan2(getMomentumZ(), getMomentumY());
 }
 const double Analysis::Object::getMotionalDirectionZX() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return atan2(getMomentumX(), getMomentumZ());
 }
-const double Analysis::Object::getMomentumYZ(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeAuMomentum(getMomentumYZ());
-}
-const double Analysis::Object::getMomentumZX(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeAuMomentum(getMomentumZX());
-}
-const double Analysis::Object::getMotionalDirectionX(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeDegree(getMotionalDirectionX());
-}
-const double Analysis::Object::getMotionalDirectionY(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeDegree(getMotionalDirectionY());
-}
-const double Analysis::Object::getMotionalDirectionZ(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeDegree(getMotionalDirectionZ());
-}
-const double Analysis::Object::getMotionalDirectionXY(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeDegree(getMotionalDirectionXY());
-}
-const double Analysis::Object::getMotionalDirectionYZ(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeDegree(getMotionalDirectionYZ());
-}
-const double Analysis::Object::getMotionalDirectionZX(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeDegree(getMotionalDirectionZX());
-}
 const double Analysis::Object::getLocationXY() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return pow(pow(getLocationX(),2e0) + pow(getLocationY(),2e0), 0.5e0);
 }
-const double Analysis::Object::getLocationXY(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeMilliMeter(getLocationXY());
-}
 const double Analysis::Object::getLocation() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return getLocationXY();
 }
 const double Analysis::Object::getLocationalDirectionXY() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return atan2(getLocationY(), getLocationX());
 }
 const double Analysis::Object::getLocationalDirectionX() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return acos(getLocationX()/getLocation());
 }
 const double Analysis::Object::getLocationalDirectionY() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return acos(getLocationY()/getLocation());
 }
-const double Analysis::Object::getLocation(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeMilliMeter(getLocation());
-}
-const double Analysis::Object::getLocationalDirectionXY(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeDegree(getLocationalDirectionXY());
-}
 const double Analysis::Object::getLocationalDirectionYX() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
   return atan2(getLocationX(), getLocationY());
 }
 const double Analysis::Object::getMotionalDirectionXZ() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return atan2(getMomentumZ(), getMomentumX());
 }
 const double Analysis::Object::getMotionalDirectionYX() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return atan2(getMomentumX(), getMomentumY());
 }
 const double Analysis::Object::getMotionalDirectionZY() const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
   return atan2(getMomentumY(), getMomentumZ());
 }
-const double Analysis::Object::getLocationalDirectionX(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeDegree(getLocationalDirectionX());
+
+// output
+double * const Analysis::Object::outputLocX() const
+{
+	if (isFlag(HavingXYTData)) return new double(kUnit.writeMilliMeter(getLocationX()));
+  return nullptr;
 }
-const double Analysis::Object::getLocationalDirectionY(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeDegree(getLocationalDirectionY());
+double * const Analysis::Object::outputLocY() const
+{
+	if (isFlag(HavingXYTData)) return new double(kUnit.writeMilliMeter(getLocationY()));
+  return nullptr;
 }
-const double Analysis::Object::getLocationalDirectionYX(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS1
-  return unit.writeDegree(getLocationalDirectionYX());
+double * const Analysis::Object::outputLocR() const
+{
+	if (isFlag(HavingXYTData)) return new double(kUnit.writeMilliMeter(getLocation()));
+  return nullptr;
 }
-const double Analysis::Object::getMotionalDirectionXZ(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeDegree(getMotionalDirectionXZ());
+double * const Analysis::Object::outputLocDir() const
+{
+	if (isFlag(HavingXYTData)) return new double(kUnit.writeDegree(getLocationalDirectionX()));
+  return nullptr;
 }
-const double Analysis::Object::getMotionalDirectionYX(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeDegree(getMotionalDirectionYX());
+double * const Analysis::Object::outputTOF() const
+{
+	if (isFlag(HavingXYTData)) return new double(kUnit.writeNanoSec(getTOF()));
+  return nullptr;
 }
-const double Analysis::Object::getMotionalDirectionZY(const Analysis::Unit &unit) const {
-	ANALYSIS_OBJECT_RETURN_OUT_OF_FRAME_IF_IT_IS2
-  return unit.writeDegree(getMotionalDirectionZY());
+double * const Analysis::Object::outputPX() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeAuMomentum(getMomentumX()));
+  return nullptr;
 }
-const double Analysis::Object::getMass(const Analysis::Unit &unit) const {
-  return unit.writeAtomicMass(getMass());
+double * const Analysis::Object::outputPY() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeAuMomentum(getMomentumY()));
+  return nullptr;
 }
-const double Analysis::Object::getCharge(const Analysis::Unit &unit) const {
-  return unit.writeElementaryCharge(getCharge());
+double * const Analysis::Object::outputPZ() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeAuMomentum(getMomentumZ()));
+  return nullptr;
 }
-const double Analysis::Object::getMinOfTOF(const Analysis::Unit &unit) const {
-  return unit.writeNanoSec(getMinOfTOF());
+double * const Analysis::Object::outputPXY() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeAuMomentum(getMomentumXY()));
+  return nullptr;
 }
-const double Analysis::Object::getMaxOfTOF(const Analysis::Unit &unit) const {
-  return unit.writeNanoSec(getMaxOfTOF());
+double * const Analysis::Object::outputPYZ() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeAuMomentum(getMomentumYZ()));
+  return nullptr;
+}
+double * const Analysis::Object::outputPZX() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeAuMomentum(getMomentumZX()));
+  return nullptr;
+}
+double * const Analysis::Object::outputP() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeAuMomentum(getMomentum()));
+  return nullptr;
+}
+double * const Analysis::Object::outputPDirX() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionX()));
+  return nullptr;
+}
+double * const Analysis::Object::outputPDirY() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionY()));
+  return nullptr;
+}
+double * const Analysis::Object::outputPDirZ() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionZ()));
+  return nullptr;
+}
+double * const Analysis::Object::outputE() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeElectronVolt(getEnergy()));
+  return nullptr;
+}
+double* const Analysis::Object::outputCosPDirZ() const
+{
+	if (isFlag(HavingMomentumData)) return new double(cos(getMotionalDirectionZ()));
+	return nullptr;
+}
+double* const Analysis::Object::outputPDirXY() const
+{
+	if (isFlag(HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionXY()));
+	return nullptr;
+}
+double* const Analysis::Object::outputPDirXZ() const
+{
+  if (isFlag(HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionXZ()));
+  return nullptr;
+}
+double* const Analysis::Object::outputPDirYX() const
+{
+  if (isFlag(HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionYX()));
+  return nullptr;
+}
+double* const Analysis::Object::outputPDirYZ() const
+{
+  if (isFlag(HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionYZ()));
+  return nullptr;
+}
+double* const Analysis::Object::outputPDirZX() const
+{
+  if (isFlag(HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionZX()));
+  return nullptr;
+}
+double* const Analysis::Object::outputPDirZY() const
+{
+  if (isFlag(HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionZY()));
+  return nullptr;
 }

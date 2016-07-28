@@ -2,9 +2,9 @@
 #define ANALYSIS_OBJECT_H
 
 
+#include <assert.h>
 #include "Unit.h"
 #include "ObjectFlag.h"
-#define OUT_OF_FRAME -100000000
 
 namespace Analysis {
 class Object: public ObjectFlag {
@@ -12,7 +12,6 @@ class Object: public ObjectFlag {
   const double charge;
   const double minOfTOF;
   const double maxOfTOF;
-  const double outOfFrame = OUT_OF_FRAME; 
   double locationX;
   double locationY;
   double TOF;
@@ -37,10 +36,6 @@ class Object: public ObjectFlag {
   const double &getCharge() const;
   const double &getMinOfTOF() const;
   const double &getMaxOfTOF() const;
-  const double getMass(const Unit &) const;
-  const double getCharge(const Unit &) const;
-  const double getMinOfTOF(const Unit &) const;
-  const double getMaxOfTOF(const Unit &) const;
 
   const double &getLocationX() const; // could be out out frame 
   const double &getLocationY() const; // could be out out frame 
@@ -69,32 +64,31 @@ class Object: public ObjectFlag {
   const double getMotionalDirectionZY() const; // could be out out frame 
   const double getEnergy() const; // could be out out frame 
 
-  const double getLocationX(const Unit &) const; // could be out out frame 
-  const double getLocationY(const Unit &) const; // could be out out frame 
-  const double getLocationXY(const Unit &) const; // could be out out frame 
-  const double getLocation(const Unit &) const; // could be out out frame 
-  const double getLocationalDirectionX(const Unit &) const; // could be out out frame 
-  const double getLocationalDirectionY(const Unit &) const; // could be out out frame 
-  const double getLocationalDirectionXY(const Unit &) const; // could be out out frame 
-  const double getLocationalDirectionYX(const Unit &) const; // could be out out frame 
-  const double getTOF(const Unit &) const; // could be out out frame 
-  const double getMomentumX(const Unit &) const; // could be out out frame 
-  const double getMomentumY(const Unit &) const; // could be out out frame 
-  const double getMomentumZ(const Unit &) const; // could be out out frame 
-  const double getMomentumXY(const Unit &) const; // could be out out frame 
-  const double getMomentumYZ(const Unit &) const; // could be out out frame 
-  const double getMomentumZX(const Unit &) const; // could be out out frame 
-  const double getMomentum(const Unit &) const; // could be out out frame 
-  const double getMotionalDirectionX(const Unit &) const; // could be out out frame 
-  const double getMotionalDirectionY(const Unit &) const; // could be out out frame 
-  const double getMotionalDirectionZ(const Unit &) const; // could be out out frame 
-  const double getMotionalDirectionXY(const Unit &) const; // could be out out frame 
-  const double getMotionalDirectionXZ(const Unit &) const; // could be out out frame 
-  const double getMotionalDirectionYX(const Unit &) const; // could be out out frame 
-  const double getMotionalDirectionYZ(const Unit &) const; // could be out out frame 
-  const double getMotionalDirectionZX(const Unit &) const; // could be out out frame 
-  const double getMotionalDirectionZY(const Unit &) const; // could be out out frame 
-  const double getEnergy(const Unit &) const; // could be out out frame 
+  // output
+public:
+  double * const outputLocX() const;
+  double * const outputLocY() const;
+  double * const outputLocR() const;
+  double * const outputLocDir() const;
+  double * const outputTOF() const;
+  double * const outputPX() const;
+  double * const outputPY() const;
+  double * const outputPZ() const;
+  double * const outputPXY() const;
+  double * const outputPYZ() const;
+  double * const outputPZX() const; 
+  double * const outputP() const;
+  double * const outputPDirX() const;
+  double * const outputPDirY() const;
+  double * const outputPDirZ() const;
+  double * const outputPDirXY() const;
+  double * const outputPDirXZ() const;
+  double * const outputPDirYX() const;
+  double * const outputPDirYZ() const;
+  double * const outputPDirZX() const;
+  double * const outputPDirZY() const;
+  double * const outputCosPDirZ() const;
+  double * const outputE() const;
 };
 }
 

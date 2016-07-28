@@ -14,7 +14,6 @@ class Objects {
  private:
   const int numberOfHits;
   const int numberOfHitsUsed;
-  const double outOfFrame = OUT_OF_FRAME;
   Object **ppObject;
   const int getNumberOfDeadObjects() const;
   const int getNumberOfDeadDummyObjects() const;
@@ -46,6 +45,7 @@ class Objects {
   const Object &getObject(const int &) const;
   const Object &getDummyObject(const int &) const;
   const Object &getRealOrDummyObject(const int &) const;
+
   // get
   const int getNumberOfDummyObject() const;
   const double getLocationX() const; // could be out of frame 
@@ -77,36 +77,36 @@ class Objects {
   const double getMotionalDirectionZX() const; // could be out of frame 
   const double getMotionalDirectionZY() const; // could be out of frame 
   const double getEnergy() const; // could be out of frame 
-  // get with unit
-  const double getLocationX(const Unit &) const; // could be out of frame 
-  const double getLocationY(const Unit &) const; // could be out of frame 
-  const double getLocationXY(const Unit &) const; // could be out of frame 
-  const double getLocation(const Unit &) const; // could be out of frame 
-  const double getLocationalDirectionX(const Unit &) const; // could be out of frame 
-  const double getLocaitonalDirectionY(const Unit &) const; // could be out of frame 
-  const double getLocationalDirectionXY(const Unit &) const; // could be out of frame 
-  const double getLocationDirectionYX(const Unit &) const; // could be out of frame
-  const double getSumOfTOF(const Unit &) const; // could be out of frame (note: don't use macro)
-  const double getSumOfTOF(const Unit &, const int &, const int &) const; // could be out of frame (note: don't use macro)
-  const double getSumOfTOF(const Unit &, const int &, const int&, const int&) const; // could be out of frame (note: don't use macro)
-  const double getDiffOfTOF(const Unit &, const int &, const int &) const; // could be out of frame (note: don't use macro) 
-  const double getMomentumX(const Unit &) const; // could be out of frame 
-  const double getMomentumY(const Unit &) const; // could be out of frame 
-  const double getMomentumZ(const Unit &) const; // could be out of frame 
-  const double getMomentumXY(const Unit &) const; // could be out of frame 
-  const double getMomentumYZ(const Unit &) const; // could be out of frame 
-  const double getMomentumZX(const Unit &) const; // could be out of frame 
-  const double getMomentum(const Unit &) const; // could be out of frame 
-  const double getMotionalDirectionX(const Unit &) const; // could be out of frame 
-  const double getMotionalDirectionY(const Unit &) const; // could be out of frame 
-  const double getMotionalDirectionZ(const Unit &) const; // could be out of frame 
-  const double getMotionalDirectionXY(const Unit &) const; // could be out of frame 
-  const double getMotionalDirectionXZ(const Unit &) const; // could be out of frame 
-  const double getMotionalDirectionYX(const Unit &) const; // could be out of frame 
-  const double getMotionalDirectionYZ(const Unit &) const; // could be out of frame 
-  const double getMotionalDirectionZX(const Unit &) const; // could be out of frame 
-  const double getMotionalDirectionZY(const Unit &) const; // could be out of frame 
-  const double getEnergy(const Unit &) const; // could be out of frame 
+
+  // output 
+public:
+	double * const outputCOMLocX() const;
+	double * const outputCOMLocY() const;
+	double * const outputCOMLocR() const;
+	double * const outputCOMLocDir() const;
+	double * const outputTotalTOF() const;
+	double * const outputSumOf2TOFs(const int i1, const int i2) const;
+	double * const outputSumOf3TOFs(const int i1, const int i2, const int i3) const;
+	double * const outputDiffOfTOFs(const int i1, const int i2) const;
+	double * const outputPX() const;
+	double * const outputPY() const;
+	double * const outputPZ() const;
+	double * const outputPXY() const;
+	double * const outputPYZ() const;
+	double * const outputPZX() const;
+	double * const outputP() const;
+	double * const outputPDirX() const;
+	double * const outputPDirY() const;
+	double * const outputPDirZ() const;
+  double * const outputPDirXY() const;
+  double * const outputPDirXZ() const;
+  double * const outputPDirYX() const;
+  double * const outputPDirYZ() const;
+  double * const outputPDirZX() const;
+  double * const outputPDirZY() const;
+  double * const outputCosPDirZ() const;
+	double * const outputE() const;
+
   // bools
   const bool isDummyObject(const int &) const;
   const bool isRealObject(const int &) const;

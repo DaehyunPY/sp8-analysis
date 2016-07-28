@@ -199,24 +199,24 @@ void Analysis::AnalysisRun::fillNatureHists() {
           && (!pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead));
   if (under2ndAnd3rdHitIonAreNotDead) {
     fill1d(histID_1stHitIonTOF_under2ndAnd3rdHitIonAreNotDead,
-                  pIons->getRealOrDummyObject(0).getTOF(*pUnit));
+                  pIons->getRealOrDummyObject(0).outputTOF());
   }
   const bool under1stHitIonInMasterRegion =
       pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
   if (under1stHitIonInMasterRegion) {
     fill2d(histID_2ndAnd3rdHitIonTOF_under1stHitIonIsInMasterRegion,
-                  pIons->getRealOrDummyObject(1).getTOF(*pUnit),
-                  pIons->getRealOrDummyObject(2).getTOF(*pUnit));
+                  pIons->getRealOrDummyObject(1).outputTOF(),
+                  pIons->getRealOrDummyObject(2).outputTOF());
   }
   const bool underMasterCondition =
       (pIons->areAllFlag(ObjectFlag::WithinMasterRegion)
           && pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion));
   if (underMasterCondition) {
     fill2d(histID_1stHitElecEAndSumOfIonTOFs_underMasterCondition,
-                  pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit),
-                  pIons->getSumOfTOF(*pUnit));
+                  pElectrons->getRealOrDummyObject(0).outputE(),
+                  pIons->outputTotalTOF());
     fill1d(histID_1stHitElecE_underMasterCondition,
-                  pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit));
+                  pElectrons->getRealOrDummyObject(0).outputE());
   }
 }
 
@@ -391,15 +391,48 @@ void Analysis::AnalysisRun::createIonHists() {
                   "1st hit ion TOF [ns]", "Sum of 2nd, 3rd and 4th hit ion TOFs [ns]",
                   H2_ION_TOF, H2_ION_SUMOFTOF(3),
                   dirNameOfIonHists);
-  // FISH
-  create2d(SAMETITLEWITH(hist2ID_1stHitIonTOFAndLocXY_notDead),
-	  "TOF [ns]", "Location_xy [mm]",
-	  H2_ION_TOF, H2_ION_RADIUS,
-	  dirNameOfIonHists);
-  create2d(SAMETITLEWITH(hist2ID_1stHitIonTOFAndLocXY_master),
-	  "TOF [ns]", "Location_xy [mm]",
-	  H2_ION_TOF, H2_ION_RADIUS,
-	  dirNameOfIonHists);
+  // Ion FISH
+#define __ION_XYFISH_TITLE_BIN_REGION_DIR__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 400, -50, 50, "IonFish"
+#define __ION_RFISH_TITLE_BIN_REGION_DIR__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 200, 0, 50, "IonFish"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_always), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_notDead), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_master), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_always), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_notDead), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_master), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_always), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_notDead), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_master), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_always), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_notDead), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_master), __ION_XYFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_always), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_notDead), __ION_RFISH_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_master), __ION_RFISH_TITLE_BIN_REGION_DIR__);
   // Momentum
   create3d(SAMETITLEWITH(hist3ID_1stHitIonPxPyPz),
                   "Momentum X [au]", "Momentum Y [au]", "Momentum Z [au]",
@@ -425,6 +458,30 @@ void Analysis::AnalysisRun::createIonHists() {
                   "Motional Direction XY [degree]", "Motional Direction Z [1]",
                   H2_DEGREE, H2_SINCOS,
                   dirNameOfIonHists);
+  // IonEnergy
+#define __IONENERGY1__ "Energy [eV]", 1000, 0, 50, "IonEnergy"
+#define __IONENERGY2__ "Energy 1 [eV]", "Energy 2 [eV]", 200, 0, 50, 200, 0, 50, "IonEnergy"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hE), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hE_master), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hE), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hE_master), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hE), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hE_master), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hE), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hE_master), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTtE), __IONENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTtE_master), __IONENERGY1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hE_i2hE), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hE_i2hE_master), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hE_i3hE), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hE_i3hE_master), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hE_i4hE), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hE_i4hE_master), __IONENERGY2__);
+
+// KER
+#define __KER_TITLE_BIN_REGION_DIR__ "KER [eV]", "Electron Kinetic Energy [eV]", 1000, 0, 100, 500, 0, 50, "KER"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE), __KER_TITLE_BIN_REGION_DIR__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE_master), __KER_TITLE_BIN_REGION_DIR__);
 }
 
 void Analysis::AnalysisRun::fillIonHists() {
@@ -432,41 +489,64 @@ void Analysis::AnalysisRun::fillIonHists() {
   const bool dead2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
   const bool dead3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
   const bool dead4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
-  const bool properP1 =
-      pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::HavingProperPzData);
-  const bool properP2 =
-      pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::HavingProperPzData);
-  const bool properP3 =
-      pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::HavingProperPzData);
-  const bool properP4 =
-      pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::HavingProperPzData);
-
   const bool isIonMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool isElecMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool isMaster = isIonMaster && isElecMaster;
   
-  const double x1 = pIons->getRealOrDummyObject(0).getLocationX(*pUnit);
-  const double y1 = pIons->getRealOrDummyObject(0).getLocationY(*pUnit);
-  const double xy1 = pIons->getRealOrDummyObject(0).getLocationXY(*pUnit);
-  const double t1 = pIons->getRealOrDummyObject(0).getTOF(*pUnit);
-  const double x2 = pIons->getRealOrDummyObject(1).getLocationX(*pUnit);
-  const double y2 = pIons->getRealOrDummyObject(1).getLocationY(*pUnit);
-  const double t2 = pIons->getRealOrDummyObject(1).getTOF(*pUnit);
-  const double x3 = pIons->getRealOrDummyObject(2).getLocationX(*pUnit);
-  const double y3 = pIons->getRealOrDummyObject(2).getLocationY(*pUnit);
-  const double t3 = pIons->getRealOrDummyObject(2).getTOF(*pUnit);
-  const double x4 = pIons->getRealOrDummyObject(3).getLocationX(*pUnit);
-  const double y4 = pIons->getRealOrDummyObject(3).getLocationY(*pUnit);
-  const double t4 = pIons->getRealOrDummyObject(3).getTOF(*pUnit);
+  const double * const x1 = pIons->getRealOrDummyObject(0).outputLocX();
+  const double * const y1 = pIons->getRealOrDummyObject(0).outputLocY();
+  const double * const r1 = pIons->getRealOrDummyObject(0).outputLocR();
+  const double * const t1 = pIons->getRealOrDummyObject(0).outputTOF();
+  const double * const x2 = pIons->getRealOrDummyObject(1).outputLocX();
+  const double * const y2 = pIons->getRealOrDummyObject(1).outputLocY();
+  const double * const r2 = pIons->getRealOrDummyObject(1).outputLocR();
+  const double * const t2 = pIons->getRealOrDummyObject(1).outputTOF();
+  const double * const x3 = pIons->getRealOrDummyObject(2).outputLocX();
+  const double * const y3 = pIons->getRealOrDummyObject(2).outputLocY();
+  const double * const r3 = pIons->getRealOrDummyObject(2).outputLocR();
+  const double * const t3 = pIons->getRealOrDummyObject(2).outputTOF();
+  const double * const x4 = pIons->getRealOrDummyObject(3).outputLocX();
+  const double * const y4 = pIons->getRealOrDummyObject(3).outputLocY();
+  const double * const r4 = pIons->getRealOrDummyObject(3).outputLocR();
+  const double * const t4 = pIons->getRealOrDummyObject(3).outputTOF();
 
-  const double xCOM = pIons->getLocationX(*pUnit);
-  const double yCOM = pIons->getLocationY(*pUnit);
-  const double tSum12 = pIons->getSumOfTOF(*pUnit, 0, 1);
-  const double tSum23 = pIons->getSumOfTOF(*pUnit, 1, 2);
-  const double tSum34 = pIons->getSumOfTOF(*pUnit, 2, 3);
-  const double tDiff12 = pIons->getDiffOfTOF(*pUnit, 0, 1);
-  const double tDiff23 = pIons->getDiffOfTOF(*pUnit, 1, 2);
-  const double tDiff34 = pIons->getDiffOfTOF(*pUnit, 2, 3);
+  const double * const xCOM = pIons->outputCOMLocX();
+  const double * const yCOM = pIons->outputCOMLocY();
+  const double * const tSum12 = pIons->outputSumOf2TOFs(0, 1);
+  const double * const tSum23 = pIons->outputSumOf2TOFs(1, 2);
+  const double * const tSum34 = pIons->outputSumOf2TOFs(2, 3);
+  const double * const tDiff12 = pIons->outputDiffOfTOFs(0, 1);
+  const double * const tDiff23 = pIons->outputDiffOfTOFs(1, 2);
+  const double * const tDiff34 = pIons->outputDiffOfTOFs(2, 3);
+
+  const double * const px1 = pIons->getRealOrDummyObject(0).outputPX();
+  const double * const py1 = pIons->getRealOrDummyObject(0).outputPY();
+  const double * const pxy1 = pIons->getRealOrDummyObject(0).outputPXY();
+  const double * const pz1 = pIons->getRealOrDummyObject(0).outputPZ();
+  const double * const cpz1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
+  const double * const px2 = pIons->getRealOrDummyObject(1).outputPX();
+  const double * const py2 = pIons->getRealOrDummyObject(1).outputPY();
+  const double * const pxy2 = pIons->getRealOrDummyObject(1).outputPXY();
+  const double * const pz2 = pIons->getRealOrDummyObject(1).outputPZ();
+  const double * const cpz2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
+  const double * const px3 = pIons->getRealOrDummyObject(2).outputPX();
+  const double * const py3 = pIons->getRealOrDummyObject(2).outputPY();
+  const double * const pxy3 = pIons->getRealOrDummyObject(2).outputPXY();
+  const double * const pz3 = pIons->getRealOrDummyObject(2).outputPZ();
+  const double * const cpz3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
+  const double * const px4 = pIons->getRealOrDummyObject(3).outputPX();
+  const double * const py4 = pIons->getRealOrDummyObject(3).outputPY();
+  const double * const pxy4 = pIons->getRealOrDummyObject(3).outputPXY();
+  const double * const pz4 = pIons->getRealOrDummyObject(3).outputPZ();
+  const double * const cpz4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
+
+  const double * const e1 = pIons->getRealOrDummyIon(0).outputE();
+  const double * const e2 = pIons->getRealOrDummyIon(1).outputE();
+  const double * const e3 = pIons->getRealOrDummyIon(2).outputE();
+  const double * const e4 = pIons->getRealOrDummyIon(3).outputE();
+  const double * const eT = pIons->outputE();
+
+  const double * const eE1 = pElectrons->getRealOrDummyElectron(0).outputE();
 
   // Detector image and TOF
   if (!dead1) {
@@ -534,47 +614,79 @@ void Analysis::AnalysisRun::fillIonHists() {
 	}
   }
   // FISH
-  if (!dead1) {
-	fill2d(hist2ID_1stHitIonTOFAndLocXY_notDead, t1, xy1);
-  }
-  if (isMaster) {
-	  if (!dead1) {
-		  fill2d(hist2ID_1stHitIonTOFAndLocXY_notDead, t1, xy1);
-	  }
-  }
+  fill2d(h2_i1hXFish_always, t1, x1);
+  if (!dead1) fill2d(h2_i1hXFish_notDead, t1, x1);
+  if (!dead1 && isMaster) fill2d(h2_i1hXFish_master, t1, x1);
+  fill2d(h2_i1hYFish_always, t1, y1);
+  if (!dead1) fill2d(h2_i1hYFish_notDead, t1, y1);
+  if (!dead1 && isMaster) fill2d(h2_i1hYFish_master, t1, y1);
+  fill2d(h2_i1hRFish_always, t1, r1);
+  if (!dead1) fill2d(h2_i1hRFish_notDead, t1, r1);
+  if (!dead1 && isMaster) fill2d(h2_i1hRFish_master, t1, r1);
+
+  fill2d(h2_i2hXFish_always, t2, x2);
+  if (!dead2) fill2d(h2_i2hXFish_notDead, t2, x2);
+  if (!dead2 && isMaster) fill2d(h2_i2hXFish_master, t2, x2);
+  fill2d(h2_i2hYFish_always, t2, y2);
+  if (!dead2) fill2d(h2_i2hYFish_notDead, t2, y2);
+  if (!dead2 && isMaster) fill2d(h2_i2hYFish_master, t2, y2);
+  fill2d(h2_i2hRFish_always, t2, r2);
+  if (!dead2) fill2d(h2_i2hRFish_notDead, t2, r2);
+  if (!dead2 && isMaster) fill2d(h2_i2hRFish_master, t2, r2);
+
+  fill2d(h2_i3hXFish_always, t3, x3);
+  if (!dead3) fill2d(h2_i3hXFish_notDead, t3, x3);
+  if (!dead3 && isMaster) fill2d(h2_i3hXFish_master, t3, x3);
+  fill2d(h2_i3hYFish_always, t3, y3);
+  if (!dead3) fill2d(h2_i3hYFish_notDead, t3, y3);
+  if (!dead3 && isMaster) fill2d(h2_i3hYFish_master, t3, y3);
+  fill2d(h2_i3hRFish_always, t3, r3);
+  if (!dead3) fill2d(h2_i3hRFish_notDead, t3, r3);
+  if (!dead3 && isMaster) fill2d(h2_i3hRFish_master, t3, r3);
+
+  fill2d(h2_i4hXFish_always, t4, x4);
+  if (!dead4) fill2d(h2_i4hXFish_notDead, t4, x4);
+  if (!dead4 && isMaster) fill2d(h2_i4hXFish_master, t4, x4);
+  fill2d(h2_i4hYFish_always, t4, y4);
+  if (!dead4) fill2d(h2_i4hYFish_notDead, t4, y4);
+  if (!dead4 && isMaster) fill2d(h2_i4hYFish_master, t4, y4);
+  fill2d(h2_i4hRFish_always, t4, r4);
+  if (!dead4) fill2d(h2_i4hRFish_notDead, t4, r4);
+  if (!dead4 && isMaster) fill2d(h2_i4hRFish_master, t4, r4);
+
   // Momentum 
-  if (properP1) {
-    fill3d(hist3ID_1stHitIonPxPyPz,
-                  pIons->getIon(0).getMomentumX(*pUnit),
-                  pIons->getIon(0).getMomentumY(*pUnit),
-                  pIons->getIon(0).getMomentumZ(*pUnit));
-    fill2d(hist2ID_1stHitIonPDirecXYAndCosPDirecZ,
-                  pIons->getIon(0).getMotionalDirectionXY(*pUnit),
-                  cos(pIons->getIon(0).getMotionalDirectionZ()));
-  }
-  if (properP2) {
-    fill2d(hist2ID_2ndHitIonPDirecXYAndCosPDirecZ,
-                  pIons->getIon(1).getMotionalDirectionXY(*pUnit),
-                  cos(pIons->getIon(1).getMotionalDirectionZ()));
-  }
-  if (properP3) {
-    fill2d(hist2ID_3rdHitIonPDirecXYAndCosPDirecZ,
-                  pIons->getIon(2).getMotionalDirectionXY(*pUnit),
-                  cos(pIons->getIon(2).getMotionalDirectionZ()));
-  }
-  if (properP4) {
-    fill2d
-        (hist2ID_4thHitIonPDirecXYAndCosPDirecZ,
-                  pIons->getIon(3).getMotionalDirectionXY(*pUnit),
-                  cos(pIons->getIon(3).getMotionalDirectionZ()));
-  }
+  fill3d(hist3ID_1stHitIonPxPyPz, px1, py1, pz1);
+  fill2d(hist2ID_1stHitIonPDirecXYAndCosPDirecZ, pxy1, cpz1);
+  fill2d(hist2ID_2ndHitIonPDirecXYAndCosPDirecZ, pxy2, cpz2);
+  fill2d(hist2ID_3rdHitIonPDirecXYAndCosPDirecZ, pxy3, cpz3);
+  fill2d(hist2ID_4thHitIonPDirecXYAndCosPDirecZ, pxy4, cpz4);
+  if (isMaster) fill3d(hist3ID_1stHitIonPxPyPz_underMasterCondition, px1, py2, pz1);
+
+  // IonEnergy 
+  fill1d(h1_i1hE, e1);
+  fill1d(h1_i2hE, e2);
+  fill1d(h1_i3hE, e3);
+  fill1d(h1_i4hE, e4);
+  fill1d(h1_iTtE, eT);
+  fill2d(h2_i1hE_i2hE, e1, e2);
+  fill2d(h2_i2hE_i3hE, e2, e3);
+  fill2d(h2_i3hE_i4hE, e3, e4);
   if (isMaster) {
-    if (properP1) {
-      fill3d(hist3ID_1stHitIonPxPyPz_underMasterCondition,
-                    pIons->getIon(0).getMomentumX(*pUnit),
-                    pIons->getIon(0).getMomentumY(*pUnit),
-                    pIons->getIon(0).getMomentumZ(*pUnit));
-    }
+	  fill1d(h1_i1hE_master, e1);
+	  fill1d(h1_i2hE_master, e2);
+	  fill1d(h1_i3hE_master, e3);
+	  fill1d(h1_i4hE_master, e4);
+	  fill1d(h1_iTtE_master, eT);
+  fill2d(h2_i1hE_i2hE_master, e1, e2);
+  fill2d(h2_i2hE_i3hE_master, e2, e3);
+  fill2d(h2_i3hE_i4hE_master, e3, e4);
+  }
+  
+  // KER
+  fill2d(h2_iKER_e1hE, eT, eE1);
+  if (isMaster)
+  {
+	  fill2d(h2_iKER_e1hE_master, eT, eE1);
   }
 }
 
@@ -802,55 +914,52 @@ void Analysis::AnalysisRun::fillElecHists() {
 	const bool dead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
 	const bool dead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
 	const bool dead4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
-	const bool properP1 =
-		pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::HavingProperPzData);
-	const bool properP2 =
-		pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::HavingProperPzData);
-	const bool properP3 =
-		pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::HavingProperPzData);
-	const bool properP4 =
-		pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::HavingProperPzData);
-
 	const bool isIonMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
 	const bool isElecMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
 	const bool isMaster = isIonMaster && isElecMaster;
 
-	const double x1 = pElectrons->getRealOrDummyObject(0).getLocationX(*pUnit);
-	const double y1 = pElectrons->getRealOrDummyObject(0).getLocationY(*pUnit);
-	const double xy1 = pElectrons->getRealOrDummyObject(0).getLocationXY(*pUnit);
-	const double t1 = pElectrons->getRealOrDummyObject(0).getTOF(*pUnit);
-	const double x2 = pElectrons->getRealOrDummyObject(1).getLocationX(*pUnit);
-	const double y2 = pElectrons->getRealOrDummyObject(1).getLocationY(*pUnit);
-	const double t2 = pElectrons->getRealOrDummyObject(1).getTOF(*pUnit);
-	const double x3 = pElectrons->getRealOrDummyObject(2).getLocationX(*pUnit);
-	const double y3 = pElectrons->getRealOrDummyObject(2).getLocationY(*pUnit);
-	const double t3 = pElectrons->getRealOrDummyObject(2).getTOF(*pUnit);
-	const double x4 = pElectrons->getRealOrDummyObject(3).getLocationX(*pUnit);
-	const double y4 = pElectrons->getRealOrDummyObject(3).getLocationY(*pUnit);
-	const double t4 = pElectrons->getRealOrDummyObject(3).getTOF(*pUnit);
+	const double * const x1 = pElectrons->getRealOrDummyObject(0).outputLocX();
+	const double * const y1 = pElectrons->getRealOrDummyObject(0).outputLocY();
+	const double * const r1 = pElectrons->getRealOrDummyObject(0).outputLocR();
+	const double * const t1 = pElectrons->getRealOrDummyObject(0).outputTOF();
+	const double * const x2 = pElectrons->getRealOrDummyObject(1).outputLocX();
+	const double * const y2 = pElectrons->getRealOrDummyObject(1).outputLocY();
+  const double * const r2 = pElectrons->getRealOrDummyObject(1).outputLocR();
+	const double * const t2 = pElectrons->getRealOrDummyObject(1).outputTOF();
+	const double * const x3 = pElectrons->getRealOrDummyObject(2).outputLocX();
+	const double * const y3 = pElectrons->getRealOrDummyObject(2).outputLocY();
+  const double * const r3 = pElectrons->getRealOrDummyObject(2).outputLocR();
+	const double * const t3 = pElectrons->getRealOrDummyObject(2).outputTOF();
+	const double * const x4 = pElectrons->getRealOrDummyObject(3).outputLocX();
+	const double * const y4 = pElectrons->getRealOrDummyObject(3).outputLocY();
+  const double * const r4 = pElectrons->getRealOrDummyObject(3).outputLocR();
+	const double * const t4 = pElectrons->getRealOrDummyObject(3).outputTOF();
 
-	const double xCOM = pElectrons->getLocationX(*pUnit);
-	const double yCOM = pElectrons->getLocationY(*pUnit);
-	const double tSum12 = pElectrons->getSumOfTOF(*pUnit, 0, 1);
-	const double tSum23 = pElectrons->getSumOfTOF(*pUnit, 1, 2);
-	const double tSum34 = pElectrons->getSumOfTOF(*pUnit, 2, 3);
-	const double tDiff12 = pElectrons->getDiffOfTOF(*pUnit, 0, 1);
-	const double tDiff23 = pElectrons->getDiffOfTOF(*pUnit, 1, 2);
-	const double tDiff34 = pElectrons->getDiffOfTOF(*pUnit, 2, 3);
+	const double * const xCOM = pElectrons->outputCOMLocX();
+	const double * const yCOM = pElectrons->outputCOMLocY();
+	const double * const tSum12 = pElectrons->outputSumOf2TOFs(0, 1);
+	const double * const tSum23 = pElectrons->outputSumOf2TOFs(1, 2);
+	const double * const tSum34 = pElectrons->outputSumOf2TOFs(2, 3);
+	const double * const tDiff12 = pElectrons->outputDiffOfTOFs(0, 1);
+	const double * const tDiff23 = pElectrons->outputDiffOfTOFs(1, 2);
+	const double * const tDiff34 = pElectrons->outputDiffOfTOFs(2, 3);
 
-	const double px1 = pElectrons->getRealOrDummyObject(0).getMomentumX(*pUnit);
-	const double py1 = pElectrons->getRealOrDummyObject(0).getMomentumY(*pUnit);
-	const double pz1 = pElectrons->getRealOrDummyObject(0).getMomentumZ(*pUnit);
-	const double pxy1 = pElectrons->getRealOrDummyObject(0).getMomentumXY(*pUnit);
-	const double pyz1 = pElectrons->getRealOrDummyObject(0).getMomentumYZ(*pUnit);
-	const double pzx1 = pElectrons->getRealOrDummyObject(0).getMomentumZX(*pUnit);
+	const double * const px1 = pElectrons->getRealOrDummyObject(0).outputPX();
+	const double * const py1 = pElectrons->getRealOrDummyObject(0).outputPY();
+	const double * const pz1 = pElectrons->getRealOrDummyObject(0).outputPZ();
+	const double * const pxy1 = pElectrons->getRealOrDummyObject(0).outputPXY();
+	const double * const pyz1 = pElectrons->getRealOrDummyObject(0).outputPYZ();
+	const double * const pzx1 = pElectrons->getRealOrDummyObject(0).outputPZX();
 
-	const double pDirXY1 = pElectrons->getRealOrDummyObject(0).getMotionalDirectionXY(*pUnit);
-	const double pDirYZ1 = pElectrons->getRealOrDummyObject(0).getMotionalDirectionYZ(*pUnit);
-	const double pDirZX1 = pElectrons->getRealOrDummyObject(0).getMotionalDirectionZX(*pUnit);
-	const double pDirZ1 = pElectrons->getRealOrDummyObject(0).getMotionalDirectionZ(*pUnit);
+	const double * const pDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirX();
+	const double * const pDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
+	const double * const pDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
+	const double * const cpz1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
 	
-	const double e1 = pElectrons->getRealOrDummyObject(0).getEnergy(*pUnit);
+	const double * const e1 = pElectrons->getRealOrDummyObject(0).outputE();
+  const double * const e2 = pElectrons->getRealOrDummyObject(1).outputE();
+  const double * const e3 = pElectrons->getRealOrDummyObject(2).outputE();
+  const double * const e4 = pElectrons->getRealOrDummyObject(3).outputE();
 
 	// Detector image and TOF
 	if (!dead1) {
@@ -910,41 +1019,31 @@ void Analysis::AnalysisRun::fillElecHists() {
 	}
 	// FISH 
 	if (!dead1) {
-		fill2d(hist2ID_1stHitElecTOFAndLocXY_notDead, t1, xy1);
+		fill2d(hist2ID_1stHitElecTOFAndLocXY_notDead, t1, r1);
 	}
 	if (isMaster) {
 		if (!dead1) {
-			fill2d(hist2ID_1stHitElecTOFAndLocXY_master, t1, xy1);
+			fill2d(hist2ID_1stHitElecTOFAndLocXY_master, t1, r1);
 		}
 	}
 	// Momentum 
-	if (properP1) {
 		fill2d(hist2ID_1stHitElecPxPy_notDead, px1, py1);
 		fill1d(hist1ID_1stHitElecPz_notDead, pz1);
-	}
 	if (isMaster) {
-		if (properP1) {
 			fill2d(hist2ID_1stHitElecPxPy_master, px1, py1);
 			fill1d(hist1ID_1stHitElecPz_master, pz1);
-		}
 	}
 	// Momentum Direction 
-	if (properP1) {
 		fill2d(hist2ID_1stHitElecPDirXYAndPXY_notDead, pDirXY1, pxy1);
 		fill2d(hist2ID_1stHitElecPDirYZAndPYZ_notDead, pDirYZ1, pyz1);
 		fill2d(hist2ID_1stHitElecPDirZXAndPZX_notDead, pDirZX1, pzx1);
-		fill2d(hist2ID_1stHitElecPDirXYAndCosPDirZ_notDead, pDirXY1, cos(pDirZ1));
-	}
+		fill2d(hist2ID_1stHitElecPDirXYAndCosPDirZ_notDead, pDirXY1, cpz1);
 	if (isMaster) {
-		if (properP1) {
 			fill2d(hist2ID_1stHitElecPDirXYAndPXY_master, pDirXY1, pxy1);
 			fill2d(hist2ID_1stHitElecPDirYZAndPYZ_master, pDirYZ1, pyz1);
 			fill2d(hist2ID_1stHitElecPDirZXAndPZX_master, pDirZX1, pzx1);
-			fill2d(hist2ID_1stHitElecPDirXYAndCosPDirZ_master, pDirXY1, cos(pDirZ1));
-		}
+			fill2d(hist2ID_1stHitElecPDirXYAndCosPDirZ_master, pDirXY1, cpz1);
 	}
 	// Energy 
-	if (properP1) {
 		fill1d(hist1ID_1stHitElecE, e1);
-	}
 }

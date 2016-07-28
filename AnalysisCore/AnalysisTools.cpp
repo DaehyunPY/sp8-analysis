@@ -195,10 +195,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
   ion.setLocationX(x);
   ion.setLocationY(y);
   ion.setTOF(t);
-  ion.setFlag(ObjectFlag::HavingXYTData);
   ion.setFlag(ObjectFlag::ResortFlag, f1);
   if (ion.getTOF() > deadTime || ion.getTOF() < 0e0) {
     ion.setFlag(ObjectFlag::Dead);
+	  ion.setFlag(ObjectFlag::HavingNotProperData);
+  } else {
+	  ion.setFlag(ObjectFlag::HavingXYTData);
   }
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
@@ -220,10 +222,12 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
   electron.setLocationX(x);
   electron.setLocationY(y);
   electron.setTOF(t);
-  electron.setFlag(ObjectFlag::HavingXYTData);
   electron.setFlag(ObjectFlag::ResortFlag, f1);
   if (electron.getTOF() > deadTime || electron.getTOF() < 0e0) {
     electron.setFlag(ObjectFlag::Dead);
+	electron.setFlag(ObjectFlag::HavingNotProperData);
+  } else {
+  electron.setFlag(ObjectFlag::HavingXYTData);
   }
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Ion &ion, const OptName opt) const {
@@ -251,10 +255,9 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Ion &ion, const OptName opt
       const double &pz = calculateMomentumZ(ion, isHavingProperPz);
       ion.setMomentumX(pxy.x);
       ion.setMomentumY(pxy.y);
-      ion.setFlag(ObjectFlag::HavingMomentumData);
       if (isHavingProperPz) {
         ion.setMomentumZ(pz);
-        ion.setFlag(ObjectFlag::HavingProperPzData);
+        ion.setFlag(ObjectFlag::HavingMomentumData);
       }
     }
   }
@@ -284,10 +287,9 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Electron &elec, const OptNa
       const double &pz = calculateMomentumZ(elec, isHavingProperPz);
       elec.setMomentumX(pxy.x);
       elec.setMomentumY(pxy.y);
-      elec.setFlag(ObjectFlag::HavingMomentumData);
       if (isHavingProperPz) {
         elec.setMomentumZ(pz);
-        elec.setFlag(ObjectFlag::HavingProperPzData);
+        elec.setFlag(ObjectFlag::HavingMomentumData);
       }
     }
   }

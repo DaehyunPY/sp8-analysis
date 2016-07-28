@@ -2,7 +2,6 @@
 // Created by Daehyun You on 11/27/15.
 //
 
-#include <cassert>
 #include "ObjectFlag.h"
 
 Analysis::ObjectFlag::ObjectFlag() : Flag() {
@@ -49,7 +48,8 @@ const bool Analysis::ObjectFlag::isInFrameOfAllData() const {
   return getNthDigit(5) == flagFor5thDigit_inFrameOfAllData;
 }
 const bool Analysis::ObjectFlag::isDead() const {
-  return get1stDigit() == flagFor1stDigit_dead;
+	const auto f = get1stDigit();
+  return (f == initFlag) || (f == flagFor1stDigit_dead);
 }
 const bool Analysis::ObjectFlag::isOutOfFrameOfBasicData() const {
   return getNthDigit(5)
@@ -103,6 +103,12 @@ const bool Analysis::ObjectFlag::isRisky() const {
 Analysis::ObjectFlag::~ObjectFlag() {
 
 }
+void Analysis::ObjectFlag::setHavingNotProperData() {
+	const auto f0 = get2ndDigit();
+  if ((f0 == initFlag) || (f0 == flagFor2ndDigit_havingXYTData) || (f0 == flagFor2ndDigit_havingMomentumData)) {
+	  set2ndDigit(flagFor2ndDigit_havingNotProperData);
+  }
+}
 void Analysis::ObjectFlag::setHavingXYTData() {
   if(get2ndDigit() == initFlag) {
     set2ndDigit(flagFor2ndDigit_havingXYTData);
@@ -113,23 +119,17 @@ void Analysis::ObjectFlag::setHavingMomentumData() {
     set2ndDigit(flagFor2ndDigit_havingMomentumData);
   }
 }
-void Analysis::ObjectFlag::setHavingProperPzData() {
-  const unsigned int f0 = get2ndDigit();
-  if(f0 == flagFor2ndDigit_havingXYTData || f0 == flagFor2ndDigit_havingMomentumData) {
-    set2ndDigit(flagFor2ndDigit_havingProperPzData);
-  }
+const bool Analysis::ObjectFlag::isHavingNotProperData() const {
+	const auto f0 = get2ndDigit();
+	return (f0 == initFlag) || (f0 == flagFor2ndDigit_havingNotProperData);
 }
 const bool Analysis::ObjectFlag::isHavingXYTData() const {
   const unsigned int f0 = get2ndDigit();
-  return (f0 == flagFor2ndDigit_havingXYTData) || (f0 == flagFor2ndDigit_havingMomentumData) || (f0 == flagFor2ndDigit_havingProperPzData);
+  return (f0 == flagFor2ndDigit_havingXYTData) || (f0 == flagFor2ndDigit_havingMomentumData);
 }
 const bool Analysis::ObjectFlag::isHavingMomentumData() const {
   const unsigned int f0 = get2ndDigit();
-  return (f0 == flagFor2ndDigit_havingMomentumData) || (f0 == flagFor2ndDigit_havingProperPzData);
-}
-const bool Analysis::ObjectFlag::isHavingProperPzData() const {
-  const unsigned int f0 = get2ndDigit();
-  return (f0 == flagFor2ndDigit_havingProperPzData);
+  return (f0 == flagFor2ndDigit_havingMomentumData);
 }
 #define ANALYSIS_OBJECTFLAG_CASESET(X) case X: set ## X(); break;
 void Analysis::ObjectFlag::setFlag(const FlagName flagName) {
@@ -137,9 +137,9 @@ void Analysis::ObjectFlag::setFlag(const FlagName flagName) {
     ANALYSIS_OBJECTFLAG_CASESET(WithinMasterRegion)
     ANALYSIS_OBJECTFLAG_CASESET(OutOfMasterRegion)
     ANALYSIS_OBJECTFLAG_CASESET(Dead)
+    ANALYSIS_OBJECTFLAG_CASESET(HavingNotProperData)
     ANALYSIS_OBJECTFLAG_CASESET(HavingXYTData)
     ANALYSIS_OBJECTFLAG_CASESET(HavingMomentumData)
-    ANALYSIS_OBJECTFLAG_CASESET(HavingProperPzData)
     ANALYSIS_OBJECTFLAG_CASESET(RealObject)
     ANALYSIS_OBJECTFLAG_CASESET(IonObject)
     ANALYSIS_OBJECTFLAG_CASESET(AnionObject)
@@ -169,9 +169,9 @@ const bool Analysis::ObjectFlag::isFlag(const FlagName flagName) const {
     ANALYSIS_OBJECTFLAG_CASEIS(WithinMasterRegion)
     ANALYSIS_OBJECTFLAG_CASEIS(OutOfMasterRegion)
     ANALYSIS_OBJECTFLAG_CASEIS(Dead)
+    ANALYSIS_OBJECTFLAG_CASEIS(HavingNotProperData)
     ANALYSIS_OBJECTFLAG_CASEIS(HavingXYTData)
     ANALYSIS_OBJECTFLAG_CASEIS(HavingMomentumData)
-    ANALYSIS_OBJECTFLAG_CASEIS(HavingProperPzData)
     ANALYSIS_OBJECTFLAG_CASEIS(MostReliable)
     ANALYSIS_OBJECTFLAG_CASEIS(MostOrSecondMostReliable)
     ANALYSIS_OBJECTFLAG_CASEIS(Risky)

@@ -7,7 +7,7 @@
 
 #include <string>
 #include <map>
-
+#include <cassert>
 #include "../Protocols/Flag.h"
 
 namespace Analysis {
@@ -20,9 +20,9 @@ class ObjectFlag: protected Flag {
     WithinMasterRegion,
     OutOfMasterRegion,
     Dead,
+	HavingNotProperData,
     HavingXYTData,
     HavingMomentumData,
-    HavingProperPzData,
     ResortFlag,
     MostReliable,
     MostOrSecondMostReliable,
@@ -51,15 +51,15 @@ class ObjectFlag: protected Flag {
   const bool isDead() const;
 
  private:
-  const unsigned int flagFor2ndDigit_havingXYTData = 1;
-  const unsigned int flagFor2ndDigit_havingMomentumData = 2;
-  const unsigned int flagFor2ndDigit_havingProperPzData = 3;
+  const unsigned int flagFor2ndDigit_havingNotProperData = 1;
+  const unsigned int flagFor2ndDigit_havingXYTData = 2;
+  const unsigned int flagFor2ndDigit_havingMomentumData = 3;
+  void setHavingNotProperData();
   void setHavingXYTData();
   void setHavingMomentumData();
-  void setHavingProperPzData();
+  const bool isHavingNotProperData() const;
   const bool isHavingXYTData() const;
   const bool isHavingMomentumData() const;
-  const bool isHavingProperPzData() const;
 
  private:
   const unsigned int flagForResort_theRegion1 = 0;
