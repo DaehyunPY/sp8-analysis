@@ -892,7 +892,7 @@ int main(int argc, char *argv[]) {
         }
         if (pElecs) {
           delete[] pElecs;
-          pElecs = nullptr
+		  pElecs = nullptr;
         }
       }
 
