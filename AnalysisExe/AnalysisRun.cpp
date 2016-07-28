@@ -174,9 +174,10 @@ void Analysis::AnalysisRun::createHists() {
 
   // IonTOF
 #define __IONTOF1__ "TOF [ns]", 2000, 0, 10000, "IonTOF"
-#define __IONTOF2__ "TOF 1 [ns]", "TOF 2 [ns]", 500, 0, 10000, 500, 0, 10000, "IonTOF"
-#define __IONTOF3__ "Sum of TOFs [ns]", "Diff of TOFs [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
-#define __IONTOF4__ "TOF 1 [ns]", "TOF 2 [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
+#define __IONTOF2__ "TOF [ns]", 4000, 0, 20000, "IonTOF"
+#define __IONTOF3__ "TOF 1 [ns]", "TOF 2 [ns]", 500, 0, 10000, 500, 0, 10000, "IonTOF"
+#define __IONTOF4__ "Sum of TOFs [ns]", "Diff of TOFs [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
+#define __IONTOF5__ "TOF 1 [ns]", "TOF 2 [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF), __IONTOF1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF_master), __IONTOF1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i2hTOF), __IONTOF1__);
@@ -185,24 +186,26 @@ void Analysis::AnalysisRun::createHists() {
   create1d(SAME_TITLE_WITH_VALNAME(h1_i3hTOF_master), __IONTOF1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i4hTOF), __IONTOF1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i4hTOF_master), __IONTOF1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO), __IONTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO_master), __IONTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO), __IONTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO_master), __IONTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO), __IONTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO_master), __IONTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO_master), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO_master), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO_master), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO_master), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO_master), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO_master), __IONTOF4__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalTOF), __IONTOF2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalTOF_master), __IONTOF2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO_master), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO_master), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO_master), __IONTOF3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO_master), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO_master), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO_master), __IONTOF4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO), __IONTOF5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO_master), __IONTOF5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO), __IONTOF5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO_master), __IONTOF5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO), __IONTOF5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO_master), __IONTOF5__);
 
   // IonFISH
 #define __IONFISH1__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 400, -50, 50, "IonFish"
@@ -213,21 +216,18 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_master), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish), __IONFISH2__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_master), __IONFISH2__);
-
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_master), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_master), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish), __IONFISH2__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_master), __IONFISH2__);
-
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_master), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_master), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish), __IONFISH2__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_master), __IONFISH2__);
-
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_master), __IONFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish), __IONFISH1__);
@@ -397,6 +397,10 @@ void Analysis::AnalysisRun::fillHists() {
   const bool eDead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
   const bool eDead4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
 
+  const bool iMaster1 = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::WithinMasterRegion);
   const bool iMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool eMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool master = iMaster && eMaster;
@@ -736,13 +740,10 @@ void Analysis::AnalysisRun::fillHists() {
   }
 
   // Others
-  const bool ii2h3hNotDead = (!pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead))
-      && (!pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead));
-  if (ii2h3hNotDead) {
+  if ((!iDead2) && (!iDead3)) {
     fill1d(h1_i1hTOF_i2h3hNotDead, iT1);
   }
-  const bool i1hMaster = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
-  if (i1hMaster) {
+  if (iMaster1) {
     fill2d(h2_i2h3hPIPICO_i1hMaster, iT2, iT3);
   }
   if (master) {
