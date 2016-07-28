@@ -360,15 +360,18 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist_master), __ELECMOMENTUM2__);
 
   // ElecEnergy
-#define __ELECENERGY__ "Energy [eV]", 1000, 0, 50, "ElecEnergy"
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE), __ELECENERGY__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE_master), __ELECENERGY__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE), __ELECENERGY__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE_master), __ELECENERGY__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE), __ELECENERGY__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE_master), __ELECENERGY__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE), __ELECENERGY__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE_master), __ELECENERGY__);
+#define __ELECENERGY1__ "Energy [eV]", 1000, 0, 50, "ElecEnergy"
+#define __ELECENERGY2__ "Energy [eV]", 2000, 0, 100, "ElecEnergy"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE), __ELECENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE_master), __ELECENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE), __ELECENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE_master), __ELECENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE), __ELECENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE_master), __ELECENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE), __ELECENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE_master), __ELECENERGY1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_eTotalE), __ELECENERGY2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_eTotalE_master), __ELECENERGY2__);
 
 // IonElecCorr
 #define __IONELECCORR__ "KER [eV]", "Electron Kinetic Energy [eV]", 1000, 0, 100, 500, 0, 50, "IonElecCorr"
@@ -383,8 +386,6 @@ void Analysis::AnalysisRun::createHists() {
            "TOF 1 [ns]", "TOF 2 [ns]", 500, 0, 10000, 500, 0, 10000, __OTHERS__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hE_iTotalTOF_master),
            "Energy [eV]", "Sum of TOFs [ns]", 100, 0, 50, 2000, 0, 20000, __OTHERS__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE_master),
-           "Energy [eV]", 1000, 0, 50, __OTHERS__);
 }
 
 void Analysis::AnalysisRun::fillHists() {
@@ -732,6 +733,13 @@ void Analysis::AnalysisRun::fillHists() {
   fill1d(h1_e3hE, eE3);
   fill1d(h1_e4hE, eE4);
   fill1d(h1_eTotalE, eETotal);
+  if (master) {
+    fill1d(h1_e1hE_master, eE1);
+    fill1d(h1_e2hE_master, eE2);
+    fill1d(h1_e3hE_master, eE3);
+    fill1d(h1_e4hE_master, eE4);
+    fill1d(h1_eTotalE_master, eETotal);
+  }
 
   // IonElecCorr
   fill2d(h2_iKER_e1hE, iETotal, eE1);
