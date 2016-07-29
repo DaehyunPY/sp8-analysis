@@ -96,16 +96,37 @@ Analysis::AnalysisRun::~AnalysisRun() {
   flushRootFile();
 
   // finalization is done
-  delete pElectrons;
-  delete pIons;
-  delete pTools;
-  delete pUnit;
-  delete pEventReader;
-  delete pEventChain;
+  if (pElectrons) {
+    delete pElectrons;
+    pElectrons = nullptr;
+  }
+  if (pIons) {
+    delete pIons;
+    pIons = nullptr;
+  }
+  if (pTools) {
+    delete pTools;
+    pTools = nullptr;
+  }
+  if (pUnit) {
+    delete pUnit;
+    pUnit = nullptr;
+  }
+  if (pEventReader) {
+    delete pEventReader;
+    pEventReader = nullptr;
+  }
+  if (pEventChain) {
+    delete pEventChain;
+    pEventChain = nullptr;
+  }
 
   pLogWriter->write() << "Finalization is done." << std::endl;
   pLogWriter->write() << std::endl;
-  delete pLogWriter;
+  if (pLogWriter) {
+    delete pLogWriter;
+    pLogWriter = nullptr;
+  }
 }
 
 void Analysis::AnalysisRun::processEvent(const long raw) {

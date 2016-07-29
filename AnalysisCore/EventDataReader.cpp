@@ -5,8 +5,14 @@
 #include "EventDataReader.h"
 
 Analysis::EventDataReader::~EventDataReader() {
-  delete[] pEventData;
-  delete[] pFlagData;
+  if (pEventData) {
+    delete[] pEventData;
+    pEventData = nullptr;
+  }
+  if (pFlagData) {
+    delete[] pFlagData;
+    pFlagData = nullptr;
+  }
 }
 Analysis::EventDataReader::EventDataReader(const int numOfHit)
     : numberOfHit(numOfHit) {

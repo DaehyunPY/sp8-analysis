@@ -26,13 +26,13 @@
 #define NUM_IONS 200
 #define NUM_CHANNELS 80
 
-sort_class *ionSorter;
+sort_class *ionSorter = nullptr;
 std::string ionCalibTabFilename;
 double ion_offset_sum_u, ion_offset_sum_v, ion_offset_sum_w;
 double ion_w_offset, ion_pos_offset_x, ion_pos_offset_y;
 int ion_command;
 
-sort_class *elecSorter;
+sort_class *elecSorter = nullptr;
 std::string elecClibTabFilename;
 double elec_offset_sum_u, elec_offset_sum_v, elec_offset_sum_w;
 double elec_w_offset;
@@ -310,13 +310,13 @@ void cleanUpSorters() {
   printf("deleting the ion sorter... ");
   if (ionSorter) {
     delete ionSorter;
-    ionSorter = 0;
+    ionSorter = nullptr;
   }
   printf("ok \n");
   printf("deleting the elec sorter... ");
   if (elecSorter) {
     delete elecSorter;
-    elecSorter = 0;
+    elecSorter = nullptr;
   }
   printf("ok \n");
 }
@@ -448,7 +448,7 @@ int main(int argc, char *argv[]) {
                                         elec_pos_offset_y);
     if (!readSuccessfully) {
       delete elecSorter;
-      elecSorter = 0;
+      elecSorter = nullptr;
     }
     elecClibTabFilename = pReader->getStringAt("electron_calibration_table");
     if (elecSorter) {
@@ -459,7 +459,10 @@ int main(int argc, char *argv[]) {
 
   // Close the JSON reader
   std::cout << "Closing the config file... ";
-  if (pReader) delete pReader;
+  if (pReader) {
+    delete pReader;
+    pReader = nullptr;
+  }
   std::cout << "ok" << std::endl;
 
   if (ion_command > 1 && elec_command > 1) {
@@ -883,8 +886,14 @@ int main(int argc, char *argv[]) {
           pElecs[i].flag = elecSorter->output_hit_array[i]->method;
         }
         pRun->fillTree(number_of_ions, pIons, number_of_electrons, pElecs);
-        delete[] pIons;
-        delete[] pElecs;
+        if (pIons) {
+          delete[] pIons;
+          pIons = nullptr;
+        }
+        if (pElecs) {
+          delete[] pElecs;
+          pElecs = nullptr
+        }
       }
 
       // Write to output file
@@ -1001,7 +1010,10 @@ int main(int argc, char *argv[]) {
     }
 
     // Close IO file
-    if (pRun) delete pRun;
+    if (pRun) {
+      delete pRun;
+      pRun = nullptr;
+    }
     printf("deleting the LMF reader instance... ");
     if (pLMF) {
       delete pLMF;
@@ -1020,7 +1032,10 @@ int main(int argc, char *argv[]) {
   // Finish the program
   printf("terminating the root app.\n");
   cleanUpSorters();
-  if (pLMFFilenames) delete[] pLMFFilenames;
+  if (pLMFFilenames) {
+    delete[] pLMFFilenames;
+    pLMFFilenames = nullptr;
+  }
   theRootApp.Terminate();
   std::cout << "The program is done. " << std::endl;
   return 0;

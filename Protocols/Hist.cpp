@@ -11,9 +11,16 @@ Analysis::Hist::Hist(const bool verbose, int size)
   for (int i = 0; i < arraySize; ++i) ppHistArray[i] = 0;
 }
 Analysis::Hist::~Hist() {
-  delete[] ppHistArray;
+  if (ppHistArray) {
+    delete[] ppHistArray;
+    ppHistArray = nullptr;
+  }
   printf("Closing root file... ");
-  if (pRootFile) pRootFile->Close();
+  if (pRootFile) {
+    pRootFile->Close();
+    delete pRootFile;
+    pRootFile = nullptr;
+  }
   printf("ok\n");
 }
 void Analysis::Hist::openRootFile(const TString name, const TString arg) {

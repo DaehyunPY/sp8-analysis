@@ -35,9 +35,15 @@ Analysis::Ions::Ions(const Analysis::Unit &unit,
 }
 Analysis::Ions::~Ions() {
   for (int i = 0; i < getNumberOfRealOrDummyObjects(); i++) {
-    delete ppIon[i];
+    if (ppIon[i]) {
+      delete ppIon[i];
+      ppIon[i] = nullptr;
+    }
   }
-  delete[] ppIon;
+  if (ppIon) {
+    delete[] ppIon;
+    ppIon = nullptr;
+  }
 }
 Analysis::Ion &Analysis::Ions::setIonMembers(const int &i) {
   assert(i < this->getNumberOfObjects());

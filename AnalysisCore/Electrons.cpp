@@ -30,9 +30,15 @@ Analysis::Electrons::Electrons(const Analysis::Unit &unit,
 }
 Analysis::Electrons::~Electrons() {
   for (int i = 0; i < getNumberOfRealOrDummyObjects(); i++) {
-    delete ppElectron[i];
+    if (ppElectron[i]) {
+      delete ppElectron[i];
+      ppElectron[i] = nullptr;
+    }
   }
-  delete[] ppElectron;
+  if (ppElectron) {
+    delete[] ppElectron;
+    ppElectron = nullptr;
+  }
 }
 Analysis::Electron &Analysis::Electrons::setElectronMembers(const int &i) {
   assert(isRealObject(i));
