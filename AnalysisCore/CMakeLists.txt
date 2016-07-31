@@ -19,6 +19,5 @@ set(SOURCE_FILES
     ObjectFlag.cpp
     ObjectParameters.cpp
     Objects.cpp
-    Unit.cpp
     )
 add_library(AnalysisCore STATIC ${SOURCE_FILES})
