@@ -10,7 +10,6 @@
 #include <TROOT.h>
 #include <TQObject.h>
 #include <TPad.h>
-#include <Buttons.h>
 #include <TCanvas.h>
 
 class Drag {

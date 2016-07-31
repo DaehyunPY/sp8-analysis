@@ -8,17 +8,19 @@ FitGauss::FitGauss(double reg1, double reg2) {
   obj = pad->GetSelected();
   if (!obj) {
     std::cout << "The object is invalid." << std::endl;
+    delete this;
+    return;
   }
   std::cout << "Object: " << obj->GetName() << std::endl;
 
   if (!obj->InheritsFrom("TH1") || obj->InheritsFrom("TH2") || obj->InheritsFrom("TH3")) {
     std::cout << "Select a TH1!" << std::endl;
-    delete (this);
+    delete this;
     return;
   }
 
   if (reg1==0 && reg2==0) {
-    pad->SetCrosshair(true);
+    cnvs->SetCrosshair(true);
     cnvs->Connect("ProcessedEvent(Int_t,Int_t,Int_t,TObject*)",
                   "Drag", this, "dragReg(Int_t,Int_t,Int_t,TObject*)");
     std::cout << "Drag the region to fit a Gaussian function." << std::endl;
@@ -43,7 +45,7 @@ void FitGauss::fitGauss(double reg1, double reg2) {
   h1->Draw("same");
   cnvs->Modified();
   cnvs->Update();
-  delete (this);
+  delete this;
 }
 
 

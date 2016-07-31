@@ -9,11 +9,13 @@ Drag::Drag() {
   cnvs = pad->GetCanvas();
   if (!(pad && cnvs)) {
     std::cout << "The pad and the canvas are invalid." << std::endl;
+    delete this;
+    return;
   }
   std::cout << "Pad: " << pad->GetName() << std::endl;
   std::cout << "Canvas: " << cnvs->GetName() << std::endl;
 
-  wasCrosshairOn = (bool) pad->GetCrosshair();
+  wasCrosshairOn = (bool) cnvs->GetCrosshair();
 }
 Drag::~Drag() {
   if (pad) pad = nullptr;
