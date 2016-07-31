@@ -3,7 +3,7 @@
 
 
 #include <assert.h>
-#include "Unit.h"
+#include "../Protocols/Unit.h"
 #include "ObjectFlag.h"
 
 namespace Analysis {

@@ -1,7 +1,7 @@
 #ifndef ANALYSIS_OBJECTPARAMETERS_H
 #define ANALYSIS_OBJECTPARAMETERS_H
 
-#include "Unit.h"
+#include "../Protocols/Unit.h"
 #include "../Protocols/JSONReader.h"
 
 namespace Analysis {

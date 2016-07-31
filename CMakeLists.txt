@@ -80,6 +80,7 @@ endif ()
 
 ### add sub lib
 add_subdirectory(AnalysisCore)
+add_subdirectory(Macros)
 add_subdirectory(Protocols)
 
 ### compiler
