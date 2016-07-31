@@ -87,6 +87,14 @@ class AnalysisRun: Hist {
     h2_i4hRFish, h2_i4hRFish_master,
 
     // IonMomentum
+	h1_i1hP, h1_i1hP_master,
+	h1_i2hP, h1_i2hP_master,
+	h1_i3hP, h1_i3hP_master,
+	h1_i4hP, h1_i4hP_master,
+	h1_iTotalP, h1_iTotalP_master,
+	h2_i1h2hP, h2_i1h2hP_master,
+	h2_i2h3hP, h2_i2h3hP_master,
+	h2_i3h4hP, h2_i3h4hP_master,
     h2_i1hPDirDist, h2_i1hPDirDist_master,
     h2_i2hPDirDist, h2_i2hPDirDist_master,
     h2_i3hPDirDist, h2_i3hPDirDist_master,

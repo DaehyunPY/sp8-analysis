@@ -181,7 +181,7 @@ const long Analysis::AnalysisRun::getEntries() const {
 
 void Analysis::AnalysisRun::createHists() {
   // IonImage
-#define __IONIMAGE__ "Location X [mm]", "Location Y [mm]", 100, -50, 50, 100, -50, 50, "IonImage"
+#define __IONIMAGE__ "Location X [mm]", "Location Y [mm]", 400, -50, 50, 400, -50, 50, "IonImage"
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage), __IONIMAGE__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage_master), __IONIMAGE__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage), __IONIMAGE__);
@@ -196,9 +196,9 @@ void Analysis::AnalysisRun::createHists() {
   // IonTOF
 #define __IONTOF1__ "TOF [ns]", 2000, 0, 10000, "IonTOF"
 #define __IONTOF2__ "TOF [ns]", 4000, 0, 20000, "IonTOF"
-#define __IONTOF3__ "TOF 1 [ns]", "TOF 2 [ns]", 500, 0, 10000, 500, 0, 10000, "IonTOF"
+#define __IONTOF3__ "TOF [ns]", "TOF [ns]", 500, 0, 10000, 500, 0, 10000, "IonTOF"
 #define __IONTOF4__ "Sum of TOFs [ns]", "Diff of TOFs [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
-#define __IONTOF5__ "TOF 1 [ns]", "TOF 2 [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
+#define __IONTOF5__ "TOF [ns]", "TOF [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF), __IONTOF1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF_master), __IONTOF1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i2hTOF), __IONTOF1__);
@@ -257,15 +257,33 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_master), __IONFISH2__);
 
   // IonMomentum
-#define __IONMOMENTUM__ "Direction XY [degree]", "Direction Z [1]", 180, -180, 180, 100, -1, 1, "IonMomentum"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist), __IONMOMENTUM__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_master), __IONMOMENTUM__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist), __IONMOMENTUM__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_master), __IONMOMENTUM__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist), __IONMOMENTUM__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_master), __IONMOMENTUM__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist), __IONMOMENTUM__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_master), __IONMOMENTUM__);
+#define __IONMOMENTUM1__ "Momentum [au]", 2000, 0, 500, "IonMomentum" 
+#define __IONMOMENTUM2__ "Momentum [au]", "Momentum [au]",  400, 0, 500, 400, 0, 500, "IonMomentum" 
+#define __IONMOMENTUM3__ "Direction XY [degree]", "Cos Direction Z [1]", 360, -180, 180, 400, -1, 1, "IonMomentum"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hP), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hP_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hP), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hP_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hP), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hP_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP_master), __IONMOMENTUM1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP), __IONMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP_master), __IONMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP), __IONMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP_master), __IONMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP), __IONMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP_master), __IONMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_master), __IONMOMENTUM3__);
 
   // IonEnergy
 #define __IONENERGY1__ "Energy [eV]", 1000, 0, 50, "IonEnergy"
@@ -288,7 +306,7 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE_master), __IONENERGY2__);
 
   // ElecImage
-#define __ELECIMAGE__ "Location X [mm]", "Location Y [mm]", 100, -75, 75, 100, -75, 75, "ElecImage"
+#define __ELECIMAGE__ "Location X [mm]", "Location Y [mm]", 600, -75, 75, 600, -75, 75, "ElecImage"
   create2d(SAME_TITLE_WITH_VALNAME(h2_eh1Image), __ELECIMAGE__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_eh1Image_master), __ELECIMAGE__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_eh2Image), __ELECIMAGE__);
@@ -299,8 +317,8 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_eh4Image_master), __ELECIMAGE__);
 
   // ElecTOF
-#define __ELECTOF1__ "TOF [ns]", 1000, -20, 130, "ElecTOF"
-#define __ELECTOF2__ "TOF 1 [ns]", "TOF 2 [ns]", 200, -20, 130, 200, -20, 130, "ElecTOF"
+#define __ELECTOF1__ "TOF [ns]", 1000, 0, 100, "ElecTOF"
+#define __ELECTOF2__ "TOF [ns]", "TOF [ns]", 400, 0, 100, 400, 0, 100, "ElecTOF"
   create1d(SAME_TITLE_WITH_VALNAME(h1_e1hTOF), __ELECTOF1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_e1hTOF_master), __ELECTOF1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_e2hTOF), __ELECTOF1__);
@@ -317,8 +335,8 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3h4hPEPECO_master), __ELECTOF2__);
 
   // ElecFish
-#define __ELECFISH1__ "TOF [ns]", "Location [mm]", 200, -20, 130, 300, -75, 75, "ElecFish"
-#define __ELECFISH2__ "TOF [ns]", "Location [mm]", 200, -20, 130, 150, 0, 75, "ElecFish"
+#define __ELECFISH1__ "TOF [ns]", "Location [mm]", 400, 0, 100, 600, -75, 75, "ElecFish"
+#define __ELECFISH2__ "TOF [ns]", "Location [mm]", 400, 0, 100, 300, 0, 75, "ElecFish"
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hXFish), __ELECFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hXFish_master), __ELECFISH1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hYFish), __ELECFISH1__);
@@ -345,8 +363,8 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hRFish_master), __ELECFISH2__);
 
   // ElecMomentum
-#define __ELECMOMENTUM1__ "Direction [degree]", "Momentum [au]", 180, -180, 180, 1500, 0, 3, "ElecMomentum"
-#define __ELECMOMENTUM2__ "Direction XY [degree]", "Direction Z [1]", 180, -180, 180, 100, -1, 1, "ElecMomentum"
+#define __ELECMOMENTUM1__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 500, 0, 4, "ElecMomentum"
+#define __ELECMOMENTUM2__ "Direction XY [degree]", "Direction Z [1]", 360, -180, 180, 400, -1, 1, "ElecMomentum"
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY), __ELECMOMENTUM1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_master), __ELECMOMENTUM1__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ), __ELECMOMENTUM1__);
@@ -395,7 +413,7 @@ void Analysis::AnalysisRun::createHists() {
   create1d(SAME_TITLE_WITH_VALNAME(h1_eTotalE_master), __ELECENERGY2__);
 
 // IonElecCorr
-#define __IONELECCORR__ "KER [eV]", "Electron Kinetic Energy [eV]", 1000, 0, 100, 500, 0, 50, "IonElecCorr"
+#define __IONELECCORR__ "KER [eV]", "Electron Kinetic Energy [eV]", 400, 0, 100, 500, 0, 50, "IonElecCorr"
   create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE), __IONELECCORR__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE_master), __IONELECCORR__);
 
@@ -406,7 +424,7 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO_i1hMaster),
            "TOF 1 [ns]", "TOF 2 [ns]", 500, 0, 10000, 500, 0, 10000, __OTHERS__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hE_iTotalTOF_master),
-           "Energy [eV]", "Sum of TOFs [ns]", 100, 0, 50, 2000, 0, 20000, __OTHERS__);
+           "Energy [eV]", "Sum of TOFs [ns]", 500, 0, 50, 1000, 0, 20000, __OTHERS__);
 }
 
 void Analysis::AnalysisRun::fillHists() {
@@ -484,22 +502,31 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPY1 = pIons->getRealOrDummyObject(0).outputPY();
   const double *const iPXY1 = pIons->getRealOrDummyObject(0).outputPXY();
   const double *const iPZ1 = pIons->getRealOrDummyObject(0).outputPZ();
+  const double *const iP1 = pIons->getRealOrDummyObject(0).outputP();
+  const double *const iPDirXY1 = pIons->getRealOrDummyObject(0).outputPDirXY();
   const double *const iCosPDirZ1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
   const double *const iPX2 = pIons->getRealOrDummyObject(1).outputPX();
   const double *const iPY2 = pIons->getRealOrDummyObject(1).outputPY();
   const double *const iPXY2 = pIons->getRealOrDummyObject(1).outputPXY();
   const double *const iPZ2 = pIons->getRealOrDummyObject(1).outputPZ();
+  const double *const iP2 = pIons->getRealOrDummyObject(1).outputP();
+  const double *const iPDirXY2 = pIons->getRealOrDummyObject(1).outputPDirXY();
   const double *const iCosPDirZ2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
   const double *const iPX3 = pIons->getRealOrDummyObject(2).outputPX();
   const double *const iPY3 = pIons->getRealOrDummyObject(2).outputPY();
   const double *const iPXY3 = pIons->getRealOrDummyObject(2).outputPXY();
   const double *const iPZ3 = pIons->getRealOrDummyObject(2).outputPZ();
+  const double *const iP3 = pIons->getRealOrDummyObject(2).outputP();
+  const double *const iPDirXY3 = pIons->getRealOrDummyObject(2).outputPDirXY();
   const double *const iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
   const double *const iPX4 = pIons->getRealOrDummyObject(3).outputPX();
   const double *const iPY4 = pIons->getRealOrDummyObject(3).outputPY();
   const double *const iPXY4 = pIons->getRealOrDummyObject(3).outputPXY();
   const double *const iPZ4 = pIons->getRealOrDummyObject(3).outputPZ();
+  const double *const iP4 = pIons->getRealOrDummyObject(3).outputP();
+  const double *const iPDirXY4 = pIons->getRealOrDummyObject(3).outputPDirXY();
   const double *const iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
+  const double *const iPTotal = pIons->outputP();
 
   const double *const ePX1 = pElectrons->getRealOrDummyObject(0).outputPX();
   const double *const ePY1 = pElectrons->getRealOrDummyObject(0).outputPY();
@@ -507,7 +534,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePXY1 = pElectrons->getRealOrDummyObject(0).outputPXY();
   const double *const ePYZ1 = pElectrons->getRealOrDummyObject(0).outputPYZ();
   const double *const ePZX1 = pElectrons->getRealOrDummyObject(0).outputPZX();
-  const double *const ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirX();
+  const double *const eP1 = pElectrons->getRealOrDummyObject(0).outputP();
+  const double *const ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirXY();
   const double *const ePDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
   const double *const ePDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
   const double *const eCosPDirZ1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
@@ -517,7 +545,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePXY2 = pElectrons->getRealOrDummyObject(1).outputPXY();
   const double *const ePYZ2 = pElectrons->getRealOrDummyObject(1).outputPYZ();
   const double *const ePZX2 = pElectrons->getRealOrDummyObject(1).outputPZX();
-  const double *const ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirX();
+  const double *const eP2 = pElectrons->getRealOrDummyObject(1).outputP();
+  const double *const ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirXY();
   const double *const ePDirYZ2 = pElectrons->getRealOrDummyObject(1).outputPDirYZ();
   const double *const ePDirZX2 = pElectrons->getRealOrDummyObject(1).outputPDirZX();
   const double *const eCosPDirZ2 = pElectrons->getRealOrDummyObject(1).outputCosPDirZ();
@@ -527,7 +556,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePXY3 = pElectrons->getRealOrDummyObject(2).outputPXY();
   const double *const ePYZ3 = pElectrons->getRealOrDummyObject(2).outputPYZ();
   const double *const ePZX3 = pElectrons->getRealOrDummyObject(2).outputPZX();
-  const double *const ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirX();
+  const double *const eP3 = pElectrons->getRealOrDummyObject(2).outputP();
+  const double *const ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirXY();
   const double *const ePDirYZ3 = pElectrons->getRealOrDummyObject(2).outputPDirYZ();
   const double *const ePDirZX3 = pElectrons->getRealOrDummyObject(2).outputPDirZX();
   const double *const eCosPDirZ3 = pElectrons->getRealOrDummyObject(2).outputCosPDirZ();
@@ -537,7 +567,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePXY4 = pElectrons->getRealOrDummyObject(3).outputPXY();
   const double *const ePYZ4 = pElectrons->getRealOrDummyObject(3).outputPYZ();
   const double *const ePZX4 = pElectrons->getRealOrDummyObject(3).outputPZX();
-  const double *const ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirX();
+  const double *const eP4 = pElectrons->getRealOrDummyObject(3).outputP();
+  const double *const ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirXY();
   const double *const ePDirYZ4 = pElectrons->getRealOrDummyObject(3).outputPDirYZ();
   const double *const ePDirZX4 = pElectrons->getRealOrDummyObject(3).outputPDirZX();
   const double *const eCosPDirZ4 = pElectrons->getRealOrDummyObject(3).outputCosPDirZ();
@@ -623,15 +654,31 @@ void Analysis::AnalysisRun::fillHists() {
   }
 
 // IonMomentum
-  fill2d(h2_i1hPDirDist, iPXY1, iCosPDirZ1);
-  fill2d(h2_i2hPDirDist, iPXY2, iCosPDirZ2);
-  fill2d(h2_i3hPDirDist, iPXY3, iCosPDirZ3);
-  fill2d(h2_i4hPDirDist, iPXY4, iCosPDirZ4);
+  fill1d(h1_i1hP, iP1);
+  fill1d(h1_i2hP, iP2);
+  fill1d(h1_i3hP, iP3);
+  fill1d(h1_i4hP, iP4);
+  fill1d(h1_iTotalP, iPTotal);
+  fill2d(h2_i1h2hP, iP1, iP2);
+  fill2d(h2_i2h3hP, iP2, iP3);
+  fill2d(h2_i3h4hP, iP3, iP4);
+  fill2d(h2_i1hPDirDist, iPDirXY1, iCosPDirZ1);
+  fill2d(h2_i2hPDirDist, iPDirXY2, iCosPDirZ2);
+  fill2d(h2_i3hPDirDist, iPDirXY3, iCosPDirZ3);
+  fill2d(h2_i4hPDirDist, iPDirXY4, iCosPDirZ4);
   if (master) {
-    fill2d(h2_i1hPDirDist_master, iPXY1, iCosPDirZ1);
-    fill2d(h2_i2hPDirDist_master, iPXY2, iCosPDirZ2);
-    fill2d(h2_i3hPDirDist_master, iPXY3, iCosPDirZ3);
-    fill2d(h2_i4hPDirDist_master, iPXY4, iCosPDirZ4);
+  fill1d(h1_i1hP_master, iP1);
+  fill1d(h1_i2hP_master, iP2);
+  fill1d(h1_i3hP_master, iP3);
+  fill1d(h1_i4hP_master, iP4);
+  fill1d(h1_iTotalP_master, iPTotal);
+  fill2d(h2_i1h2hP_master, iP1, iP2);
+  fill2d(h2_i2h3hP_master, iP2, iP3);
+  fill2d(h2_i3h4hP_master, iP3, iP4);
+    fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
+    fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
+    fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
+    fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
   }
 
 // IonEnergy
