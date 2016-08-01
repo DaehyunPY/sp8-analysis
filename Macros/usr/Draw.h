@@ -2,8 +2,8 @@
 // Created by Daehyun You on 7/30/16.
 //
 
-#ifndef ANALYSIS_DRAG_H
-#define ANALYSIS_DRAG_H
+#ifndef ANALYSIS_DRAW_H
+#define ANALYSIS_DRAW_H
 
 
 #include <iostream>
@@ -12,10 +12,10 @@
 #include <TPad.h>
 #include <TCanvas.h>
 
-class Drag {
+class Draw {
  protected:
-  Drag();
-  virtual ~Drag();
+  Draw();
+  virtual ~Draw();
   TPad *pad;
   TCanvas *cnvs;
 

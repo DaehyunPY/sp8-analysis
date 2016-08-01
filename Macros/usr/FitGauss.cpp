@@ -22,7 +22,7 @@ FitGauss::FitGauss(double reg1, double reg2) {
   if (reg1==0 && reg2==0) {
     cnvs->SetCrosshair(true);
     cnvs->Connect("ProcessedEvent(Int_t,Int_t,Int_t,TObject*)",
-                  "Drag", this, "dragReg(Int_t,Int_t,Int_t,TObject*)");
+                  "Draw", this, "dragReg(Int_t,Int_t,Int_t,TObject*)");
     std::cout << "Drag the region to fit a Gaussian function." << std::endl;
   } else fitGauss(reg1, reg2);
 }
@@ -43,8 +43,6 @@ void FitGauss::fitGauss(double reg1, double reg2) {
   TH1 *h1 = (TH2 *) obj;
   h1->Fit("gaus", "w", "", reg1, reg2);
   h1->Draw("same");
-  cnvs->Modified();
-  cnvs->Update();
   delete this;
 }
 

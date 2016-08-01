@@ -7,9 +7,9 @@
 
 
 #include <TH2.h>
-#include "Drag.h"
+#include "Draw.h"
 
-class Proj: protected Drag {
+class Proj: protected Draw {
   TObject *obj;
  public:
   enum AxisType {

@@ -4,7 +4,7 @@
 
 #include "Proj.h"
 
-Proj::Proj(AxisType tp, double reg1, double reg2) : Drag(), type(tp) {
+Proj::Proj(AxisType tp, double reg1, double reg2) : Draw(), type(tp) {
   obj = pad->GetSelected();
   if (!obj) {
     std::cout << "The object is invalid." << std::endl;
@@ -27,8 +27,8 @@ Proj::Proj(AxisType tp, double reg1, double reg2) : Drag(), type(tp) {
   if (reg1==0 && reg2==0) {
     cnvs->SetCrosshair(true);
     cnvs->Connect("ProcessedEvent(Int_t,Int_t,Int_t,TObject*)",
-                  "Drag", this, "dragReg(Int_t,Int_t,Int_t,TObject*)");
-    if (type == x) std::cout << "Drag the y region to project." << std::endl;
+                  "Draw", this, "dragReg(Int_t,Int_t,Int_t,TObject*)");
+    if (type == x) std::cout << "Draw the y region to project." << std::endl;
     else std::cout << "Drag the x region to project." << std::endl; // type == y
   } else project(reg1, reg2);
 }
@@ -60,11 +60,10 @@ void Proj::project(double reg1, double reg2) {
   if (type == x) newHist = h2->ProjectionX("_px", h2->GetYaxis()->FindBin(reg1), h2->GetYaxis()->FindBin(reg2), "");
   else newHist = h2->ProjectionY("_py", h2->GetXaxis()->FindBin(reg1), h2->GetXaxis()->FindBin(reg2), ""); // type == y
   newCnvs = new TCanvas("project");
+  newCnvs->cd();
   newHist->Draw();
   newCnvs->Modified();
   newCnvs->Update();
+  pad->cd();
   delete this;
 }
-
-
-
