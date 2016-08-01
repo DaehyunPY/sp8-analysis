@@ -4,19 +4,24 @@
 
 #include "Mark.h"
 Mark::Mark(): Draw() {
-  n = 0;
   gr = new TGraph();
   gr->SetMarkerStyle(kStar);
 }
 Mark::~Mark() {
   if (gr) {
-    gr->Draw("PSame");
+    draw();
     delete gr;
     gr = nullptr;
   }
 }
-void Mark::addPoint(double x, double y) {
-  gr->SetPoint(n, x, y);
-  n += 1;
+void Mark::mkPoint(int i, double x, double y) {
+  gr->SetPoint(i, x, y);
+  draw();
+}
+void Mark::rmPoint(int i) {
+  gr->RemovePoint(i);
+  draw();
+}
+void Mark::draw() {
   gr->Draw("PSame");
 }

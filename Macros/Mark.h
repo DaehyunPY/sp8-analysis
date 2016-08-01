@@ -11,11 +11,12 @@
 
 class Mark: protected Draw {
   TGraph *gr;
-  int n;
  public:
   Mark();
   ~Mark();
-  void addPoint(double x, double y);
+  void mkPoint(int i, double x, double y);
+  void rmPoint(int i);
+  void draw();
 };
 
 
