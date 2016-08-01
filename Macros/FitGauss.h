@@ -8,9 +8,9 @@
 
 #include <TH1.h>
 #include <TH2.h>
-#include "Drag.h"
+#include "Draw.h"
 
-class FitGauss: protected Drag {
+class FitGauss: protected Draw {
   TObject *obj;
  public:
   FitGauss(double reg1=0, double reg2=0);
