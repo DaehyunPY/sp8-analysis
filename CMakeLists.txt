@@ -96,7 +96,6 @@ endif ()
 set(ANALYSISEXE_SOURCE_FILES
         AnalysisExe/Main.cpp
         AnalysisExe/AnalysisRun.cpp
-        AnalysisExe/OutputFlag.cpp
         )
 add_executable(AnalysisExe ${ANALYSISEXE_SOURCE_FILES})
 target_link_libraries(AnalysisExe AnalysisCore Protocols)

@@ -17,7 +17,6 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) :
   pLogWriter->logResultOfLoadingJSONFile(configReader);
 
   // Setup ROOT files
-  if (configReader.getStringAt("setup_input.type") == "ROOT") {
     pEventChain =
         new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
     pEventChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
@@ -44,7 +43,6 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) :
         pEventChain->SetBranchAddress((str + ch).c_str(), &(pEventReader->setFlagDataAt(i, str + ch)));
       }
     }
-  }
 
   // Setup unit helper
   pUnit = new Analysis::Unit;
@@ -54,21 +52,6 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) :
   pIons = new Analysis::Ions(*pUnit, configReader, numberOfHits);
   pElectrons = new Analysis::Electrons(*pUnit, configReader, numberOfHits);
   pLogWriter->logAnalysisTools(*pUnit, *pTools, *pIons, *pElectrons);
-
-  // Read output option
-  if (configReader.getBoolAt("setup_output.send_out_of_frame")) {
-    flag.setSendingOutOfFrame();
-  }
-  if (configReader.getBoolAt("setup_output.show_only_master_region_events")) {
-    flag.setShowingOnlyMasterRegionEvents();
-  }
-  pLogWriter->write() << "Output Options: " << std::endl;
-  pLogWriter->write() << "    Send Out of Frame: "
-      << (flag.isSendingOutOfFrame() ? "true" : "false") << std::endl;
-  pLogWriter->write() << "    Show Only Master Region Events: "
-      << (flag.isShowingOnlyMasterRegionEvents() ? "true" : "false")
-      << std::endl;
-  pLogWriter->write() << std::endl;
 
   // Open ROOT file
   std::cout << "open a root file... ";

@@ -21,7 +21,6 @@
 #include <TH2F.h>
 #include <TChain.h>
 #include <RooDataProjBinding.h>
-#include "OutputFlag.h"
 #include "../Protocols/Hist.h"
 #include "../Protocols/Unit.h"
 #include "../AnalysisCore/AnalysisTools.h"
@@ -39,7 +38,6 @@ class AnalysisRun: Hist {
   Analysis::Electrons *pElectrons;
   Analysis::EventDataReader *pEventReader;
   Analysis::LogWriter *pLogWriter;
-  Analysis::OutputFlag flag;
 
  public:
   AnalysisRun(const std::string configFilename);
