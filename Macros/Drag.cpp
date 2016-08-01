@@ -15,6 +15,7 @@ Drag::Drag() {
   std::cout << "Pad: " << pad->GetName() << std::endl;
   std::cout << "Canvas: " << cnvs->GetName() << std::endl;
 
+  pad->cd();
   wasCrosshairOn = (bool) cnvs->GetCrosshair();
 }
 Drag::~Drag() {

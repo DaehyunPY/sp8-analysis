@@ -60,11 +60,10 @@ void Proj::project(double reg1, double reg2) {
   if (type == x) newHist = h2->ProjectionX("_px", h2->GetYaxis()->FindBin(reg1), h2->GetYaxis()->FindBin(reg2), "");
   else newHist = h2->ProjectionY("_py", h2->GetXaxis()->FindBin(reg1), h2->GetXaxis()->FindBin(reg2), ""); // type == y
   newCnvs = new TCanvas("project");
+  newCnvs->cd();
   newHist->Draw();
   newCnvs->Modified();
   newCnvs->Update();
+  pad->cd();
   delete this;
 }
-
-
-
