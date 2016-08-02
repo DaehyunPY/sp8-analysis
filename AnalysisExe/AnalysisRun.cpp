@@ -734,28 +734,28 @@ void Analysis::AnalysisRun::fillHists() {
   // ElecFish
   fill2d(h2_e1hXFish, eT1, eX1);
   fill2d(h2_e1hYFish, eT1, eY1);
-  fill2d(h2_e1hXFish, eT1, eX1);
+  fill2d(h2_e1hRFish, eT1, eR1);
+  fill2d(h2_e2hXFish, eT2, eX2);
   fill2d(h2_e2hYFish, eT2, eY2);
   fill2d(h2_e2hRFish, eT2, eR2);
-  fill2d(h2_e2hXFish, eT2, eX2);
+  fill2d(h2_e3hXFish, eT3, eX3);
   fill2d(h2_e3hYFish, eT3, eY3);
   fill2d(h2_e3hRFish, eT3, eR3);
-  fill2d(h2_e3hXFish, eT3, eX3);
+  fill2d(h2_e4hXFish, eT4, eX4);
   fill2d(h2_e4hYFish, eT4, eY4);
-  fill2d(h2_e4hRFish, eT4, eR4);
   fill2d(h2_e4hRFish, eT4, eR4);
   if (master) {
     fill2d(h2_e1hXFish_master, eT1, eX1);
     fill2d(h2_e1hYFish_master, eT1, eY1);
-    fill2d(h2_e1hXFish_master, eT1, eX1);
+    fill2d(h2_e1hRFish_master, eT1, eR1);
+    fill2d(h2_e2hXFish_master, eT2, eX2);
     fill2d(h2_e2hYFish_master, eT2, eY2);
     fill2d(h2_e2hRFish_master, eT2, eR2);
-    fill2d(h2_e2hXFish_master, eT2, eX2);
+    fill2d(h2_e3hXFish_master, eT3, eX3);
     fill2d(h2_e3hYFish_master, eT3, eY3);
     fill2d(h2_e3hRFish_master, eT3, eR3);
-    fill2d(h2_e3hXFish_master, eT3, eX3);
+    fill2d(h2_e4hXFish_master, eT4, eX4);
     fill2d(h2_e4hYFish_master, eT4, eY4);
-    fill2d(h2_e4hRFish_master, eT4, eR4);
     fill2d(h2_e4hRFish_master, eT4, eR4);
   }
 
