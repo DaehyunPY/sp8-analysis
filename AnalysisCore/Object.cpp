@@ -174,7 +174,7 @@ double * const Analysis::Object::outputLocR() const
 }
 double * const Analysis::Object::outputLocDir() const
 {
-	if (isFlag(HavingXYTData)) return new double(kUnit.writeDegree(getLocationalDirectionX()));
+	if (isFlag(HavingXYTData)) return new double(kUnit.writeDegree(getLocationalDirectionXY()));
   return nullptr;
 }
 double * const Analysis::Object::outputTOF() const

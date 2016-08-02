@@ -164,17 +164,28 @@ const long Analysis::AnalysisRun::getEntries() const {
 
 void Analysis::AnalysisRun::createHists() {
   // IonImage
-#define __IONIMAGE__ "Location X [mm]", "Location Y [mm]", 400, -50, 50, 400, -50, 50, "IonImage"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage), __IONIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage_master), __IONIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage), __IONIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage_master), __IONIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage), __IONIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage_master), __IONIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage), __IONIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage_master), __IONIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage), __IONIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage_master), __IONIMAGE__);
+#define __IONIMAGE1__ "Location X [mm]", "Location Y [mm]", 400, -50, 50, 400, -50, 50, "IonImage"
+#define __IONIMAGE2__ "Direction [degree]", "Location R [mm]", 360, -180, 180, 200, 0, 50, "IonImage"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage_master), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage_master), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage_master), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage_master), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage_master), __IONIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImageDirDist), __IONIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImageDirDist_master), __IONIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImageDirDist), __IONIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImageDirDist_master), __IONIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImageDirDist), __IONIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImageDirDist_master), __IONIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImageDirDist), __IONIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImageDirDist_master), __IONIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImageDirDist), __IONIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImageDirDist_master), __IONIMAGE2__);
 
   // IonTOF
 #define __IONTOF1__ "TOF [ns]", 2000, 0, 10000, "IonTOF"
@@ -240,33 +251,97 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_master), __IONFISH2__);
 
   // IonMomentum
-#define __IONMOMENTUM1__ "Momentum [au]", 2000, 0, 500, "IonMomentum" 
-#define __IONMOMENTUM2__ "Momentum [au]", "Momentum [au]",  400, 0, 500, 400, 0, 500, "IonMomentum" 
-#define __IONMOMENTUM3__ "Direction XY [degree]", "Cos Direction Z [1]", 360, -180, 180, 400, -1, 1, "IonMomentum"
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hP), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hP_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hP), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hP_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hP), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hP_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP_master), __IONMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_master), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_master), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_master), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_master), __IONMOMENTUM3__);
+#define __IONMOMENTUM1__ "Momentum [au]", 4000, -500, 500, "IonMomentum" 
+#define __IONMOMENTUM2__ "Momentum [au]", 2000, 0, 500, "IonMomentum" 
+#define __IONMOMENTUM3__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 400, 0, 500, "IonMomentum"
+#define __IONMOMENTUM4__ "Direction XY [degree]", "Cos Direction Z [1]", 360, -180, 180, 400, -1, 1, "IonMomentum"
+#define __IONMOMENTUM5__ "Momentum [au]", "Momentum [au]",  400, 0, 500, 400, 0, 500, "IonMomentum" 
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPX), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPX_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPY), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPY_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPZ), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPZ_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hP), __IONMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hP_master), __IONMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPX), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPX_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPY), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPY_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPZ), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPZ_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hP), __IONMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hP_master), __IONMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPX), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPX_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPY), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPY_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPZ), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPZ_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hP), __IONMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hP_master), __IONMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPX), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPX_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPY), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPY_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPZ), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPZ_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP), __IONMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP_master), __IONMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPX), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPX_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPY), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPY_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPZ), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPZ_master), __IONMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP), __IONMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP_master), __IONMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP), __IONMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP_master), __IONMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP), __IONMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP_master), __IONMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP), __IONMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP_master), __IONMOMENTUM5__);
 
   // IonEnergy
 #define __IONENERGY1__ "Energy [eV]", 1000, 0, 50, "IonEnergy"
@@ -289,15 +364,24 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE_master), __IONENERGY2__);
 
   // ElecImage
-#define __ELECIMAGE__ "Location X [mm]", "Location Y [mm]", 600, -75, 75, 600, -75, 75, "ElecImage"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_eh1Image), __ELECIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_eh1Image_master), __ELECIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_eh2Image), __ELECIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_eh2Image_master), __ELECIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_eh3Image), __ELECIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_eh3Image_master), __ELECIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_eh4Image), __ELECIMAGE__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_eh4Image_master), __ELECIMAGE__);
+#define __ELECIMAGE1__ "Location X [mm]", "Location Y [mm]", 600, -75, 75, 600, -75, 75, "ElecImage"
+#define __ELECIMAGE2__ "Direction [degree]", "Location R [mm]", 360, -180, 180, 300, 0, 75, "ElecImage"
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImage), __ELECIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImage_master), __ELECIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImage), __ELECIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImage_master), __ELECIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImage), __ELECIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImage_master), __ELECIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImage), __ELECIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImage_master), __ELECIMAGE1__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImageDirDist), __ELECIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImageDirDist_master), __ELECIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImageDirDist), __ELECIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImageDirDist_master), __ELECIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImageDirDist), __ELECIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImageDirDist_master), __ELECIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImageDirDist), __ELECIMAGE2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImageDirDist_master), __ELECIMAGE2__);
 
   // ElecTOF
 #define __ELECTOF1__ "TOF [ns]", 1000, 0, 100, "ElecTOF"
@@ -346,40 +430,74 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hRFish_master), __ELECFISH2__);
 
   // ElecMomentum
-#define __ELECMOMENTUM1__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 500, 0, 4, "ElecMomentum"
-#define __ELECMOMENTUM2__ "Direction XY [degree]", "Direction Z [1]", 360, -180, 180, 400, -1, 1, "ElecMomentum"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist_master), __ELECMOMENTUM2__);
+#define __ELECMOMENTUM1__ "Momentum [au]", 4000, -4, 4, "ElecMomentum" 
+#define __ELECMOMENTUM2__ "Momentum [au]", 2000, 0, 4, "ElecMomentum" 
+#define __ELECMOMENTUM3__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 500, 0, 4, "ElecMomentum"
+#define __ELECMOMENTUM4__ "Direction XY [degree]", "Direction Z [1]", 360, -180, 180, 400, -1, 1, "ElecMomentum"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPX), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPX_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPY), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPY_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPZ), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPZ_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hP), __ELECMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hP_master), __ELECMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPX), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPX_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPY), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPY_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPZ), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPZ_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hP), __ELECMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hP_master), __ELECMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPX), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPX_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPY), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPY_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPZ), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPZ_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hP), __ELECMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hP_master), __ELECMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPX), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPX_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPY), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPY_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPZ), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPZ_master), __ELECMOMENTUM1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hP), __ELECMOMENTUM2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hP_master), __ELECMOMENTUM2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist_master), __ELECMOMENTUM4__);
 
   // ElecEnergy
 #define __ELECENERGY1__ "Energy [eV]", 1000, 0, 50, "ElecEnergy"
@@ -431,22 +549,28 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iX1 = pIons->getRealOrDummyObject(0).outputLocX();
   const double *const iY1 = pIons->getRealOrDummyObject(0).outputLocY();
   const double *const iR1 = pIons->getRealOrDummyObject(0).outputLocR();
+  const double *const iDir1 = pIons->getRealOrDummyObject(0).outputLocDir();
   const double *const iT1 = pIons->getRealOrDummyObject(0).outputTOF();
   const double *const iX2 = pIons->getRealOrDummyObject(1).outputLocX();
   const double *const iY2 = pIons->getRealOrDummyObject(1).outputLocY();
+  const double *const iDir2 = pIons->getRealOrDummyObject(1).outputLocDir();
   const double *const iR2 = pIons->getRealOrDummyObject(1).outputLocR();
   const double *const iT2 = pIons->getRealOrDummyObject(1).outputTOF();
   const double *const iX3 = pIons->getRealOrDummyObject(2).outputLocX();
   const double *const iY3 = pIons->getRealOrDummyObject(2).outputLocY();
+  const double *const iDir3 = pIons->getRealOrDummyObject(2).outputLocDir();
   const double *const iR3 = pIons->getRealOrDummyObject(2).outputLocR();
   const double *const iT3 = pIons->getRealOrDummyObject(2).outputTOF();
   const double *const iX4 = pIons->getRealOrDummyObject(3).outputLocX();
   const double *const iY4 = pIons->getRealOrDummyObject(3).outputLocY();
+  const double *const iDir4 = pIons->getRealOrDummyObject(3).outputLocDir();
   const double *const iR4 = pIons->getRealOrDummyObject(3).outputLocR();
   const double *const iT4 = pIons->getRealOrDummyObject(3).outputTOF();
 
   const double *const iCOMX = pIons->outputCOMLocX();
   const double *const iCOMY = pIons->outputCOMLocY();
+  const double *const iCOMR = pIons->outputCOMLocR();
+  const double *const iCOMDir = pIons->outputCOMLocDir();
   const double *const iTTotal = pIons->outputTotalTOF();
   const double *const iT12 = pIons->outputSumOf2TOFs(0, 1);
   const double *const iT23 = pIons->outputSumOf2TOFs(1, 2);
@@ -458,18 +582,22 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const eX1 = pElectrons->getRealOrDummyObject(0).outputLocX();
   const double *const eY1 = pElectrons->getRealOrDummyObject(0).outputLocY();
   const double *const eR1 = pElectrons->getRealOrDummyObject(0).outputLocR();
+  const double *const eDir1 = pElectrons->getRealOrDummyObject(0).outputLocDir();
   const double *const eT1 = pElectrons->getRealOrDummyObject(0).outputTOF();
   const double *const eX2 = pElectrons->getRealOrDummyObject(1).outputLocX();
   const double *const eY2 = pElectrons->getRealOrDummyObject(1).outputLocY();
   const double *const eR2 = pElectrons->getRealOrDummyObject(1).outputLocR();
+  const double *const eDir2 = pElectrons->getRealOrDummyObject(1).outputLocDir();
   const double *const eT2 = pElectrons->getRealOrDummyObject(1).outputTOF();
   const double *const eX3 = pElectrons->getRealOrDummyObject(2).outputLocX();
   const double *const eY3 = pElectrons->getRealOrDummyObject(2).outputLocY();
   const double *const eR3 = pElectrons->getRealOrDummyObject(2).outputLocR();
+  const double *const eDir3 = pElectrons->getRealOrDummyObject(2).outputLocDir();
   const double *const eT3 = pElectrons->getRealOrDummyObject(2).outputTOF();
   const double *const eX4 = pElectrons->getRealOrDummyObject(3).outputLocX();
   const double *const eY4 = pElectrons->getRealOrDummyObject(3).outputLocY();
   const double *const eR4 = pElectrons->getRealOrDummyObject(3).outputLocR();
+  const double *const eDir4 = pElectrons->getRealOrDummyObject(3).outputLocDir();
   const double *const eT4 = pElectrons->getRealOrDummyObject(3).outputTOF();
 
   const double *const eCOMX = pElectrons->outputCOMLocX();
@@ -483,33 +611,59 @@ void Analysis::AnalysisRun::fillHists() {
 
   const double *const iPX1 = pIons->getRealOrDummyObject(0).outputPX();
   const double *const iPY1 = pIons->getRealOrDummyObject(0).outputPY();
-  const double *const iPXY1 = pIons->getRealOrDummyObject(0).outputPXY();
   const double *const iPZ1 = pIons->getRealOrDummyObject(0).outputPZ();
+  const double *const iPXY1 = pIons->getRealOrDummyObject(0).outputPXY();
+  const double *const iPYZ1 = pIons->getRealOrDummyObject(0).outputPYZ();
+  const double *const iPZX1 = pIons->getRealOrDummyObject(0).outputPZX();
   const double *const iP1 = pIons->getRealOrDummyObject(0).outputP();
   const double *const iPDirXY1 = pIons->getRealOrDummyObject(0).outputPDirXY();
+  const double *const iPDirYZ1 = pIons->getRealOrDummyObject(0).outputPDirYZ();
+  const double *const iPDirZX1 = pIons->getRealOrDummyObject(0).outputPDirZX();
   const double *const iCosPDirZ1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
   const double *const iPX2 = pIons->getRealOrDummyObject(1).outputPX();
   const double *const iPY2 = pIons->getRealOrDummyObject(1).outputPY();
-  const double *const iPXY2 = pIons->getRealOrDummyObject(1).outputPXY();
   const double *const iPZ2 = pIons->getRealOrDummyObject(1).outputPZ();
+  const double *const iPXY2 = pIons->getRealOrDummyObject(1).outputPXY();
+  const double *const iPYZ2 = pIons->getRealOrDummyObject(1).outputPYZ();
+  const double *const iPZX2 = pIons->getRealOrDummyObject(1).outputPZX();
   const double *const iP2 = pIons->getRealOrDummyObject(1).outputP();
   const double *const iPDirXY2 = pIons->getRealOrDummyObject(1).outputPDirXY();
+  const double *const iPDirYZ2 = pIons->getRealOrDummyObject(1).outputPDirYZ();
+  const double *const iPDirZX2 = pIons->getRealOrDummyObject(1).outputPDirZX();
   const double *const iCosPDirZ2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
   const double *const iPX3 = pIons->getRealOrDummyObject(2).outputPX();
   const double *const iPY3 = pIons->getRealOrDummyObject(2).outputPY();
-  const double *const iPXY3 = pIons->getRealOrDummyObject(2).outputPXY();
   const double *const iPZ3 = pIons->getRealOrDummyObject(2).outputPZ();
+  const double *const iPXY3 = pIons->getRealOrDummyObject(2).outputPXY();
+  const double *const iPYZ3 = pIons->getRealOrDummyObject(2).outputPYZ();
+  const double *const iPZX3 = pIons->getRealOrDummyObject(2).outputPZX();
   const double *const iP3 = pIons->getRealOrDummyObject(2).outputP();
   const double *const iPDirXY3 = pIons->getRealOrDummyObject(2).outputPDirXY();
+  const double *const iPDirYZ3 = pIons->getRealOrDummyObject(2).outputPDirYZ();
+  const double *const iPDirZX3 = pIons->getRealOrDummyObject(2).outputPDirZX();
   const double *const iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
   const double *const iPX4 = pIons->getRealOrDummyObject(3).outputPX();
   const double *const iPY4 = pIons->getRealOrDummyObject(3).outputPY();
-  const double *const iPXY4 = pIons->getRealOrDummyObject(3).outputPXY();
   const double *const iPZ4 = pIons->getRealOrDummyObject(3).outputPZ();
+  const double *const iPXY4 = pIons->getRealOrDummyObject(3).outputPXY();
+  const double *const iPYZ4 = pIons->getRealOrDummyObject(3).outputPYZ();
+  const double *const iPZX4 = pIons->getRealOrDummyObject(3).outputPZX();
   const double *const iP4 = pIons->getRealOrDummyObject(3).outputP();
   const double *const iPDirXY4 = pIons->getRealOrDummyObject(3).outputPDirXY();
+  const double *const iPDirYZ4 = pIons->getRealOrDummyObject(3).outputPDirYZ();
+  const double *const iPDirZX4 = pIons->getRealOrDummyObject(3).outputPDirZX();
   const double *const iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
+  const double *const iPXTotal = pIons->outputPX();
+  const double *const iPYTotal = pIons->outputPY();
+  const double *const iPZTotal = pIons->outputPZ();
+  const double *const iPXYTotal = pIons->outputPXY();
+  const double *const iPYZTotal = pIons->outputPYZ();
+  const double *const iPZXTotal = pIons->outputPZX();
   const double *const iPTotal = pIons->outputP();
+  const double *const iPDirXYTotal = pIons->outputPDirXY();
+  const double *const iPDirYZTotal = pIons->outputPDirYZ();
+  const double *const iPDirZXTotal = pIons->outputPDirZX();
+  const double *const iCosPDirZTotal = pIons->outputCosPDirZ();
 
   const double *const ePX1 = pElectrons->getRealOrDummyObject(0).outputPX();
   const double *const ePY1 = pElectrons->getRealOrDummyObject(0).outputPY();
@@ -574,12 +728,22 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i3hImage, iX3, iY3);
   fill2d(h2_i4hImage, iX4, iY4);
   fill2d(h2_iCOMImage, iCOMX, iCOMY);
+  fill2d(h2_i1hImageDirDist, iDir1, iR1);
+  fill2d(h2_i2hImageDirDist, iDir2, iR2);
+  fill2d(h2_i3hImageDirDist, iDir3, iR3);
+  fill2d(h2_i4hImageDirDist, iDir4, iR4);
+  fill2d(h2_iCOMImageDirDist, iCOMDir, iCOMDir);
   if (master) {
-    fill2d(h2_i1hImage_master, iX1, iY1);
-    fill2d(h2_i2hImage_master, iX2, iY2);
-    fill2d(h2_i3hImage_master, iX3, iY3);
-    fill2d(h2_i4hImage_master, iX4, iY4);
-    fill2d(h2_iCOMImage_master, iCOMX, iCOMY);
+  fill2d(h2_i1hImage_master, iX1, iY1);
+  fill2d(h2_i2hImage_master, iX2, iY2);
+  fill2d(h2_i3hImage_master, iX3, iY3);
+  fill2d(h2_i4hImage_master, iX4, iY4);
+  fill2d(h2_iCOMImage_master, iCOMX, iCOMY);
+  fill2d(h2_i1hImageDirDist_master, iDir1, iR1);
+  fill2d(h2_i2hImageDirDist_master, iDir2, iR2);
+  fill2d(h2_i3hImageDirDist_master, iDir3, iR3);
+  fill2d(h2_i4hImageDirDist_master, iDir4, iR4);
+  fill2d(h2_iCOMImageDirDist_master, iCOMDir, iCOMDir);
   }
 
   // IonTOF
@@ -637,31 +801,93 @@ void Analysis::AnalysisRun::fillHists() {
   }
 
 // IonMomentum
+  fill1d(h1_i1hPX, iPX1);
+  fill1d(h1_i1hPY, iPY1);
+  fill1d(h1_i1hPZ, iPZ1);
   fill1d(h1_i1hP, iP1);
+  fill1d(h1_i2hPX, iPX2);
+  fill1d(h1_i2hPY, iPY2);
+  fill1d(h1_i2hPZ, iPZ2);
   fill1d(h1_i2hP, iP2);
+  fill1d(h1_i3hPX, iPX3);
+  fill1d(h1_i3hPY, iPY3);
+  fill1d(h1_i3hPZ, iPZ3);
   fill1d(h1_i3hP, iP3);
+  fill1d(h1_i4hPX, iPX4);
+  fill1d(h1_i4hPY, iPY4);
+  fill1d(h1_i4hPZ, iPZ4);
   fill1d(h1_i4hP, iP4);
+  fill1d(h1_iTotalPX, iPXTotal);
+  fill1d(h1_iTotalPY, iPYTotal);
+  fill1d(h1_iTotalPZ, iPZTotal);
   fill1d(h1_iTotalP, iPTotal);
+  fill2d(h2_i1hPDirDistXY, iPDirXY1, iPXY1);
+  fill2d(h2_i1hPDirDistYZ, iPDirYZ1, iPYZ1);
+  fill2d(h2_i1hPDirDistZX, iPDirZX1, iPZX1);
+  fill2d(h2_i1hPDirDist, iPDirXY1, iCosPDirZ1);
+  fill2d(h2_i2hPDirDistXY, iPDirXY2, iPXY2);
+  fill2d(h2_i2hPDirDistYZ, iPDirYZ2, iPYZ2);
+  fill2d(h2_i2hPDirDistZX, iPDirZX2, iPZX2);
+  fill2d(h2_i2hPDirDist, iPDirXY2, iCosPDirZ2);
+  fill2d(h2_i3hPDirDistXY, iPDirXY3, iPXY3);
+  fill2d(h2_i3hPDirDistYZ, iPDirYZ3, iPYZ3);
+  fill2d(h2_i3hPDirDistZX, iPDirZX3, iPZX3);
+  fill2d(h2_i3hPDirDist, iPDirXY3, iCosPDirZ3);
+  fill2d(h2_i4hPDirDistXY, iPDirXY4, iPXY4);
+  fill2d(h2_i4hPDirDistYZ, iPDirYZ4, iPYZ4);
+  fill2d(h2_i4hPDirDistZX, iPDirZX4, iPZX4);
+  fill2d(h2_i4hPDirDist, iPDirXY4, iCosPDirZ4);
+  fill2d(h2_iTotalPDirDistXY, iPDirXYTotal, iPXYTotal);
+  fill2d(h2_iTotalPDirDistYZ, iPDirYZTotal, iPYZTotal);
+  fill2d(h2_iTotalPDirDistZX, iPDirZXTotal, iPZXTotal);
+  fill2d(h2_iTotalPDirDist, iPDirXYTotal, iCosPDirZTotal);
   fill2d(h2_i1h2hP, iP1, iP2);
   fill2d(h2_i2h3hP, iP2, iP3);
   fill2d(h2_i3h4hP, iP3, iP4);
-  fill2d(h2_i1hPDirDist, iPDirXY1, iCosPDirZ1);
-  fill2d(h2_i2hPDirDist, iPDirXY2, iCosPDirZ2);
-  fill2d(h2_i3hPDirDist, iPDirXY3, iCosPDirZ3);
-  fill2d(h2_i4hPDirDist, iPDirXY4, iCosPDirZ4);
   if (master) {
+  fill1d(h1_i1hPX_master, iPX1);
+  fill1d(h1_i1hPY_master, iPY1);
+  fill1d(h1_i1hPZ_master, iPZ1);
   fill1d(h1_i1hP_master, iP1);
+  fill1d(h1_i2hPX_master, iPX2);
+  fill1d(h1_i2hPY_master, iPY2);
+  fill1d(h1_i2hPZ_master, iPZ2);
   fill1d(h1_i2hP_master, iP2);
+  fill1d(h1_i3hPX_master, iPX3);
+  fill1d(h1_i3hPY_master, iPY3);
+  fill1d(h1_i3hPZ_master, iPZ3);
   fill1d(h1_i3hP_master, iP3);
+  fill1d(h1_i4hPX_master, iPX4);
+  fill1d(h1_i4hPY_master, iPY4);
+  fill1d(h1_i4hPZ_master, iPZ4);
   fill1d(h1_i4hP_master, iP4);
+  fill1d(h1_iTotalPX_master, iPXTotal);
+  fill1d(h1_iTotalPY_master, iPYTotal);
+  fill1d(h1_iTotalPZ_master, iPZTotal);
   fill1d(h1_iTotalP_master, iPTotal);
+  fill2d(h2_i1hPDirDistXY_master, iPDirXY1, iPXY1);
+  fill2d(h2_i1hPDirDistYZ_master, iPDirYZ1, iPYZ1);
+  fill2d(h2_i1hPDirDistZX_master, iPDirZX1, iPZX1);
+  fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
+  fill2d(h2_i2hPDirDistXY_master, iPDirXY2, iPXY2);
+  fill2d(h2_i2hPDirDistYZ_master, iPDirYZ2, iPYZ2);
+  fill2d(h2_i2hPDirDistZX_master, iPDirZX2, iPZX2);
+  fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
+  fill2d(h2_i3hPDirDistXY_master, iPDirXY3, iPXY3);
+  fill2d(h2_i3hPDirDistYZ_master, iPDirYZ3, iPYZ3);
+  fill2d(h2_i3hPDirDistZX_master, iPDirZX3, iPZX3);
+  fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
+  fill2d(h2_i4hPDirDistXY_master, iPDirXY4, iPXY4);
+  fill2d(h2_i4hPDirDistYZ_master, iPDirYZ4, iPYZ4);
+  fill2d(h2_i4hPDirDistZX_master, iPDirZX4, iPZX4);
+  fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
+  fill2d(h2_iTotalPDirDistXY_master, iPDirXYTotal, iPXYTotal);
+  fill2d(h2_iTotalPDirDistYZ_master, iPDirYZTotal, iPYZTotal);
+  fill2d(h2_iTotalPDirDistZX_master, iPDirZXTotal, iPZXTotal);
+  fill2d(h2_iTotalPDirDist_master, iPDirXYTotal, iCosPDirZTotal);
   fill2d(h2_i1h2hP_master, iP1, iP2);
   fill2d(h2_i2h3hP_master, iP2, iP3);
   fill2d(h2_i3h4hP_master, iP3, iP4);
-    fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
-    fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
-    fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
-    fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
   }
 
 // IonEnergy
@@ -685,15 +911,23 @@ void Analysis::AnalysisRun::fillHists() {
   }
 
   // ElecImage
-  fill2d(h2_eh1Image, eX1, eY1);
-  fill2d(h2_eh2Image, eX2, eY2);
-  fill2d(h2_eh3Image, eX3, eY3);
-  fill2d(h2_eh4Image, eX4, eY4);
+  fill2d(h2_e1hImage, eX1, eY1);
+  fill2d(h2_e2hImage, eX2, eY2);
+  fill2d(h2_e3hImage, eX3, eY3);
+  fill2d(h2_e4hImage, eX4, eY4);
+  fill2d(h2_e1hImageDirDist, eDir1, eR1);
+  fill2d(h2_e2hImageDirDist, eDir2, eR2);
+  fill2d(h2_e3hImageDirDist, eDir3, eR3);
+  fill2d(h2_e4hImageDirDist, eDir4, eR4);
   if (master) {
-    fill2d(h2_eh1Image_master, eX1, eY1);
-    fill2d(h2_eh2Image_master, eX2, eY2);
-    fill2d(h2_eh3Image_master, eX3, eY3);
-    fill2d(h2_eh4Image_master, eX4, eY4);
+    fill2d(h2_e1hImage_master, eX1, eY1);
+    fill2d(h2_e2hImage_master, eX2, eY2);
+    fill2d(h2_e3hImage_master, eX3, eY3);
+    fill2d(h2_e4hImage_master, eX4, eY4);
+  fill2d(h2_e1hImageDirDist_master, eDir1, eR1);
+  fill2d(h2_e2hImageDirDist_master, eDir2, eR2);
+  fill2d(h2_e3hImageDirDist_master, eDir3, eR3);
+  fill2d(h2_e4hImageDirDist_master, eDir4, eR4);
   }
 
   // ElecTOF
@@ -743,6 +977,22 @@ void Analysis::AnalysisRun::fillHists() {
   }
 
   // ElecMomentum
+  fill1d(h1_e1hPX, ePX1);
+  fill1d(h1_e1hPY, ePY1);
+  fill1d(h1_e1hPZ, ePZ1);
+  fill1d(h1_e1hP, eP1);
+  fill1d(h1_e2hPX, ePX2);
+  fill1d(h1_e2hPY, ePY2);
+  fill1d(h1_e2hPZ, ePZ2);
+  fill1d(h1_e2hP, eP2);
+  fill1d(h1_e3hPX, ePX3);
+  fill1d(h1_e3hPY, ePY3);
+  fill1d(h1_e3hPZ, ePZ3);
+  fill1d(h1_e3hP, eP3);
+  fill1d(h1_e4hPX, ePX4);
+  fill1d(h1_e4hPY, ePY4);
+  fill1d(h1_e4hPZ, ePZ4);
+  fill1d(h1_e4hP, eP4);
   fill2d(h2_e1hPDirDistXY, ePDirXY1, ePXY1);
   fill2d(h2_e1hPDirDistYZ, ePDirYZ1, ePYZ1);
   fill2d(h2_e1hPDirDistZX, ePDirZX1, ePZX1);
@@ -760,6 +1010,22 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_e4hPDirDistZX, ePDirZX4, ePZX4);
   fill2d(h2_e4hPDirDist, ePDirXY4, eCosPDirZ4);
   if (master) {
+  fill1d(h1_e1hPX_master, ePX1);
+  fill1d(h1_e1hPY_master, ePY1);
+  fill1d(h1_e1hPZ_master, ePZ1);
+  fill1d(h1_e1hP_master, eP1);
+  fill1d(h1_e2hPX_master, ePX2);
+  fill1d(h1_e2hPY_master, ePY2);
+  fill1d(h1_e2hPZ_master, ePZ2);
+  fill1d(h1_e2hP_master, eP2);
+  fill1d(h1_e3hPX_master, ePX3);
+  fill1d(h1_e3hPY_master, ePY3);
+  fill1d(h1_e3hPZ_master, ePZ3);
+  fill1d(h1_e3hP_master, eP3);
+  fill1d(h1_e4hPX_master, ePX4);
+  fill1d(h1_e4hPY_master, ePY4);
+  fill1d(h1_e4hPZ_master, ePZ4);
+  fill1d(h1_e4hP_master, eP4);
     fill2d(h2_e1hPDirDistXY_master, ePDirXY1, ePXY1);
     fill2d(h2_e1hPDirDistYZ_master, ePDirYZ1, ePYZ1);
     fill2d(h2_e1hPDirDistZX_master, ePDirZX1, ePZX1);
