@@ -7,9 +7,9 @@ elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
   # add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif ()
 set(SOURCE_FILES
-    Draw.cpp
-    FitGauss.cpp
-    Mark.cpp
-    Proj.cpp
+    usr/Draw.cpp
+    usr/FitGauss.cpp
+    usr/Mark.cpp
+    usr/Proj.cpp
     )
 add_library(Macros STATIC ${SOURCE_FILES})
