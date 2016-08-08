@@ -341,6 +341,10 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Objects &objs,
   for (int i = 0; i < n; i++) {
     loadMomentumCalculator(objs.setObjectMembers(i), opt);
   }
+  if (!objs.isMomentumConserved())
+    objs.setAllFlag(ObjectFlag::OutOfMasterRegion);
+  if (!objs.isEnergyConserved())
+    objs.setAllFlag(ObjectFlag::OutOfMasterRegion);
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
                                                    const Unit &unit,

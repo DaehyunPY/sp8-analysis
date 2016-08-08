@@ -499,6 +499,24 @@ Analysis::Objects::Objects(ObjsType tp,
     for (int i = masterNumOfHits; i < maxNumOfHits; i++) {
       ppObject[i] = new Object(ObjectFlag::DummyObject);
     }
+    if (reader.hasMember("ions.momentum_conservation")) {
+      isThrowingObjsMomentumIsNotConserved = true;
+      p0 = kUnit.readAuMomentum(reader.getDoubleAt("ions.momentum_conservation", 0));
+      p1 = kUnit.readAuMomentum(reader.getDoubleAt("ions.momentum_conservation", 1));
+    } else {
+      isThrowingObjsMomentumIsNotConserved = false;
+      p0 = 0;
+      p1 = 0;
+    }
+    if (reader.hasMember("ions.energy_conservation")) {
+      isThrowingObjsEnergyIsNotConserved = true;
+      e0 = kUnit.readElectronVolt(reader.getDoubleAt("ions.energy_conservation", 0));
+      e1 = kUnit.readElectronVolt(reader.getDoubleAt("ions.energy_conservation", 1));
+    } else {
+      isThrowingObjsEnergyIsNotConserved = false;
+      e0 = 0;
+      e1 = 0;
+    }
   } else if (tp == elecs) {
     masterNumOfHits = reader.getIntAt("electrons.number_of_hits");
     assert(0 <= masterNumOfHits && masterNumOfHits <= maxNumOfHits);
@@ -511,6 +529,24 @@ Analysis::Objects::Objects(ObjsType tp,
     }
     for (int i = masterNumOfHits; i < maxNumOfHits; i++) {
       ppObject[i] = new Object(ObjectFlag::DummyObject);
+    }
+    if (reader.hasMember("electrons.momentum_conservation")) {
+      isThrowingObjsMomentumIsNotConserved = true;
+      p0 = kUnit.readAuMomentum(reader.getDoubleAt("electrons.momentum_conservation", 0));
+      p1 = kUnit.readAuMomentum(reader.getDoubleAt("electrons.momentum_conservation", 1));
+    } else {
+      isThrowingObjsMomentumIsNotConserved = false;
+      p0 = 0;
+      p1 = 0;
+    }
+    if (reader.hasMember("electrons.energy_conservation")) {
+      isThrowingObjsEnergyIsNotConserved = true;
+      e0 = kUnit.readElectronVolt(reader.getDoubleAt("electrons.energy_conservation", 0));
+      e1= kUnit.readElectronVolt(reader.getDoubleAt("electrons.energy_conservation", 1));
+    } else {
+      isThrowingObjsEnergyIsNotConserved = false;
+      e0 = 0;
+      e1 = 0;
     }
   } else {
     assert(false);
@@ -528,5 +564,23 @@ const std::string Analysis::Objects::getStrNum(int i) const {
     else if (firstDigit == 2) { return str + "nd"; }
     else if (firstDigit == 3) { return str + "rd"; }
     else { return str + "th"; }
+  }
+}
+bool Analysis::Objects::isMomentumConserved() const {
+  if (!isThrowingObjsMomentumIsNotConserved) return true;
+  if (areAllFlag(ObjectFlag::HavingMomentumData)) {
+    double p = getMomentum();
+    return (p0 <= p) && (p <= p1);
+  } else {
+    return false;
+  }
+}
+bool Analysis::Objects::isEnergyConserved() const {
+  if (!isThrowingObjsEnergyIsNotConserved) return true;
+  if (areAllFlag(ObjectFlag::HavingMomentumData)) {
+    double e = getEnergy();
+    return (e0 <= e) && (e <= e1);
+  } else {
+    return false;
   }
 }

@@ -13,7 +13,8 @@ void Analysis::ObjectFlag::setWithinMasterRegion() {
   }
 }
 void Analysis::ObjectFlag::setOutOfMasterRegion() {
-  if (get1stDigit() == initFlag) {
+  const int n = get1stDigit();
+  if (n == initFlag || n == flagFor1stDigit_withinMasterRegion) {
     set1stDigit(flagFor1stDigit_outOfMasterRegion);
   }
 }

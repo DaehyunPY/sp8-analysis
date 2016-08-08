@@ -40,6 +40,9 @@ class Objects {
   double p0, p1;
   bool isThrowingObjsEnergyIsNotConserved;
   double e0, e1;
+ public:
+  bool isMomentumConserved() const;
+  bool isEnergyConserved() const;
 
  public:
   // set & reset

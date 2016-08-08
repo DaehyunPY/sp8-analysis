@@ -35,6 +35,7 @@ class Unit {
   const double readAuMomentum(const double d) const;
   const double readVolt(const double d) const;
   const double readGauss(const double d) const; // magnetic field
+  const double readElectronVolt(const double d) const; // energy
   const double readDegree(const double d) const;
   // write
   const double writeElectronRestMass(const double d) const;

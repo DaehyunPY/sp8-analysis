@@ -32,8 +32,8 @@
   "ions": {
     "resort_flag"          : 14, // from 0 to # (inclue #)
     "number_of_hits"       : 1,
-    "momentum_conservation": [0, 1], // [au] 
-    "energy_conservation"  : [0, 1], // [eV]
+    // "momentum_conservation": [0, 0], // [au] option (comment out to stop use it) 
+    // "energy_conservation"  : [0, 0], // [eV] option (comment out to stop use it)
     "1st_hit": {
       "charge"        : 1,        // parameter 183
       "mass"          : 20.1797,  // parameter 186
@@ -72,8 +72,8 @@
   "electrons": {
     "resort_flag"   : 14,   // from 0 to # (inclue #)
     "number_of_hits": 1, 
-    "momentum_conservation": [0, 1], // [au] 
-    "energy_conservation"  : [0, 1], // [eV]
+    // "momentum_conservation": [0, 0], // [au] 
+    // "energy_conservation"  : [0, 0], // [eV]
     "maximum_of_TOF": 45.0, // [ns] parameter 225 (not compatibility with legacy option) 
     "minimum_of_TOF": 20.0, // [ns] parameter 224 (not compatibility with legacy option) 
   },

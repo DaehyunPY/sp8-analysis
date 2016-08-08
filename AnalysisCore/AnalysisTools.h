@@ -84,8 +84,8 @@ class AnalysisTools {
   enum OptName {
     OnlyWithinMasterRegion, OnlyNotDead, AllRegion
   };
-  void loadMomentumCalculator(Object &obj, const OptName opt=OnlyWithinMasterRegion) const; // main momentum calculator
-  void loadMomentumCalculator(Objects &objs, const OptName opt=OnlyWithinMasterRegion) const; // for ions
+  void loadMomentumCalculator(Object &obj, const OptName opt=OnlyWithinMasterRegion) const;
+  void loadMomentumCalculator(Objects &objs, const OptName opt=OnlyWithinMasterRegion) const;
 };
 }
 #endif

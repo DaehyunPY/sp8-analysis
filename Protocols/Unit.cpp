@@ -82,3 +82,6 @@ const double Analysis::Unit::writeAtomicMass(const double d) const {
 const double Analysis::Unit::writeElementaryCharge(const double d) const {
   return d;
 }
+const double Analysis::Unit::readElectronVolt(const double d) const {
+  return d / kHartreeEnergy * kElementaryCharge;
+}
