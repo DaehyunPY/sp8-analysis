@@ -5,9 +5,9 @@
 
 #include "EquipmentParameters.h"
 #include "ObjectParameters.h"
-#include "Ions.h"
-#include "Electrons.h"
 #include "EventDataReader.h"
+#include "Object.h"
+#include "Objects.h"
 namespace Analysis {
 class AnalysisTools {
   // tpyes
@@ -42,29 +42,18 @@ class AnalysisTools {
  private:
   void resetCounter();
   const XY calculateRotation(const XY &, const double &) const;
-  const double calculateDiffTOF(const Ion &, const double &) const;
-  const double calculateDiffTOF(const Electron &, const double &) const;
-  const XY calculateMomentumXY(const Object &) const;
-  const double calculateMomentumZ(const Ion &, bool &info) const; // todo: find better way to calculate 
-  const double calculateMomentumZ(const Electron &, bool &info) const; // todo: find better way to calculate
-  void loadEventDataInputer(Ion &,
+  const double calculateDiffTOF(const Object &obj, const double &) const;
+  const XY calculateMomentumXY(const Object &obj) const;
+  const double calculateMomentumZ(const Object &obj, bool &info) const; // todo: find better way to calculate
+  void loadEventDataInputer(Object &,
                             const double &,
                             const double &,
                             const double &,
-                            const int &) const; // main inputer for ion
-  void loadEventDataInputer(Electron &,
-                            const double &,
-                            const double &,
-                            const double &,
-                            const int &) const; // main inputer for electron
-  void loadEventDataInputer(Ion &,
+                            const int &) const;
+  void loadEventDataInputer(Object &,
                             const Unit &,
                             const EventDataReader &,
-                            const int &) const; // for reader
-  void loadEventDataInputer(Electron &,
-                            const Unit &,
-                            const EventDataReader &,
-                            const int &) const; // for reader
+                            const int &) const;
 
  public:
   const EquipmentParameters &getEquipmentParameters() const;
@@ -73,15 +62,7 @@ class AnalysisTools {
   const std::string &getID() const;
   const int &getEventNumber() const;
   void loadEventCounter();
-  const double calculateTOF(const Ion ion,
-                            const double d) const;
-  const double calculateTOF(const Unit &unit,
-                            const Ion ion,
-                            const double d) const;
-  const double calculateTOF(const Electron elec,
-                            const double d) const;
-  const double calculateTOF(const Unit &unit,
-                            const Electron elec,
+  const double calculateTOF(const Object obj,
                             const double d) const;
   const double calculateFrequencyOfCycle(const double &m,
                                          const double &q,
@@ -90,35 +71,21 @@ class AnalysisTools {
   const double calculatePeriodOfCycle(const double &m,
                                       const double &q, const double &B) const;
   const double calculatePeriodOfCycle(const Object &) const;
-  const double calculatePeriodOfCycle(const Unit &,
-                                      const Object &) const;
-  void loadEventDataInputer(Ion &,
+  void loadEventDataInputer(Object &,
                             const Unit &,
                             const double &,
                             const double &,
                             const double &,
                             const int &) const; // for unit
-  void loadEventDataInputer(Electron &,
-                            const Unit &,
-                            const double &,
-                            const double &,
-                            const double &,
-                            const int &) const; // for unit
-  void loadEventDataInputer(Ions &,
+  void loadEventDataInputer(Objects &,
                             const Unit &,
                             const EventDataReader &) const; // for ions
-  void loadEventDataInputer(Electrons &,
-                            const Unit &,
-                            const EventDataReader &) const; // for ions
-
  public:
   enum OptName {
     OnlyWithinMasterRegion, OnlyNotDead, AllRegion
   };
-  void loadMomentumCalculator(Ion &ion, const OptName opt=OnlyWithinMasterRegion) const; // main momentum calculator
-  void loadMomentumCalculator(Electron &elec, const OptName opt=OnlyWithinMasterRegion) const; // main momentum calculator
-  void loadMomentumCalculator(Ions &ions, const OptName opt=OnlyWithinMasterRegion) const; // for ions
-  void loadMomentumCalculator(Electrons &electrons, const OptName opt=OnlyWithinMasterRegion) const; // for electrons
+  void loadMomentumCalculator(Object &obj, const OptName opt=OnlyWithinMasterRegion) const; // main momentum calculator
+  void loadMomentumCalculator(Objects &objs, const OptName opt=OnlyWithinMasterRegion) const; // for ions
 };
 }
 #endif

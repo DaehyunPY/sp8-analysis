@@ -8,8 +8,9 @@ Analysis::AnalysisTools::AnalysisTools(const EquipmentParameters &equip,
       ionParameters(ion),
       elecParameters(elec),
       ID(ID) {
-  if(elecParameters.getParameterType() == ObjectParameters::legacy_elec_parameters_not_corrected) {
-    elecParameters.correctLegacyParameters(calculateTOF(Electron(), 0));
+  if (elecParameters.getParameterType()
+      == ObjectParameters::legacy_elec_parameters_not_corrected) {
+    elecParameters.correctLegacyParameters(calculateTOF(Object(ObjectFlag::ElecObject), 0));
   }
   resetCounter();
   return;
@@ -19,118 +20,124 @@ void Analysis::AnalysisTools::resetCounter() {
   this->eventNumber = 0;
   return;
 }
-const double Analysis::AnalysisTools::calculateTOF(const Ion ion,
+const double Analysis::AnalysisTools::calculateTOF(const Object obj,
                                                    const double p0) const {
-  const double &len1 = getEquipmentParameters().getLengthOfL1();
-  const double &len2 = getEquipmentParameters().getLengthOfL2();
-  const double &len3 = getEquipmentParameters().getLengthOfL3();
-  const double &E1 = getEquipmentParameters().getElectricFiledOfL1();
-  const double &E2 = getEquipmentParameters().getElectricFiledOfL2();
-  const double &E3 = getEquipmentParameters().getElectricFiledOfL3();
-  const double &m = ion.getMass();
-  const double &q = ion.getCharge();
-  const double p1 = pow(pow(p0, 2e0) + 2e0 * m * q * E1 * len1, 0.5e0);
-  const double p2 = pow(pow(p1, 2e0) + 2e0 * m * q * E2 * len2, 0.5e0);
-  const double p3 = pow(pow(p2, 2e0) + 2e0 * m * q * E3 * len3, 0.5e0);
-  const double t1 = (p1 - p0) / q / E1;
-  const double t2 = (p2 - p1) / q / E2;
-  const double t3 = (p3 - p2) / q / E3;
-  return t1 + t2 + t3;
+  if (obj.isFlag(ObjectFlag::IonObject)) {
+    const double &len1 = getEquipmentParameters().getLengthOfL1();
+    const double &len2 = getEquipmentParameters().getLengthOfL2();
+    const double &len3 = getEquipmentParameters().getLengthOfL3();
+    const double &E1 = getEquipmentParameters().getElectricFiledOfL1();
+    const double &E2 = getEquipmentParameters().getElectricFiledOfL2();
+    const double &E3 = getEquipmentParameters().getElectricFiledOfL3();
+    const double &m = obj.getMass();
+    const double &q = obj.getCharge();
+    const double p1 = pow(pow(p0, 2e0) + 2e0 * m * q * E1 * len1, 0.5e0);
+    const double p2 = pow(pow(p1, 2e0) + 2e0 * m * q * E2 * len2, 0.5e0);
+    const double p3 = pow(pow(p2, 2e0) + 2e0 * m * q * E3 * len3, 0.5e0);
+    const double t1 = (p1 - p0) / q / E1;
+    const double t2 = (p2 - p1) / q / E2;
+    const double t3 = (p3 - p2) / q / E3;
+    return t1 + t2 + t3;
+  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
+    const double &len1 = getEquipmentParameters().getLengthOfD1();
+    const double &len2 = getEquipmentParameters().getLengthOfD2();
+    const double &E1 = getEquipmentParameters().getElectricFiledOfD1();
+    const double &m = obj.getMass();
+    const double &q = obj.getCharge();
+    const double p1 = pow(pow(p0, 2e0) + 2e0 * m * q * E1 * len1, 0.5e0);
+    const double t1 = (p1 - p0) / q / E1;
+    const double t2 = len2 * m / p1;
+    return t1 + t2;
+  } else {
+    assert(false);
+  }
 }
-const double Analysis::AnalysisTools::calculateDiffTOF(const Ion &ion,
+const double Analysis::AnalysisTools::calculateDiffTOF(const Object &obj,
                                                        const double &p0) const {
-  const double &len1 = getEquipmentParameters().getLengthOfL1();
-  const double &len2 = getEquipmentParameters().getLengthOfL2();
-  const double &len3 = getEquipmentParameters().getLengthOfL3();
-  const double &E1 = getEquipmentParameters().getElectricFiledOfL1();
-  const double &E2 = getEquipmentParameters().getElectricFiledOfL2();
-  const double &E3 = getEquipmentParameters().getElectricFiledOfL3();
-  const double &m = ion.getMass();
-  const double &q = ion.getCharge();
-  return
-      -1.0 * pow(p0, 1.0)
-          * pow(2.0 * E2 * len2 * m * q
-                    + pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), 1.0), -0.5)
-          / (E3 * q)
-          + 1.0 * pow(p0, 1.0)
-              * pow(2.0 * E3 * len3 * m * q
-                        + pow(2.0 * E2 * len2 * m * q
-                                  + pow(2.0 * E1 * len1 * m * q
-                                            + pow(p0, 2.0), 1.0), 1.0), -0.5)
-              / (E3 * q)
-          - 1.0 * pow(p0, 1.0)
-              * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -0.5)
-              / (E2 * q)
-          + 1.0 * pow(p0, 1.0)
-              * pow(2.0 * E2 * len2 * m * q
-                        + pow(2.0 * E1 * len1 * m * q
-                                  + pow(p0, 2.0), 1.0), -0.5) / (E2 * q)
-          + 1.0 * pow(p0, 1.0)
-              * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -0.5)
-              / (E1 * q) - 1 / (E1 * q);
+  if (obj.isFlag(ObjectFlag::IonObject)) {
+    const double &len1 = getEquipmentParameters().getLengthOfL1();
+    const double &len2 = getEquipmentParameters().getLengthOfL2();
+    const double &len3 = getEquipmentParameters().getLengthOfL3();
+    const double &E1 = getEquipmentParameters().getElectricFiledOfL1();
+    const double &E2 = getEquipmentParameters().getElectricFiledOfL2();
+    const double &E3 = getEquipmentParameters().getElectricFiledOfL3();
+    const double &m = obj.getMass();
+    const double &q = obj.getCharge();
+    return
+        -1.0 * pow(p0, 1.0)
+            * pow(2.0 * E2 * len2 * m * q
+                      + pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), 1.0), -0.5)
+            / (E3 * q)
+            + 1.0 * pow(p0, 1.0)
+                * pow(2.0 * E3 * len3 * m * q
+                          + pow(2.0 * E2 * len2 * m * q
+                                    + pow(2.0 * E1 * len1 * m * q
+                                              + pow(p0, 2.0), 1.0), 1.0), -0.5)
+                / (E3 * q)
+            - 1.0 * pow(p0, 1.0)
+                * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -0.5)
+                / (E2 * q)
+            + 1.0 * pow(p0, 1.0)
+                * pow(2.0 * E2 * len2 * m * q
+                          + pow(2.0 * E1 * len1 * m * q
+                                    + pow(p0, 2.0), 1.0), -0.5) / (E2 * q)
+            + 1.0 * pow(p0, 1.0)
+                * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -0.5)
+                / (E1 * q) - 1 / (E1 * q);
+  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
+    const double &len1 = getEquipmentParameters().getLengthOfD1();
+    const double &len2 = getEquipmentParameters().getLengthOfD2();
+    const double &E1 = getEquipmentParameters().getElectricFiledOfD1();
+    const double &m = obj.getMass();
+    const double &q = obj.getCharge();
+    return -1.0 * len2 * m * pow(p0, 1.0)
+        * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -1.5)
+        + 1.0 * pow(p0, 1.0) * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -0.5)
+            / (E1 * q)
+        - 1 / (E1 * q);
+  } else {
+    assert(false);
+  }
 }
-const double Analysis::AnalysisTools::calculateMomentumZ(const Ion &ion,
+const double Analysis::AnalysisTools::calculateMomentumZ(const Object &obj,
                                                          bool &info) const {
-  double x0, x1, dx, f, df;
-  const double &f0 = ion.getTOF();
-  x1 = 0e0;
-  info = false;
-  for (int i = 0; i < LIMITATION_NUMBER_OF_LOOP; i++) {
-    x0 = x1;
-    f = calculateTOF(ion, x0) - f0;
-    df = calculateDiffTOF(ion, x0);
-    dx = -f / df;
-    x1 = x0 + dx;
-    if (x0 == x1) {
-      info = true;
-      return x1;
+  if (obj.isFlag(ObjectFlag::IonObject)) {
+    double x0, x1, dx, f, df;
+    const double &f0 = obj.getTOF();
+    x1 = 0e0;
+    info = false;
+    for (int i = 0; i < LIMITATION_NUMBER_OF_LOOP; i++) {
+      x0 = x1;
+      f = calculateTOF(obj, x0) - f0;
+      df = calculateDiffTOF(obj, x0);
+      dx = -f / df;
+      x1 = x0 + dx;
+      if (x0 == x1) {
+        info = true;
+        return x1;
+      }
     }
-  }
-  return 0e0;
-}
-const double Analysis::AnalysisTools::calculateTOF(
-    const Analysis::Electron electron, const double p0) const {
-  const double &len1 = getEquipmentParameters().getLengthOfD1();
-  const double &len2 = getEquipmentParameters().getLengthOfD2();
-  const double &E1 = getEquipmentParameters().getElectricFiledOfD1();
-  const double &m = electron.getMass();
-  const double &q = electron.getCharge();
-  const double p1 = pow(pow(p0, 2e0) + 2e0 * m * q * E1 * len1, 0.5e0);
-  const double t1 = (p1 - p0) / q / E1;
-  const double t2 = len2 * m / p1;
-  return t1 + t2;
-}
-const double Analysis::AnalysisTools::calculateDiffTOF
-    (const Electron &elec, const double &p0) const {
-  const double &len1 = getEquipmentParameters().getLengthOfD1();
-  const double &len2 = getEquipmentParameters().getLengthOfD2();
-  const double &E1 = getEquipmentParameters().getElectricFiledOfD1();
-  const double &m = elec.getMass();
-  const double &q = elec.getCharge();
-  return -1.0 * len2 * m * pow(p0, 1.0)
-      * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -1.5)
-      + 1.0 * pow(p0, 1.0) * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -0.5)
-          / (E1 * q)
-      - 1 / (E1 * q);
-}
-const double Analysis::AnalysisTools::calculateMomentumZ
-    (const Electron &elec, bool &info) const {
-  double x0, x1, dx, f, df;
-  const double &f0 = elec.getTOF();
-  x1 = 0e0;
-  info = false;
-  for (int i = 0; i < LIMITATION_NUMBER_OF_LOOP; i++) {
-    x0 = x1;
-    f = calculateTOF(elec, x0) - f0;
-    df = calculateDiffTOF(elec, x0);
-    dx = -f / df;
-    x1 = x0 + dx;
-    if (x0 == x1) {
-      info = true;
-      return x1;
+    return 0e0;
+  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
+    double x0, x1, dx, f, df;
+    const double &f0 = obj.getTOF();
+    x1 = 0e0;
+    info = false;
+    for (int i = 0; i < LIMITATION_NUMBER_OF_LOOP; i++) {
+      x0 = x1;
+      f = calculateTOF(obj, x0) - f0;
+      df = calculateDiffTOF(obj, x0);
+      dx = -f / df;
+      x1 = x0 + dx;
+      if (x0 == x1) {
+        info = true;
+        return x1;
+      }
     }
+    return 0e0;
+  } else {
+    assert(false);
   }
-  return 0e0;
 }
 const Analysis::EquipmentParameters
 &Analysis::AnalysisTools::getEquipmentParameters() const {
@@ -151,7 +158,9 @@ Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
                                        const Analysis::JSONReader &reader)
     : AnalysisTools(Analysis::EquipmentParameters(unit, reader),
                     Analysis::ObjectParameters(unit, reader, "ion_parameters."),
-                    Analysis::ObjectParameters(unit, reader, "electron_parameters."),
+                    Analysis::ObjectParameters(unit,
+                                               reader,
+                                               "electron_parameters."),
                     reader.hasMember("ID") ? reader.getStringAt("ID") : "") {
   return;
 }
@@ -176,122 +185,125 @@ const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateMomentumXY(
     return calculateRotation({p0 * x, p0 * y}, theta);
   }
 }
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
                                                    const double &x1,
                                                    const double &y1,
                                                    const double &t1,
                                                    const int &f1) const {
-  const double &theta = getIonParameters().getAngleOfDetector();
-  const double &dx = getIonParameters().getPixelSizeOfX();
-  const double &dy = getIonParameters().getPixelSizeOfY();
-  const double &deadTime = getIonParameters().getDeadTime();
-  const double &x0 = getIonParameters().getXZeroOfCOM();
-  const double &y0 = getIonParameters().getYZeroOfCOM();
-  const double &t0 = getIonParameters().getTimeZeroOfTOF();
-  const XY xy = calculateRotation({x1, y1}, theta);
-  const double x = xy.x*dx - x0;
-  const double y = xy.y*dy - y0;
-  const double t = t1 - t0;
-  ion.setLocationX(x);
-  ion.setLocationY(y);
-  ion.setTOF(t);
-  ion.setFlag(ObjectFlag::ResortFlag, f1);
-  if (ion.getTOF() > deadTime || ion.getTOF() < 0e0) {
-    ion.setFlag(ObjectFlag::Dead);
-	  ion.setFlag(ObjectFlag::HavingNotProperData);
-  } else {
-	  ion.setFlag(ObjectFlag::HavingXYTData);
-  }
-}
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &electron,
-                                                   const double &x1,
-                                                   const double &y1,
-                                                   const double &t1,
-                                                   const int &f1) const {
-  const double &theta = getElectronParameters().getAngleOfDetector();
-  const double &dx = getElectronParameters().getPixelSizeOfX();
-  const double &dy = getElectronParameters().getPixelSizeOfY();
-  const double &deadTime = getElectronParameters().getDeadTime();
-  const double &x0 = getElectronParameters().getXZeroOfCOM();
-  const double &y0 = getElectronParameters().getYZeroOfCOM();
-  const double &t0 = getElectronParameters().getTimeZeroOfTOF();
-  const XY xy = calculateRotation({x1, y1}, theta);
-  const double x = xy.x*dx - x0;
-  const double y = xy.y*dy - y0;
-  const double t = t1 - t0;
-  electron.setLocationX(x);
-  electron.setLocationY(y);
-  electron.setTOF(t);
-  electron.setFlag(ObjectFlag::ResortFlag, f1);
-  if (electron.getTOF() > deadTime || electron.getTOF() < 0e0) {
-    electron.setFlag(ObjectFlag::Dead);
-	electron.setFlag(ObjectFlag::HavingNotProperData);
-  } else {
-  electron.setFlag(ObjectFlag::HavingXYTData);
-  }
-}
-void Analysis::AnalysisTools::loadMomentumCalculator(Ion &ion, const OptName opt) const {
-  if(ion.isFlag(ObjectFlag::DummyObject)) {
-    return;
-  } else {
-    bool isTarget;
-    switch (opt) {
-      case OnlyWithinMasterRegion:
-        isTarget = ion.isFlag(ObjectFlag::WithinMasterRegion);
-        break;
-      case OnlyNotDead:
-        isTarget = !(ion.isFlag(ObjectFlag::Dead));
-        break;
-      case AllRegion:
-        isTarget = true;
-        break;
-      default:
-        assert(false);
-        isTarget = false;
+  if (obj.isFlag(ObjectFlag::IonObject)) {
+    const double &theta = getIonParameters().getAngleOfDetector();
+    const double &dx = getIonParameters().getPixelSizeOfX();
+    const double &dy = getIonParameters().getPixelSizeOfY();
+    const double &deadTime = getIonParameters().getDeadTime();
+    const double &x0 = getIonParameters().getXZeroOfCOM();
+    const double &y0 = getIonParameters().getYZeroOfCOM();
+    const double &t0 = getIonParameters().getTimeZeroOfTOF();
+    const XY xy = calculateRotation({x1, y1}, theta);
+    const double x = xy.x * dx - x0;
+    const double y = xy.y * dy - y0;
+    const double t = t1 - t0;
+    obj.setLocationX(x);
+    obj.setLocationY(y);
+    obj.setTOF(t);
+    obj.setFlag(ObjectFlag::ResortFlag, f1);
+    if (obj.getTOF() > deadTime || obj.getTOF() < 0e0) {
+      obj.setFlag(ObjectFlag::Dead);
+      obj.setFlag(ObjectFlag::HavingNotProperData);
+    } else {
+      obj.setFlag(ObjectFlag::HavingXYTData);
     }
-    if(isTarget) {
-      bool isHavingProperPz;
-      const XY &pxy = calculateMomentumXY(ion);
-      const double &pz = calculateMomentumZ(ion, isHavingProperPz);
-      ion.setMomentumX(pxy.x);
-      ion.setMomentumY(pxy.y);
-      if (isHavingProperPz) {
-        ion.setMomentumZ(pz);
-        ion.setFlag(ObjectFlag::HavingMomentumData);
+  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
+    const double &theta = getElectronParameters().getAngleOfDetector();
+    const double &dx = getElectronParameters().getPixelSizeOfX();
+    const double &dy = getElectronParameters().getPixelSizeOfY();
+    const double &deadTime = getElectronParameters().getDeadTime();
+    const double &x0 = getElectronParameters().getXZeroOfCOM();
+    const double &y0 = getElectronParameters().getYZeroOfCOM();
+    const double &t0 = getElectronParameters().getTimeZeroOfTOF();
+    const XY xy = calculateRotation({x1, y1}, theta);
+    const double x = xy.x * dx - x0;
+    const double y = xy.y * dy - y0;
+    const double t = t1 - t0;
+    obj.setLocationX(x);
+    obj.setLocationY(y);
+    obj.setTOF(t);
+    obj.setFlag(ObjectFlag::ResortFlag, f1);
+    if (obj.getTOF() > deadTime || obj.getTOF() < 0e0) {
+      obj.setFlag(ObjectFlag::Dead);
+      obj.setFlag(ObjectFlag::HavingNotProperData);
+    } else {
+      obj.setFlag(ObjectFlag::HavingXYTData);
+    }
+  } else {
+    assert(false);
+  }
+}
+void Analysis::AnalysisTools::loadMomentumCalculator(Object &obj,
+                                                     const OptName opt) const {
+  if (obj.isFlag(ObjectFlag::IonObject)) {
+    if (obj.isFlag(ObjectFlag::DummyObject)) {
+      return;
+    } else {
+      bool isTarget;
+      switch (opt) {
+        case OnlyWithinMasterRegion:
+          isTarget = obj.isFlag(ObjectFlag::WithinMasterRegion);
+          break;
+        case OnlyNotDead:
+          isTarget = !(obj.isFlag(ObjectFlag::Dead));
+          break;
+        case AllRegion:
+          isTarget = true;
+          break;
+        default:
+          assert(false);
+          isTarget = false;
+      }
+      if (isTarget) {
+        bool isHavingProperPz;
+        const XY &pxy = calculateMomentumXY(obj);
+        const double &pz = calculateMomentumZ(obj, isHavingProperPz);
+        obj.setMomentumX(pxy.x);
+        obj.setMomentumY(pxy.y);
+        if (isHavingProperPz) {
+          obj.setMomentumZ(pz);
+          obj.setFlag(ObjectFlag::HavingMomentumData);
+        }
       }
     }
-  }
-}
-void Analysis::AnalysisTools::loadMomentumCalculator(Electron &elec, const OptName opt) const {
-  if(elec.isFlag(ObjectFlag::DummyObject)) {
-    return;
-  } else {
-    bool isTarget;
-    switch (opt) {
-      case OnlyWithinMasterRegion:
-        isTarget = elec.isFlag(ObjectFlag::WithinMasterRegion);
-        break;
-      case OnlyNotDead:
-        isTarget = !(elec.isFlag(ObjectFlag::Dead));
-        break;
-      case AllRegion:
-        isTarget = true;
-        break;
-      default:
-        assert(false);
-        isTarget = false;
-    }
-    if (isTarget) {
-      bool isHavingProperPz;
-      const XY &pxy = calculateMomentumXY(elec);
-      const double &pz = calculateMomentumZ(elec, isHavingProperPz);
-      elec.setMomentumX(pxy.x);
-      elec.setMomentumY(pxy.y);
-      if (isHavingProperPz) {
-        elec.setMomentumZ(pz);
-        elec.setFlag(ObjectFlag::HavingMomentumData);
+  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
+    if (obj.isFlag(ObjectFlag::DummyObject)) {
+      return;
+    } else {
+      bool isTarget;
+      switch (opt) {
+        case OnlyWithinMasterRegion:
+          isTarget = obj.isFlag(ObjectFlag::WithinMasterRegion);
+          break;
+        case OnlyNotDead:
+          isTarget = !(obj.isFlag(ObjectFlag::Dead));
+          break;
+        case AllRegion:
+          isTarget = true;
+          break;
+        default:
+          assert(false);
+          isTarget = false;
+      }
+      if (isTarget) {
+        bool isHavingProperPz;
+        const XY &pxy = calculateMomentumXY(obj);
+        const double &pz = calculateMomentumZ(obj, isHavingProperPz);
+        obj.setMomentumX(pxy.x);
+        obj.setMomentumY(pxy.y);
+        if (isHavingProperPz) {
+          obj.setMomentumZ(pz);
+          obj.setFlag(ObjectFlag::HavingMomentumData);
+        }
       }
     }
+  } else {
+    assert(false);
   }
 }
 const int &Analysis::AnalysisTools::getEventNumber() const {
@@ -303,102 +315,65 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(
                                 object.getCharge(),
                                 getEquipmentParameters().getMagneticFiled());
 }
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
                                                    const Unit &unit,
                                                    const double &x,
                                                    const double &y,
                                                    const double &t,
                                                    const int &f) const {
-  this->loadEventDataInputer(ion,
-                             unit.readMilliMeter(x),
-                             unit.readMilliMeter(y),
-                             unit.readNanoSec(t),
-                             f);
-}
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &elec,
-                                                   const Unit &unit,
-                                                   const double &x,
-                                                   const double &y,
-                                                   const double &t,
-                                                   const int &f) const {
-  this->loadEventDataInputer(elec,
-                             unit.readMilliMeter(x),
-                             unit.readMilliMeter(y),
-                             unit.readNanoSec(t),
-                             f);
-}
-void Analysis::AnalysisTools::loadMomentumCalculator(Ions &ions, const OptName opt) const {
-  const int &n = ions.getNumberOfObjects();
-  for (int i = 0; i < n; i++) {
-    loadMomentumCalculator(ions.setIonMembers(i), opt);
+  if (obj.isFlag(ObjectFlag::IonObject)) {
+    this->loadEventDataInputer(obj,
+                               unit.readMilliMeter(x),
+                               unit.readMilliMeter(y),
+                               unit.readNanoSec(t),
+                               f);
+  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
+    this->loadEventDataInputer(obj,
+                               unit.readMilliMeter(x),
+                               unit.readMilliMeter(y),
+                               unit.readNanoSec(t),
+                               f);
   }
 }
-void Analysis::AnalysisTools::loadMomentumCalculator(Electrons &elecs, const OptName opt) const {
-  const int &n = elecs.getNumberOfObjects();
+void Analysis::AnalysisTools::loadMomentumCalculator(Objects &objs,
+                                                     const OptName opt) const {
+  const int &n = objs.getNumberOfObjects();
   for (int i = 0; i < n; i++) {
-    loadMomentumCalculator(elecs.setElectronMembers(i), opt);
+    loadMomentumCalculator(objs.setObjectMembers(i), opt);
   }
 }
-
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ion &ion,
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
                                                    const Unit &unit,
                                                    const EventDataReader &reader,
                                                    const int &iHit) const {
-  loadEventDataInputer(ion,
-                       unit,
-                       reader.getEventDataAt(iHit, "IonX"),
-                       reader.getEventDataAt(iHit, "IonY"),
-                       reader.getEventDataAt(iHit, "IonT"),
-                       reader.getFlagDataAt(iHit, "IonFlag"));
+  if (obj.isFlag(ObjectFlag::IonObject)) {
+    loadEventDataInputer(obj,
+                         unit,
+                         reader.getEventDataAt(iHit, "IonX"),
+                         reader.getEventDataAt(iHit, "IonY"),
+                         reader.getEventDataAt(iHit, "IonT"),
+                         reader.getFlagDataAt(iHit, "IonFlag"));
+  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
+    loadEventDataInputer(obj,
+                         unit,
+                         reader.getEventDataAt(iHit, "ElecX"),
+                         reader.getEventDataAt(iHit, "ElecY"),
+                         reader.getEventDataAt(iHit, "ElecT"),
+                         reader.getFlagDataAt(iHit, "ElecFlag"));
+  }
 }
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electron &elec,
-                                                   const Unit &unit,
-                                                   const EventDataReader &reader,
-                                                   const int &iHit) const {
-  loadEventDataInputer(elec,
-                       unit,
-                       reader.getEventDataAt(iHit, "ElecX"),
-                       reader.getEventDataAt(iHit, "ElecY"),
-                       reader.getEventDataAt(iHit, "ElecT"),
-                       reader.getFlagDataAt(iHit, "ElecFlag"));
-}
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Ions &ions,
+void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Objects &objs,
                                                    const Unit &unit,
                                                    const EventDataReader &reader) const {
-  const int &n = ions.getNumberOfObjects();
-  const int &m = ions.getNumberOfRealOrDummyObjects();
+  const int &n = objs.getNumberOfObjects();
+  const int &m = objs.getNumberOfRealOrDummyObjects();
   for (int i = 0; i < n; i++) {
-    loadEventDataInputer(ions.setIonMembers(i), unit, reader, i);
+    loadEventDataInputer(objs.setObjectMembers(i), unit, reader, i);
   }
   for (int i = n; i < m; i++) {
-    loadEventDataInputer(ions.setDummyIonMembers(i), unit, reader, i);
+    loadEventDataInputer(objs.setDummyObjectMembers(i), unit, reader, i);
   }
 }
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Electrons &electrons,
-                                                   const Unit &unit,
-                                                   const EventDataReader &reader) const {
-  const int &n = electrons.getNumberOfObjects();
-  const int &m = electrons.getNumberOfRealOrDummyObjects();
-  for (int i = 0; i < n; i++) {
-    loadEventDataInputer(electrons.setElectronMembers(i), unit, reader, i);
-  }
-  for (int i = n; i < m; i++) {
-    loadEventDataInputer(electrons.setDummyElectronMembers(i), unit, reader, i);
-  }
-}
-
-const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
-                                                   const Analysis::Ion ion,
-                                                   const double d) const {
-  return unit.writeNanoSec(this->calculateTOF(ion, unit.readAuMomentum(d)));
-}
-const double Analysis::AnalysisTools::calculateTOF(const Analysis::Unit &unit,
-                                                   const Analysis::Electron elec,
-                                                   const double d) const {
-  return unit.writeNanoSec(this->calculateTOF(elec,
-                                              unit.readAuMomentum(d)));
-}
-
 const double Analysis::AnalysisTools::calculateFrequencyOfCycle(const double &m,
                                                                 const double &q,
                                                                 const double &B) const {
@@ -406,7 +381,8 @@ const double Analysis::AnalysisTools::calculateFrequencyOfCycle(const double &m,
   return 0.5e0 / pi / m * B * q;
 }
 
-const double Analysis::AnalysisTools::calculateFrequencyOfCycle(const Object &object) const {
+const double
+Analysis::AnalysisTools::calculateFrequencyOfCycle(const Object &object) const {
   return calculateFrequencyOfCycle(object.getMass(),
                                    object.getCharge(),
                                    getEquipmentParameters().getMagneticFiled());
@@ -417,12 +393,6 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(const double &m,
                                                              const double &B) const {
   const double pi = atan2(0e0, -1e0);
   return 2e0 * pi * m / B / q;
-}
-
-const double Analysis::AnalysisTools::calculatePeriodOfCycle(
-    const Analysis::Unit &unit,
-    const Analysis::Object &object) const {
-  return unit.writeNanoSec(calculatePeriodOfCycle(object));
 }
 const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateRotation(
     const XY &xy,

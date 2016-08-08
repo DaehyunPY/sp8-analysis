@@ -8,10 +8,10 @@
 
 namespace Analysis {
 class Object: public ObjectFlag {
-  const double mass;
-  const double charge;
-  const double minOfTOF;
-  const double maxOfTOF;
+  double mass;
+  double charge;
+  double minOfTOF;
+  double maxOfTOF;
   double locationX;
   double locationY;
   double TOF;
@@ -19,11 +19,12 @@ class Object: public ObjectFlag {
   double momentumY;
   double momentumZ;
 
- protected:
-  Object(const double &m, const double &q, const double &t0, const double &t1);
-
  public:
-  Object(); // for dummy object
+  Object(const double m,
+         const double q,
+         const double t0,
+         const double t1); // for ion
+  Object(const FlagName f, const double t0=0, const double t1=0);
   ~Object();
   void resetEventData();
   void setLocationX(const double &);
@@ -37,32 +38,32 @@ class Object: public ObjectFlag {
   const double &getMinOfTOF() const;
   const double &getMaxOfTOF() const;
 
-  const double &getLocationX() const; // could be out out frame 
-  const double &getLocationY() const; // could be out out frame 
-  const double &getTOF() const; // could be out out frame 
-  const double &getMomentumX() const; // could be out out frame 
-  const double &getMomentumY() const; // could be out out frame 
-  const double &getMomentumZ() const; // could be out out frame 
-  const double getLocationXY() const; // could be out out frame 
-  const double getLocation() const; // could be out out frame 
-  const double getLocationalDirectionX() const; // could be out out frame 
-  const double getLocationalDirectionY() const; // could be out out frame 
-  const double getLocationalDirectionXY() const; // could be out out frame 
-  const double getLocationalDirectionYX() const; // could be out out frame 
-  const double getMomentumXY() const; // could be out out frame 
-  const double getMomentumYZ() const; // could be out out frame 
-  const double getMomentumZX() const; // could be out out frame 
-  const double getMomentum() const; // could be out out frame 
-  const double getMotionalDirectionX() const; // could be out out frame 
-  const double getMotionalDirectionY() const; // could be out out frame 
-  const double getMotionalDirectionZ() const; // could be out out frame 
-  const double getMotionalDirectionXY() const; // could be out out frame 
-  const double getMotionalDirectionXZ() const; // could be out out frame 
-  const double getMotionalDirectionYX() const; // could be out out frame 
-  const double getMotionalDirectionYZ() const; // could be out out frame 
-  const double getMotionalDirectionZX() const; // could be out out frame 
-  const double getMotionalDirectionZY() const; // could be out out frame 
-  const double getEnergy() const; // could be out out frame 
+  const double &getLocationX() const;
+  const double &getLocationY() const;
+  const double &getTOF() const;
+  const double &getMomentumX() const;
+  const double &getMomentumY() const;
+  const double &getMomentumZ() const;
+  const double getLocationXY() const;
+  const double getLocation() const;
+  const double getLocationalDirectionX() const;
+  const double getLocationalDirectionY() const;
+  const double getLocationalDirectionXY() const;
+  const double getLocationalDirectionYX() const;
+  const double getMomentumXY() const;
+  const double getMomentumYZ() const;
+  const double getMomentumZX() const;
+  const double getMomentum() const;
+  const double getMotionalDirectionX() const;
+  const double getMotionalDirectionY() const;
+  const double getMotionalDirectionZ() const;
+  const double getMotionalDirectionXY() const;
+  const double getMotionalDirectionXZ() const;
+  const double getMotionalDirectionYX() const;
+  const double getMotionalDirectionYZ() const;
+  const double getMotionalDirectionZX() const;
+  const double getMotionalDirectionZY() const;
+  const double getEnergy() const;
 
   // output
 public:

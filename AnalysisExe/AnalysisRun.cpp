@@ -4,8 +4,8 @@
 
 #include "AnalysisRun.h"
 
-Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) :
-    Hist(false, numberOfHists) {
+Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
+    : Hist(false, numberOfHists) {
   // Setup json file reader
   Analysis::JSONReader configReader(configFilename);
 
@@ -16,42 +16,56 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) :
   pLogWriter = new Analysis::LogWriter(configReader);
   pLogWriter->logResultOfLoadingJSONFile(configReader);
 
-  // Setup ROOT files
-    pEventChain =
-        new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
-    pEventChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
-    pLogWriter->write() << "Input file type is ROOT. " << std::endl;
-    pLogWriter->write() << "    Filenames: "
-        << configReader.getStringAt("setup_input.filenames").c_str()
-        << std::endl;
-    pLogWriter->write() << "    Tree Name: "
-        << configReader.getStringAt("setup_input.tree_name").c_str()
-        << std::endl;
-    pLogWriter->write() << std::endl;
-
-    // Setup event reader
-    numberOfHits = configReader.getIntAt("setup_input.number_of_hits");
-    pEventReader = new Analysis::EventDataReader(numberOfHits);
-    char ch[2];
-    for (int i = 0; i < numberOfHits; i++) {
-      for (std::string str : {"IonX", "IonY", "IonT", "ElecX", "ElecY", "ElecT"}) {
-        sprintf(ch, "%01d", i);
-        pEventChain->SetBranchAddress((str + ch).c_str(), &(pEventReader->setEventDataAt(i, str + ch)));
-      }
-      for (std::string str : {"IonFlag", "ElecFlag"}) {
-        sprintf(ch, "%01d", i);
-        pEventChain->SetBranchAddress((str + ch).c_str(), &(pEventReader->setFlagDataAt(i, str + ch)));
-      }
+  // Setup input ROOT files
+  std::cout << "Setting up input root files... ";
+  pEventChain =
+      new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
+  pEventChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
+  pLogWriter->write() << "Filenames: "
+                      << configReader.getStringAt("setup_input.filenames").c_str()
+                      << std::endl;
+  maxNumOfIonHits =
+      configReader.getIntAt("setup_input.max_number_of_ion_hits");
+  maxNumOfElecHits =
+      configReader.getIntAt("setup_input.max_number_of_electron_hits");
+  pEventReader =
+      new Analysis::EventDataReader(maxNumOfIonHits, maxNumOfElecHits);
+  char ch[2];
+  for (int i = 0; i < maxNumOfIonHits; i++) {
+    for (std::string str : {"IonX", "IonY", "IonT"}) {
+      sprintf(ch, "%01d", i);
+      pEventChain->SetBranchAddress((str + ch).c_str(),
+                                    &(pEventReader->setEventDataAt(i,
+                                                                   str + ch)));
     }
-
-  // Setup unit helper
-  pUnit = new Analysis::Unit;
+    for (std::string str : {"IonFlag"}) {
+      sprintf(ch, "%01d", i);
+      pEventChain->SetBranchAddress((str + ch).c_str(),
+                                    &(pEventReader->setFlagDataAt(i,
+                                                                  str + ch)));
+    }
+  }
+  for (int i = 0; i < maxNumOfElecHits; i++) {
+    for (std::string str : {"ElecX", "ElecY", "ElecT"}) {
+      sprintf(ch, "%01d", i);
+      pEventChain->SetBranchAddress((str + ch).c_str(),
+                                    &(pEventReader->setEventDataAt(i,
+                                                                   str + ch)));
+    }
+    for (std::string str : {"ElecFlag"}) {
+      sprintf(ch, "%01d", i);
+      pEventChain->SetBranchAddress((str + ch).c_str(),
+                                    &(pEventReader->setFlagDataAt(i,
+                                                                  str + ch)));
+    }
+  }
+  std::cout << "ok" << std::endl;
 
   // Make analysis tools, ions, and electrons
-  pTools = new Analysis::AnalysisTools(*pUnit, configReader);
-  pIons = new Analysis::Ions(*pUnit, configReader, numberOfHits);
-  pElectrons = new Analysis::Electrons(*pUnit, configReader, numberOfHits);
-  pLogWriter->logAnalysisTools(*pUnit, *pTools, *pIons, *pElectrons);
+  pTools = new Analysis::AnalysisTools(kUnit, configReader);
+  pIons = new Analysis::Objects(Objects::ions, maxNumOfIonHits, configReader);
+  pElectrons = new Analysis::Objects(Objects::elecs, maxNumOfElecHits, configReader);
+  pLogWriter->logAnalysisTools(kUnit, *pTools, *pIons, *pElectrons);
 
   // Open ROOT file
   std::cout << "open a root file... ";
@@ -73,7 +87,8 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename) :
 
 Analysis::AnalysisRun::~AnalysisRun() {
   // counter
-  pLogWriter->write() << "Event count: " << pTools->getEventNumber() << std::endl;
+  pLogWriter->write() << "Event count: " << pTools->getEventNumber()
+                      << std::endl;
 
   // flush ROOT file
   flushRootFile();
@@ -90,10 +105,6 @@ Analysis::AnalysisRun::~AnalysisRun() {
   if (pTools) {
     delete pTools;
     pTools = nullptr;
-  }
-  if (pUnit) {
-    delete pUnit;
-    pUnit = nullptr;
   }
   if (pEventReader) {
     delete pEventReader;
@@ -124,8 +135,8 @@ void Analysis::AnalysisRun::processEvent(const long raw) {
   pElectrons->resetEventData();
 
   // input event data
-  pTools->loadEventDataInputer(*pIons, *pUnit, *pEventReader);
-  pTools->loadEventDataInputer(*pElectrons, *pUnit, *pEventReader);
+  pTools->loadEventDataInputer(*pIons, kUnit, *pEventReader);
+  pTools->loadEventDataInputer(*pElectrons, kUnit, *pEventReader);
 
   // resort option
   if (pIons->areAllFlag(ObjectFlag::MostOrSecondMostReliable)
@@ -251,11 +262,11 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_master), __IONFISH2__);
 
   // IonMomentum
-#define __IONMOMENTUM1__ "Momentum [au]", 4000, -500, 500, "IonMomentum" 
-#define __IONMOMENTUM2__ "Momentum [au]", 2000, 0, 500, "IonMomentum" 
+#define __IONMOMENTUM1__ "Momentum [au]", 4000, -500, 500, "IonMomentum"
+#define __IONMOMENTUM2__ "Momentum [au]", 2000, 0, 500, "IonMomentum"
 #define __IONMOMENTUM3__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 400, 0, 500, "IonMomentum"
 #define __IONMOMENTUM4__ "Direction XY [degree]", "Cos Direction Z [1]", 360, -180, 180, 400, -1, 1, "IonMomentum"
-#define __IONMOMENTUM5__ "Momentum [au]", "Momentum [au]",  400, 0, 500, 400, 0, 500, "IonMomentum" 
+#define __IONMOMENTUM5__ "Momentum [au]", "Momentum [au]",  400, 0, 500, 400, 0, 500, "IonMomentum"
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPX), __IONMOMENTUM1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPX_master), __IONMOMENTUM1__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPY), __IONMOMENTUM1__);
@@ -329,11 +340,14 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_master),
+           __IONMOMENTUM3__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_master),
+           __IONMOMENTUM3__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_master),
+           __IONMOMENTUM3__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP), __IONMOMENTUM5__);
@@ -430,8 +444,8 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hRFish_master), __ELECFISH2__);
 
   // ElecMomentum
-#define __ELECMOMENTUM1__ "Momentum [au]", 4000, -4, 4, "ElecMomentum" 
-#define __ELECMOMENTUM2__ "Momentum [au]", 2000, 0, 4, "ElecMomentum" 
+#define __ELECMOMENTUM1__ "Momentum [au]", 4000, -4, 4, "ElecMomentum"
+#define __ELECMOMENTUM2__ "Momentum [au]", 2000, 0, 4, "ElecMomentum"
 #define __ELECMOMENTUM3__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 500, 0, 4, "ElecMomentum"
 #define __ELECMOMENTUM4__ "Direction XY [degree]", "Direction Z [1]", 360, -180, 180, 400, -1, 1, "ElecMomentum"
   create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPX), __ELECMOMENTUM1__);
@@ -523,9 +537,25 @@ void Analysis::AnalysisRun::createHists() {
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF_i2h3hNotDead),
            "TOF [ns]", 2000, 0, 10000, __OTHERS__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO_i1hMaster),
-           "TOF 1 [ns]", "TOF 2 [ns]", 500, 0, 10000, 500, 0, 10000, __OTHERS__);
+           "TOF 1 [ns]",
+           "TOF 2 [ns]",
+           500,
+           0,
+           10000,
+           500,
+           0,
+           10000,
+           __OTHERS__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hE_iTotalTOF_master),
-           "Energy [eV]", "Sum of TOFs [ns]", 500, 0, 50, 1000, 0, 20000, __OTHERS__);
+           "Energy [eV]",
+           "Sum of TOFs [ns]",
+           500,
+           0,
+           50,
+           1000,
+           0,
+           20000,
+           __OTHERS__);
 }
 
 void Analysis::AnalysisRun::fillHists() {
@@ -533,15 +563,23 @@ void Analysis::AnalysisRun::fillHists() {
   const bool iDead2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
   const bool iDead3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
   const bool iDead4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
-  const bool eDead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
-  const bool eDead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
-  const bool eDead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
-  const bool eDead4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
+  const bool
+      eDead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
+  const bool
+      eDead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
+  const bool
+      eDead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
+  const bool
+      eDead4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
 
-  const bool iMaster1 = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
-  const bool iMaster2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::WithinMasterRegion);
-  const bool iMaster3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::WithinMasterRegion);
-  const bool iMaster4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster1 =
+      pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster2 =
+      pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster3 =
+      pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster4 =
+      pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::WithinMasterRegion);
   const bool iMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool eMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool master = iMaster && eMaster;
@@ -582,22 +620,26 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const eX1 = pElectrons->getRealOrDummyObject(0).outputLocX();
   const double *const eY1 = pElectrons->getRealOrDummyObject(0).outputLocY();
   const double *const eR1 = pElectrons->getRealOrDummyObject(0).outputLocR();
-  const double *const eDir1 = pElectrons->getRealOrDummyObject(0).outputLocDir();
+  const double
+      *const eDir1 = pElectrons->getRealOrDummyObject(0).outputLocDir();
   const double *const eT1 = pElectrons->getRealOrDummyObject(0).outputTOF();
   const double *const eX2 = pElectrons->getRealOrDummyObject(1).outputLocX();
   const double *const eY2 = pElectrons->getRealOrDummyObject(1).outputLocY();
   const double *const eR2 = pElectrons->getRealOrDummyObject(1).outputLocR();
-  const double *const eDir2 = pElectrons->getRealOrDummyObject(1).outputLocDir();
+  const double
+      *const eDir2 = pElectrons->getRealOrDummyObject(1).outputLocDir();
   const double *const eT2 = pElectrons->getRealOrDummyObject(1).outputTOF();
   const double *const eX3 = pElectrons->getRealOrDummyObject(2).outputLocX();
   const double *const eY3 = pElectrons->getRealOrDummyObject(2).outputLocY();
   const double *const eR3 = pElectrons->getRealOrDummyObject(2).outputLocR();
-  const double *const eDir3 = pElectrons->getRealOrDummyObject(2).outputLocDir();
+  const double
+      *const eDir3 = pElectrons->getRealOrDummyObject(2).outputLocDir();
   const double *const eT3 = pElectrons->getRealOrDummyObject(2).outputTOF();
   const double *const eX4 = pElectrons->getRealOrDummyObject(3).outputLocX();
   const double *const eY4 = pElectrons->getRealOrDummyObject(3).outputLocY();
   const double *const eR4 = pElectrons->getRealOrDummyObject(3).outputLocR();
-  const double *const eDir4 = pElectrons->getRealOrDummyObject(3).outputLocDir();
+  const double
+      *const eDir4 = pElectrons->getRealOrDummyObject(3).outputLocDir();
   const double *const eT4 = pElectrons->getRealOrDummyObject(3).outputTOF();
 
   const double *const eCOMX = pElectrons->outputCOMLocX();
@@ -619,7 +661,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXY1 = pIons->getRealOrDummyObject(0).outputPDirXY();
   const double *const iPDirYZ1 = pIons->getRealOrDummyObject(0).outputPDirYZ();
   const double *const iPDirZX1 = pIons->getRealOrDummyObject(0).outputPDirZX();
-  const double *const iCosPDirZ1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
+  const double
+      *const iCosPDirZ1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
   const double *const iPX2 = pIons->getRealOrDummyObject(1).outputPX();
   const double *const iPY2 = pIons->getRealOrDummyObject(1).outputPY();
   const double *const iPZ2 = pIons->getRealOrDummyObject(1).outputPZ();
@@ -630,7 +673,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXY2 = pIons->getRealOrDummyObject(1).outputPDirXY();
   const double *const iPDirYZ2 = pIons->getRealOrDummyObject(1).outputPDirYZ();
   const double *const iPDirZX2 = pIons->getRealOrDummyObject(1).outputPDirZX();
-  const double *const iCosPDirZ2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
+  const double
+      *const iCosPDirZ2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
   const double *const iPX3 = pIons->getRealOrDummyObject(2).outputPX();
   const double *const iPY3 = pIons->getRealOrDummyObject(2).outputPY();
   const double *const iPZ3 = pIons->getRealOrDummyObject(2).outputPZ();
@@ -641,7 +685,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXY3 = pIons->getRealOrDummyObject(2).outputPDirXY();
   const double *const iPDirYZ3 = pIons->getRealOrDummyObject(2).outputPDirYZ();
   const double *const iPDirZX3 = pIons->getRealOrDummyObject(2).outputPDirZX();
-  const double *const iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
+  const double
+      *const iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
   const double *const iPX4 = pIons->getRealOrDummyObject(3).outputPX();
   const double *const iPY4 = pIons->getRealOrDummyObject(3).outputPY();
   const double *const iPZ4 = pIons->getRealOrDummyObject(3).outputPZ();
@@ -652,7 +697,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXY4 = pIons->getRealOrDummyObject(3).outputPDirXY();
   const double *const iPDirYZ4 = pIons->getRealOrDummyObject(3).outputPDirYZ();
   const double *const iPDirZX4 = pIons->getRealOrDummyObject(3).outputPDirZX();
-  const double *const iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
+  const double
+      *const iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
   const double *const iPXTotal = pIons->outputPX();
   const double *const iPYTotal = pIons->outputPY();
   const double *const iPZTotal = pIons->outputPZ();
@@ -672,10 +718,14 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePYZ1 = pElectrons->getRealOrDummyObject(0).outputPYZ();
   const double *const ePZX1 = pElectrons->getRealOrDummyObject(0).outputPZX();
   const double *const eP1 = pElectrons->getRealOrDummyObject(0).outputP();
-  const double *const ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirXY();
-  const double *const ePDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
-  const double *const ePDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
-  const double *const eCosPDirZ1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
+  const double
+      *const ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirXY();
+  const double
+      *const ePDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
+  const double
+      *const ePDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
+  const double
+      *const eCosPDirZ1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
   const double *const ePX2 = pElectrons->getRealOrDummyObject(1).outputPX();
   const double *const ePY2 = pElectrons->getRealOrDummyObject(1).outputPY();
   const double *const ePZ2 = pElectrons->getRealOrDummyObject(1).outputPZ();
@@ -683,10 +733,14 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePYZ2 = pElectrons->getRealOrDummyObject(1).outputPYZ();
   const double *const ePZX2 = pElectrons->getRealOrDummyObject(1).outputPZX();
   const double *const eP2 = pElectrons->getRealOrDummyObject(1).outputP();
-  const double *const ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirXY();
-  const double *const ePDirYZ2 = pElectrons->getRealOrDummyObject(1).outputPDirYZ();
-  const double *const ePDirZX2 = pElectrons->getRealOrDummyObject(1).outputPDirZX();
-  const double *const eCosPDirZ2 = pElectrons->getRealOrDummyObject(1).outputCosPDirZ();
+  const double
+      *const ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirXY();
+  const double
+      *const ePDirYZ2 = pElectrons->getRealOrDummyObject(1).outputPDirYZ();
+  const double
+      *const ePDirZX2 = pElectrons->getRealOrDummyObject(1).outputPDirZX();
+  const double
+      *const eCosPDirZ2 = pElectrons->getRealOrDummyObject(1).outputCosPDirZ();
   const double *const ePX3 = pElectrons->getRealOrDummyObject(2).outputPX();
   const double *const ePY3 = pElectrons->getRealOrDummyObject(2).outputPY();
   const double *const ePZ3 = pElectrons->getRealOrDummyObject(2).outputPZ();
@@ -694,10 +748,14 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePYZ3 = pElectrons->getRealOrDummyObject(2).outputPYZ();
   const double *const ePZX3 = pElectrons->getRealOrDummyObject(2).outputPZX();
   const double *const eP3 = pElectrons->getRealOrDummyObject(2).outputP();
-  const double *const ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirXY();
-  const double *const ePDirYZ3 = pElectrons->getRealOrDummyObject(2).outputPDirYZ();
-  const double *const ePDirZX3 = pElectrons->getRealOrDummyObject(2).outputPDirZX();
-  const double *const eCosPDirZ3 = pElectrons->getRealOrDummyObject(2).outputCosPDirZ();
+  const double
+      *const ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirXY();
+  const double
+      *const ePDirYZ3 = pElectrons->getRealOrDummyObject(2).outputPDirYZ();
+  const double
+      *const ePDirZX3 = pElectrons->getRealOrDummyObject(2).outputPDirZX();
+  const double
+      *const eCosPDirZ3 = pElectrons->getRealOrDummyObject(2).outputCosPDirZ();
   const double *const ePX4 = pElectrons->getRealOrDummyObject(3).outputPX();
   const double *const ePY4 = pElectrons->getRealOrDummyObject(3).outputPY();
   const double *const ePZ4 = pElectrons->getRealOrDummyObject(3).outputPZ();
@@ -705,21 +763,25 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePYZ4 = pElectrons->getRealOrDummyObject(3).outputPYZ();
   const double *const ePZX4 = pElectrons->getRealOrDummyObject(3).outputPZX();
   const double *const eP4 = pElectrons->getRealOrDummyObject(3).outputP();
-  const double *const ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirXY();
-  const double *const ePDirYZ4 = pElectrons->getRealOrDummyObject(3).outputPDirYZ();
-  const double *const ePDirZX4 = pElectrons->getRealOrDummyObject(3).outputPDirZX();
-  const double *const eCosPDirZ4 = pElectrons->getRealOrDummyObject(3).outputCosPDirZ();
+  const double
+      *const ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirXY();
+  const double
+      *const ePDirYZ4 = pElectrons->getRealOrDummyObject(3).outputPDirYZ();
+  const double
+      *const ePDirZX4 = pElectrons->getRealOrDummyObject(3).outputPDirZX();
+  const double
+      *const eCosPDirZ4 = pElectrons->getRealOrDummyObject(3).outputCosPDirZ();
 
-  const double *const iE1 = pIons->getRealOrDummyIon(0).outputE();
-  const double *const iE2 = pIons->getRealOrDummyIon(1).outputE();
-  const double *const iE3 = pIons->getRealOrDummyIon(2).outputE();
-  const double *const iE4 = pIons->getRealOrDummyIon(3).outputE();
+  const double *const iE1 = pIons->getRealOrDummyObject(0).outputE();
+  const double *const iE2 = pIons->getRealOrDummyObject(1).outputE();
+  const double *const iE3 = pIons->getRealOrDummyObject(2).outputE();
+  const double *const iE4 = pIons->getRealOrDummyObject(3).outputE();
   const double *const iETotal = pIons->outputE();
 
-  const double *const eE1 = pElectrons->getRealOrDummyElectron(0).outputE();
-  const double *const eE2 = pElectrons->getRealOrDummyElectron(1).outputE();
-  const double *const eE3 = pElectrons->getRealOrDummyElectron(2).outputE();
-  const double *const eE4 = pElectrons->getRealOrDummyElectron(3).outputE();
+  const double *const eE1 = pElectrons->getRealOrDummyObject(0).outputE();
+  const double *const eE2 = pElectrons->getRealOrDummyObject(1).outputE();
+  const double *const eE3 = pElectrons->getRealOrDummyObject(2).outputE();
+  const double *const eE4 = pElectrons->getRealOrDummyObject(3).outputE();
   const double *const eETotal = pElectrons->outputE();
 
   // IonImage
@@ -734,16 +796,16 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i4hImageDirDist, iDir4, iR4);
   fill2d(h2_iCOMImageDirDist, iCOMDir, iCOMDir);
   if (master) {
-  fill2d(h2_i1hImage_master, iX1, iY1);
-  fill2d(h2_i2hImage_master, iX2, iY2);
-  fill2d(h2_i3hImage_master, iX3, iY3);
-  fill2d(h2_i4hImage_master, iX4, iY4);
-  fill2d(h2_iCOMImage_master, iCOMX, iCOMY);
-  fill2d(h2_i1hImageDirDist_master, iDir1, iR1);
-  fill2d(h2_i2hImageDirDist_master, iDir2, iR2);
-  fill2d(h2_i3hImageDirDist_master, iDir3, iR3);
-  fill2d(h2_i4hImageDirDist_master, iDir4, iR4);
-  fill2d(h2_iCOMImageDirDist_master, iCOMDir, iCOMDir);
+    fill2d(h2_i1hImage_master, iX1, iY1);
+    fill2d(h2_i2hImage_master, iX2, iY2);
+    fill2d(h2_i3hImage_master, iX3, iY3);
+    fill2d(h2_i4hImage_master, iX4, iY4);
+    fill2d(h2_iCOMImage_master, iCOMX, iCOMY);
+    fill2d(h2_i1hImageDirDist_master, iDir1, iR1);
+    fill2d(h2_i2hImageDirDist_master, iDir2, iR2);
+    fill2d(h2_i3hImageDirDist_master, iDir3, iR3);
+    fill2d(h2_i4hImageDirDist_master, iDir4, iR4);
+    fill2d(h2_iCOMImageDirDist_master, iCOMDir, iCOMDir);
   }
 
   // IonTOF
@@ -845,49 +907,49 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i2h3hP, iP2, iP3);
   fill2d(h2_i3h4hP, iP3, iP4);
   if (master) {
-  fill1d(h1_i1hPX_master, iPX1);
-  fill1d(h1_i1hPY_master, iPY1);
-  fill1d(h1_i1hPZ_master, iPZ1);
-  fill1d(h1_i1hP_master, iP1);
-  fill1d(h1_i2hPX_master, iPX2);
-  fill1d(h1_i2hPY_master, iPY2);
-  fill1d(h1_i2hPZ_master, iPZ2);
-  fill1d(h1_i2hP_master, iP2);
-  fill1d(h1_i3hPX_master, iPX3);
-  fill1d(h1_i3hPY_master, iPY3);
-  fill1d(h1_i3hPZ_master, iPZ3);
-  fill1d(h1_i3hP_master, iP3);
-  fill1d(h1_i4hPX_master, iPX4);
-  fill1d(h1_i4hPY_master, iPY4);
-  fill1d(h1_i4hPZ_master, iPZ4);
-  fill1d(h1_i4hP_master, iP4);
-  fill1d(h1_iTotalPX_master, iPXTotal);
-  fill1d(h1_iTotalPY_master, iPYTotal);
-  fill1d(h1_iTotalPZ_master, iPZTotal);
-  fill1d(h1_iTotalP_master, iPTotal);
-  fill2d(h2_i1hPDirDistXY_master, iPDirXY1, iPXY1);
-  fill2d(h2_i1hPDirDistYZ_master, iPDirYZ1, iPYZ1);
-  fill2d(h2_i1hPDirDistZX_master, iPDirZX1, iPZX1);
-  fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
-  fill2d(h2_i2hPDirDistXY_master, iPDirXY2, iPXY2);
-  fill2d(h2_i2hPDirDistYZ_master, iPDirYZ2, iPYZ2);
-  fill2d(h2_i2hPDirDistZX_master, iPDirZX2, iPZX2);
-  fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
-  fill2d(h2_i3hPDirDistXY_master, iPDirXY3, iPXY3);
-  fill2d(h2_i3hPDirDistYZ_master, iPDirYZ3, iPYZ3);
-  fill2d(h2_i3hPDirDistZX_master, iPDirZX3, iPZX3);
-  fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
-  fill2d(h2_i4hPDirDistXY_master, iPDirXY4, iPXY4);
-  fill2d(h2_i4hPDirDistYZ_master, iPDirYZ4, iPYZ4);
-  fill2d(h2_i4hPDirDistZX_master, iPDirZX4, iPZX4);
-  fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
-  fill2d(h2_iTotalPDirDistXY_master, iPDirXYTotal, iPXYTotal);
-  fill2d(h2_iTotalPDirDistYZ_master, iPDirYZTotal, iPYZTotal);
-  fill2d(h2_iTotalPDirDistZX_master, iPDirZXTotal, iPZXTotal);
-  fill2d(h2_iTotalPDirDist_master, iPDirXYTotal, iCosPDirZTotal);
-  fill2d(h2_i1h2hP_master, iP1, iP2);
-  fill2d(h2_i2h3hP_master, iP2, iP3);
-  fill2d(h2_i3h4hP_master, iP3, iP4);
+    fill1d(h1_i1hPX_master, iPX1);
+    fill1d(h1_i1hPY_master, iPY1);
+    fill1d(h1_i1hPZ_master, iPZ1);
+    fill1d(h1_i1hP_master, iP1);
+    fill1d(h1_i2hPX_master, iPX2);
+    fill1d(h1_i2hPY_master, iPY2);
+    fill1d(h1_i2hPZ_master, iPZ2);
+    fill1d(h1_i2hP_master, iP2);
+    fill1d(h1_i3hPX_master, iPX3);
+    fill1d(h1_i3hPY_master, iPY3);
+    fill1d(h1_i3hPZ_master, iPZ3);
+    fill1d(h1_i3hP_master, iP3);
+    fill1d(h1_i4hPX_master, iPX4);
+    fill1d(h1_i4hPY_master, iPY4);
+    fill1d(h1_i4hPZ_master, iPZ4);
+    fill1d(h1_i4hP_master, iP4);
+    fill1d(h1_iTotalPX_master, iPXTotal);
+    fill1d(h1_iTotalPY_master, iPYTotal);
+    fill1d(h1_iTotalPZ_master, iPZTotal);
+    fill1d(h1_iTotalP_master, iPTotal);
+    fill2d(h2_i1hPDirDistXY_master, iPDirXY1, iPXY1);
+    fill2d(h2_i1hPDirDistYZ_master, iPDirYZ1, iPYZ1);
+    fill2d(h2_i1hPDirDistZX_master, iPDirZX1, iPZX1);
+    fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
+    fill2d(h2_i2hPDirDistXY_master, iPDirXY2, iPXY2);
+    fill2d(h2_i2hPDirDistYZ_master, iPDirYZ2, iPYZ2);
+    fill2d(h2_i2hPDirDistZX_master, iPDirZX2, iPZX2);
+    fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
+    fill2d(h2_i3hPDirDistXY_master, iPDirXY3, iPXY3);
+    fill2d(h2_i3hPDirDistYZ_master, iPDirYZ3, iPYZ3);
+    fill2d(h2_i3hPDirDistZX_master, iPDirZX3, iPZX3);
+    fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
+    fill2d(h2_i4hPDirDistXY_master, iPDirXY4, iPXY4);
+    fill2d(h2_i4hPDirDistYZ_master, iPDirYZ4, iPYZ4);
+    fill2d(h2_i4hPDirDistZX_master, iPDirZX4, iPZX4);
+    fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
+    fill2d(h2_iTotalPDirDistXY_master, iPDirXYTotal, iPXYTotal);
+    fill2d(h2_iTotalPDirDistYZ_master, iPDirYZTotal, iPYZTotal);
+    fill2d(h2_iTotalPDirDistZX_master, iPDirZXTotal, iPZXTotal);
+    fill2d(h2_iTotalPDirDist_master, iPDirXYTotal, iCosPDirZTotal);
+    fill2d(h2_i1h2hP_master, iP1, iP2);
+    fill2d(h2_i2h3hP_master, iP2, iP3);
+    fill2d(h2_i3h4hP_master, iP3, iP4);
   }
 
 // IonEnergy
@@ -924,10 +986,10 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_e2hImage_master, eX2, eY2);
     fill2d(h2_e3hImage_master, eX3, eY3);
     fill2d(h2_e4hImage_master, eX4, eY4);
-  fill2d(h2_e1hImageDirDist_master, eDir1, eR1);
-  fill2d(h2_e2hImageDirDist_master, eDir2, eR2);
-  fill2d(h2_e3hImageDirDist_master, eDir3, eR3);
-  fill2d(h2_e4hImageDirDist_master, eDir4, eR4);
+    fill2d(h2_e1hImageDirDist_master, eDir1, eR1);
+    fill2d(h2_e2hImageDirDist_master, eDir2, eR2);
+    fill2d(h2_e3hImageDirDist_master, eDir3, eR3);
+    fill2d(h2_e4hImageDirDist_master, eDir4, eR4);
   }
 
   // ElecTOF
@@ -1010,22 +1072,22 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_e4hPDirDistZX, ePDirZX4, ePZX4);
   fill2d(h2_e4hPDirDist, ePDirXY4, eCosPDirZ4);
   if (master) {
-  fill1d(h1_e1hPX_master, ePX1);
-  fill1d(h1_e1hPY_master, ePY1);
-  fill1d(h1_e1hPZ_master, ePZ1);
-  fill1d(h1_e1hP_master, eP1);
-  fill1d(h1_e2hPX_master, ePX2);
-  fill1d(h1_e2hPY_master, ePY2);
-  fill1d(h1_e2hPZ_master, ePZ2);
-  fill1d(h1_e2hP_master, eP2);
-  fill1d(h1_e3hPX_master, ePX3);
-  fill1d(h1_e3hPY_master, ePY3);
-  fill1d(h1_e3hPZ_master, ePZ3);
-  fill1d(h1_e3hP_master, eP3);
-  fill1d(h1_e4hPX_master, ePX4);
-  fill1d(h1_e4hPY_master, ePY4);
-  fill1d(h1_e4hPZ_master, ePZ4);
-  fill1d(h1_e4hP_master, eP4);
+    fill1d(h1_e1hPX_master, ePX1);
+    fill1d(h1_e1hPY_master, ePY1);
+    fill1d(h1_e1hPZ_master, ePZ1);
+    fill1d(h1_e1hP_master, eP1);
+    fill1d(h1_e2hPX_master, ePX2);
+    fill1d(h1_e2hPY_master, ePY2);
+    fill1d(h1_e2hPZ_master, ePZ2);
+    fill1d(h1_e2hP_master, eP2);
+    fill1d(h1_e3hPX_master, ePX3);
+    fill1d(h1_e3hPY_master, ePY3);
+    fill1d(h1_e3hPZ_master, ePZ3);
+    fill1d(h1_e3hP_master, eP3);
+    fill1d(h1_e4hPX_master, ePX4);
+    fill1d(h1_e4hPY_master, ePY4);
+    fill1d(h1_e4hPZ_master, ePZ4);
+    fill1d(h1_e4hP_master, eP4);
     fill2d(h2_e1hPDirDistXY_master, ePDirXY1, ePXY1);
     fill2d(h2_e1hPDirDistYZ_master, ePDirYZ1, ePYZ1);
     fill2d(h2_e1hPDirDistZX_master, ePDirZX1, ePZX1);

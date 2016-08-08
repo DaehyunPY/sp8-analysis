@@ -11,13 +11,14 @@
 namespace Analysis {
 class EventDataReader {
  private:
-  const int numberOfHit;
+  const int maxNumOfIonHits;
+  const int maxNumOfElecHits;
   double *pEventData;
   int *pFlagData;
   const int getAdressAt(const int i, const std::string str) const;
 
  public:
-  EventDataReader(const int numOfHit);
+  EventDataReader(const int iNum, const int eNum);
   ~EventDataReader();
   double &setEventDataAt(const int i, std::string str);
   int &setFlagDataAt(const int i, std::string str);

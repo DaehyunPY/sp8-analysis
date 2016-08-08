@@ -14,31 +14,26 @@ Analysis::EventDataReader::~EventDataReader() {
     pFlagData = nullptr;
   }
 }
-Analysis::EventDataReader::EventDataReader(const int numOfHit)
-    : numberOfHit(numOfHit) {
-  pEventData = new double[2*3*numOfHit];
-  pFlagData = new int[2*numOfHit];
+Analysis::EventDataReader::EventDataReader(const int iNum, const int eNum)
+    : maxNumOfIonHits(iNum), maxNumOfElecHits(eNum) {
+  pEventData = new double[3*(iNum+eNum)];
+  pFlagData = new int[iNum+eNum];
 }
 const int Analysis::EventDataReader::getAdressAt(const int i, const std::string str) const {
   int adress = 0;
   if(str.find("Flag") != std::string::npos) {
     adress += i;
-    if (str.find("Elec") != std::string::npos) {
-      adress *= 2;
-    } else if (str.find("Ion") != std::string::npos) {
-      adress *= 1;
+    if (str.find("Ion") != std::string::npos) {
+      assert(0 <= i && i<maxNumOfIonHits);
+    } else if (str.find("Elec") != std::string::npos) {
+      assert(0 <= i && i<maxNumOfElecHits);
+      adress += maxNumOfIonHits;
     } else {
       assert(false);
     }
     return adress;
   } else {
-    if (str.find("Elec") != std::string::npos) {
-      adress += 3;
-    } else if (str.find("Ion") != std::string::npos) {
-      adress += 0;
-    } else {
-      assert(false);
-    }
+    adress += 3*i;
     if (str.find("T") != std::string::npos) {
       adress += 0;
     } else if (str.find("X") != std::string::npos) {
@@ -48,7 +43,14 @@ const int Analysis::EventDataReader::getAdressAt(const int i, const std::string 
     } else {
       assert(false);
     }
-    adress += 6 * i;
+    if (str.find("Ion") != std::string::npos) {
+      assert(0 <= i && i<maxNumOfIonHits);
+    } else if (str.find("Elec") != std::string::npos) {
+      assert(0 <= i && i<maxNumOfElecHits);
+      adress += 3*maxNumOfIonHits;
+    } else {
+      assert(false);
+    }
     return adress;
   }
 }

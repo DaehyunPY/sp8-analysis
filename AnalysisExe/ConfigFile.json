@@ -2,9 +2,10 @@
   "ID": "Example",
   "working_directory": "PATH", 
   "setup_input": {
-    "filenames"      : "resortLess*.root",  // wildcard is availble 
-    "tree_name"      : "resortedData", 
-    "number_of_hits" : 4
+    "filenames": "resortLess*.root",  // wildcard is availble 
+    "tree_name": "resortedData", 
+    "max_number_of_ion_hits"     : 4,
+    "max_number_of_electron_hits": 4, 
   },
   "equipment_parameters": {
     "electric_potential_of_electron_region": -200,  // [V] parameter 213
@@ -29,8 +30,10 @@
     "time_zero_of_TOF" : 1846.0035258, // [ns] parameter 220
   },
   "ions": {
-    "resort_flag"   : 14, // from 0 to # (inclue #)
-    "number_of_hits": 1,
+    "resort_flag"          : 14, // from 0 to # (inclue #)
+    "number_of_hits"       : 1,
+    "momentum_conservation": [0, 1], // [au] 
+    "energy_conservation"  : [0, 1], // [eV]
     "1st_hit": {
       "charge"        : 1,        // parameter 183
       "mass"          : 20.1797,  // parameter 186
@@ -54,7 +57,7 @@
       "mass"          : 83.8,     // parameter 264
       "maximum_of_TOF": 10000,    // [ns] parameter 265
       "minimum_of_TOF": 5000,     // [ns] parameter 266 
-    }
+    },
   },
   "electron_parameters": {
     "type"             : "default_type", // default_type, legacy_ion_parameters, legacy_elec_parameters
@@ -69,7 +72,9 @@
   "electrons": {
     "resort_flag"   : 14,   // from 0 to # (inclue #)
     "number_of_hits": 1, 
+    "momentum_conservation": [0, 1], // [au] 
+    "energy_conservation"  : [0, 1], // [eV]
     "maximum_of_TOF": 45.0, // [ns] parameter 225 (not compatibility with legacy option) 
     "minimum_of_TOF": 20.0, // [ns] parameter 224 (not compatibility with legacy option) 
-  } 
+  },
 }

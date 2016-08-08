@@ -8,12 +8,8 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 set(SOURCE_FILES
     AnalysisTools.cpp
-    Electron.cpp
-    Electrons.cpp
     EquipmentParameters.cpp
     EventDataReader.cpp
-    Ion.cpp
-    Ions.cpp
     LogWriter.cpp
     Object.cpp
     ObjectFlag.cpp

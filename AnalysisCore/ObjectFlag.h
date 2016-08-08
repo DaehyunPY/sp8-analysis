@@ -15,6 +15,7 @@ class ObjectFlag: protected Flag {
  protected:
   ObjectFlag();
   virtual ~ObjectFlag();
+  void resetFlag();
  public:
   enum FlagName {
     WithinMasterRegion,
@@ -29,8 +30,6 @@ class ObjectFlag: protected Flag {
     Risky,
     RealObject,
     IonObject,
-    AnionObject,
-    CationObject,
     ElecObject,
     DummyObject
   };
@@ -86,37 +85,18 @@ class ObjectFlag: protected Flag {
   const bool isRisky() const;
 
  private:
-  const unsigned int flagFor6thDigit_realObject = 1;
-  const unsigned int flagFor6thDigit_ionObject = 2;
-  const unsigned int flagFor6thDigit_anionObject = 3;
-  const unsigned int flagFor6thDigit_cationObject = 4;
-  const unsigned int flagFor6thDigit_elecObject = 5;
-  const unsigned int flagFor6thDigit_dummyObject = 6;
+  const unsigned int flagFor5thDigit_realObject = 1;
+  const unsigned int flagFor5thDigit_ionObject = 2;
+  const unsigned int flagFor5thDigit_elecObject = 3;
+  const unsigned int flagFor5thDigit_dummyObject = 4;
   void setRealObject();
   void setIonObject();
-  void setAnionObject();
-  void setCationObject();
   void setElecObject();
   void setDummyObject();
   const bool isRealObject() const;
   const bool isIonObject() const;
-  const bool isAnionObject() const;
-  const bool isCationObject() const;
   const bool isElecObject() const;
   const bool isDummyObject() const;
-
-  // delete blew
- private:
-  const unsigned int flagFor5thDigit_inFrameOfAllData = 1;
-  const unsigned int flagFor5thDigit_outOfFrameOfMomentumData = 2;
-  const unsigned int flagFor5thDigit_outOfFrameOfBasicData = 3;
- public:
-  void setInFrameOfAllDataFlag();
-  void setOutOfFrameOfMomentumDataFlag();
-  void setOutOfFrameOfBasicDataFlag();
-  const bool isInFrameOfAllData() const;
-  const bool isOutOfFrameOfMomentumData() const;
-  const bool isOutOfFrameOfBasicData() const;
 };
 }
 

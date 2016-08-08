@@ -15,7 +15,7 @@
 #include "LogWriter.h"
 Analysis::LogWriter::LogWriter(const std::string &prefix) {
   std::time_t tt = std::chrono::system_clock::to_time_t (std::chrono::system_clock::now());
-  struct std::tm * ptm = std::localtime(&tt);
+  std::tm * ptm = std::localtime(&tt);
   ID = std::to_string(tt);
   filename = prefix;
   if(!(prefix == "")) { filename += "-"; }
@@ -29,7 +29,7 @@ Analysis::LogWriter::LogWriter(const std::string &prefix) {
 }
 Analysis::LogWriter::~LogWriter() {
   std::time_t tt = std::chrono::system_clock::to_time_t (std::chrono::system_clock::now());
-  struct std::tm * ptm = std::localtime(&tt);
+  std::tm * ptm = std::localtime(&tt);
   logFile << "It is closed at " << std::put_time(ptm,"%c") << std::endl;
   logFile.close();
 }
@@ -68,8 +68,8 @@ Analysis::LogWriter::LogWriter(const Analysis::JSONReader &reader)
 }
 void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
                                            const Analysis::AnalysisTools &analysisTools,
-                                           const Analysis::Ions &ions,
-                                           const Analysis::Electrons &electrons) {
+                                           const Analysis::Objects &ions,
+                                           const Analysis::Objects &elecs) {
   logFile << "Loaded Parameters: " << std::endl;
   logFile << "    ID: " << analysisTools.getID().c_str() << std::endl;
   logFile << "    Equipment Parameters: " << std::endl;
@@ -106,18 +106,18 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
     for (int i = 0; i < n; i++) {
       const std::string name = getObjectName(i);
       logFile << "        " << name.c_str() << ":" << std::endl;
-      const double t1 = analysisTools.calculateTOF(unit, ions.getIon(i), 0e0);
-      const double t2 = analysisTools.calculatePeriodOfCycle(unit, ions.getIon(0));
+      const double t1 = kUnit.writeNanoSec(analysisTools.calculateTOF(ions.getObject(i), 0e0));
+      const double t2 = kUnit.writeNanoSec(analysisTools.calculatePeriodOfCycle(ions.getObject(i)));
       logFile << "            TOF of Stopped Object: " << t1 << std::endl;
       logFile << "            Period of Cycle: " << t2 << std::endl;
     }
   }
   logFile << "    Electrons: " << std::endl;
   {
-    const int &n = electrons.getNumberOfObjects();
+    const int &n = elecs.getNumberOfObjects();
     logFile << "        Number of Hits: " << n << std::endl;
-    const double t1 = analysisTools.calculateTOF(unit, Electron(), 0e0);
-    const double t2 = analysisTools.calculatePeriodOfCycle(unit, Electron());
+    const double t1 = kUnit.writeNanoSec(analysisTools.calculateTOF(Object(ObjectFlag::ElecObject), 0e0));
+    const double t2 = kUnit.writeNanoSec(analysisTools.calculatePeriodOfCycle(Object(ObjectFlag::ElecObject)));
     logFile << "        TOF of Stopped Object: " << t1 << std::endl;
     logFile << "        Period of Cycle: " << t2 << std::endl;
   }

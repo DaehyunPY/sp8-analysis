@@ -4,12 +4,13 @@
 
 #include "Objects.h"
 
-Analysis::Objects::Objects(const int &n, const int &m)
-    : numberOfHits(n), numberOfHitsUsed(m) {
-  assert(n > 0 && n <= m);
-  ppObject = new Object *[getNumberOfRealOrDummyObjects()]{nullptr};
-}
 Analysis::Objects::~Objects() {
+  for (int i = 0; i < maxNumOfHits; i++) {
+    if (ppObject[i]) {
+      delete ppObject[i];
+      ppObject[i] = nullptr;
+    }
+  }
   if (ppObject) {
     delete[] ppObject;
     ppObject = nullptr;
@@ -32,7 +33,7 @@ void Analysis::Objects::setDummyObject(const int &i, Analysis::Object &object) {
   ppObject[i] = &object;
 }
 const int &Analysis::Objects::getNumberOfObjects() const {
-  return numberOfHits;
+  return masterNumOfHits;
 }
 const double Analysis::Objects::getLocationX() const {
   const int &n = getNumberOfObjects();
@@ -129,7 +130,7 @@ Analysis::Object &Analysis::Objects::setDummyObjectMembers(const int &i) {
   return *ppObject[i];
 }
 const int &Analysis::Objects::getNumberOfRealOrDummyObjects() const {
-  return numberOfHitsUsed;
+  return maxNumOfHits;
 }
 const bool Analysis::Objects::isDummyObject(const int &i) const {
   const int &n = getNumberOfObjects();
@@ -140,25 +141,9 @@ const bool Analysis::Objects::isRealObject(const int &i) const {
   const int &n = getNumberOfObjects();
   return (i >= 0) && (i < n);
 }
-const bool Analysis::Objects::existOutOfFrameOfBasicDataObject() const {
-  const int &n = getNumberOfObjects();
-  bool b = false;
-  for (int i = 0; i < n; i++) {
-    b = b || getObject(i).isOutOfFrameOfBasicData();
-  }
-  return b;
-}
-const bool Analysis::Objects::existOutOfFrameOfMomentumDataObject() const {
-  const int &n = getNumberOfObjects();
-  bool b = false;
-  for (int i = 0; i < n; i++) {
-    b = b || getObject(i).isOutOfFrameOfMomentumData();
-  }
-  return b;
-}
 const int Analysis::Objects::getNumberOfDeadObjects() const {
   int n = 0;
-  for (int i = 0; i < numberOfHits; i++) {
+  for (int i = 0; i < masterNumOfHits; i++) {
     if (getObject(i).isFlag(ObjectFlag::Dead)) {
       n += 1;
     }
@@ -167,7 +152,7 @@ const int Analysis::Objects::getNumberOfDeadObjects() const {
 }
 const int Analysis::Objects::getNumberOfDeadDummyObjects() const {
   int n = 0;
-  for (int i = numberOfHits; i < numberOfHitsUsed; i++) {
+  for (int i = masterNumOfHits; i < maxNumOfHits; i++) {
     if (getDummyObject(i).isFlag(ObjectFlag::Dead)) {
       n += 1;
     }
@@ -213,7 +198,7 @@ const Analysis::Object &Analysis::Objects::getRealOrDummyObject(const int &i) co
     pObject = &getDummyObject(i);
   } else {
     assert(false);
-    pObject = new Object();
+    pObject = new Object(ObjectFlag::DummyObject);
   }
   return *pObject;
 }
@@ -225,49 +210,9 @@ Analysis::Object &Analysis::Objects::setRealOrDummyObjectMembers(const int &i) {
     pObject = &setDummyObjectMembers(i);
   } else {
     assert(false);
-    pObject = new Object();
+    pObject = new Object(ObjectFlag::DummyObject);
   }
   return *pObject;
-}
-
-void Analysis::Objects::setAllOfObjectIsOutOfFrameOfBasicDataFlag() {
-  const int &n = getNumberOfObjects();
-  for (int i = 0; i < n; i++) {
-    setObjectMembers(i).setOutOfFrameOfBasicDataFlag();
-  }
-}
-
-void Analysis::Objects::setAllOfObjectIsOutOfFrameOfMomentumDataFlag() {
-  const int &n = getNumberOfObjects();
-  for (int i = 0; i < n; i++) {
-    setObjectMembers(i).setOutOfFrameOfMomentumDataFlag();
-  }
-}
-
-void Analysis::Objects::setAllOfDummyObjectIsOutOfFrameOfBasicDataFlag() {
-  const int &n = getNumberOfObjects();
-  const int &m = getNumberOfDeadRealOrDummyObjects();
-  for (int i = n; i < m; i++) {
-    setDummyObjectMembers(i).setOutOfFrameOfBasicDataFlag();
-  }
-}
-
-void Analysis::Objects::setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag() {
-  const int &n = getNumberOfObjects();
-  const int &m = getNumberOfDeadRealOrDummyObjects();
-  for (int i = n; i < m; i++) {
-    setDummyObjectMembers(i).setOutOfFrameOfMomentumDataFlag();
-  }
-}
-
-void Analysis::Objects::setAllOfRealOrDummyObjectIsOutOfFrameOfBasicDataFlag() {
-  setAllOfObjectIsOutOfFrameOfBasicDataFlag();
-  setAllOfDummyObjectIsOutOfFrameOfBasicDataFlag();
-}
-
-void Analysis::Objects::setAllOfRealOrDummyObjectIsOutOfFrameOfMomentumDataFlag() {
-  setAllOfObjectIsOutOfFrameOfMomentumDataFlag();
-  setAllOfDummyObjectIsOutOfFrameOfMomentumDataFlag();
 }
 
 const bool Analysis::Objects::isRealOrDummyObject(const int &i) const {
@@ -300,24 +245,6 @@ const double Analysis::Objects::getMotionalDirectionYX() const {
 const double Analysis::Objects::getMotionalDirectionZY() const {
   return atan2(getMomentumY(), getMomentumZ());
 }
-void Analysis::Objects::setAllOfRealOrDummyObjectIsInFrameOfAllDataFlag() {
-  setAllOfObjectIsInFrameOfAllDataFlag();
-  setAllOfDummyObjectIsInFrameOfAllDataFlag();
-}
-void Analysis::Objects::setAllOfDummyObjectIsInFrameOfAllDataFlag() {
-  const int &n = getNumberOfObjects();
-  const int &m = getNumberOfRealOrDummyObjects();
-  for(int i = n; i < m; i++) {
-    setDummyObjectMembers(i).setInFrameOfAllDataFlag();
-  }
-
-}
-void Analysis::Objects::setAllOfObjectIsInFrameOfAllDataFlag() {
-  const int &n = getNumberOfObjects();
-  for(int i = 0; i < n; i++) {
-    setObjectMembers(i).setInFrameOfAllDataFlag();
-  }
-}
 const double Analysis::Objects::getSumOfTOF(const int &i1,
                                             const int &i2,
                                             const int &i3) const {
@@ -346,15 +273,15 @@ const bool Analysis::Objects::areAllFlag(const ObjectFlag::FlagName flagName,
   switch(optName) {
     case Real:
       n1 = 0;
-      n2 = numberOfHits;
+      n2 = masterNumOfHits;
       break;
     case Dummy:
-      n1 = numberOfHits;
-      n2 = numberOfHitsUsed;
+      n1 = masterNumOfHits;
+      n2 = maxNumOfHits;
       break;
     case RealOrDummy:
       n1 = 0;
-      n2 = numberOfHitsUsed;
+      n2 = maxNumOfHits;
       break;
     default:
       assert(false);
@@ -372,15 +299,15 @@ const bool Analysis::Objects::existFlag(const ObjectFlag::FlagName flagName,
   switch(optName) {
     case Real:
       n1 = 0;
-      n2 = numberOfHits;
+      n2 = masterNumOfHits;
       break;
     case Dummy:
-      n1 = numberOfHits;
-      n2 = numberOfHitsUsed;
+      n1 = masterNumOfHits;
+      n2 = maxNumOfHits;
       break;
     case RealOrDummy:
       n1 = 0;
-      n2 = numberOfHitsUsed;
+      n2 = maxNumOfHits;
       break;
     default:
       assert(false);
@@ -398,15 +325,15 @@ void Analysis::Objects::setAllFlag(const ObjectFlag::FlagName flagName,
   switch(optName) {
     case Real:
       n1 = 0;
-      n2 = numberOfHits;
+      n2 = masterNumOfHits;
       break;
     case Dummy:
-      n1 = numberOfHits;
-      n2 = numberOfHitsUsed;
+      n1 = masterNumOfHits;
+      n2 = maxNumOfHits;
       break;
     case RealOrDummy:
       n1 = 0;
-      n2 = numberOfHitsUsed;
+      n2 = maxNumOfHits;
       break;
     default:
       assert(false);
@@ -553,4 +480,53 @@ double* const Analysis::Objects::outputPDirZY() const
 {
   if (areAllFlag(ObjectFlag::HavingMomentumData)) return new double(kUnit.writeDegree(getMotionalDirectionZY()));
   return nullptr;
+}
+Analysis::Objects::Objects(ObjsType tp,
+                           const int maxNum,
+                           const JSONReader &reader)
+    : type(tp), maxNumOfHits(maxNum) {
+  if (tp == ions) {
+    masterNumOfHits = reader.getIntAt("ions.number_of_hits");
+    assert(0 <= masterNumOfHits && masterNumOfHits <= maxNumOfHits);
+    ppObject = new Object *[maxNumOfHits]{nullptr};
+    for (int i = 0; i < masterNumOfHits; i++) {
+      ppObject[i] = new Object(
+          reader.getDoubleAt("ions." + getStrNum(i) + "_hit.mass"),
+          reader.getDoubleAt("ions." + getStrNum(i) + "_hit.charge"),
+          reader.getDoubleAt("ions." + getStrNum(i) + "_hit.minimum_of_TOF"),
+          reader.getDoubleAt("ions." + getStrNum(i) + "_hit.maximum_of_TOF"));
+    }
+    for (int i = masterNumOfHits; i < maxNumOfHits; i++) {
+      ppObject[i] = new Object(ObjectFlag::DummyObject);
+    }
+  } else if (tp == elecs) {
+    masterNumOfHits = reader.getIntAt("electrons.number_of_hits");
+    assert(0 <= masterNumOfHits && masterNumOfHits <= maxNumOfHits);
+    ppObject = new Object *[maxNumOfHits]{nullptr};
+    for (int i = 0; i < masterNumOfHits; i++) {
+      ppObject[i] = new Object(
+          ObjectFlag::ElecObject,
+          reader.getDoubleAt("electrons.minimum_of_TOF"),
+          reader.getDoubleAt("electrons.maximum_of_TOF"));
+    }
+    for (int i = masterNumOfHits; i < maxNumOfHits; i++) {
+      ppObject[i] = new Object(ObjectFlag::DummyObject);
+    }
+  } else {
+    assert(false);
+  }
+}
+const std::string Analysis::Objects::getStrNum(int i) const {
+  i += 1;
+  assert(i > 0);
+  const int firstDigit = i % 10;
+  const int secondDigit = (i / 10) % 10;
+  const std::string str = std::to_string(i);
+  if (secondDigit == 1) { return str + "th"; }
+  else {
+    if (firstDigit == 1) { return str + "st"; }
+    else if (firstDigit == 2) { return str + "nd"; }
+    else if (firstDigit == 3) { return str + "rd"; }
+    else { return str + "th"; }
+  }
 }

@@ -27,8 +27,8 @@ class LogWriter {
   void logResultOfLoadingJSONFile(const JSONReader &);
   void logAnalysisTools(const Unit &,
                         const AnalysisTools &,
-                        const Ions &,
-                        const Electrons &);
+                        const Objects &ions,
+                        const Objects &elecs);
   std::fstream &write();
 };
 }

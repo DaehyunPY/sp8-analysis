@@ -19,7 +19,7 @@ class Flag {
   Flag();
   virtual ~Flag();
   void setFlag(const unsigned int f);
-  void resetFlag();
+  virtual void resetFlag();
 
  protected:
   const unsigned int get1stDigit(const unsigned int f) const;
