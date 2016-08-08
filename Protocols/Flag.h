@@ -6,8 +6,10 @@
 #define ANALYSIS_FLAG_H
 
 
+#include <cmath>
 #include <stdlib.h>
 #include <string>
+#include <assert.h>
 
 namespace Analysis {
 class Flag {

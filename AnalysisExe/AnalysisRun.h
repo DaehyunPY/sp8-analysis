@@ -46,7 +46,7 @@ class AnalysisRun: Hist {
  private:
   enum HistList {
     // IonImage
-        h2_i1hImage, h2_i1hImage_master,
+    h2_i1hImage, h2_i1hImage_master,
     h2_i2hImage, h2_i2hImage_master,
     h2_i3hImage, h2_i3hImage_master,
     h2_i4hImage, h2_i4hImage_master,
@@ -58,7 +58,7 @@ class AnalysisRun: Hist {
     h2_iCOMImageDirDist, h2_iCOMImageDirDist_master,
 
     // IonTOF
-        h1_i1hTOF, h1_i1hTOF_master,
+    h1_i1hTOF, h1_i1hTOF_master,
     h1_i2hTOF, h1_i2hTOF_master,
     h1_i3hTOF, h1_i3hTOF_master,
     h1_i4hTOF, h1_i4hTOF_master,
@@ -74,7 +74,7 @@ class AnalysisRun: Hist {
     h2_i1h2h3h4h4PICO, h2_i1h2h3h4h4PICO_master,
 
     // IonFish
-        h2_i1hXFish, h2_i1hXFish_master,
+    h2_i1hXFish, h2_i1hXFish_master,
     h2_i1hYFish, h2_i1hYFish_master,
     h2_i1hRFish, h2_i1hRFish_master,
     h2_i2hXFish, h2_i2hXFish_master,
@@ -88,7 +88,7 @@ class AnalysisRun: Hist {
     h2_i4hRFish, h2_i4hRFish_master,
 
     // IonMomentum
-        h1_i1hPX, h1_i1hPX_master,
+    h1_i1hPX, h1_i1hPX_master,
     h1_i1hPY, h1_i1hPY_master,
     h1_i1hPZ, h1_i1hPZ_master,
     h1_i1hP, h1_i1hP_master,
@@ -133,7 +133,7 @@ class AnalysisRun: Hist {
     h2_i3h4hP, h2_i3h4hP_master,
 
     // IonEnergy
-        h1_i1hE, h1_i1hE_master,
+    h1_i1hE, h1_i1hE_master,
     h1_i2hE, h1_i2hE_master,
     h1_i3hE, h1_i3hE_master,
     h1_i4hE, h1_i4hE_master,
@@ -143,7 +143,7 @@ class AnalysisRun: Hist {
     h2_i3h4hE, h2_i3h4hE_master,
 
     // ElecImage
-        h2_e1hImage, h2_e1hImage_master,
+    h2_e1hImage, h2_e1hImage_master,
     h2_e2hImage, h2_e2hImage_master,
     h2_e3hImage, h2_e3hImage_master,
     h2_e4hImage, h2_e4hImage_master,
@@ -153,7 +153,7 @@ class AnalysisRun: Hist {
     h2_e4hImageDirDist, h2_e4hImageDirDist_master,
 
     // ElecTOF
-        h1_e1hTOF, h1_e1hTOF_master,
+    h1_e1hTOF, h1_e1hTOF_master,
     h1_e2hTOF, h1_e2hTOF_master,
     h1_e3hTOF, h1_e3hTOF_master,
     h1_e4hTOF, h1_e4hTOF_master,
@@ -162,7 +162,7 @@ class AnalysisRun: Hist {
     h2_e3h4hPEPECO, h2_e3h4hPEPECO_master,
 
     // ElecFish
-        h2_e1hXFish, h2_e1hXFish_master,
+    h2_e1hXFish, h2_e1hXFish_master,
     h2_e1hYFish, h2_e1hYFish_master,
     h2_e1hRFish, h2_e1hRFish_master,
     h2_e2hXFish, h2_e2hXFish_master,
@@ -176,7 +176,7 @@ class AnalysisRun: Hist {
     h2_e4hRFish, h2_e4hRFish_master,
 
     // ElecMomentum
-        h1_e1hPX, h1_e1hPX_master,
+    h1_e1hPX, h1_e1hPX_master,
     h1_e1hPY, h1_e1hPY_master,
     h1_e1hPZ, h1_e1hPZ_master,
     h1_e1hP, h1_e1hP_master,
@@ -210,17 +210,17 @@ class AnalysisRun: Hist {
     h2_e4hPDirDist, h2_e4hPDirDist_master,
 
     // ElecEnergy
-        h1_e1hE, h1_e1hE_master,
+    h1_e1hE, h1_e1hE_master,
     h1_e2hE, h1_e2hE_master,
     h1_e3hE, h1_e3hE_master,
     h1_e4hE, h1_e4hE_master,
     h1_eTotalE, h1_eTotalE_master,
 
     // IonElecCorr
-        h2_iKER_e1hE, h2_iKER_e1hE_master,
+    h2_iKER_e1hE, h2_iKER_e1hE_master,
 
     // Others
-        h1_i1hTOF_i2h3hNotDead,
+    h1_i1hTOF_i2h3hNotDead,
     h2_i2h3hPIPICO_i1hMaster,
     h2_e1hE_iTotalTOF_master,
 

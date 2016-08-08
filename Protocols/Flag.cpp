@@ -2,8 +2,6 @@
 // Created by Daehyun You on 11/27/15.
 //
 
-#include <cmath>
-#include <assert.h>
 #include "Flag.h"
 
 Analysis::Flag::Flag() {

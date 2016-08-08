@@ -46,7 +46,7 @@ const rapidjson::Value &Analysis::JSONReader::getValue(std::string str1) const {
     found = str1.find(".");
   }
   if (!(value->HasMember(str1.c_str()))) {
-    std::cout << tmp << std::endl;
+    std::cout << "Member " << tmp << " doesn't exist!" << std::endl;
     assert(false);
   }
   return (*value)[str1.c_str()];
