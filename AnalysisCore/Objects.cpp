@@ -483,73 +483,50 @@ double* const Analysis::Objects::outputPDirZY() const
 }
 Analysis::Objects::Objects(ObjsType tp,
                            const int maxNum,
-                           const JSONReader &reader)
+                           const JSONReader &reader,
+                           const std::string prefix)
     : type(tp), maxNumOfHits(maxNum) {
   if (tp == ions) {
-    masterNumOfHits = reader.getIntAt("ions.number_of_hits");
+    masterNumOfHits = reader.getIntAt(prefix+"number_of_hits");
     assert(0 <= masterNumOfHits && masterNumOfHits <= maxNumOfHits);
     ppObject = new Object *[maxNumOfHits]{nullptr};
     for (int i = 0; i < masterNumOfHits; i++) {
-      ppObject[i] = new Object(
-          reader.getDoubleAt("ions." + getStrNum(i) + "_hit.mass"),
-          reader.getDoubleAt("ions." + getStrNum(i) + "_hit.charge"),
-          reader.getDoubleAt("ions." + getStrNum(i) + "_hit.minimum_of_TOF"),
-          reader.getDoubleAt("ions." + getStrNum(i) + "_hit.maximum_of_TOF"));
+      ppObject[i] = new Object(ObjectFlag::IonObject,
+                               reader, prefix + getStrNum(i) + "_hit.");
     }
     for (int i = masterNumOfHits; i < maxNumOfHits; i++) {
       ppObject[i] = new Object(ObjectFlag::DummyObject);
-    }
-    if (reader.hasMember("ions.momentum_conservation")) {
-      isThrowingObjsMomentumIsNotConserved = true;
-      p0 = kUnit.readAuMomentum(reader.getDoubleAt("ions.momentum_conservation", 0));
-      p1 = kUnit.readAuMomentum(reader.getDoubleAt("ions.momentum_conservation", 1));
-    } else {
-      isThrowingObjsMomentumIsNotConserved = false;
-      p0 = 0;
-      p1 = 0;
-    }
-    if (reader.hasMember("ions.energy_conservation")) {
-      isThrowingObjsEnergyIsNotConserved = true;
-      e0 = kUnit.readElectronVolt(reader.getDoubleAt("ions.energy_conservation", 0));
-      e1 = kUnit.readElectronVolt(reader.getDoubleAt("ions.energy_conservation", 1));
-    } else {
-      isThrowingObjsEnergyIsNotConserved = false;
-      e0 = 0;
-      e1 = 0;
     }
   } else if (tp == elecs) {
-    masterNumOfHits = reader.getIntAt("electrons.number_of_hits");
+    masterNumOfHits = reader.getIntAt(prefix+"number_of_hits");
     assert(0 <= masterNumOfHits && masterNumOfHits <= maxNumOfHits);
     ppObject = new Object *[maxNumOfHits]{nullptr};
     for (int i = 0; i < masterNumOfHits; i++) {
-      ppObject[i] = new Object(
-          ObjectFlag::ElecObject,
-          reader.getDoubleAt("electrons.minimum_of_TOF"),
-          reader.getDoubleAt("electrons.maximum_of_TOF"));
+      ppObject[i] = new Object(ObjectFlag::ElecObject, reader, prefix);
     }
     for (int i = masterNumOfHits; i < maxNumOfHits; i++) {
       ppObject[i] = new Object(ObjectFlag::DummyObject);
-    }
-    if (reader.hasMember("electrons.momentum_conservation")) {
-      isThrowingObjsMomentumIsNotConserved = true;
-      p0 = kUnit.readAuMomentum(reader.getDoubleAt("electrons.momentum_conservation", 0));
-      p1 = kUnit.readAuMomentum(reader.getDoubleAt("electrons.momentum_conservation", 1));
-    } else {
-      isThrowingObjsMomentumIsNotConserved = false;
-      p0 = 0;
-      p1 = 0;
-    }
-    if (reader.hasMember("electrons.energy_conservation")) {
-      isThrowingObjsEnergyIsNotConserved = true;
-      e0 = kUnit.readElectronVolt(reader.getDoubleAt("electrons.energy_conservation", 0));
-      e1= kUnit.readElectronVolt(reader.getDoubleAt("electrons.energy_conservation", 1));
-    } else {
-      isThrowingObjsEnergyIsNotConserved = false;
-      e0 = 0;
-      e1 = 0;
     }
   } else {
     assert(false);
+  }
+  if (reader.hasMember(prefix+"momentum_conservation")) {
+    isThrowingObjsMomentumIsNotConserved = true;
+    p0 = kUnit.readAuMomentum(reader.getDoubleAt(prefix+"momentum_conservation", 0));
+    p1 = kUnit.readAuMomentum(reader.getDoubleAt(prefix+"momentum_conservation", 1));
+  } else {
+    isThrowingObjsMomentumIsNotConserved = false;
+    p0 = 0;
+    p1 = 0;
+  }
+  if (reader.hasMember(prefix+"energy_conservation")) {
+    isThrowingObjsEnergyIsNotConserved = true;
+    e0 = kUnit.readElectronVolt(reader.getDoubleAt(prefix+"energy_conservation", 0));
+    e1 = kUnit.readElectronVolt(reader.getDoubleAt(prefix+"energy_conservation", 1));
+  } else {
+    isThrowingObjsEnergyIsNotConserved = false;
+    e0 = 0;
+    e1 = 0;
   }
 }
 const std::string Analysis::Objects::getStrNum(int i) const {

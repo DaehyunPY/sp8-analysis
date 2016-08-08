@@ -32,7 +32,8 @@ class Objects {
  public:
   Objects(ObjsType tp,
           const int maxNum,
-          const JSONReader &reader);
+          const JSONReader &reader,
+          const std::string prefix="");
   ~Objects();
 
  private:

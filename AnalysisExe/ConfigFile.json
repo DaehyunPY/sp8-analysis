@@ -25,38 +25,38 @@
     "pixel_size_of_x"  : 0.927,        // [1] parameter 147
     "pixel_size_of_y"  : 0.927,        // [1] parameter 148
     "dead_time"        : 13000,        // [ns] 
-    "x_zero_of_COM"    : 93.253363,    // [mm] parameter 196
-    "y_zero_of_COM"    : 94.9788,      // [mm] parameter 197
+    "x_zero_of_image"  : 93.253363,    // [mm] parameter 196
+    "y_zero_of_image"  : 94.9788,      // [mm] parameter 197
     "time_zero_of_TOF" : 1846.0035258, // [ns] parameter 220
   },
   "ions": {
-    "resort_flag"          : 14, // from 0 to # (inclue #)
-    "number_of_hits"       : 1,
+    "resort_flag"   : 14, // from 0 to # (inclue #)
+    "number_of_hits": 1,
     // "momentum_conservation": [0, 0], // [au] option (comment out to stop use it) 
     // "energy_conservation"  : [0, 0], // [eV] option (comment out to stop use it)
     "1st_hit": {
-      "charge"        : 1,        // parameter 183
-      "mass"          : 20.1797,  // parameter 186
-      "maximum_of_TOF": 4500,     // [ns] parameter 190 
-      "minimum_of_TOF": 2500,     // [ns] parameter 191
+      "charge": 1,         // parameter 183
+      "mass"  : 20.1797,   // parameter 186
+      "TOF"   : [0, 5000], // [ns] parameter 190, 191
+      // "dx_and_dy": [0, 0] // [mm] option (comment out to stop use it) 
     },
     "2nd_hit": {
-      "charge"        : 1,        // parameter 184
-      "mass"          : 83.8,     // parameter 187
-      "maximum_of_TOF": 10000,    // [ns] parameter 192
-      "minimum_of_TOF": 5000,     // [ns] parameter 193
+      "charge": 1,         // parameter 184
+      "mass"  : 83.8,      // parameter 187
+      "TOF"   : [0, 5000], // [ns] parameter 192, 193
+      // "dx_and_dy": [0, 0] // [mm] option (comment out to stop use it) 
     },
     "3rd_hit": {
-      "charge"        : 1,        // parameter 185
-      "mass"          : 83.8,     // parameter 188
-      "maximum_of_TOF": 10000,    // [ns] parameter 194
-      "minimum_of_TOF": 5000,     // [ns] parameter 195 
+      "charge": 1,         // parameter 185
+      "mass"  : 83.8,      // parameter 188
+      "TOF"   : [0, 5000], // [ns] parameter 194, 195
+      // "dx_and_dy": [0, 0] // [mm] option (comment out to stop use it) 
     },
     "4th_hit": {
-      "charge"        : 1,        // parameter 270
-      "mass"          : 83.8,     // parameter 264
-      "maximum_of_TOF": 10000,    // [ns] parameter 265
-      "minimum_of_TOF": 5000,     // [ns] parameter 266 
+      "charge": 1,         // parameter 270
+      "mass"  : 83.8,      // parameter 264
+      "TOF"   : [0, 5000], // [ns] parameter 265, 266
+      // "dx_and_dy": [0, 0] // [mm] option (comment out to stop use it) 
     },
   },
   "electron_parameters": {
@@ -65,15 +65,15 @@
     "pixel_size_of_x"  : 0.925,       // [1] parameter 226
     "pixel_size_of_y"  : 0.925,       // [1] parameter 227
     "dead_time"        : 60,          // [ns]
-    "x_zero_of_COM"    : 125.104,     // [mm] parameter 228
-    "y_zero_of_COM"    : 34.50485,    // [mm] parameter 229
+    "x_zero_of_image"  : 125.104,     // [mm] parameter 228
+    "y_zero_of_image"  : 34.50485,    // [mm] parameter 229
     "time_zero_of_TOF" : 1805.536719, // [ns] parameter 221
   },
   "electrons": {
     "resort_flag"   : 14,   // from 0 to # (inclue #)
     "number_of_hits": 1, 
-    // "momentum_conservation": [0, 0], // [au] 
-    // "energy_conservation"  : [0, 0], // [eV]
+    // "momentum_conservation": [0, 0], // [au] option (comment out to stop use it)
+    // "energy_conservation"  : [0, 0], // [eV] option (comment out to stop use it)
     "maximum_of_TOF": 45.0, // [ns] parameter 225 (not compatibility with legacy option) 
     "minimum_of_TOF": 20.0, // [ns] parameter 224 (not compatibility with legacy option) 
   },

@@ -1,41 +1,68 @@
 #include "Object.h"
 
-Analysis::Object::Object(const double m,
-                         const double q,
-                         const double t0,
-                         const double t1)
-    : ObjectFlag() {
-  assert(m > 0e0);
-  assert(q > 0e0);
+Analysis::Object::Object(const Analysis::ObjectFlag::FlagName f,
+                         const Analysis::JSONReader &reader,
+                         const std::string prefix): ObjectFlag() {
+  if (f == IonObject) {
+    double m = reader.getDoubleAt(prefix+"mass");
+    double q = reader.getDoubleAt(prefix+"charge");
+    assert(m > 0e0);
+    assert(q > 0e0);
+    mass = kUnit.readAtomicMass(m);
+    charge = kUnit.readElementaryCharge(q);
+  } else if (f == ElecObject) {
+    mass = kUnit.readElectronRestMass(1e0);
+    charge = kUnit.readElementaryCharge(1e0);
+  } else {
+    assert(false);
+  }
+  double t0 = reader.getDoubleAt(prefix+"TOF", 0);
+  double t1 = reader.getDoubleAt(prefix+"TOF", 1);
   assert(t0 <= t1);
-  mass = kUnit.readAtomicMass(m);
-  charge = kUnit.readElementaryCharge(q);
   minOfTOF = kUnit.readNanoSec(t0);
   maxOfTOF = kUnit.readNanoSec(t1);
-  setFlag(IonObject);
+  if (reader.hasMember(prefix+"dx_and_dy")) {
+    isAdjecting = true;
+    dx = kUnit.readMilliMeter(reader.getDoubleAt(prefix+"dx_and_dy", 0));
+    dy = kUnit.readMilliMeter(reader.getDoubleAt(prefix+"dx_and_dy", 1));
+  } else {
+    isAdjecting = false;
+    dx = 0;
+    dy = 0;
+  }
+  setFlag(f);
   resetEventData();
   return;
-};
+}
 Analysis::Object::Object(const Analysis::ObjectFlag::FlagName f,
-                         const double t0,
-                         const double t1)
-    : ObjectFlag() {
-  if (f == ElecObject) {
+                         const double m, const double q,
+                         const double t0, const double t1) : ObjectFlag() {
+  if (f == IonObject) {
+    assert(m > 0e0);
+    assert(q > 0e0);
+    assert(t0 <= t1);
+    mass = kUnit.readAtomicMass(m);
+    charge = kUnit.readElementaryCharge(q);
+    minOfTOF = kUnit.readNanoSec(t0);
+    maxOfTOF = kUnit.readNanoSec(t1);
+  } else if (f == ElecObject) {
     assert(t0 <= t1);
     mass = kUnit.readElectronRestMass(1e0);
     charge = kUnit.readElementaryCharge(1e0);
     minOfTOF = kUnit.readNanoSec(t0);
     maxOfTOF = kUnit.readNanoSec(t1);
-    setFlag(f);
   } else if (f == DummyObject) {
     mass = 0;
     charge = 0;
     minOfTOF = 0;
     maxOfTOF = 0;
-    setFlag(f);
   } else {
     assert(false);
   }
+  isAdjecting = false;
+  dx = 0;
+  dy = 0;
+  setFlag(f);
   resetEventData();
   return;
 }
@@ -51,11 +78,11 @@ void Analysis::Object::resetEventData() {
   return;
 }
 void Analysis::Object::setLocationX(const double &x) {
-  locationX = x;
+  locationX = x+dx;
   return;
 }
 void Analysis::Object::setLocationY(const double &y) {
-  locationY = y;
+  locationY = y+dy;
   return;
 }
 void Analysis::Object::setTOF(const double &t) {

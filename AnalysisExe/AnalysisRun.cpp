@@ -63,8 +63,8 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
 
   // Make analysis tools, ions, and electrons
   pTools = new Analysis::AnalysisTools(kUnit, configReader);
-  pIons = new Analysis::Objects(Objects::ions, maxNumOfIonHits, configReader);
-  pElectrons = new Analysis::Objects(Objects::elecs, maxNumOfElecHits, configReader);
+  pIons = new Analysis::Objects(Objects::ions, maxNumOfIonHits, configReader, "ions.");
+  pElectrons = new Analysis::Objects(Objects::elecs, maxNumOfElecHits, configReader, "electrons.");
   pLogWriter->logAnalysisTools(kUnit, *pTools, *pIons, *pElectrons);
 
   // Open ROOT file

@@ -31,7 +31,7 @@ Analysis::JSONReader::JSONReader(const std::string f) {
 }
 Analysis::JSONReader::~JSONReader() { }
 const rapidjson::Value &Analysis::JSONReader::getValue(std::string str1) const {
-//	std::cout << str1 << std::endl;
+  const auto tmp = str1;
   std::string str0;
   std::size_t found;
   const rapidjson::Value *value;
@@ -45,7 +45,10 @@ const rapidjson::Value &Analysis::JSONReader::getValue(std::string str1) const {
     value = &((*value)[str0.c_str()]);
     found = str1.find(".");
   }
-  assert(value->HasMember(str1.c_str()));
+  if (!(value->HasMember(str1.c_str()))) {
+    std::cout << tmp << std::endl;
+    assert(false);
+  }
   return (*value)[str1.c_str()];
 }
 const int Analysis::JSONReader::getIntAt(const std::string str, const int i) const {

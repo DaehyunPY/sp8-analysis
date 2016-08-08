@@ -78,8 +78,8 @@ Analysis::ObjectParameters::ObjectParameters(const Unit &unit,
                        reader.getDoubleAt(prefix + "pixel_size_of_x"),
                        reader.getDoubleAt(prefix + "pixel_size_of_y"),
                        reader.getDoubleAt(prefix + "dead_time"),
-                       reader.getDoubleAt(prefix + "x_zero_of_COM"),
-                       reader.getDoubleAt(prefix + "y_zero_of_COM"),
+                       reader.getDoubleAt(prefix + "x_zero_of_image"),
+                       reader.getDoubleAt(prefix + "y_zero_of_image"),
                        reader.getDoubleAt(prefix + "time_zero_of_TOF")) {
   return;
 }

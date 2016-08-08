@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "../Protocols/Unit.h"
 #include "ObjectFlag.h"
+#include "../Protocols/JSONReader.h"
 
 namespace Analysis {
 class Object: public ObjectFlag {
@@ -18,15 +19,22 @@ class Object: public ObjectFlag {
   double momentumX;
   double momentumY;
   double momentumZ;
-
  public:
-  Object(const double m,
-         const double q,
-         const double t0,
-         const double t1); // for ion
-  Object(const FlagName f, const double t0=0, const double t1=0);
+  Object(const FlagName f,
+         const double m=0, const double q=0,
+         const double t0=0, const double t1=0);
+  Object(const FlagName f,
+         const JSONReader &reader,
+         const std::string prefix="");
   ~Object();
   void resetEventData();
+
+ private:
+  bool isAdjecting;
+  double dx;
+  double dy;
+
+ public:
   void setLocationX(const double &);
   void setLocationY(const double &);
   void setTOF(const double &);
@@ -37,7 +45,6 @@ class Object: public ObjectFlag {
   const double &getCharge() const;
   const double &getMinOfTOF() const;
   const double &getMaxOfTOF() const;
-
   const double &getLocationX() const;
   const double &getLocationY() const;
   const double &getTOF() const;
