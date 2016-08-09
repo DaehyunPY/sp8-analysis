@@ -10,7 +10,12 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
   Analysis::JSONReader configReader(configFilename);
 
   // Change the working directory
-  chdir(configReader.getStringAt("working_directory").c_str());
+  if (configReader.hasMember("working_directory")) {
+    auto path = configReader.getStringAt("working_directory");
+    std::cout << "Changing path to `" << path << "'... ";
+    chdir(path.c_str());
+    std::cout << "ok" << std::endl;
+  }
 
   // Setup writer
   pLogWriter = new Analysis::LogWriter(configReader);
@@ -63,8 +68,14 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
 
   // Make analysis tools, ions, and electrons
   pTools = new Analysis::AnalysisTools(kUnit, configReader);
-  pIons = new Analysis::Objects(Objects::ions, maxNumOfIonHits, configReader, "ions.");
-  pElectrons = new Analysis::Objects(Objects::elecs, maxNumOfElecHits, configReader, "electrons.");
+  pIons = new Analysis::Objects(Objects::ions,
+                                maxNumOfIonHits,
+                                configReader,
+                                "ions.");
+  pElectrons = new Analysis::Objects(Objects::elecs,
+                                     maxNumOfElecHits,
+                                     configReader,
+                                     "electrons.");
   pLogWriter->logAnalysisTools(kUnit, *pTools, *pIons, *pElectrons);
 
   // Open ROOT file
@@ -978,64 +989,64 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i2h3hP, iP2, iP3);
   fill2d(h2_i3h4hP, iP3, iP4);
   if (master) {
-  fill1d(h1_i1hPX_master, iPX1);
-  fill1d(h1_i1hPY_master, iPY1);
-  fill1d(h1_i1hPZ_master, iPZ1);
-  fill2d(h2_i1hPXY_master, iPX1, iPY1);
-  fill2d(h2_i1hPYZ_master, iPY1, iPZ1);
-  fill2d(h2_i1hPZX_master, iPZ1, iPX1);
-  fill1d(h1_i1hP_master, iP1);
-  fill1d(h1_i2hPX_master, iPX2);
-  fill1d(h1_i2hPY_master, iPY2);
-  fill1d(h1_i2hPZ_master, iPZ2);
-  fill2d(h2_i2hPXY_master, iPX2, iPY2);
-  fill2d(h2_i2hPYZ_master, iPY2, iPZ2);
-  fill2d(h2_i2hPZX_master, iPZ2, iPX2);
-  fill1d(h1_i2hP_master, iP2);
-  fill1d(h1_i3hPX_master, iPX3);
-  fill1d(h1_i3hPY_master, iPY3);
-  fill1d(h1_i3hPZ_master, iPZ3);
-  fill2d(h2_i3hPXY_master, iPX3, iPY3);
-  fill2d(h2_i3hPYZ_master, iPY3, iPZ3);
-  fill2d(h2_i3hPZX_master, iPZ3, iPX3);
-  fill1d(h1_i3hP_master, iP3);
-  fill1d(h1_i4hPX_master, iPX4);
-  fill1d(h1_i4hPY_master, iPY4);
-  fill1d(h1_i4hPZ_master, iPZ4);
-  fill2d(h2_i4hPXY_master, iPX4, iPY4);
-  fill2d(h2_i4hPYZ_master, iPY4, iPZ4);
-  fill2d(h2_i4hPZX_master, iPZ4, iPX4);
-  fill1d(h1_i4hP_master, iP4);
-  fill1d(h1_iTotalPX_master, iPXTotal);
-  fill1d(h1_iTotalPY_master, iPYTotal);
-  fill1d(h1_iTotalPZ_master, iPZTotal);
-  fill2d(h2_iTotalPXY_master, iPXTotal, iPYTotal);
-  fill2d(h2_iTotalPYZ_master, iPYTotal, iPZTotal);
-  fill2d(h2_iTotalPZX_master, iPZTotal, iPXTotal);
-  fill1d(h1_iTotalP_master, iPTotal);
-  fill2d(h2_i1hPDirDistXY_master, iPDirXY1, iPXY1);
-  fill2d(h2_i1hPDirDistYZ_master, iPDirYZ1, iPYZ1);
-  fill2d(h2_i1hPDirDistZX_master, iPDirZX1, iPZX1);
-  fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
-  fill2d(h2_i2hPDirDistXY_master, iPDirXY2, iPXY2);
-  fill2d(h2_i2hPDirDistYZ_master, iPDirYZ2, iPYZ2);
-  fill2d(h2_i2hPDirDistZX_master, iPDirZX2, iPZX2);
-  fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
-  fill2d(h2_i3hPDirDistXY_master, iPDirXY3, iPXY3);
-  fill2d(h2_i3hPDirDistYZ_master, iPDirYZ3, iPYZ3);
-  fill2d(h2_i3hPDirDistZX_master, iPDirZX3, iPZX3);
-  fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
-  fill2d(h2_i4hPDirDistXY_master, iPDirXY4, iPXY4);
-  fill2d(h2_i4hPDirDistYZ_master, iPDirYZ4, iPYZ4);
-  fill2d(h2_i4hPDirDistZX_master, iPDirZX4, iPZX4);
-  fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
-  fill2d(h2_iTotalPDirDistXY_master, iPDirXYTotal, iPXYTotal);
-  fill2d(h2_iTotalPDirDistYZ_master, iPDirYZTotal, iPYZTotal);
-  fill2d(h2_iTotalPDirDistZX_master, iPDirZXTotal, iPZXTotal);
-  fill2d(h2_iTotalPDirDist_master, iPDirXYTotal, iCosPDirZTotal);
-  fill2d(h2_i1h2hP_master, iP1, iP2);
-  fill2d(h2_i2h3hP_master, iP2, iP3);
-  fill2d(h2_i3h4hP_master, iP3, iP4);
+    fill1d(h1_i1hPX_master, iPX1);
+    fill1d(h1_i1hPY_master, iPY1);
+    fill1d(h1_i1hPZ_master, iPZ1);
+    fill2d(h2_i1hPXY_master, iPX1, iPY1);
+    fill2d(h2_i1hPYZ_master, iPY1, iPZ1);
+    fill2d(h2_i1hPZX_master, iPZ1, iPX1);
+    fill1d(h1_i1hP_master, iP1);
+    fill1d(h1_i2hPX_master, iPX2);
+    fill1d(h1_i2hPY_master, iPY2);
+    fill1d(h1_i2hPZ_master, iPZ2);
+    fill2d(h2_i2hPXY_master, iPX2, iPY2);
+    fill2d(h2_i2hPYZ_master, iPY2, iPZ2);
+    fill2d(h2_i2hPZX_master, iPZ2, iPX2);
+    fill1d(h1_i2hP_master, iP2);
+    fill1d(h1_i3hPX_master, iPX3);
+    fill1d(h1_i3hPY_master, iPY3);
+    fill1d(h1_i3hPZ_master, iPZ3);
+    fill2d(h2_i3hPXY_master, iPX3, iPY3);
+    fill2d(h2_i3hPYZ_master, iPY3, iPZ3);
+    fill2d(h2_i3hPZX_master, iPZ3, iPX3);
+    fill1d(h1_i3hP_master, iP3);
+    fill1d(h1_i4hPX_master, iPX4);
+    fill1d(h1_i4hPY_master, iPY4);
+    fill1d(h1_i4hPZ_master, iPZ4);
+    fill2d(h2_i4hPXY_master, iPX4, iPY4);
+    fill2d(h2_i4hPYZ_master, iPY4, iPZ4);
+    fill2d(h2_i4hPZX_master, iPZ4, iPX4);
+    fill1d(h1_i4hP_master, iP4);
+    fill1d(h1_iTotalPX_master, iPXTotal);
+    fill1d(h1_iTotalPY_master, iPYTotal);
+    fill1d(h1_iTotalPZ_master, iPZTotal);
+    fill2d(h2_iTotalPXY_master, iPXTotal, iPYTotal);
+    fill2d(h2_iTotalPYZ_master, iPYTotal, iPZTotal);
+    fill2d(h2_iTotalPZX_master, iPZTotal, iPXTotal);
+    fill1d(h1_iTotalP_master, iPTotal);
+    fill2d(h2_i1hPDirDistXY_master, iPDirXY1, iPXY1);
+    fill2d(h2_i1hPDirDistYZ_master, iPDirYZ1, iPYZ1);
+    fill2d(h2_i1hPDirDistZX_master, iPDirZX1, iPZX1);
+    fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
+    fill2d(h2_i2hPDirDistXY_master, iPDirXY2, iPXY2);
+    fill2d(h2_i2hPDirDistYZ_master, iPDirYZ2, iPYZ2);
+    fill2d(h2_i2hPDirDistZX_master, iPDirZX2, iPZX2);
+    fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
+    fill2d(h2_i3hPDirDistXY_master, iPDirXY3, iPXY3);
+    fill2d(h2_i3hPDirDistYZ_master, iPDirYZ3, iPYZ3);
+    fill2d(h2_i3hPDirDistZX_master, iPDirZX3, iPZX3);
+    fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
+    fill2d(h2_i4hPDirDistXY_master, iPDirXY4, iPXY4);
+    fill2d(h2_i4hPDirDistYZ_master, iPDirYZ4, iPYZ4);
+    fill2d(h2_i4hPDirDistZX_master, iPDirZX4, iPZX4);
+    fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
+    fill2d(h2_iTotalPDirDistXY_master, iPDirXYTotal, iPXYTotal);
+    fill2d(h2_iTotalPDirDistYZ_master, iPDirYZTotal, iPYZTotal);
+    fill2d(h2_iTotalPDirDistZX_master, iPDirZXTotal, iPZXTotal);
+    fill2d(h2_iTotalPDirDist_master, iPDirXYTotal, iCosPDirZTotal);
+    fill2d(h2_i1h2hP_master, iP1, iP2);
+    fill2d(h2_i2h3hP_master, iP2, iP3);
+    fill2d(h2_i3h4hP_master, iP3, iP4);
   }
 
 // IonEnergy
@@ -1170,50 +1181,50 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_e4hPDirDistZX, ePDirZX4, ePZX4);
   fill2d(h2_e4hPDirDist, ePDirXY4, eCosPDirZ4);
   if (master) {
-  fill1d(h1_e1hPX_master, ePX1);
-  fill1d(h1_e1hPY_master, ePY1);
-  fill1d(h1_e1hPZ_master, ePZ1);
-  fill2d(h2_e1hPXY_master, ePX1, ePY1);
-  fill2d(h2_e1hPYZ_master, ePY1, ePZ1);
-  fill2d(h2_e1hPZX_master, ePZ1, ePX1);
-  fill1d(h1_e1hP_master, eP1);
-  fill1d(h1_e2hPX_master, ePX2);
-  fill1d(h1_e2hPY_master, ePY2);
-  fill1d(h1_e2hPZ_master, ePZ2);
-  fill2d(h2_e2hPXY_master, ePX2, ePY2);
-  fill2d(h2_e2hPYZ_master, ePY2, ePZ2);
-  fill2d(h2_e2hPZX_master, ePZ2, ePX2);
-  fill1d(h1_e2hP_master, eP2);
-  fill1d(h1_e3hPX_master, ePX3);
-  fill1d(h1_e3hPY_master, ePY3);
-  fill1d(h1_e3hPZ_master, ePZ3);
-  fill2d(h2_e3hPXY_master, ePX3, ePY3);
-  fill2d(h2_e3hPYZ_master, ePY3, ePZ3);
-  fill2d(h2_e3hPZX_master, ePZ3, ePX3);
-  fill1d(h1_e3hP_master, eP3);
-  fill1d(h1_e4hPX_master, ePX4);
-  fill1d(h1_e4hPY_master, ePY4);
-  fill1d(h1_e4hPZ_master, ePZ4);
-  fill2d(h2_e4hPXY_master, ePX4, ePY4);
-  fill2d(h2_e4hPYZ_master, ePY4, ePZ4);
-  fill2d(h2_e4hPZX_master, ePZ4, ePX4);
-  fill1d(h1_e4hP_master, eP4);
-  fill2d(h2_e1hPDirDistXY_master, ePDirXY1, ePXY1);
-  fill2d(h2_e1hPDirDistYZ_master, ePDirYZ1, ePYZ1);
-  fill2d(h2_e1hPDirDistZX_master, ePDirZX1, ePZX1);
-  fill2d(h2_e1hPDirDist_master, ePDirXY1, eCosPDirZ1);
-  fill2d(h2_e2hPDirDistXY_master, ePDirXY2, ePXY2);
-  fill2d(h2_e2hPDirDistYZ_master, ePDirYZ2, ePYZ2);
-  fill2d(h2_e2hPDirDistZX_master, ePDirZX2, ePZX2);
-  fill2d(h2_e2hPDirDist_master, ePDirXY2, eCosPDirZ2);
-  fill2d(h2_e3hPDirDistXY_master, ePDirXY3, ePXY3);
-  fill2d(h2_e3hPDirDistYZ_master, ePDirYZ3, ePYZ3);
-  fill2d(h2_e3hPDirDistZX_master, ePDirZX3, ePZX3);
-  fill2d(h2_e3hPDirDist_master, ePDirXY3, eCosPDirZ3);
-  fill2d(h2_e4hPDirDistXY_master, ePDirXY4, ePXY4);
-  fill2d(h2_e4hPDirDistYZ_master, ePDirYZ4, ePYZ4);
-  fill2d(h2_e4hPDirDistZX_master, ePDirZX4, ePZX4);
-  fill2d(h2_e4hPDirDist_master, ePDirXY4, eCosPDirZ4);
+    fill1d(h1_e1hPX_master, ePX1);
+    fill1d(h1_e1hPY_master, ePY1);
+    fill1d(h1_e1hPZ_master, ePZ1);
+    fill2d(h2_e1hPXY_master, ePX1, ePY1);
+    fill2d(h2_e1hPYZ_master, ePY1, ePZ1);
+    fill2d(h2_e1hPZX_master, ePZ1, ePX1);
+    fill1d(h1_e1hP_master, eP1);
+    fill1d(h1_e2hPX_master, ePX2);
+    fill1d(h1_e2hPY_master, ePY2);
+    fill1d(h1_e2hPZ_master, ePZ2);
+    fill2d(h2_e2hPXY_master, ePX2, ePY2);
+    fill2d(h2_e2hPYZ_master, ePY2, ePZ2);
+    fill2d(h2_e2hPZX_master, ePZ2, ePX2);
+    fill1d(h1_e2hP_master, eP2);
+    fill1d(h1_e3hPX_master, ePX3);
+    fill1d(h1_e3hPY_master, ePY3);
+    fill1d(h1_e3hPZ_master, ePZ3);
+    fill2d(h2_e3hPXY_master, ePX3, ePY3);
+    fill2d(h2_e3hPYZ_master, ePY3, ePZ3);
+    fill2d(h2_e3hPZX_master, ePZ3, ePX3);
+    fill1d(h1_e3hP_master, eP3);
+    fill1d(h1_e4hPX_master, ePX4);
+    fill1d(h1_e4hPY_master, ePY4);
+    fill1d(h1_e4hPZ_master, ePZ4);
+    fill2d(h2_e4hPXY_master, ePX4, ePY4);
+    fill2d(h2_e4hPYZ_master, ePY4, ePZ4);
+    fill2d(h2_e4hPZX_master, ePZ4, ePX4);
+    fill1d(h1_e4hP_master, eP4);
+    fill2d(h2_e1hPDirDistXY_master, ePDirXY1, ePXY1);
+    fill2d(h2_e1hPDirDistYZ_master, ePDirYZ1, ePYZ1);
+    fill2d(h2_e1hPDirDistZX_master, ePDirZX1, ePZX1);
+    fill2d(h2_e1hPDirDist_master, ePDirXY1, eCosPDirZ1);
+    fill2d(h2_e2hPDirDistXY_master, ePDirXY2, ePXY2);
+    fill2d(h2_e2hPDirDistYZ_master, ePDirYZ2, ePYZ2);
+    fill2d(h2_e2hPDirDistZX_master, ePDirZX2, ePZX2);
+    fill2d(h2_e2hPDirDist_master, ePDirXY2, eCosPDirZ2);
+    fill2d(h2_e3hPDirDistXY_master, ePDirXY3, ePXY3);
+    fill2d(h2_e3hPDirDistYZ_master, ePDirYZ3, ePYZ3);
+    fill2d(h2_e3hPDirDistZX_master, ePDirZX3, ePZX3);
+    fill2d(h2_e3hPDirDist_master, ePDirXY3, eCosPDirZ3);
+    fill2d(h2_e4hPDirDistXY_master, ePDirXY4, ePXY4);
+    fill2d(h2_e4hPDirDistYZ_master, ePDirYZ4, ePYZ4);
+    fill2d(h2_e4hPDirDistZX_master, ePDirZX4, ePZX4);
+    fill2d(h2_e4hPDirDist_master, ePDirXY4, eCosPDirZ4);
   }
 
   // ElecEnergy

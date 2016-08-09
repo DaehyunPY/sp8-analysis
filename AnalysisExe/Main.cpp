@@ -9,91 +9,96 @@
 #include "AnalysisRun.h"
 
 void showProgressBar(const float prog = 0) {
-    const int width = 50; // characters
-    std::cout << "[";
-    int pos = (int) (width * prog);
-    for (int i = 0; i < width; ++i) {
-        if (i < pos) {
-            std::cout << "=";
-        } else if (i == pos) {
-            std::cout << ">";
-        } else {
-            std::cout << " ";
-        }
+  const int width = 50; // characters
+  std::cout << "[";
+  int pos = (int) (width * prog);
+  for (int i = 0; i < width; ++i) {
+    if (i < pos) {
+      std::cout << "=";
+    } else if (i == pos) {
+      std::cout << ">";
+    } else {
+      std::cout << " ";
     }
-    std::cout << "] " << (int) (100 * prog) << "%\r";
-    std::cout.flush();
+  }
+  std::cout << "] " << (int) (100 * prog) << "%\r";
+  std::cout.flush();
 }
 
 enum StatusInfo {
-    keepRunning,
-    quitProgramSafely,
-    done
+  keepRunning,
+  quitProgramSafely,
+  done
 };
 
 void inputManager(StatusInfo &info) {
-    std::string input;
-    if (info != keepRunning) { return; }
-    while (std::cin) {
-        std::cout << "Type something in:" << std::endl;
-        std::getline(std::cin, input);
-        if (input.empty()) {
-            continue;
-        }
-        std::cout << "You typed [" << input << "]" << std::endl;
-        if (input.compare("quit") == 0 && info == keepRunning) {
-            info = quitProgramSafely;
-        }
+  std::string input;
+  if (info != keepRunning) { return; }
+  while (std::cin) {
+    std::cout << "Type something in:" << std::endl;
+    std::getline(std::cin, input);
+    if (input.empty()) {
+      continue;
     }
-    std::cout << "Our work here is done." << std::endl;
+    std::cout << "You typed [" << input << "]" << std::endl;
+    if (input.compare("quit") == 0 && info == keepRunning) {
+      info = quitProgramSafely;
+    }
+  }
+  std::cout << "Our work here is done." << std::endl;
 }
 
 int main(int argc, char *argv[]) {
-    // Inform status
-    if (argc < 2) {
-		printf("syntax: AnalysisExe filename\n");
-        printf("Please provide a filename.\n");
-        return 0;
-    }
-    if (argc > 2) {
-		printf("syntax: AnalysisExe filename\n");
-        printf("too many arguments\n");
-        return 0;
-    }
-    std::cout << "The exe file which place at " << argv[0] << ", is running now. " << std::endl;
-    std::cout << "The configure file which place at " << argv[1] << ", is going to be read. " << std::endl;
-    std::cout << "To quit this program safely, input 'quit'. " << std::endl;
-
-    // Make input thread
-    StatusInfo statusInfo = keepRunning;
-    std::thread threadForInput(inputManager, std::ref(statusInfo));
-
-    // Setup to run
-    srand((unsigned int) time(nullptr));
-    int currentPercentage = -1;
-	std::cout << "Setup run...";
-    Analysis::AnalysisRun run(argv[1]);
-	std::cout << "ok" << std::endl;
-    const long totalEntries = run.getEntries();
-
-    // Run processes
-    for (long i = 0; i < totalEntries; i++) {
-        // Show the process bar
-        if (currentPercentage / 100.0 < i / (double) totalEntries) {
-            currentPercentage++;
-            showProgressBar((const float) (currentPercentage / 100.0));
-        }
-        // Check input
-        if (statusInfo == quitProgramSafely) {
-            break;
-        }
-        run.processEvent(i);
-    }
-
-    // Finish the program
-    statusInfo = done;
-    threadForInput.detach();
-    threadForInput.~thread();
-    std::cout << "The program is done. " << std::endl;
+  // Inform status
+  if (argc < 2) {
+    printf("syntax: AnalysisExe filename\n");
+    printf("Please provide a filename.\n");
     return 0;
+  }
+  if (argc > 2) {
+    printf("syntax: AnalysisExe filename\n");
+    printf("too many arguments\n");
+    return 0;
+  }
+  std::cout << "arg 0: `" << argv[0] << "', is running now. " << std::endl;
+  std::cout << "arg 1: `" << argv[1] << "', is going to be read. " << std::endl;
+  std::string path = argv[1];
+  path = path.substr(0, path.find_last_of("/\\"));
+  std::cout << "Setting path to `" << path << "'... ";
+  chdir(path.c_str());
+  std::cout << "ok" << std::endl;
+
+  // Make input thread
+  std::cout << "To quit this program safely, input 'quit'. " << std::endl;
+  StatusInfo statusInfo = keepRunning;
+  std::thread threadForInput(inputManager, std::ref(statusInfo));
+
+  // Setup to run
+  srand((unsigned int) time(nullptr));
+  int currentPercentage = -1;
+  std::cout << "Setup run...";
+  Analysis::AnalysisRun run(argv[1]);
+  std::cout << "ok" << std::endl;
+  const long totalEntries = run.getEntries();
+
+  // Run processes
+  for (long i = 0; i < totalEntries; i++) {
+    // Show the process bar
+    if (currentPercentage / 100.0 < i / (double) totalEntries) {
+      currentPercentage++;
+      showProgressBar((const float) (currentPercentage / 100.0));
+    }
+    // Check input
+    if (statusInfo == quitProgramSafely) {
+      break;
+    }
+    run.processEvent(i);
+  }
+
+  // Finish the program
+  statusInfo = done;
+  threadForInput.detach();
+  threadForInput.~thread();
+  std::cout << "The program is done. " << std::endl;
+  return 0;
 }

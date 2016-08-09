@@ -1,6 +1,6 @@
 {
   "ID": "Example",
-  "working_directory": "PATH", 
+  // "working_directory": "PATH", // to set the same path with the config file, comment out it 
   "setup_input": {
     "filenames": "resortLess*.root",  // wildcard is availble 
     "tree_name": "resortedData", 
