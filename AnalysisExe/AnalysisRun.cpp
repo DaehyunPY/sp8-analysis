@@ -135,8 +135,8 @@ void Analysis::AnalysisRun::processEvent(const long raw) {
   pElectrons->resetEventData();
 
   // input event data
-  pTools->loadEventDataInputer(*pIons, kUnit, *pEventReader);
-  pTools->loadEventDataInputer(*pElectrons, kUnit, *pEventReader);
+  pTools->loadEventDataInputer(*pIons, *pEventReader);
+  pTools->loadEventDataInputer(*pElectrons, *pEventReader);
 
   // resort option
   if (pIons->areAllFlag(ObjectFlag::MostOrSecondMostReliable)

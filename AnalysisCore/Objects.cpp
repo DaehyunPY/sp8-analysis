@@ -198,7 +198,6 @@ const Analysis::Object &Analysis::Objects::getRealOrDummyObject(const int &i) co
     pObject = &getDummyObject(i);
   } else {
     assert(false);
-    pObject = new Object(ObjectFlag::DummyObject);
   }
   return *pObject;
 }
@@ -210,7 +209,6 @@ Analysis::Object &Analysis::Objects::setRealOrDummyObjectMembers(const int &i) {
     pObject = &setDummyObjectMembers(i);
   } else {
     assert(false);
-    pObject = new Object(ObjectFlag::DummyObject);
   }
   return *pObject;
 }
@@ -490,23 +488,19 @@ Analysis::Objects::Objects(ObjsType tp,
     masterNumOfHits = reader.getIntAt(prefix+"number_of_hits");
     assert(0 <= masterNumOfHits && masterNumOfHits <= maxNumOfHits);
     ppObject = new Object *[maxNumOfHits]{nullptr};
-    for (int i = 0; i < masterNumOfHits; i++) {
+    for (int i = 0; i < masterNumOfHits; i++)
       ppObject[i] = new Object(ObjectFlag::IonObject,
                                reader, prefix + getStrNum(i) + "_hit.");
-    }
-    for (int i = masterNumOfHits; i < maxNumOfHits; i++) {
-      ppObject[i] = new Object(ObjectFlag::DummyObject);
-    }
+    for (int i = masterNumOfHits; i < maxNumOfHits; i++)
+      ppObject[i] = new Object(ObjectFlag::DummyObject, ObjectFlag::IonObject);
   } else if (tp == elecs) {
     masterNumOfHits = reader.getIntAt(prefix+"number_of_hits");
     assert(0 <= masterNumOfHits && masterNumOfHits <= maxNumOfHits);
     ppObject = new Object *[maxNumOfHits]{nullptr};
-    for (int i = 0; i < masterNumOfHits; i++) {
+    for (int i = 0; i < masterNumOfHits; i++)
       ppObject[i] = new Object(ObjectFlag::ElecObject, reader, prefix);
-    }
-    for (int i = masterNumOfHits; i < maxNumOfHits; i++) {
-      ppObject[i] = new Object(ObjectFlag::DummyObject);
-    }
+    for (int i = masterNumOfHits; i < maxNumOfHits; i++)
+      ppObject[i] = new Object(ObjectFlag::DummyObject, ObjectFlag::ElecObject);
   } else {
     assert(false);
   }

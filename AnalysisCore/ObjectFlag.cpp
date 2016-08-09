@@ -112,9 +112,9 @@ void Analysis::ObjectFlag::setFlag(const FlagName flagName) {
     ANALYSIS_OBJECTFLAG_CASESET(HavingXYTData)
     ANALYSIS_OBJECTFLAG_CASESET(HavingMomentumData)
     ANALYSIS_OBJECTFLAG_CASESET(RealObject)
+    ANALYSIS_OBJECTFLAG_CASESET(DummyObject)
     ANALYSIS_OBJECTFLAG_CASESET(IonObject)
     ANALYSIS_OBJECTFLAG_CASESET(ElecObject)
-    ANALYSIS_OBJECTFLAG_CASESET(DummyObject)
     default:
       assert(false);
       break;
@@ -145,9 +145,9 @@ const bool Analysis::ObjectFlag::isFlag(const FlagName flagName) const {
     ANALYSIS_OBJECTFLAG_CASEIS(MostOrSecondMostReliable)
     ANALYSIS_OBJECTFLAG_CASEIS(Risky)
     ANALYSIS_OBJECTFLAG_CASEIS(RealObject)
+    ANALYSIS_OBJECTFLAG_CASEIS(DummyObject)
     ANALYSIS_OBJECTFLAG_CASEIS(IonObject)
     ANALYSIS_OBJECTFLAG_CASEIS(ElecObject)
-    ANALYSIS_OBJECTFLAG_CASEIS(DummyObject)
     default:
       assert(false);
   }
@@ -166,43 +166,32 @@ const bool Analysis::ObjectFlag::isFlag(const FlagName flagName,
   return output;
 }
 void Analysis::ObjectFlag::setRealObject() {
-  if(getNthDigit(5) == initFlag) {
+  if(getNthDigit(5) == initFlag)
     setNthDigit(5, flagFor5thDigit_realObject);
-  }
 }
 void Analysis::ObjectFlag::setDummyObject() {
-  if(getNthDigit(5) == initFlag) {
+  if(getNthDigit(5) == initFlag)
     setNthDigit(5, flagFor5thDigit_dummyObject);
-  }
 }
 const bool Analysis::ObjectFlag::isRealObject() const {
-  const int n = getNthDigit(5);
-  return n == flagFor5thDigit_realObject
-      || n == flagFor5thDigit_ionObject
-      || n == flagFor5thDigit_elecObject;
+  return getNthDigit(5) == flagFor5thDigit_realObject;
 }
 const bool Analysis::ObjectFlag::isDummyObject() const {
   return getNthDigit(5) == flagFor5thDigit_dummyObject;
 }
 void Analysis::ObjectFlag::setIonObject() {
-  const int n = getNthDigit(5);
-  if(n == initFlag || n == flagFor5thDigit_realObject) {
-    setNthDigit(5, flagFor5thDigit_ionObject);
-  }
+  if(getNthDigit(6) == initFlag)
+    setNthDigit(6, flagFor6thDigit_ionObject);
 }
 void Analysis::ObjectFlag::setElecObject() {
-  const int n = getNthDigit(5);
-  if (n == initFlag
-      || n == flagFor5thDigit_realObject) {
-    setNthDigit(5, flagFor5thDigit_elecObject);
-  }
+  if (getNthDigit(6)== initFlag)
+    setNthDigit(6, flagFor6thDigit_elecObject);
 }
 const bool Analysis::ObjectFlag::isIonObject() const {
-  const int n = getNthDigit(5);
-  return n == flagFor5thDigit_ionObject;
+  return getNthDigit(6) == flagFor6thDigit_ionObject;
 }
 const bool Analysis::ObjectFlag::isElecObject() const {
-  return getNthDigit(5) == flagFor5thDigit_elecObject;
+  return getNthDigit(6) == flagFor6thDigit_elecObject;
 }
 void Analysis::ObjectFlag::resetFlag() {
   setNthDigit(1, initFlag);

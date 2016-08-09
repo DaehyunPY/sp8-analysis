@@ -116,8 +116,9 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
   {
     const int &n = elecs.getNumberOfObjects();
     logFile << "        Number of Hits: " << n << std::endl;
-    const double t1 = kUnit.writeNanoSec(analysisTools.calculateTOF(Object(ObjectFlag::ElecObject), 0e0));
-    const double t2 = kUnit.writeNanoSec(analysisTools.calculatePeriodOfCycle(Object(ObjectFlag::ElecObject)));
+    const auto elec = Object(ObjectFlag::RealObject, ObjectFlag::ElecObject);
+    const double t1 = kUnit.writeNanoSec(analysisTools.calculateTOF(elec, 0));
+    const double t2 = kUnit.writeNanoSec(analysisTools.calculatePeriodOfCycle(elec));
     logFile << "        TOF of Stopped Object: " << t1 << std::endl;
     logFile << "        Period of Cycle: " << t2 << std::endl;
   }

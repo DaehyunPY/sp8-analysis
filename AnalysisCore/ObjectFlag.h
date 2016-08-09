@@ -21,7 +21,7 @@ class ObjectFlag: protected Flag {
     WithinMasterRegion,
     OutOfMasterRegion,
     Dead,
-	HavingNotProperData,
+    HavingNotProperData,
     HavingXYTData,
     HavingMomentumData,
     ResortFlag,
@@ -29,9 +29,9 @@ class ObjectFlag: protected Flag {
     MostOrSecondMostReliable,
     Risky,
     RealObject,
+    DummyObject,
     IonObject,
-    ElecObject,
-    DummyObject
+    ElecObject
   };
   void setFlag(const FlagName flagName);
   void setFlag(const FlagName flagName, const int arg);
@@ -72,9 +72,12 @@ class ObjectFlag: protected Flag {
   const unsigned int flagForResort_riskyRegion2 = 20;
   const unsigned int flagFor3rd2Digit_init = 0;
   const unsigned int flagFor3rd2Digit_inTheRegion1 = 1;
-  const unsigned int flagFor3rd2Digit_inTheRegion2 = flagForResort_theRegion2 - flagForResort_theRegion1 + 1; // 21
-  const unsigned int flagFor3rd2Digit_lowerThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 1;
-  const unsigned int flagFor3rd2Digit_upperThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 2;
+  const unsigned int flagFor3rd2Digit_inTheRegion2 =
+      flagForResort_theRegion2 - flagForResort_theRegion1 + 1; // 21
+  const unsigned int
+      flagFor3rd2Digit_lowerThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 1;
+  const unsigned int
+      flagFor3rd2Digit_upperThanTheRegion = flagFor3rd2Digit_inTheRegion2 + 2;
   const unsigned int convertCoboldFlag(const int coboldFlag) const;
   const unsigned int convertToCoboldFlag(const unsigned int storedFlag) const;
   const unsigned int getResortFlag() const;
@@ -86,17 +89,19 @@ class ObjectFlag: protected Flag {
 
  private:
   const unsigned int flagFor5thDigit_realObject = 1;
-  const unsigned int flagFor5thDigit_ionObject = 2;
-  const unsigned int flagFor5thDigit_elecObject = 3;
-  const unsigned int flagFor5thDigit_dummyObject = 4;
+  const unsigned int flagFor5thDigit_dummyObject = 2;
   void setRealObject();
-  void setIonObject();
-  void setElecObject();
   void setDummyObject();
   const bool isRealObject() const;
+  const bool isDummyObject() const;
+
+ private:
+  const unsigned int flagFor6thDigit_ionObject = 3;
+  const unsigned int flagFor6thDigit_elecObject = 4;
+  void setIonObject();
+  void setElecObject();
   const bool isIonObject() const;
   const bool isElecObject() const;
-  const bool isDummyObject() const;
 };
 }
 

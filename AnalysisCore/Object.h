@@ -20,12 +20,11 @@ class Object: public ObjectFlag {
   double momentumY;
   double momentumZ;
  public:
+  Object(const FlagName f1, const FlagName f2,
+         double m = 0, double q = 0,
+         const double t0 = 0, const double t1 = 0);
   Object(const FlagName f,
-         const double m=0, const double q=0,
-         const double t0=0, const double t1=0);
-  Object(const FlagName f,
-         const JSONReader &reader,
-         const std::string prefix="");
+         const JSONReader &reader, const std::string prefix);
   ~Object();
   void resetEventData();
 

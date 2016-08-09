@@ -9,9 +9,10 @@ Analysis::AnalysisTools::AnalysisTools(const EquipmentParameters &equip,
       elecParameters(elec),
       ID(ID) {
   if (elecParameters.getParameterType()
-      == ObjectParameters::legacy_elec_parameters_not_corrected) {
-    elecParameters.correctLegacyParameters(calculateTOF(Object(ObjectFlag::ElecObject), 0));
-  }
+      == ObjectParameters::legacy_elec_parameters_not_corrected)
+    elecParameters.correctLegacyParameters(
+        calculateTOF(
+            Object(ObjectFlag::RealObject, ObjectFlag::ElecObject), 0));
   resetCounter();
   return;
 }
@@ -190,52 +191,35 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
                                                    const double &y1,
                                                    const double &t1,
                                                    const int &f1) const {
-  if (obj.isFlag(ObjectFlag::IonObject)) {
-    const double &theta = getIonParameters().getAngleOfDetector();
-    const double &dx = getIonParameters().getPixelSizeOfX();
-    const double &dy = getIonParameters().getPixelSizeOfY();
-    const double &deadTime = getIonParameters().getDeadTime();
-    const double &x0 = getIonParameters().getXZeroOfCOM();
-    const double &y0 = getIonParameters().getYZeroOfCOM();
-    const double &t0 = getIonParameters().getTimeZeroOfTOF();
-    const XY xy = calculateRotation({x1, y1}, theta);
-    const double x = xy.x * dx - x0;
-    const double y = xy.y * dy - y0;
-    const double t = t1 - t0;
-    obj.setLocationX(x);
-    obj.setLocationY(y);
-    obj.setTOF(t);
-    obj.setFlag(ObjectFlag::ResortFlag, f1);
-    if (obj.getTOF() > deadTime || obj.getTOF() < 0e0) {
-      obj.setFlag(ObjectFlag::Dead);
-      obj.setFlag(ObjectFlag::HavingNotProperData);
-    } else {
-      obj.setFlag(ObjectFlag::HavingXYTData);
-    }
-  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
-    const double &theta = getElectronParameters().getAngleOfDetector();
-    const double &dx = getElectronParameters().getPixelSizeOfX();
-    const double &dy = getElectronParameters().getPixelSizeOfY();
-    const double &deadTime = getElectronParameters().getDeadTime();
-    const double &x0 = getElectronParameters().getXZeroOfCOM();
-    const double &y0 = getElectronParameters().getYZeroOfCOM();
-    const double &t0 = getElectronParameters().getTimeZeroOfTOF();
-    const XY xy = calculateRotation({x1, y1}, theta);
-    const double x = xy.x * dx - x0;
-    const double y = xy.y * dy - y0;
-    const double t = t1 - t0;
-    obj.setLocationX(x);
-    obj.setLocationY(y);
-    obj.setTOF(t);
-    obj.setFlag(ObjectFlag::ResortFlag, f1);
-    if (obj.getTOF() > deadTime || obj.getTOF() < 0e0) {
-      obj.setFlag(ObjectFlag::Dead);
-      obj.setFlag(ObjectFlag::HavingNotProperData);
-    } else {
-      obj.setFlag(ObjectFlag::HavingXYTData);
-    }
-  } else {
+  const ObjectParameters *par = nullptr;
+  if (obj.isFlag(ObjectFlag::DummyObject))
+    obj.setFlag(ObjectFlag::OutOfMasterRegion);
+  if (obj.isFlag(ObjectFlag::IonObject)) par = &getIonParameters();
+  else if (obj.isFlag(ObjectFlag::ElecObject)) par = &getElectronParameters();
+  else
     assert(false);
+
+  const double &theta = par->getAngleOfDetector();
+  const double &dx = par->getPixelSizeOfX();
+  const double &dy = par->getPixelSizeOfY();
+  const double &deadTime = par->getDeadTime();
+  const double &x0 = par->getXZeroOfCOM();
+  const double &y0 = par->getYZeroOfCOM();
+  const double &t0 = par->getTimeZeroOfTOF();
+
+  const XY xy = calculateRotation({x1, y1}, theta);
+  const double x = xy.x * dx - x0;
+  const double y = xy.y * dy - y0;
+  const double t = t1 - t0;
+  obj.setLocationX(x);
+  obj.setLocationY(y);
+  obj.setTOF(t);
+  obj.setFlag(ObjectFlag::ResortFlag, f1);
+  if (obj.getTOF() > deadTime || obj.getTOF() < 0e0) {
+    obj.setFlag(ObjectFlag::Dead);
+    obj.setFlag(ObjectFlag::HavingNotProperData);
+  } else {
+    obj.setFlag(ObjectFlag::HavingXYTData);
   }
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Object &obj,
@@ -315,26 +299,6 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(
                                 object.getCharge(),
                                 getEquipmentParameters().getMagneticFiled());
 }
-void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
-                                                   const Unit &unit,
-                                                   const double &x,
-                                                   const double &y,
-                                                   const double &t,
-                                                   const int &f) const {
-  if (obj.isFlag(ObjectFlag::IonObject)) {
-    this->loadEventDataInputer(obj,
-                               unit.readMilliMeter(x),
-                               unit.readMilliMeter(y),
-                               unit.readNanoSec(t),
-                               f);
-  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
-    this->loadEventDataInputer(obj,
-                               unit.readMilliMeter(x),
-                               unit.readMilliMeter(y),
-                               unit.readNanoSec(t),
-                               f);
-  }
-}
 void Analysis::AnalysisTools::loadMomentumCalculator(Objects &objs,
                                                      const OptName opt) const {
   const int &n = objs.getNumberOfObjects();
@@ -347,36 +311,32 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Objects &objs,
     objs.setAllFlag(ObjectFlag::OutOfMasterRegion);
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
-                                                   const Unit &unit,
                                                    const EventDataReader &reader,
                                                    const int &iHit) const {
-  if (obj.isFlag(ObjectFlag::IonObject)) {
+  if (obj.isFlag(ObjectFlag::IonObject))
     loadEventDataInputer(obj,
-                         unit,
-                         reader.getEventDataAt(iHit, "IonX"),
-                         reader.getEventDataAt(iHit, "IonY"),
-                         reader.getEventDataAt(iHit, "IonT"),
+                         kUnit.readMilliMeter(
+                             reader.getEventDataAt(iHit, "IonX")),
+                         kUnit.readMilliMeter(
+                             reader.getEventDataAt(iHit, "IonY")),
+                         kUnit.readNanoSec(
+                             reader.getEventDataAt(iHit, "IonT")),
                          reader.getFlagDataAt(iHit, "IonFlag"));
-  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
+  else if (obj.isFlag(ObjectFlag::ElecObject))
     loadEventDataInputer(obj,
-                         unit,
-                         reader.getEventDataAt(iHit, "ElecX"),
-                         reader.getEventDataAt(iHit, "ElecY"),
-                         reader.getEventDataAt(iHit, "ElecT"),
+                         kUnit.readMilliMeter(
+                             reader.getEventDataAt(iHit, "ElecX")),
+                         kUnit.readMilliMeter(
+                             reader.getEventDataAt(iHit, "ElecY")),
+                         kUnit.readNanoSec(
+                             reader.getEventDataAt(iHit, "ElecT")),
                          reader.getFlagDataAt(iHit, "ElecFlag"));
-  }
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Objects &objs,
-                                                   const Unit &unit,
                                                    const EventDataReader &reader) const {
-  const int &n = objs.getNumberOfObjects();
   const int &m = objs.getNumberOfRealOrDummyObjects();
-  for (int i = 0; i < n; i++) {
-    loadEventDataInputer(objs.setObjectMembers(i), unit, reader, i);
-  }
-  for (int i = n; i < m; i++) {
-    loadEventDataInputer(objs.setDummyObjectMembers(i), unit, reader, i);
-  }
+  for (int i = 0; i < m; i++)
+    loadEventDataInputer(objs.setRealOrDummyObjectMembers(i), reader, i);
 }
 const double Analysis::AnalysisTools::calculateFrequencyOfCycle(const double &m,
                                                                 const double &q,

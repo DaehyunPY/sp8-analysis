@@ -3,7 +3,6 @@ project(Analysis)
 
 ### link ROOT
 set(ROOTSYS "$ENV{ROOTSYS}")
-set(ROOTSYS "/usr/local/opt/root6")
 if (ROOTSYS)
   message(STATUS "ROOTSYS is... ${ROOTSYS}")
 else ()

@@ -45,16 +45,6 @@ class AnalysisTools {
   const double calculateDiffTOF(const Object &obj, const double &) const;
   const XY calculateMomentumXY(const Object &obj) const;
   const double calculateMomentumZ(const Object &obj, bool &info) const; // todo: find better way to calculate
-  void loadEventDataInputer(Object &,
-                            const double &,
-                            const double &,
-                            const double &,
-                            const int &) const;
-  void loadEventDataInputer(Object &,
-                            const Unit &,
-                            const EventDataReader &,
-                            const int &) const;
-
  public:
   const EquipmentParameters &getEquipmentParameters() const;
   const ObjectParameters &getIonParameters() const;
@@ -71,15 +61,19 @@ class AnalysisTools {
   const double calculatePeriodOfCycle(const double &m,
                                       const double &q, const double &B) const;
   const double calculatePeriodOfCycle(const Object &) const;
+
+ private:
   void loadEventDataInputer(Object &,
-                            const Unit &,
                             const double &,
                             const double &,
                             const double &,
-                            const int &) const; // for unit
-  void loadEventDataInputer(Objects &,
-                            const Unit &,
-                            const EventDataReader &) const; // for ions
+                            const int &) const;
+  void loadEventDataInputer(Analysis::Object &,
+                            const EventDataReader &,
+                            const int &) const;
+ public:
+  void loadEventDataInputer(Analysis::Objects &, const EventDataReader &) const;
+
  public:
   enum OptName {
     OnlyWithinMasterRegion, OnlyNotDead, AllRegion
