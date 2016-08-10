@@ -27,8 +27,8 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
       new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
   pEventChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
   pLogWriter->write() << "Filenames: "
-      << configReader.getStringAt("setup_input.filenames").c_str()
-      << std::endl;
+                      << configReader.getStringAt("setup_input.filenames").c_str()
+                      << std::endl;
   maxNumOfIonHits =
       configReader.getIntAt("setup_input.max_number_of_ion_hits");
   maxNumOfElecHits =
@@ -99,7 +99,7 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
 Analysis::AnalysisRun::~AnalysisRun() {
   // counter
   pLogWriter->write() << "Event count: " << pTools->getEventNumber()
-      << std::endl;
+                      << std::endl;
 
   // flush ROOT file
   flushRootFile();
@@ -357,9 +357,18 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_master), __IONMOMENTUM5__);
@@ -371,10 +380,16 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_master), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistX), __IONMOMENTUM4__);
@@ -385,10 +400,16 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_master), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistX), __IONMOMENTUM4__);
@@ -399,10 +420,16 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_master), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistX), __IONMOMENTUM4__);
@@ -413,10 +440,16 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist_master), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP), __IONMOMENTUM6__);
@@ -613,10 +646,16 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZ_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_PDirZIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_PDirZIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_PDirXIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_PDirXIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_PDirYIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_PDirYIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist_master), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistX), __ELECMOMENTUM4__);
@@ -627,10 +666,16 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZ_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_PDirZIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_PDirZIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_PDirXIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_PDirXIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_PDirYIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_PDirYIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist_master), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistX), __ELECMOMENTUM4__);
@@ -641,10 +686,16 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZ_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_PDirZIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_PDirZIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_PDirXIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_PDirXIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_PDirYIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_PDirYIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist_master), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistX), __ELECMOMENTUM4__);
@@ -655,10 +706,16 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZ_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_PDirZIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_PDirZIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_PDirXIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_PDirXIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_PDirYIs90), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_PDirYIs90_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist_master), __ELECMOMENTUM5__);
 
@@ -1074,6 +1131,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i1hPDirDistXY, iPDirXY1, iPXY1);
   fill2d(h2_i1hPDirDistYZ, iPDirYZ1, iPYZ1);
   fill2d(h2_i1hPDirDistZX, iPDirZX1, iPZX1);
+  if (iPDirZ1Is90) fill2d(h2_i1hPDirDistXY_PDirZIs90, iPDirXY1, iPXY1);
+  if (iPDirX1Is90) fill2d(h2_i1hPDirDistYZ_PDirXIs90, iPDirYZ1, iPYZ1);
+  if (iPDirY1Is90) fill2d(h2_i1hPDirDistZX_PDirYIs90, iPDirZX1, iPZX1);
   fill2d(h2_i1hPDirDist, iPDirXY1, iCosPDirZ1);
   fill2d(h2_i2hPDirDistX, iPDirX2, iPX2);
   fill2d(h2_i2hPDirDistY, iPDirY2, iPY2);
@@ -1081,6 +1141,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i2hPDirDistXY, iPDirXY2, iPXY2);
   fill2d(h2_i2hPDirDistYZ, iPDirYZ2, iPYZ2);
   fill2d(h2_i2hPDirDistZX, iPDirZX2, iPZX2);
+  if (iPDirZ2Is90) fill2d(h2_i2hPDirDistXY_PDirZIs90, iPDirXY2, iPXY2);
+  if (iPDirX2Is90) fill2d(h2_i2hPDirDistYZ_PDirXIs90, iPDirYZ2, iPYZ2);
+  if (iPDirY2Is90) fill2d(h2_i2hPDirDistZX_PDirYIs90, iPDirZX2, iPZX2);
   fill2d(h2_i2hPDirDist, iPDirXY2, iCosPDirZ2);
   fill2d(h2_i3hPDirDistX, iPDirX3, iPX3);
   fill2d(h2_i3hPDirDistY, iPDirY3, iPY3);
@@ -1088,6 +1151,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i3hPDirDistXY, iPDirXY3, iPXY3);
   fill2d(h2_i3hPDirDistYZ, iPDirYZ3, iPYZ3);
   fill2d(h2_i3hPDirDistZX, iPDirZX3, iPZX3);
+  if (iPDirZ3Is90) fill2d(h2_i3hPDirDistXY_PDirZIs90, iPDirXY3, iPXY3);
+  if (iPDirX3Is90) fill2d(h2_i3hPDirDistYZ_PDirXIs90, iPDirYZ3, iPYZ3);
+  if (iPDirY3Is90) fill2d(h2_i3hPDirDistZX_PDirYIs90, iPDirZX3, iPZX3);
   fill2d(h2_i3hPDirDist, iPDirXY3, iCosPDirZ3);
   fill2d(h2_i4hPDirDistX, iPDirX4, iPX4);
   fill2d(h2_i4hPDirDistY, iPDirY4, iPY4);
@@ -1095,6 +1161,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i4hPDirDistXY, iPDirXY4, iPXY4);
   fill2d(h2_i4hPDirDistYZ, iPDirYZ4, iPYZ4);
   fill2d(h2_i4hPDirDistZX, iPDirZX4, iPZX4);
+  if (iPDirZ4Is90) fill2d(h2_i4hPDirDistXY_PDirZIs90, iPDirXY4, iPXY4);
+  if (iPDirX4Is90) fill2d(h2_i4hPDirDistYZ_PDirXIs90, iPDirYZ4, iPYZ4);
+  if (iPDirY4Is90) fill2d(h2_i4hPDirDistZX_PDirYIs90, iPDirZX4, iPZX4);
   fill2d(h2_i4hPDirDist, iPDirXY4, iCosPDirZ4);
   fill2d(h2_iTotalPDirDistX, iPDirXTotal, iPXTotal);
   fill2d(h2_iTotalPDirDistY, iPDirYTotal, iPYTotal);
@@ -1102,6 +1171,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_iTotalPDirDistXY, iPDirXYTotal, iPXYTotal);
   fill2d(h2_iTotalPDirDistYZ, iPDirYZTotal, iPYZTotal);
   fill2d(h2_iTotalPDirDistZX, iPDirZXTotal, iPZXTotal);
+  if (iPDirZTotalIs90) fill2d(h2_iTotalPDirDistXY_PDirZIs90, iPDirXYTotal, iPXYTotal);
+  if (iPDirXTotalIs90) fill2d(h2_iTotalPDirDistYZ_PDirXIs90, iPDirYZTotal, iPYZTotal);
+  if (iPDirYTotalIs90) fill2d(h2_iTotalPDirDistZX_PDirYIs90, iPDirZXTotal, iPZXTotal);
   fill2d(h2_iTotalPDirDist, iPDirXYTotal, iCosPDirZTotal);
   fill2d(h2_i1h2hP, iP1, iP2);
   fill2d(h2_i2h3hP, iP2, iP3);
@@ -1148,6 +1220,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_i1hPDirDistXY_master, iPDirXY1, iPXY1);
     fill2d(h2_i1hPDirDistYZ_master, iPDirYZ1, iPYZ1);
     fill2d(h2_i1hPDirDistZX_master, iPDirZX1, iPZX1);
+    if (iPDirZ1Is90) fill2d(h2_i1hPDirDistXY_PDirZIs90_master, iPDirXY1, iPXY1);
+    if (iPDirX1Is90) fill2d(h2_i1hPDirDistYZ_PDirXIs90_master, iPDirYZ1, iPYZ1);
+    if (iPDirY1Is90) fill2d(h2_i1hPDirDistZX_PDirYIs90_master, iPDirZX1, iPZX1);
     fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
     fill2d(h2_i2hPDirDistX_master, iPDirX2, iPX2);
     fill2d(h2_i2hPDirDistY_master, iPDirY2, iPY2);
@@ -1155,6 +1230,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_i2hPDirDistXY_master, iPDirXY2, iPXY2);
     fill2d(h2_i2hPDirDistYZ_master, iPDirYZ2, iPYZ2);
     fill2d(h2_i2hPDirDistZX_master, iPDirZX2, iPZX2);
+    if (iPDirZ2Is90) fill2d(h2_i2hPDirDistXY_PDirZIs90_master, iPDirXY2, iPXY2);
+    if (iPDirX2Is90) fill2d(h2_i2hPDirDistYZ_PDirXIs90_master, iPDirYZ2, iPYZ2);
+    if (iPDirY2Is90) fill2d(h2_i2hPDirDistZX_PDirYIs90_master, iPDirZX2, iPZX2);
     fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
     fill2d(h2_i3hPDirDistX_master, iPDirX3, iPX3);
     fill2d(h2_i3hPDirDistY_master, iPDirY3, iPY3);
@@ -1162,6 +1240,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_i3hPDirDistXY_master, iPDirXY3, iPXY3);
     fill2d(h2_i3hPDirDistYZ_master, iPDirYZ3, iPYZ3);
     fill2d(h2_i3hPDirDistZX_master, iPDirZX3, iPZX3);
+    if (iPDirZ3Is90) fill2d(h2_i3hPDirDistXY_PDirZIs90_master, iPDirXY3, iPXY3);
+    if (iPDirX3Is90) fill2d(h2_i3hPDirDistYZ_PDirXIs90_master, iPDirYZ3, iPYZ3);
+    if (iPDirY3Is90) fill2d(h2_i3hPDirDistZX_PDirYIs90_master, iPDirZX3, iPZX3);
     fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
     fill2d(h2_i4hPDirDistX_master, iPDirX4, iPX4);
     fill2d(h2_i4hPDirDistY_master, iPDirY4, iPY4);
@@ -1169,6 +1250,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_i4hPDirDistXY_master, iPDirXY4, iPXY4);
     fill2d(h2_i4hPDirDistYZ_master, iPDirYZ4, iPYZ4);
     fill2d(h2_i4hPDirDistZX_master, iPDirZX4, iPZX4);
+    if (iPDirZ4Is90) fill2d(h2_i4hPDirDistXY_PDirZIs90_master, iPDirXY4, iPXY4);
+    if (iPDirX4Is90) fill2d(h2_i4hPDirDistYZ_PDirXIs90_master, iPDirYZ4, iPYZ4);
+    if (iPDirY4Is90) fill2d(h2_i4hPDirDistZX_PDirYIs90_master, iPDirZX4, iPZX4);
     fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
     fill2d(h2_iTotalPDirDistX_master, iPDirXTotal, iPXTotal);
     fill2d(h2_iTotalPDirDistY_master, iPDirYTotal, iPYTotal);
@@ -1176,6 +1260,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_iTotalPDirDistXY_master, iPDirXYTotal, iPXYTotal);
     fill2d(h2_iTotalPDirDistYZ_master, iPDirYZTotal, iPYZTotal);
     fill2d(h2_iTotalPDirDistZX_master, iPDirZXTotal, iPZXTotal);
+    if (iPDirZTotalIs90) fill2d(h2_iTotalPDirDistXY_PDirZIs90_master, iPDirXYTotal, iPXYTotal);
+    if (iPDirXTotalIs90) fill2d(h2_iTotalPDirDistYZ_PDirXIs90_master, iPDirYZTotal, iPYZTotal);
+    if (iPDirYTotalIs90) fill2d(h2_iTotalPDirDistZX_PDirYIs90_master, iPDirZXTotal, iPZXTotal);
     fill2d(h2_iTotalPDirDist_master, iPDirXYTotal, iCosPDirZTotal);
     fill2d(h2_i1h2hP_master, iP1, iP2);
     fill2d(h2_i2h3hP_master, iP2, iP3);
@@ -1333,6 +1420,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_e1hPDirDistXY, ePDirXY1, ePXY1);
   fill2d(h2_e1hPDirDistYZ, ePDirYZ1, ePYZ1);
   fill2d(h2_e1hPDirDistZX, ePDirZX1, ePZX1);
+  if (ePDirZ1Is90) fill2d(h2_e1hPDirDistXY_PDirZIs90, ePDirXY1, ePXY1);
+  if (ePDirX1Is90) fill2d(h2_e1hPDirDistYZ_PDirXIs90, ePDirYZ1, ePYZ1);
+  if (ePDirY1Is90) fill2d(h2_e1hPDirDistZX_PDirYIs90, ePDirZX1, ePZX1);
   fill2d(h2_e1hPDirDist, ePDirXY1, eCosPDirZ1);
   fill2d(h2_e2hPDirDistX, ePDirX2, ePX2);
   fill2d(h2_e2hPDirDistY, ePDirY2, ePY2);
@@ -1340,6 +1430,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_e2hPDirDistXY, ePDirXY2, ePXY2);
   fill2d(h2_e2hPDirDistYZ, ePDirYZ2, ePYZ2);
   fill2d(h2_e2hPDirDistZX, ePDirZX2, ePZX2);
+  if (ePDirZ2Is90) fill2d(h2_e2hPDirDistXY_PDirZIs90, ePDirXY2, ePXY2);
+  if (ePDirX2Is90) fill2d(h2_e2hPDirDistYZ_PDirXIs90, ePDirYZ2, ePYZ2);
+  if (ePDirY2Is90) fill2d(h2_e2hPDirDistZX_PDirYIs90, ePDirZX2, ePZX2);
   fill2d(h2_e2hPDirDist, ePDirXY2, eCosPDirZ2);
   fill2d(h2_e3hPDirDistX, ePDirX3, ePX3);
   fill2d(h2_e3hPDirDistY, ePDirY3, ePY3);
@@ -1347,6 +1440,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_e3hPDirDistXY, ePDirXY3, ePXY3);
   fill2d(h2_e3hPDirDistYZ, ePDirYZ3, ePYZ3);
   fill2d(h2_e3hPDirDistZX, ePDirZX3, ePZX3);
+  if (ePDirZ3Is90) fill2d(h2_e3hPDirDistXY_PDirZIs90, ePDirXY3, ePXY3);
+  if (ePDirX3Is90) fill2d(h2_e3hPDirDistYZ_PDirXIs90, ePDirYZ3, ePYZ3);
+  if (ePDirY3Is90) fill2d(h2_e3hPDirDistZX_PDirYIs90, ePDirZX3, ePZX3);
   fill2d(h2_e3hPDirDist, ePDirXY3, eCosPDirZ3);
   fill2d(h2_e4hPDirDistX, ePDirX4, ePX4);
   fill2d(h2_e4hPDirDistY, ePDirY4, ePY4);
@@ -1354,6 +1450,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_e4hPDirDistXY, ePDirXY4, ePXY4);
   fill2d(h2_e4hPDirDistYZ, ePDirYZ4, ePYZ4);
   fill2d(h2_e4hPDirDistZX, ePDirZX4, ePZX4);
+  if (ePDirZ4Is90) fill2d(h2_e4hPDirDistXY_PDirZIs90, ePDirXY4, ePXY4);
+  if (ePDirX4Is90) fill2d(h2_e4hPDirDistYZ_PDirXIs90, ePDirYZ4, ePYZ4);
+  if (ePDirY4Is90) fill2d(h2_e4hPDirDistZX_PDirYIs90, ePDirZX4, ePZX4);
   fill2d(h2_e4hPDirDist, ePDirXY4, eCosPDirZ4);
   if (master) {
     fill1d(h1_e1hPX_master, ePX1);
@@ -1390,6 +1489,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_e1hPDirDistXY_master, ePDirXY1, ePXY1);
     fill2d(h2_e1hPDirDistYZ_master, ePDirYZ1, ePYZ1);
     fill2d(h2_e1hPDirDistZX_master, ePDirZX1, ePZX1);
+    if (ePDirZ1Is90) fill2d(h2_e1hPDirDistXY_PDirZIs90_master, ePDirXY1, ePXY1);
+    if (ePDirX1Is90) fill2d(h2_e1hPDirDistYZ_PDirXIs90_master, ePDirYZ1, ePYZ1);
+    if (ePDirY1Is90) fill2d(h2_e1hPDirDistZX_PDirYIs90_master, ePDirZX1, ePZX1);
     fill2d(h2_e1hPDirDist_master, ePDirXY1, eCosPDirZ1);
     fill2d(h2_e2hPDirDistX_master, ePDirX2, ePX2);
     fill2d(h2_e2hPDirDistY_master, ePDirY2, ePY2);
@@ -1397,6 +1499,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_e2hPDirDistXY_master, ePDirXY2, ePXY2);
     fill2d(h2_e2hPDirDistYZ_master, ePDirYZ2, ePYZ2);
     fill2d(h2_e2hPDirDistZX_master, ePDirZX2, ePZX2);
+    if (ePDirZ2Is90) fill2d(h2_e2hPDirDistXY_PDirZIs90_master, ePDirXY2, ePXY2);
+    if (ePDirX2Is90) fill2d(h2_e2hPDirDistYZ_PDirXIs90_master, ePDirYZ2, ePYZ2);
+    if (ePDirY2Is90) fill2d(h2_e2hPDirDistZX_PDirYIs90_master, ePDirZX2, ePZX2);
     fill2d(h2_e2hPDirDist_master, ePDirXY2, eCosPDirZ2);
     fill2d(h2_e3hPDirDistX_master, ePDirX3, ePX3);
     fill2d(h2_e3hPDirDistY_master, ePDirY3, ePY3);
@@ -1404,6 +1509,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_e3hPDirDistXY_master, ePDirXY3, ePXY3);
     fill2d(h2_e3hPDirDistYZ_master, ePDirYZ3, ePYZ3);
     fill2d(h2_e3hPDirDistZX_master, ePDirZX3, ePZX3);
+    if (ePDirZ3Is90) fill2d(h2_e3hPDirDistXY_PDirZIs90_master, ePDirXY3, ePXY3);
+    if (ePDirX3Is90) fill2d(h2_e3hPDirDistYZ_PDirXIs90_master, ePDirYZ3, ePYZ3);
+    if (ePDirY3Is90) fill2d(h2_e3hPDirDistZX_PDirYIs90_master, ePDirZX3, ePZX3);
     fill2d(h2_e3hPDirDist_master, ePDirXY3, eCosPDirZ3);
     fill2d(h2_e4hPDirDistX_master, ePDirX4, ePX4);
     fill2d(h2_e4hPDirDistY_master, ePDirY4, ePY4);
@@ -1411,6 +1519,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_e4hPDirDistXY_master, ePDirXY4, ePXY4);
     fill2d(h2_e4hPDirDistYZ_master, ePDirYZ4, ePYZ4);
     fill2d(h2_e4hPDirDistZX_master, ePDirZX4, ePZX4);
+    if (ePDirZ4Is90) fill2d(h2_e4hPDirDistXY_PDirZIs90_master, ePDirXY4, ePXY4);
+    if (ePDirX4Is90) fill2d(h2_e4hPDirDistYZ_PDirXIs90_master, ePDirYZ4, ePYZ4);
+    if (ePDirY4Is90) fill2d(h2_e4hPDirDistZX_PDirYIs90_master, ePDirZX4, ePZX4);
     fill2d(h2_e4hPDirDist_master, ePDirXY4, eCosPDirZ4);
   }
 

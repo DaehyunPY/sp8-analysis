@@ -137,6 +137,7 @@ const double Analysis::AnalysisTools::calculateMomentumZ(const Object &obj,
     }
     return 0e0;
   } else {
+    info = false;
     assert(false);
   }
 }

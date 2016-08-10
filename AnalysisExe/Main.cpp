@@ -60,8 +60,8 @@ int main(int argc, char *argv[]) {
     printf("too many arguments\n");
     return 0;
   }
-  std::cout << "arg 0: `" << argv[0] << "', is running now. " << std::endl;
-  std::cout << "arg 1: `" << argv[1] << "', is going to be read. " << std::endl;
+  std::cout << "arg 0: `" << argv[0] << "' is running now. " << std::endl;
+  std::cout << "arg 1: `" << argv[1] << "' is going to be read. " << std::endl;
   std::string path = argv[1];
   path = path.substr(0, path.find_last_of("/\\"));
   std::cout << "Setting path to `" << path << "'... ";
@@ -76,9 +76,7 @@ int main(int argc, char *argv[]) {
   // Setup to run
   srand((unsigned int) time(nullptr));
   int currentPercentage = -1;
-  std::cout << "Setup run...";
   Analysis::AnalysisRun run(argv[1]);
-  std::cout << "ok" << std::endl;
   const long totalEntries = run.getEntries();
 
   // Run processes
