@@ -27,8 +27,8 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
       new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
   pEventChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
   pLogWriter->write() << "Filenames: "
-                      << configReader.getStringAt("setup_input.filenames").c_str()
-                      << std::endl;
+      << configReader.getStringAt("setup_input.filenames").c_str()
+      << std::endl;
   maxNumOfIonHits =
       configReader.getIntAt("setup_input.max_number_of_ion_hits");
   maxNumOfElecHits =
@@ -99,7 +99,7 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
 Analysis::AnalysisRun::~AnalysisRun() {
   // counter
   pLogWriter->write() << "Event count: " << pTools->getEventNumber()
-                      << std::endl;
+      << std::endl;
 
   // flush ROOT file
   flushRootFile();
@@ -349,6 +349,12 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPZX_master), __IONMOMENTUM2__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP), __IONMOMENTUM3__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP_master), __IONMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistX), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistY), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZ), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ), __IONMOMENTUM4__);
@@ -357,6 +363,12 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_master), __IONMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistX), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistY), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZ), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ), __IONMOMENTUM4__);
@@ -365,6 +377,12 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_master), __IONMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistX), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistY), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZ), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ), __IONMOMENTUM4__);
@@ -373,6 +391,12 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_master), __IONMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistX), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistY), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZ), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ), __IONMOMENTUM4__);
@@ -381,15 +405,18 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_master), __IONMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistX), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistX_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistY), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistY_master), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZ), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_master),
-           __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_master),
-           __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_master),
-           __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_master), __IONMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist_master), __IONMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP), __IONMOMENTUM6__);
@@ -578,6 +605,12 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPZX_master), __ELECMOMENTUM2__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_e4hP), __ELECMOMENTUM3__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_e4hP_master), __ELECMOMENTUM3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistX), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistX_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistY), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistY_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZ), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZ_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ), __ELECMOMENTUM4__);
@@ -586,6 +619,12 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist_master), __ELECMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistX), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistX_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistY), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistY_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZ), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZ_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ), __ELECMOMENTUM4__);
@@ -594,6 +633,12 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist_master), __ELECMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistX), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistX_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistY), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistY_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZ), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZ_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ), __ELECMOMENTUM4__);
@@ -602,6 +647,12 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist), __ELECMOMENTUM5__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist_master), __ELECMOMENTUM5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistX), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistX_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistY), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistY_master), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZ), __ELECMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZ_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_master), __ELECMOMENTUM4__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ), __ELECMOMENTUM4__);
@@ -649,24 +700,20 @@ void Analysis::AnalysisRun::fillHists() {
   const bool iDead2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
   const bool iDead3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
   const bool iDead4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
-  const bool
-      eDead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
-  const bool
-      eDead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
-  const bool
-      eDead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
-  const bool
-      eDead4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
+  const bool eDead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
+  const bool eDead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
+  const bool eDead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
+  const bool eDead4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
 
-  const bool iMaster1 =
-      pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
-  const bool iMaster2 =
-      pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::WithinMasterRegion);
-  const bool iMaster3 =
-      pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::WithinMasterRegion);
-  const bool iMaster4 =
-      pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster1 = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::WithinMasterRegion);
   const bool iMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
+  const bool eMaster1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool eMaster2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool eMaster3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool eMaster4 = pElectrons->getRealOrDummyObject(3).isFlag(ObjectFlag::WithinMasterRegion);
   const bool eMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool master = iMaster && eMaster;
 
@@ -706,26 +753,22 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const eX1 = pElectrons->getRealOrDummyObject(0).outputLocX();
   const double *const eY1 = pElectrons->getRealOrDummyObject(0).outputLocY();
   const double *const eR1 = pElectrons->getRealOrDummyObject(0).outputLocR();
-  const double
-      *const eDir1 = pElectrons->getRealOrDummyObject(0).outputLocDir();
+  const double *const eDir1 = pElectrons->getRealOrDummyObject(0).outputLocDir();
   const double *const eT1 = pElectrons->getRealOrDummyObject(0).outputTOF();
   const double *const eX2 = pElectrons->getRealOrDummyObject(1).outputLocX();
   const double *const eY2 = pElectrons->getRealOrDummyObject(1).outputLocY();
   const double *const eR2 = pElectrons->getRealOrDummyObject(1).outputLocR();
-  const double
-      *const eDir2 = pElectrons->getRealOrDummyObject(1).outputLocDir();
+  const double *const eDir2 = pElectrons->getRealOrDummyObject(1).outputLocDir();
   const double *const eT2 = pElectrons->getRealOrDummyObject(1).outputTOF();
   const double *const eX3 = pElectrons->getRealOrDummyObject(2).outputLocX();
   const double *const eY3 = pElectrons->getRealOrDummyObject(2).outputLocY();
   const double *const eR3 = pElectrons->getRealOrDummyObject(2).outputLocR();
-  const double
-      *const eDir3 = pElectrons->getRealOrDummyObject(2).outputLocDir();
+  const double *const eDir3 = pElectrons->getRealOrDummyObject(2).outputLocDir();
   const double *const eT3 = pElectrons->getRealOrDummyObject(2).outputTOF();
   const double *const eX4 = pElectrons->getRealOrDummyObject(3).outputLocX();
   const double *const eY4 = pElectrons->getRealOrDummyObject(3).outputLocY();
   const double *const eR4 = pElectrons->getRealOrDummyObject(3).outputLocR();
-  const double
-      *const eDir4 = pElectrons->getRealOrDummyObject(3).outputLocDir();
+  const double *const eDir4 = pElectrons->getRealOrDummyObject(3).outputLocDir();
   const double *const eT4 = pElectrons->getRealOrDummyObject(3).outputTOF();
 
   const double *const eCOMX = pElectrons->outputCOMLocX();
@@ -750,8 +793,11 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXY1 = pIons->getRealOrDummyObject(0).outputPDirXY();
   const double *const iPDirYZ1 = pIons->getRealOrDummyObject(0).outputPDirYZ();
   const double *const iPDirZX1 = pIons->getRealOrDummyObject(0).outputPDirZX();
-  const double *const iCosPDirZ1 =
-      pIons->getRealOrDummyObject(0).outputCosPDirZ();
+  const double *const iCosPDirZ1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
+  const bool iPDirX1Is90 = iPDirX1 ? (85 <= *iPDirX1 && *iPDirX1 <= 95) : false;
+  const bool iPDirY1Is90 = iPDirY1 ? (85 <= *iPDirY1 && *iPDirY1 <= 95) : false;
+  const bool iPDirZ1Is90 = iPDirZ1 ? (85 <= *iPDirZ1 && *iPDirZ1 <= 95) : false;
+
   const double *const iPX2 = pIons->getRealOrDummyObject(1).outputPX();
   const double *const iPY2 = pIons->getRealOrDummyObject(1).outputPY();
   const double *const iPZ2 = pIons->getRealOrDummyObject(1).outputPZ();
@@ -759,11 +805,17 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPYZ2 = pIons->getRealOrDummyObject(1).outputPYZ();
   const double *const iPZX2 = pIons->getRealOrDummyObject(1).outputPZX();
   const double *const iP2 = pIons->getRealOrDummyObject(1).outputP();
+  const double *const iPDirX2 = pIons->getRealOrDummyObject(1).outputPDirX();
+  const double *const iPDirY2 = pIons->getRealOrDummyObject(1).outputPDirY();
+  const double *const iPDirZ2 = pIons->getRealOrDummyObject(1).outputPDirZ();
   const double *const iPDirXY2 = pIons->getRealOrDummyObject(1).outputPDirXY();
   const double *const iPDirYZ2 = pIons->getRealOrDummyObject(1).outputPDirYZ();
   const double *const iPDirZX2 = pIons->getRealOrDummyObject(1).outputPDirZX();
-  const double *const iCosPDirZ2 =
-      pIons->getRealOrDummyObject(1).outputCosPDirZ();
+  const double *const iCosPDirZ2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
+  const bool iPDirX2Is90 = iPDirX2 ? (85 <= *iPDirX2 && *iPDirX2 <= 95) : false;
+  const bool iPDirY2Is90 = iPDirY2 ? (85 <= *iPDirY2 && *iPDirY2 <= 95) : false;
+  const bool iPDirZ2Is90 = iPDirZ2 ? (85 <= *iPDirZ2 && *iPDirZ2 <= 95) : false;
+
   const double *const iPX3 = pIons->getRealOrDummyObject(2).outputPX();
   const double *const iPY3 = pIons->getRealOrDummyObject(2).outputPY();
   const double *const iPZ3 = pIons->getRealOrDummyObject(2).outputPZ();
@@ -771,11 +823,17 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPYZ3 = pIons->getRealOrDummyObject(2).outputPYZ();
   const double *const iPZX3 = pIons->getRealOrDummyObject(2).outputPZX();
   const double *const iP3 = pIons->getRealOrDummyObject(2).outputP();
+  const double *const iPDirX3 = pIons->getRealOrDummyObject(2).outputPDirX();
+  const double *const iPDirY3 = pIons->getRealOrDummyObject(2).outputPDirY();
+  const double *const iPDirZ3 = pIons->getRealOrDummyObject(2).outputPDirZ();
   const double *const iPDirXY3 = pIons->getRealOrDummyObject(2).outputPDirXY();
   const double *const iPDirYZ3 = pIons->getRealOrDummyObject(2).outputPDirYZ();
   const double *const iPDirZX3 = pIons->getRealOrDummyObject(2).outputPDirZX();
-  const double
-      *const iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
+  const double *const iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
+  const bool iPDirX3Is90 = iPDirX3 ? (85 <= *iPDirX3 && *iPDirX3 <= 95) : false;
+  const bool iPDirY3Is90 = iPDirY3 ? (85 <= *iPDirY3 && *iPDirY3 <= 95) : false;
+  const bool iPDirZ3Is90 = iPDirZ3 ? (85 <= *iPDirZ3 && *iPDirZ3 <= 95) : false;
+
   const double *const iPX4 = pIons->getRealOrDummyObject(3).outputPX();
   const double *const iPY4 = pIons->getRealOrDummyObject(3).outputPY();
   const double *const iPZ4 = pIons->getRealOrDummyObject(3).outputPZ();
@@ -783,11 +841,17 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPYZ4 = pIons->getRealOrDummyObject(3).outputPYZ();
   const double *const iPZX4 = pIons->getRealOrDummyObject(3).outputPZX();
   const double *const iP4 = pIons->getRealOrDummyObject(3).outputP();
+  const double *const iPDirX4 = pIons->getRealOrDummyObject(3).outputPDirX();
+  const double *const iPDirY4 = pIons->getRealOrDummyObject(3).outputPDirY();
+  const double *const iPDirZ4 = pIons->getRealOrDummyObject(3).outputPDirZ();
   const double *const iPDirXY4 = pIons->getRealOrDummyObject(3).outputPDirXY();
   const double *const iPDirYZ4 = pIons->getRealOrDummyObject(3).outputPDirYZ();
   const double *const iPDirZX4 = pIons->getRealOrDummyObject(3).outputPDirZX();
-  const double
-      *const iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
+  const double *const iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
+  const bool iPDirX4Is90 = iPDirX4 ? (85 <= *iPDirX4 && *iPDirX4 <= 95) : false;
+  const bool iPDirY4Is90 = iPDirY4 ? (85 <= *iPDirY4 && *iPDirY4 <= 95) : false;
+  const bool iPDirZ4Is90 = iPDirZ4 ? (85 <= *iPDirZ4 && *iPDirZ4 <= 95) : false;
+
   const double *const iPXTotal = pIons->outputPX();
   const double *const iPYTotal = pIons->outputPY();
   const double *const iPZTotal = pIons->outputPZ();
@@ -795,10 +859,16 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPYZTotal = pIons->outputPYZ();
   const double *const iPZXTotal = pIons->outputPZX();
   const double *const iPTotal = pIons->outputP();
+  const double *const iPDirXTotal = pIons->outputPDirX();
+  const double *const iPDirYTotal = pIons->outputPDirY();
+  const double *const iPDirZTotal = pIons->outputPDirZ();
   const double *const iPDirXYTotal = pIons->outputPDirXY();
   const double *const iPDirYZTotal = pIons->outputPDirYZ();
   const double *const iPDirZXTotal = pIons->outputPDirZX();
   const double *const iCosPDirZTotal = pIons->outputCosPDirZ();
+  const bool iPDirXTotalIs90 = iPDirXTotal ? (85 <= *iPDirXTotal && *iPDirXTotal <= 95) : false;
+  const bool iPDirYTotalIs90 = iPDirYTotal ? (85 <= *iPDirYTotal && *iPDirYTotal <= 95) : false;
+  const bool iPDirZTotalIs90 = iPDirZTotal ? (85 <= *iPDirZTotal && *iPDirZTotal <= 95) : false;
 
   const double *const ePX1 = pElectrons->getRealOrDummyObject(0).outputPX();
   const double *const ePY1 = pElectrons->getRealOrDummyObject(0).outputPY();
@@ -807,29 +877,35 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePYZ1 = pElectrons->getRealOrDummyObject(0).outputPYZ();
   const double *const ePZX1 = pElectrons->getRealOrDummyObject(0).outputPZX();
   const double *const eP1 = pElectrons->getRealOrDummyObject(0).outputP();
-  const double
-      *const ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirXY();
-  const double
-      *const ePDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
-  const double
-      *const ePDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
-  const double
-      *const eCosPDirZ1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
+  const double *const ePDirX1 = pElectrons->getRealOrDummyObject(0).outputPDirX();
+  const double *const ePDirY1 = pElectrons->getRealOrDummyObject(0).outputPDirY();
+  const double *const ePDirZ1 = pElectrons->getRealOrDummyObject(0).outputPDirZ();
+  const double *const ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirXY();
+  const double *const ePDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
+  const double *const ePDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
+  const double *const eCosPDirZ1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
+  const bool ePDirX1Is90 = ePDirX1 ? (85 <= *ePDirX1 && *ePDirX1 <= 95) : false;
+  const bool ePDirY1Is90 = ePDirY1 ? (85 <= *ePDirY1 && *ePDirY1 <= 95) : false;
+  const bool ePDirZ1Is90 = ePDirZ1 ? (85 <= *ePDirZ1 && *ePDirZ1 <= 95) : false;
+
   const double *const ePX2 = pElectrons->getRealOrDummyObject(1).outputPX();
   const double *const ePY2 = pElectrons->getRealOrDummyObject(1).outputPY();
   const double *const ePZ2 = pElectrons->getRealOrDummyObject(1).outputPZ();
+  const double *const ePDirX2 = pElectrons->getRealOrDummyObject(1).outputPDirX();
+  const double *const ePDirY2 = pElectrons->getRealOrDummyObject(1).outputPDirY();
+  const double *const ePDirZ2 = pElectrons->getRealOrDummyObject(1).outputPDirZ();
   const double *const ePXY2 = pElectrons->getRealOrDummyObject(1).outputPXY();
   const double *const ePYZ2 = pElectrons->getRealOrDummyObject(1).outputPYZ();
   const double *const ePZX2 = pElectrons->getRealOrDummyObject(1).outputPZX();
   const double *const eP2 = pElectrons->getRealOrDummyObject(1).outputP();
-  const double
-      *const ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirXY();
-  const double
-      *const ePDirYZ2 = pElectrons->getRealOrDummyObject(1).outputPDirYZ();
-  const double
-      *const ePDirZX2 = pElectrons->getRealOrDummyObject(1).outputPDirZX();
-  const double
-      *const eCosPDirZ2 = pElectrons->getRealOrDummyObject(1).outputCosPDirZ();
+  const double *const ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirXY();
+  const double *const ePDirYZ2 = pElectrons->getRealOrDummyObject(1).outputPDirYZ();
+  const double *const ePDirZX2 = pElectrons->getRealOrDummyObject(1).outputPDirZX();
+  const double *const eCosPDirZ2 = pElectrons->getRealOrDummyObject(1).outputCosPDirZ();
+  const bool ePDirX2Is90 = ePDirX2 ? (85 <= *ePDirX2 && *ePDirX2 <= 95) : false;
+  const bool ePDirY2Is90 = ePDirY2 ? (85 <= *ePDirY2 && *ePDirY2 <= 95) : false;
+  const bool ePDirZ2Is90 = ePDirZ2 ? (85 <= *ePDirZ2 && *ePDirZ2 <= 95) : false;
+
   const double *const ePX3 = pElectrons->getRealOrDummyObject(2).outputPX();
   const double *const ePY3 = pElectrons->getRealOrDummyObject(2).outputPY();
   const double *const ePZ3 = pElectrons->getRealOrDummyObject(2).outputPZ();
@@ -837,14 +913,17 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePYZ3 = pElectrons->getRealOrDummyObject(2).outputPYZ();
   const double *const ePZX3 = pElectrons->getRealOrDummyObject(2).outputPZX();
   const double *const eP3 = pElectrons->getRealOrDummyObject(2).outputP();
-  const double
-      *const ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirXY();
-  const double
-      *const ePDirYZ3 = pElectrons->getRealOrDummyObject(2).outputPDirYZ();
-  const double
-      *const ePDirZX3 = pElectrons->getRealOrDummyObject(2).outputPDirZX();
-  const double
-      *const eCosPDirZ3 = pElectrons->getRealOrDummyObject(2).outputCosPDirZ();
+  const double *const ePDirX3 = pElectrons->getRealOrDummyObject(2).outputPDirX();
+  const double *const ePDirY3 = pElectrons->getRealOrDummyObject(2).outputPDirY();
+  const double *const ePDirZ3 = pElectrons->getRealOrDummyObject(2).outputPDirZ();
+  const double *const ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirXY();
+  const double *const ePDirYZ3 = pElectrons->getRealOrDummyObject(2).outputPDirYZ();
+  const double *const ePDirZX3 = pElectrons->getRealOrDummyObject(2).outputPDirZX();
+  const double *const eCosPDirZ3 = pElectrons->getRealOrDummyObject(2).outputCosPDirZ();
+  const bool ePDirX3Is90 = ePDirX3 ? (85 <= *ePDirX3 && *ePDirX3 <= 95) : false;
+  const bool ePDirY3Is90 = ePDirY3 ? (85 <= *ePDirY3 && *ePDirY3 <= 95) : false;
+  const bool ePDirZ3Is90 = ePDirZ3 ? (85 <= *ePDirZ3 && *ePDirZ3 <= 95) : false;
+
   const double *const ePX4 = pElectrons->getRealOrDummyObject(3).outputPX();
   const double *const ePY4 = pElectrons->getRealOrDummyObject(3).outputPY();
   const double *const ePZ4 = pElectrons->getRealOrDummyObject(3).outputPZ();
@@ -852,14 +931,16 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePYZ4 = pElectrons->getRealOrDummyObject(3).outputPYZ();
   const double *const ePZX4 = pElectrons->getRealOrDummyObject(3).outputPZX();
   const double *const eP4 = pElectrons->getRealOrDummyObject(3).outputP();
-  const double
-      *const ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirXY();
-  const double
-      *const ePDirYZ4 = pElectrons->getRealOrDummyObject(3).outputPDirYZ();
-  const double
-      *const ePDirZX4 = pElectrons->getRealOrDummyObject(3).outputPDirZX();
-  const double
-      *const eCosPDirZ4 = pElectrons->getRealOrDummyObject(3).outputCosPDirZ();
+  const double *const ePDirX4 = pElectrons->getRealOrDummyObject(3).outputPDirX();
+  const double *const ePDirY4 = pElectrons->getRealOrDummyObject(3).outputPDirY();
+  const double *const ePDirZ4 = pElectrons->getRealOrDummyObject(3).outputPDirZ();
+  const double *const ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirXY();
+  const double *const ePDirYZ4 = pElectrons->getRealOrDummyObject(3).outputPDirYZ();
+  const double *const ePDirZX4 = pElectrons->getRealOrDummyObject(3).outputPDirZX();
+  const double *const eCosPDirZ4 = pElectrons->getRealOrDummyObject(3).outputCosPDirZ();
+  const bool ePDirX4Is90 = ePDirX4 ? (85 <= *ePDirX4 && *ePDirX4 <= 95) : false;
+  const bool ePDirY4Is90 = ePDirY4 ? (85 <= *ePDirY4 && *ePDirY4 <= 95) : false;
+  const bool ePDirZ4Is90 = ePDirZ4 ? (85 <= *ePDirZ4 && *ePDirZ4 <= 95) : false;
 
   const double *const iE1 = pIons->getRealOrDummyObject(0).outputE();
   const double *const iE2 = pIons->getRealOrDummyObject(1).outputE();
@@ -987,22 +1068,37 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_iTotalPYZ, iPYTotal, iPZTotal);
   fill2d(h2_iTotalPZX, iPZTotal, iPXTotal);
   fill1d(h1_iTotalP, iPTotal);
+  fill2d(h2_i1hPDirDistX, iPDirX1, iPX1);
+  fill2d(h2_i1hPDirDistY, iPDirY1, iPY1);
+  fill2d(h2_i1hPDirDistZ, iPDirZ1, iPZ1);
   fill2d(h2_i1hPDirDistXY, iPDirXY1, iPXY1);
   fill2d(h2_i1hPDirDistYZ, iPDirYZ1, iPYZ1);
   fill2d(h2_i1hPDirDistZX, iPDirZX1, iPZX1);
   fill2d(h2_i1hPDirDist, iPDirXY1, iCosPDirZ1);
+  fill2d(h2_i2hPDirDistX, iPDirX2, iPX2);
+  fill2d(h2_i2hPDirDistY, iPDirY2, iPY2);
+  fill2d(h2_i2hPDirDistZ, iPDirZ2, iPZ2);
   fill2d(h2_i2hPDirDistXY, iPDirXY2, iPXY2);
   fill2d(h2_i2hPDirDistYZ, iPDirYZ2, iPYZ2);
   fill2d(h2_i2hPDirDistZX, iPDirZX2, iPZX2);
   fill2d(h2_i2hPDirDist, iPDirXY2, iCosPDirZ2);
+  fill2d(h2_i3hPDirDistX, iPDirX3, iPX3);
+  fill2d(h2_i3hPDirDistY, iPDirY3, iPY3);
+  fill2d(h2_i3hPDirDistZ, iPDirZ3, iPZ3);
   fill2d(h2_i3hPDirDistXY, iPDirXY3, iPXY3);
   fill2d(h2_i3hPDirDistYZ, iPDirYZ3, iPYZ3);
   fill2d(h2_i3hPDirDistZX, iPDirZX3, iPZX3);
   fill2d(h2_i3hPDirDist, iPDirXY3, iCosPDirZ3);
+  fill2d(h2_i4hPDirDistX, iPDirX4, iPX4);
+  fill2d(h2_i4hPDirDistY, iPDirY4, iPY4);
+  fill2d(h2_i4hPDirDistZ, iPDirZ4, iPZ4);
   fill2d(h2_i4hPDirDistXY, iPDirXY4, iPXY4);
   fill2d(h2_i4hPDirDistYZ, iPDirYZ4, iPYZ4);
   fill2d(h2_i4hPDirDistZX, iPDirZX4, iPZX4);
   fill2d(h2_i4hPDirDist, iPDirXY4, iCosPDirZ4);
+  fill2d(h2_iTotalPDirDistX, iPDirXTotal, iPXTotal);
+  fill2d(h2_iTotalPDirDistY, iPDirYTotal, iPYTotal);
+  fill2d(h2_iTotalPDirDistZ, iPDirZTotal, iPZTotal);
   fill2d(h2_iTotalPDirDistXY, iPDirXYTotal, iPXYTotal);
   fill2d(h2_iTotalPDirDistYZ, iPDirYZTotal, iPYZTotal);
   fill2d(h2_iTotalPDirDistZX, iPDirZXTotal, iPZXTotal);
@@ -1046,22 +1142,37 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_iTotalPYZ_master, iPYTotal, iPZTotal);
     fill2d(h2_iTotalPZX_master, iPZTotal, iPXTotal);
     fill1d(h1_iTotalP_master, iPTotal);
+    fill2d(h2_i1hPDirDistX_master, iPDirX1, iPX1);
+    fill2d(h2_i1hPDirDistY_master, iPDirY1, iPY1);
+    fill2d(h2_i1hPDirDistZ_master, iPDirZ1, iPZ1);
     fill2d(h2_i1hPDirDistXY_master, iPDirXY1, iPXY1);
     fill2d(h2_i1hPDirDistYZ_master, iPDirYZ1, iPYZ1);
     fill2d(h2_i1hPDirDistZX_master, iPDirZX1, iPZX1);
     fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
+    fill2d(h2_i2hPDirDistX_master, iPDirX2, iPX2);
+    fill2d(h2_i2hPDirDistY_master, iPDirY2, iPY2);
+    fill2d(h2_i2hPDirDistZ_master, iPDirZ2, iPZ2);
     fill2d(h2_i2hPDirDistXY_master, iPDirXY2, iPXY2);
     fill2d(h2_i2hPDirDistYZ_master, iPDirYZ2, iPYZ2);
     fill2d(h2_i2hPDirDistZX_master, iPDirZX2, iPZX2);
     fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
+    fill2d(h2_i3hPDirDistX_master, iPDirX3, iPX3);
+    fill2d(h2_i3hPDirDistY_master, iPDirY3, iPY3);
+    fill2d(h2_i3hPDirDistZ_master, iPDirZ3, iPZ3);
     fill2d(h2_i3hPDirDistXY_master, iPDirXY3, iPXY3);
     fill2d(h2_i3hPDirDistYZ_master, iPDirYZ3, iPYZ3);
     fill2d(h2_i3hPDirDistZX_master, iPDirZX3, iPZX3);
     fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
+    fill2d(h2_i4hPDirDistX_master, iPDirX4, iPX4);
+    fill2d(h2_i4hPDirDistY_master, iPDirY4, iPY4);
+    fill2d(h2_i4hPDirDistZ_master, iPDirZ4, iPZ4);
     fill2d(h2_i4hPDirDistXY_master, iPDirXY4, iPXY4);
     fill2d(h2_i4hPDirDistYZ_master, iPDirYZ4, iPYZ4);
     fill2d(h2_i4hPDirDistZX_master, iPDirZX4, iPZX4);
     fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
+    fill2d(h2_iTotalPDirDistX_master, iPDirXTotal, iPXTotal);
+    fill2d(h2_iTotalPDirDistY_master, iPDirYTotal, iPYTotal);
+    fill2d(h2_iTotalPDirDistZ_master, iPDirZTotal, iPZTotal);
     fill2d(h2_iTotalPDirDistXY_master, iPDirXYTotal, iPXYTotal);
     fill2d(h2_iTotalPDirDistYZ_master, iPDirYZTotal, iPYZTotal);
     fill2d(h2_iTotalPDirDistZX_master, iPDirZXTotal, iPZXTotal);
@@ -1216,18 +1327,30 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_e4hPYZ, ePY4, ePZ4);
   fill2d(h2_e4hPZX, ePZ4, ePX4);
   fill1d(h1_e4hP, eP4);
+  fill2d(h2_e1hPDirDistX, ePDirX1, ePX1);
+  fill2d(h2_e1hPDirDistY, ePDirY1, ePY1);
+  fill2d(h2_e1hPDirDistZ, ePDirZ1, ePZ1);
   fill2d(h2_e1hPDirDistXY, ePDirXY1, ePXY1);
   fill2d(h2_e1hPDirDistYZ, ePDirYZ1, ePYZ1);
   fill2d(h2_e1hPDirDistZX, ePDirZX1, ePZX1);
   fill2d(h2_e1hPDirDist, ePDirXY1, eCosPDirZ1);
+  fill2d(h2_e2hPDirDistX, ePDirX2, ePX2);
+  fill2d(h2_e2hPDirDistY, ePDirY2, ePY2);
+  fill2d(h2_e2hPDirDistZ, ePDirZ2, ePZ2);
   fill2d(h2_e2hPDirDistXY, ePDirXY2, ePXY2);
   fill2d(h2_e2hPDirDistYZ, ePDirYZ2, ePYZ2);
   fill2d(h2_e2hPDirDistZX, ePDirZX2, ePZX2);
   fill2d(h2_e2hPDirDist, ePDirXY2, eCosPDirZ2);
+  fill2d(h2_e3hPDirDistX, ePDirX3, ePX3);
+  fill2d(h2_e3hPDirDistY, ePDirY3, ePY3);
+  fill2d(h2_e3hPDirDistZ, ePDirZ3, ePZ3);
   fill2d(h2_e3hPDirDistXY, ePDirXY3, ePXY3);
   fill2d(h2_e3hPDirDistYZ, ePDirYZ3, ePYZ3);
   fill2d(h2_e3hPDirDistZX, ePDirZX3, ePZX3);
   fill2d(h2_e3hPDirDist, ePDirXY3, eCosPDirZ3);
+  fill2d(h2_e4hPDirDistX, ePDirX4, ePX4);
+  fill2d(h2_e4hPDirDistY, ePDirY4, ePY4);
+  fill2d(h2_e4hPDirDistZ, ePDirZ4, ePZ4);
   fill2d(h2_e4hPDirDistXY, ePDirXY4, ePXY4);
   fill2d(h2_e4hPDirDistYZ, ePDirYZ4, ePYZ4);
   fill2d(h2_e4hPDirDistZX, ePDirZX4, ePZX4);
@@ -1261,18 +1384,30 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_e4hPYZ_master, ePY4, ePZ4);
     fill2d(h2_e4hPZX_master, ePZ4, ePX4);
     fill1d(h1_e4hP_master, eP4);
+    fill2d(h2_e1hPDirDistX_master, ePDirX1, ePX1);
+    fill2d(h2_e1hPDirDistY_master, ePDirY1, ePY1);
+    fill2d(h2_e1hPDirDistZ_master, ePDirZ1, ePZ1);
     fill2d(h2_e1hPDirDistXY_master, ePDirXY1, ePXY1);
     fill2d(h2_e1hPDirDistYZ_master, ePDirYZ1, ePYZ1);
     fill2d(h2_e1hPDirDistZX_master, ePDirZX1, ePZX1);
     fill2d(h2_e1hPDirDist_master, ePDirXY1, eCosPDirZ1);
+    fill2d(h2_e2hPDirDistX_master, ePDirX2, ePX2);
+    fill2d(h2_e2hPDirDistY_master, ePDirY2, ePY2);
+    fill2d(h2_e2hPDirDistZ_master, ePDirZ2, ePZ2);
     fill2d(h2_e2hPDirDistXY_master, ePDirXY2, ePXY2);
     fill2d(h2_e2hPDirDistYZ_master, ePDirYZ2, ePYZ2);
     fill2d(h2_e2hPDirDistZX_master, ePDirZX2, ePZX2);
     fill2d(h2_e2hPDirDist_master, ePDirXY2, eCosPDirZ2);
+    fill2d(h2_e3hPDirDistX_master, ePDirX3, ePX3);
+    fill2d(h2_e3hPDirDistY_master, ePDirY3, ePY3);
+    fill2d(h2_e3hPDirDistZ_master, ePDirZ3, ePZ3);
     fill2d(h2_e3hPDirDistXY_master, ePDirXY3, ePXY3);
     fill2d(h2_e3hPDirDistYZ_master, ePDirYZ3, ePYZ3);
     fill2d(h2_e3hPDirDistZX_master, ePDirZX3, ePZX3);
     fill2d(h2_e3hPDirDist_master, ePDirXY3, eCosPDirZ3);
+    fill2d(h2_e4hPDirDistX_master, ePDirX4, ePX4);
+    fill2d(h2_e4hPDirDistY_master, ePDirY4, ePY4);
+    fill2d(h2_e4hPDirDistZ_master, ePDirZ4, ePZ4);
     fill2d(h2_e4hPDirDistXY_master, ePDirXY4, ePXY4);
     fill2d(h2_e4hPDirDistYZ_master, ePDirYZ4, ePYZ4);
     fill2d(h2_e4hPDirDistZX_master, ePDirZX4, ePZX4);
