@@ -104,23 +104,57 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
     const int &n = ions.getNumberOfObjects();
     logFile << "        Number of Hits: " << n << std::endl;
     for (int i = 0; i < n; i++) {
-      const std::string name = getObjectName(i);
-      logFile << "        " << name.c_str() << ":" << std::endl;
-      const double t1 = kUnit.writeNanoSec(analysisTools.calculateTOF(ions.getObject(i), 0e0));
-      const double t2 = kUnit.writeNanoSec(analysisTools.calculatePeriodOfCycle(ions.getObject(i)));
-      logFile << "            TOF of Stopped Object: " << t1 << std::endl;
-      logFile << "            Period of Cycle: " << t2 << std::endl;
+      logFile << "        " << getObjectName(i).c_str() << ":" << std::endl;
+      auto ion = ions.getObject(i).getCopy();
+      double p;
+      bool info;
+      logFile << "            Mass [au]: " << ion.getMass() << std::endl;
+      ion.resetEventData();
+      ion.setTOF(ion.getMinOfTOF());
+      p = analysisTools.calculateMomentumZ(ion, info);
+      logFile << "            Pz of the Object having min TOF [au]: ";
+      if (info) logFile << p << std::endl;
+      else logFile << "fail" << std::endl;
+      ion.resetEventData();
+      ion.setTOF(ion.getMaxOfTOF());
+      p = analysisTools.calculateMomentumZ(ion, info);
+      logFile << "            Pz of the Object having max TOF [au]: ";
+      if (info) logFile << p << std::endl;
+      else logFile << "fail" << std::endl;
+      logFile << "            TOF of Pz=0 Object [ns]: "
+          << kUnit.writeNanoSec(analysisTools.calculateTOF(ion, 0e0)) << std::endl;
+      logFile << "            Period of Cycle [ns]: "
+          << kUnit.writeNanoSec(analysisTools.calculatePeriodOfCycle(ion)) << std::endl;
     }
   }
   logFile << "    Electrons: " << std::endl;
   {
     const int &n = elecs.getNumberOfObjects();
     logFile << "        Number of Hits: " << n << std::endl;
-    const auto elec = Object(ObjectFlag::RealObject, ObjectFlag::ElecObject);
-    const double t1 = kUnit.writeNanoSec(analysisTools.calculateTOF(elec, 0));
-    const double t2 = kUnit.writeNanoSec(analysisTools.calculatePeriodOfCycle(elec));
-    logFile << "        TOF of Stopped Object: " << t1 << std::endl;
-    logFile << "        Period of Cycle: " << t2 << std::endl;
+    {
+      const auto elec = Object(ObjectFlag::RealObject, ObjectFlag::ElecObject);
+      logFile << "        TOF of Pz=0 Object [ns]: " <<
+          kUnit.writeNanoSec(analysisTools.calculateTOF(elec, 0)) << std::endl;
+      logFile << "        Period of Cycle [ns]: " <<
+          kUnit.writeNanoSec(analysisTools.calculatePeriodOfCycle(elec)) << std::endl;
+    }
+    for (int i = 0; i < n; i++) {
+      auto elec = elecs.getObject(i).getCopy();
+      double p;
+      bool info;
+      elec.resetEventData();
+      elec.setTOF(elec.getMinOfTOF());
+      p = analysisTools.calculateMomentumZ(elec, info);
+      logFile << "            Pz of the Object having min TOF [au]: ";
+      if (info) logFile << p << std::endl;
+      else logFile << "fail" << std::endl;
+      elec.resetEventData();
+      elec.setTOF(elec.getMaxOfTOF());
+      p = analysisTools.calculateMomentumZ(elec, info);
+      logFile << "            Pz of the Object having max TOF [au]: ";
+      if (info) logFile << p << std::endl;
+      else logFile << "fail" << std::endl;
+    }
   }
   logFile << std::endl;
 }

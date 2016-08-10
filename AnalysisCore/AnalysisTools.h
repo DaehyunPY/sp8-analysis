@@ -10,8 +10,6 @@
 #include "Objects.h"
 namespace Analysis {
 class AnalysisTools {
-  // tpyes
- private:
   struct XY {
     XY(const double &x, const double &y)
         : x(x), y(y) {
@@ -19,22 +17,16 @@ class AnalysisTools {
     const double x;
     const double y;
   };
-
-  // datas
- private:
   EquipmentParameters equipParameters;
   ObjectParameters ionParameters;
   ObjectParameters elecParameters;
   std::string ID;
   int eventNumber;
-
- private:
-  AnalysisTools( // main initializer
+  AnalysisTools(
       const EquipmentParameters &equip,
       const ObjectParameters &ion,
       const ObjectParameters &elec,
       const std::string ID = "");
-
  public:
   AnalysisTools(const Unit &unit, const JSONReader &reader);
   ~AnalysisTools();
@@ -44,7 +36,6 @@ class AnalysisTools {
   const XY calculateRotation(const XY &, const double &) const;
   const double calculateDiffTOF(const Object &obj, const double &) const;
   const XY calculateMomentumXY(const Object &obj) const;
-  const double calculateMomentumZ(const Object &obj, bool &info) const; // todo: find better way to calculate
  public:
   const EquipmentParameters &getEquipmentParameters() const;
   const ObjectParameters &getIonParameters() const;
@@ -52,25 +43,16 @@ class AnalysisTools {
   const std::string &getID() const;
   const int &getEventNumber() const;
   void loadEventCounter();
-  const double calculateTOF(const Object obj,
-                            const double d) const;
-  const double calculateFrequencyOfCycle(const double &m,
-                                         const double &q,
-                                         const double &B) const;
+  const double calculateTOF(const Object obj, const double d) const;
+  const double calculateFrequencyOfCycle(const double &m, const double &q, const double &B) const;
   const double calculateFrequencyOfCycle(const Object &) const;
-  const double calculatePeriodOfCycle(const double &m,
-                                      const double &q, const double &B) const;
+  const double calculatePeriodOfCycle(const double &m, const double &q, const double &B) const;
   const double calculatePeriodOfCycle(const Object &) const;
+  const double calculateMomentumZ(const Object &obj, bool &info) const; // todo: find better way to calculate
 
  private:
-  void loadEventDataInputer(Object &,
-                            const double &,
-                            const double &,
-                            const double &,
-                            const int &) const;
-  void loadEventDataInputer(Analysis::Object &,
-                            const EventDataReader &,
-                            const int &) const;
+  void loadEventDataInputer(Object &, const double &, const double &, const double &, const int &) const;
+  void loadEventDataInputer(Analysis::Object &, const EventDataReader &, const int &) const;
  public:
   void loadEventDataInputer(Analysis::Objects &, const EventDataReader &) const;
 
@@ -78,8 +60,8 @@ class AnalysisTools {
   enum OptName {
     OnlyWithinMasterRegion, OnlyNotDead, AllRegion
   };
-  void loadMomentumCalculator(Object &obj, const OptName opt=OnlyWithinMasterRegion) const;
-  void loadMomentumCalculator(Objects &objs, const OptName opt=OnlyWithinMasterRegion) const;
+  void loadMomentumCalculator(Object &obj, const OptName opt = OnlyWithinMasterRegion) const;
+  void loadMomentumCalculator(Objects &objs, const OptName opt = OnlyWithinMasterRegion) const;
 };
 }
 #endif

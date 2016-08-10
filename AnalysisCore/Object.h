@@ -11,8 +11,8 @@ namespace Analysis {
 class Object: public ObjectFlag {
   double mass;
   double charge;
-  double minOfTOF;
-  double maxOfTOF;
+  double minTOF;
+  double maxTOF;
   double locationX;
   double locationY;
   double TOF;
@@ -21,12 +21,11 @@ class Object: public ObjectFlag {
   double momentumZ;
  public:
   Object(const FlagName f1, const FlagName f2,
-         double m = 0, double q = 0,
-         const double t0 = 0, const double t1 = 0);
-  Object(const FlagName f,
-         const JSONReader &reader, const std::string prefix);
+         double m = 0, double q = 0, const double t0 = 0, const double t1 = 0);
+  Object(const FlagName f, const JSONReader &reader, const std::string prefix);
   ~Object();
   void resetEventData();
+  Object getCopy() const;
 
  private:
   bool isAdjecting;

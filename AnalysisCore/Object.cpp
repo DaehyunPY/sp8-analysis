@@ -20,8 +20,8 @@ Analysis::Object::Object(const FlagName f,
   double t0 = reader.getDoubleAt(prefix+"TOF", 0);
   double t1 = reader.getDoubleAt(prefix+"TOF", 1);
   assert(t0 <= t1);
-  minOfTOF = kUnit.readNanoSec(t0);
-  maxOfTOF = kUnit.readNanoSec(t1);
+  minTOF = kUnit.readNanoSec(t0);
+  maxTOF = kUnit.readNanoSec(t1);
   if (reader.hasMember(prefix+"dx_and_dy")) {
     isAdjecting = true;
     dx = kUnit.readMilliMeter(reader.getDoubleAt(prefix+"dx_and_dy", 0));
@@ -44,8 +44,8 @@ Analysis::Object::Object(const FlagName f1, const FlagName f2,
   if (f1 == DummyObject) {
     mass = 0;
     charge= 0;
-    minOfTOF = 0;
-    maxOfTOF = 0;
+    minTOF = 0;
+    maxTOF = 0;
   } else if (f1 == RealObject) {
     if (f2 == IonObject) {
       assert(m > 0e0);
@@ -57,8 +57,8 @@ Analysis::Object::Object(const FlagName f1, const FlagName f2,
     assert(t0 <= t1);
     mass = kUnit.readAtomicMass(m);
     charge = kUnit.readElementaryCharge(q);
-    minOfTOF = kUnit.readNanoSec(t0);
-    maxOfTOF = kUnit.readNanoSec(t1);
+    minTOF = kUnit.readNanoSec(t0);
+    maxTOF = kUnit.readNanoSec(t1);
   }
   isAdjecting = false;
   dx = 0;
@@ -78,16 +78,18 @@ void Analysis::Object::resetEventData() {
   return;
 }
 void Analysis::Object::setLocationX(const double &x) {
-  locationX = x+dx;
+  locationX = x;
+  if (isAdjecting) locationX += dx;
   return;
 }
 void Analysis::Object::setLocationY(const double &y) {
-  locationY = y+dy;
+  locationY = y;
+  if (isAdjecting) locationY += dy;
   return;
 }
 void Analysis::Object::setTOF(const double &t) {
   TOF = t;
-  if ((TOF < maxOfTOF) && (TOF > minOfTOF)) {
+  if ((TOF < maxTOF) && (TOF > minTOF)) {
     setFlag(WithinMasterRegion);
   } else {
     setFlag(OutOfMasterRegion);
@@ -111,8 +113,8 @@ const double &Analysis::Object::getMass() const {
 const double &Analysis::Object::getCharge() const {
   return charge;
 }
-const double &Analysis::Object::getMinOfTOF() const { return minOfTOF; }
-const double &Analysis::Object::getMaxOfTOF() const { return maxOfTOF; }
+const double &Analysis::Object::getMinOfTOF() const { return minTOF; }
+const double &Analysis::Object::getMaxOfTOF() const { return maxTOF; }
 const double &Analysis::Object::getLocationX() const {
   return locationX;
 }
@@ -310,3 +312,7 @@ double *const Analysis::Object::outputPDirZY() const {
     return new double(kUnit.writeDegree(getMotionalDirectionZY()));
   return nullptr;
 }
+Analysis::Object Analysis::Object::getCopy() const {
+  return *this;
+}
+
