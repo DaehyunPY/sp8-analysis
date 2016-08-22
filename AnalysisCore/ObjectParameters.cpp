@@ -1,15 +1,21 @@
 #include "ObjectParameters.h"
 
-void Analysis::ObjectParameters::inputParameters(const ParameterType tp, const double theta, const double dx, const double dy, const double t1, const double x0, const double y0, const double t0)
-{
-	type = tp;
-	angleOfDetector = theta;
-	pixelSizeOfX = dx; 
-	pixelSizeOfY = dy; 
-	deadTime = t1; 
-	xZeroOfCOM = x0;
-	yZeroOfCOM = y0;
-	timeZeroOfTOF = t0;
+void Analysis::ObjectParameters::inputParameters(const ParameterType tp,
+                                                 const double theta,
+                                                 const double dx,
+                                                 const double dy,
+                                                 const double t1,
+                                                 const double x0,
+                                                 const double y0,
+                                                 const double t0) {
+  type = tp;
+  angleOfDetector = theta;
+  pixelSizeOfX = dx;
+  pixelSizeOfY = dy;
+  deadTime = t1;
+  xZeroOfCOM = x0;
+  yZeroOfCOM = y0;
+  timeZeroOfTOF = t0;
 }
 
 Analysis::ObjectParameters::ObjectParameters(
@@ -20,9 +26,8 @@ Analysis::ObjectParameters::ObjectParameters(
     const double t1,
     const double x0,
     const double y0,
-    const double t0)
-{
-	inputParameters(tp, theta, dx, dy, t1, x0, y0, t0); 
+    const double t0) {
+  inputParameters(tp, theta, dx, dy, t1, x0, y0, t0);
 }
 Analysis::ObjectParameters::ObjectParameters(
     const Analysis::Unit &unit,
@@ -34,30 +39,30 @@ Analysis::ObjectParameters::ObjectParameters(
     const double x0,
     const double y0,
     const double t0) {
-  if(typeName.compare("legacy_ion_parameters") == 0) {
+  if (typeName.compare("legacy_ion_parameters") == 0) {
     const double th = unit.readDegree(0);
-	inputParameters(
+    inputParameters(
         legacy_ion_parameters,
         th,
         dx,
         dy,
         unit.readNanoSec(t1),
-        unit.readMilliMeter(100*dx + x0),
-        unit.readMilliMeter(100*dy + y0),
+        unit.readMilliMeter(100 * dx + x0),
+        unit.readMilliMeter(100 * dy + y0),
         unit.readNanoSec(2000 + t0));
-  } else if(typeName.compare("legacy_elec_parameters") == 0) {
+  } else if (typeName.compare("legacy_elec_parameters") == 0) {
     const double th = unit.readDegree(-30);
-	inputParameters(
+    inputParameters(
         legacy_elec_parameters_not_corrected,
         th,
         dx,
         dy,
         unit.readNanoSec(t1),
-        unit.readMilliMeter(100*(cos(th)-sin(th)) + x0),
-        unit.readMilliMeter(100*(sin(th)+cos(th)) + y0),
+        unit.readMilliMeter(100 * (cos(th) - sin(th)) + x0),
+        unit.readMilliMeter(100 * (sin(th) + cos(th)) + y0),
         unit.readNanoSec(1980 + t0));
   } else {
-	  inputParameters(
+    inputParameters(
         default_type,
         unit.readDegree(theta),
         dx,
@@ -121,7 +126,7 @@ const double Analysis::ObjectParameters::getTimeZeroOfTOF(const Analysis::Unit &
   return unit.writeNanoSec(getTimeZeroOfTOF());
 }
 void Analysis::ObjectParameters::correctLegacyParameters(const double &elecTOF) {
-  if(type==legacy_elec_parameters_not_corrected) {
+  if (type == legacy_elec_parameters_not_corrected) {
     timeZeroOfTOF -= elecTOF;
     type = legacy_elec_parameters;
   }

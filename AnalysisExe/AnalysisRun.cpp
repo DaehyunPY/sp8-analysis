@@ -186,557 +186,359 @@ const long Analysis::AnalysisRun::getEntries() const {
 
 void Analysis::AnalysisRun::createHists() {
   // IonImage
-#define __IONIMAGE1__ "Location X [mm]", "Location Y [mm]", 400, -50, 50, 400, -50, 50, "IonImage"
-#define __IONIMAGE2__ "Direction [degree]", "Location R [mm]", 360, -180, 180, 200, 0, 50, "IonImage"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage_master), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage_master), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage_master), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage_master), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage_master), __IONIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImageDirDist), __IONIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImageDirDist_master), __IONIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImageDirDist), __IONIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImageDirDist_master), __IONIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImageDirDist), __IONIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImageDirDist_master), __IONIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImageDirDist), __IONIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImageDirDist_master), __IONIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImageDirDist), __IONIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImageDirDist_master), __IONIMAGE2__);
+#define __IONIMAGE__ "IonImage"
+#define __IONIMAGE1__ "Location X [mm]", "Location Y [mm]", 400, -50, 50, 400, -50, 50, __IONIMAGE__
+#define __IONIMAGE2__ "Direction [degree]", "Location R [mm]", 360, -180, 180, 200, 0, 50, __IONIMAGE__
+#define __CREATEIONIMAGE__(X) \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImage_ ## X), __IONIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage_ ## X), __IONIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage_ ## X), __IONIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage_ ## X), __IONIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage_ ## X), __IONIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImageDirDist_ ## X), __IONIMAGE2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImageDirDist_ ## X), __IONIMAGE2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImageDirDist_ ## X), __IONIMAGE2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImageDirDist_ ## X), __IONIMAGE2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImageDirDist_ ## X), __IONIMAGE2__);
+  __CREATEIONIMAGE__(always)
+  __CREATEIONIMAGE__(iMaster)
+  __CREATEIONIMAGE__(master)
+
 
   // IonTOF
-#define __IONTOF1__ "TOF [ns]", 2000, 0, 10000, "IonTOF"
-#define __IONTOF2__ "TOF [ns]", 4000, 0, 20000, "IonTOF"
-#define __IONTOF3__ "TOF [ns]", "TOF [ns]", 500, 0, 10000, 500, 0, 10000, "IonTOF"
-#define __IONTOF4__ "Sum of TOFs [ns]", "Diff of TOFs [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
-#define __IONTOF5__ "TOF [ns]", "TOF [ns]", 1000, 0, 20000, 500, 0, 10000, "IonTOF"
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF), __IONTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF_master), __IONTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hTOF), __IONTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hTOF_master), __IONTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hTOF), __IONTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hTOF_master), __IONTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hTOF), __IONTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hTOF_master), __IONTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalTOF), __IONTOF2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalTOF_master), __IONTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO_master), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO_master), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO_master), __IONTOF3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO_master), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO_master), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO_master), __IONTOF4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO), __IONTOF5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO_master), __IONTOF5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO), __IONTOF5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO_master), __IONTOF5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO), __IONTOF5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO_master), __IONTOF5__);
+#define __IONTOF__ "IonTOF"
+#define __IONTOF1__ "TOF [ns]", 2000, 0, 10000, __IONTOF__
+#define __IONTOF2__ "TOF [ns]", 4000, 0, 20000, __IONTOF__
+#define __IONTOF3__ "TOF [ns]", "TOF [ns]", 500, 0, 10000, 500, 0, 10000, __IONTOF__
+#define __IONTOF4__ "Sum of TOFs [ns]", "Diff of TOFs [ns]", 1000, 0, 20000, 500, 0, 10000, __IONTOF__
+#define __IONTOF5__ "TOF [ns]", "TOF [ns]", 1000, 0, 20000, 500, 0, 10000, __IONTOF__
+#define __CREATEIONTOF__(X) \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF_ ## X), __IONTOF1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hTOF_ ## X), __IONTOF1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hTOF_ ## X), __IONTOF1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hTOF_ ## X), __IONTOF1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalTOF_ ## X), __IONTOF2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO_ ## X), __IONTOF3__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO_ ## X), __IONTOF3__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO_ ## X), __IONTOF3__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO_ ## X), __IONTOF4__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO_ ## X), __IONTOF4__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO_ ## X), __IONTOF4__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO_ ## X), __IONTOF5__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO_ ## X), __IONTOF5__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO_ ## X), __IONTOF5__);
+  __CREATEIONTOF__(always)
+  __CREATEIONTOF__(iMaster)
+  __CREATEIONTOF__(master)
 
   // IonFISH
-#define __IONFISH1__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 400, -50, 50, "IonFish"
-#define __IONFISH2__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 200, 0, 50, "IonFish"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_master), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_master), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish), __IONFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_master), __IONFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_master), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_master), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish), __IONFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_master), __IONFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_master), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_master), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish), __IONFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_master), __IONFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_master), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_master), __IONFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish), __IONFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_master), __IONFISH2__);
+#define __IONFISH__ "IonFish"
+#define __IONFISH1__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 400, -50, 50, __IONFISH__
+#define __IONFISH2__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 200, 0, 50, __IONFISH__
+#define __CREATEIONFISH__(X) \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hRFish_ ## X), __IONFISH2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hXFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hYFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hRFish_ ## X), __IONFISH2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hXFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hYFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_ ## X), __IONFISH2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_ ## X), __IONFISH2__);
+  __CREATEIONFISH__(always)
+  __CREATEIONFISH__(iMaster)
+  __CREATEIONFISH__(master)
 
   // IonMomentum
-#define __IONMOMENTUM1__ "Momentum [au]", 4000, -500, 500, "IonMomentum"
-#define __IONMOMENTUM2__ "Momentum [au]", "Momentum [au]", 800, -500, 500, 800, -500, 500, "IonMomentum"
-#define __IONMOMENTUM3__ "Momentum [au]", 2000, 0, 500, "IonMomentum"
-#define __IONMOMENTUM4__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 400, 0, 500, "IonMomentum"
-#define __IONMOMENTUM5__ "Direction XY [degree]", "Cos Direction Z [1]", 360, -180, 180, 400, -1, 1, "IonMomentum"
-#define __IONMOMENTUM6__ "Momentum [au]", "Momentum [au]",  400, 0, 500, 400, 0, 500, "IonMomentum"
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPX), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPX_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPY), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPY_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPZ), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPZ_master), __IONMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPXY), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPXY_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPYZ), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPYZ_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPZX), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPZX_master), __IONMOMENTUM2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hP), __IONMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hP_master), __IONMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPX), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPX_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPY), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPY_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPZ), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPZ_master), __IONMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPXY), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPXY_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPYZ), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPYZ_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPZX), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPZX_master), __IONMOMENTUM2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hP), __IONMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hP_master), __IONMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPX), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPX_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPY), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPY_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPZ), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPZ_master), __IONMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPXY), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPXY_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPYZ), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPYZ_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPZX), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPZX_master), __IONMOMENTUM2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hP), __IONMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hP_master), __IONMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPX), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPX_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPY), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPY_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPZ), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPZ_master), __IONMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPXY), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPXY_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPYZ), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPYZ_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPZX), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPZX_master), __IONMOMENTUM2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP), __IONMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP_master), __IONMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPX), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPX_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPY), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPY_master), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPZ), __IONMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPZ_master), __IONMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPXY), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPXY_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPYZ), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPYZ_master), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPZX), __IONMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPZX_master), __IONMOMENTUM2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP), __IONMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP_master), __IONMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_master), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_master), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_master), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_master), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_PDirZIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_PDirZIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_PDirXIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_PDirXIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_PDirYIs90), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_PDirYIs90_master), __IONMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist_master), __IONMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP), __IONMOMENTUM6__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP_master), __IONMOMENTUM6__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP), __IONMOMENTUM6__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP_master), __IONMOMENTUM6__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP), __IONMOMENTUM6__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP_master), __IONMOMENTUM6__);
+#define __IONMOMENTUM__ "IonMomentum"
+#define __IONMOMENTUM1__ "Momentum [au]", 4000, -500, 500, __IONMOMENTUM__
+#define __IONMOMENTUM2__ "Momentum [au]", "Momentum [au]", 800, -500, 500, 800, -500, 500, __IONMOMENTUM__
+#define __IONMOMENTUM3__ "Momentum [au]", 2000, 0, 500, __IONMOMENTUM__
+#define __IONMOMENTUM4__ "Momentum [au]", "Momentum [au]",  400, 0, 500, 400, 0, 500, __IONMOMENTUM__
+#define __CREATEIONMOMENTUM__(X) \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPX_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPY_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hPZ_ ## X), __IONMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPXY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPYZ_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPZX_ ## X), __IONMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hP_ ## X), __IONMOMENTUM3__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPX_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPY_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hPZ_ ## X), __IONMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPXY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPYZ_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPZX_ ## X), __IONMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hP_ ## X), __IONMOMENTUM3__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPX_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPY_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hPZ_ ## X), __IONMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPXY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPYZ_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPZX_ ## X), __IONMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hP_ ## X), __IONMOMENTUM3__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPX_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPY_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hPZ_ ## X), __IONMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPXY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPYZ_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPZX_ ## X), __IONMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP_ ## X), __IONMOMENTUM3__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPX_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPY_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPZ_ ## X), __IONMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPXY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPYZ_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPZX_ ## X), __IONMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP_ ## X), __IONMOMENTUM3__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP_ ## X), __IONMOMENTUM4__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP_ ## X), __IONMOMENTUM4__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP_ ## X), __IONMOMENTUM4__); 
+  __CREATEIONMOMENTUM__(always)
+  __CREATEIONMOMENTUM__(iMaster)
+  __CREATEIONMOMENTUM__(master)
 
+  // IonMomentumAngDist 
+#define __IONMOMENTUMANGDIST__ "IonMomentumAngDist"
+#define __IONMOMENTUMANGDIST1__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 400, 0, 500, __IONMOMENTUMANGDIST__
+#define __IONMOMENTUMANGDIST2__ "Direction XY [degree]", "Cos Direction Z [1]", 360, -180, 180, 400, -1, 1, __IONMOMENTUMANGDIST__
+#define __CREATEIONMOMENTUMANGDIST__(X) \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist_ ## X), __IONMOMENTUMANGDIST2__); 
+  __CREATEIONMOMENTUMANGDIST__(always)
+  __CREATEIONMOMENTUMANGDIST__(iMaster)
+  __CREATEIONMOMENTUMANGDIST__(master)
+  
   // IonEnergy
-#define __IONENERGY1__ "Energy [eV]", 1000, 0, 50, "IonEnergy"
-#define __IONENERGY2__ "Direction [degree]", "Energy [eV]", 360, -180, 180, 500, 0, 50, "IonEnergy"
-#define __IONENERGY3__ "Energy [eV]", "Energy [eV]", 500, 0, 50, 500, 0, 50, "IonEnergy"
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hE), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hE_master), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hE), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hE_master), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hE), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hE_master), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hE), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hE_master), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalE), __IONENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalE_master), __IONENERGY1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hEDirDistXY), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hEDirDistXY_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hEDirDistYZ), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hEDirDistYZ_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hEDirDistZX), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hEDirDistZX_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hEDirDistXY), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hEDirDistXY_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hEDirDistYZ), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hEDirDistYZ_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hEDirDistZX), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hEDirDistZX_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hEDirDistXY), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hEDirDistXY_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hEDirDistYZ), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hEDirDistYZ_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hEDirDistZX), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hEDirDistZX_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hEDirDistXY), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hEDirDistXY_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hEDirDistYZ), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hEDirDistYZ_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hEDirDistZX), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hEDirDistZX_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalEDirDistXY), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalEDirDistXY_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalEDirDistYZ), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalEDirDistYZ_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalEDirDistZX), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalEDirDistZX_master), __IONENERGY2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hE), __IONENERGY3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hE_master), __IONENERGY3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hE), __IONENERGY3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hE_master), __IONENERGY3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE), __IONENERGY3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE_master), __IONENERGY3__);
+#define __IONENERGY__ "IonEnergy"
+#define __IONENERGY1__ "Energy [eV]", 1000, 0, 50, __IONENERGY__
+#define __IONENERGY2__ "Direction [degree]", "Energy [eV]", 360, -180, 180, 500, 0, 50, __IONENERGY__
+#define __IONENERGY3__ "Energy [eV]", "Energy [eV]", 500, 0, 50, 500, 0, 50, __IONENERGY__
+#define __CREATEIONENERGY__(X) \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i1hE_ ## X), __IONENERGY1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i2hE_ ## X), __IONENERGY1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i3hE_ ## X), __IONENERGY1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i4hE_ ## X), __IONENERGY1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalE_ ## X), __IONENERGY1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hE_ ## X), __IONENERGY3__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hE_ ## X), __IONENERGY3__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE_ ## X), __IONENERGY3__);
+  __CREATEIONENERGY__(always)
+  __CREATEIONENERGY__(iMaster)
+  __CREATEIONENERGY__(master)
 
   // ElecImage
-#define __ELECIMAGE1__ "Location X [mm]", "Location Y [mm]", 600, -75, 75, 600, -75, 75, "ElecImage"
-#define __ELECIMAGE2__ "Direction [degree]", "Location R [mm]", 360, -180, 180, 300, 0, 75, "ElecImage"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImage), __ELECIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImage_master), __ELECIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImage), __ELECIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImage_master), __ELECIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImage), __ELECIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImage_master), __ELECIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImage), __ELECIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImage_master), __ELECIMAGE1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImageDirDist), __ELECIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImageDirDist_master), __ELECIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImageDirDist), __ELECIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImageDirDist_master), __ELECIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImageDirDist), __ELECIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImageDirDist_master), __ELECIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImageDirDist), __ELECIMAGE2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImageDirDist_master), __ELECIMAGE2__);
+#define __ELECIMAGE__ "ElecImage"
+#define __ELECIMAGE1__ "Location X [mm]", "Location Y [mm]", 600, -75, 75, 600, -75, 75,__ELECIMAGE__
+#define __ELECIMAGE2__ "Direction [degree]", "Location R [mm]", 360, -180, 180, 300, 0, 75,__ELECIMAGE__
+#define __CREATEELECIMAGE__(X) \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImage_ ## X), __ELECIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImage_ ## X), __ELECIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImage_ ## X), __ELECIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImage_ ## X), __ELECIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hImageDirDist_ ## X), __ELECIMAGE2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hImageDirDist_ ## X), __ELECIMAGE2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hImageDirDist_ ## X), __ELECIMAGE2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hImageDirDist_ ## X), __ELECIMAGE2__); 
+  __CREATEELECIMAGE__(always)
+  __CREATEELECIMAGE__(eMaster)
+  __CREATEELECIMAGE__(master)
 
   // ElecTOF
-#define __ELECTOF1__ "TOF [ns]", 1000, 0, 100, "ElecTOF"
-#define __ELECTOF2__ "TOF [ns]", "TOF [ns]", 400, 0, 100, 400, 0, 100, "ElecTOF"
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hTOF), __ELECTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hTOF_master), __ELECTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hTOF), __ELECTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hTOF_master), __ELECTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hTOF), __ELECTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hTOF_master), __ELECTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hTOF), __ELECTOF1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hTOF_master), __ELECTOF1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1h2hPEPECO), __ELECTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1h2hPEPECO_master), __ELECTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2h3hPEPECO), __ELECTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2h3hPEPECO_master), __ELECTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3h4hPEPECO), __ELECTOF2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3h4hPEPECO_master), __ELECTOF2__);
+#define __ELECTOF__ "ElecTOF"
+#define __ELECTOF1__ "TOF [ns]", 1000, 0, 100, __ELECTOF__
+#define __ELECTOF2__ "TOF [ns]", "TOF [ns]", 400, 0, 100, 400, 0, 100, __ELECTOF__
+#define __CREATEELECTOF__(X) \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hTOF_ ## X), __ELECTOF1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hTOF_ ## X), __ELECTOF1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hTOF_ ## X), __ELECTOF1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hTOF_ ## X), __ELECTOF1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1h2hPEPECO_ ## X), __ELECTOF2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2h3hPEPECO_ ## X), __ELECTOF2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3h4hPEPECO_ ## X), __ELECTOF2__); 
+  __CREATEELECTOF__(always)
+  __CREATEELECTOF__(eMaster)
+  __CREATEELECTOF__(master)
 
   // ElecFish
-#define __ELECFISH1__ "TOF [ns]", "Location [mm]", 400, 0, 100, 600, -75, 75, "ElecFish"
-#define __ELECFISH2__ "TOF [ns]", "Location [mm]", 400, 0, 100, 300, 0, 75, "ElecFish"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hXFish), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hXFish_master), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hYFish), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hYFish_master), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hRFish), __ELECFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hRFish_master), __ELECFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hXFish), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hXFish_master), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hYFish), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hYFish_master), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hRFish), __ELECFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hRFish_master), __ELECFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hXFish), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hXFish_master), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hYFish), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hYFish_master), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hRFish), __ELECFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hRFish_master), __ELECFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hXFish), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hXFish_master), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hYFish), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hYFish_master), __ELECFISH1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hRFish), __ELECFISH2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hRFish_master), __ELECFISH2__);
+#define __ELECFISH__ "ElecFish"
+#define __ELECFISH1__ "TOF [ns]", "Location [mm]", 400, 0, 100, 600, -75, 75, __ELECFISH__
+#define __ELECFISH2__ "TOF [ns]", "Location [mm]", 400, 0, 100, 300, 0, 75, __ELECFISH__
+#define __CREATEELECFISH__(X) \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hXFish_ ## X), __ELECFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hYFish_ ## X), __ELECFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hRFish_ ## X), __ELECFISH2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hXFish_ ## X), __ELECFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hYFish_ ## X), __ELECFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hRFish_ ## X), __ELECFISH2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hXFish_ ## X), __ELECFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hYFish_ ## X), __ELECFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hRFish_ ## X), __ELECFISH2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hXFish_ ## X), __ELECFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hYFish_ ## X), __ELECFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hRFish_ ## X), __ELECFISH2__);
+  __CREATEELECFISH__(always)
+  __CREATEELECFISH__(eMaster)
+  __CREATEELECFISH__(master)
 
   // ElecMomentum
-#define __ELECMOMENTUM1__ "Momentum [au]", 4000, -4, 4, "ElecMomentum"
-#define __ELECMOMENTUM2__ "Momentum [au]", "Momentum [au]", 1000, -4, 4, 1000, -4, 4, "ElecMomentum"
-#define __ELECMOMENTUM3__ "Momentum [au]", 2000, 0, 4, "ElecMomentum"
-#define __ELECMOMENTUM4__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 500, 0, 4, "ElecMomentum"
-#define __ELECMOMENTUM5__ "Direction XY [degree]", "Direction Z [1]", 360, -180, 180, 400, -1, 1, "ElecMomentum"
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPX), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPX_master), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPY), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPY_master), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPZ), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPZ_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPXY), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPXY_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPYZ), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPYZ_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPZX), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPZX_master), __ELECMOMENTUM2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hP), __ELECMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hP_master), __ELECMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPX), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPX_master), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPY), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPY_master), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPZ), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPZ_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPXY), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPXY_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPYZ), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPYZ_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPZX), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPZX_master), __ELECMOMENTUM2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hP), __ELECMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hP_master), __ELECMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPX), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPX_master), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPY), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPY_master), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPZ), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPZ_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPXY), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPXY_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPYZ), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPYZ_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPZX), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPZX_master), __ELECMOMENTUM2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hP), __ELECMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hP_master), __ELECMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPX), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPX_master), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPY), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPY_master), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPZ), __ELECMOMENTUM1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPZ_master), __ELECMOMENTUM1__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPXY), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPXY_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPYZ), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPYZ_master), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPZX), __ELECMOMENTUM2__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPZX_master), __ELECMOMENTUM2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hP), __ELECMOMENTUM3__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hP_master), __ELECMOMENTUM3__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistX), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistX_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistY), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistY_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZ), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZ_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_PDirZIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_PDirZIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_PDirXIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_PDirXIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_PDirYIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_PDirYIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist), __ELECMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist_master), __ELECMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistX), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistX_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistY), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistY_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZ), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZ_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_PDirZIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_PDirZIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_PDirXIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_PDirXIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_PDirYIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_PDirYIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist), __ELECMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist_master), __ELECMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistX), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistX_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistY), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistY_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZ), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZ_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_PDirZIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_PDirZIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_PDirXIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_PDirXIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_PDirYIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_PDirYIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist), __ELECMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist_master), __ELECMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistX), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistX_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistY), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistY_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZ), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZ_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_PDirZIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_PDirZIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_PDirXIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_PDirXIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_PDirYIs90), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_PDirYIs90_master), __ELECMOMENTUM4__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist), __ELECMOMENTUM5__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist_master), __ELECMOMENTUM5__);
+#define __ELECMOMENTUM__ "ElecMomentum"
+#define __ELECMOMENTUM1__ "Momentum [au]", 4000, -4, 4, __ELECMOMENTUM__
+#define __ELECMOMENTUM2__ "Momentum [au]", "Momentum [au]", 1000, -4, 4, 1000, -4, 4, __ELECMOMENTUM__
+#define __ELECMOMENTUM3__ "Momentum [au]", 2000, 0, 4, __ELECMOMENTUM__
+#define __CREATEELECMOMENTUM_(X) \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPX_ ## X), __ELECMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPY_ ## X), __ELECMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hPZ_ ## X), __ELECMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPXY_ ## X), __ELECMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPYZ_ ## X), __ELECMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPZX_ ## X), __ELECMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hP_ ## X), __ELECMOMENTUM3__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPX_ ## X), __ELECMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPY_ ## X), __ELECMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hPZ_ ## X), __ELECMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPXY_ ## X), __ELECMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPYZ_ ## X), __ELECMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPZX_ ## X), __ELECMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hP_ ## X), __ELECMOMENTUM3__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPX_ ## X), __ELECMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPY_ ## X), __ELECMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hPZ_ ## X), __ELECMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPXY_ ## X), __ELECMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPYZ_ ## X), __ELECMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPZX_ ## X), __ELECMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hP_ ## X), __ELECMOMENTUM3__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPX_ ## X), __ELECMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPY_ ## X), __ELECMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hPZ_ ## X), __ELECMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPXY_ ## X), __ELECMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPYZ_ ## X), __ELECMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPZX_ ## X), __ELECMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hP_ ## X), __ELECMOMENTUM3__); 
+  __CREATEELECMOMENTUM_(always)
+  __CREATEELECMOMENTUM_(eMaster)
+  __CREATEELECMOMENTUM_(master)
+
+  // ElecMomentumAngDist 
+#define __ELECMOMENTUMANGDIST__ "ElecMomentumAngDist"
+#define __ELECMOMENTUMANGDIST1__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 500, 0, 4, __ELECMOMENTUMANGDIST__
+#define __ELECMOMENTUMANGDIST2__ "Direction XY [degree]", "Direction Z [1]", 360, -180, 180, 400, -1, 1, __ELECMOMENTUMANGDIST__
+#define __CREATEELECMOMENTUMANGDIST__(X) \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistX_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistY_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZ_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistX_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistY_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZ_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistX_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistY_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZ_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistX_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistY_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZ_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist_ ## X), __ELECMOMENTUMANGDIST2__);
+  __CREATEELECMOMENTUMANGDIST__(always)
+  __CREATEELECMOMENTUMANGDIST__(eMaster)
+  __CREATEELECMOMENTUMANGDIST__(master)
 
   // ElecEnergy
-#define __ELECENERGY1__ "Energy [eV]", 1000, 0, 50, "ElecEnergy"
-#define __ELECENERGY2__ "Energy [eV]", 2000, 0, 100, "ElecEnergy"
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE), __ELECENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE_master), __ELECENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE), __ELECENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE_master), __ELECENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE), __ELECENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE_master), __ELECENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE), __ELECENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE_master), __ELECENERGY1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_eTotalE), __ELECENERGY2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_eTotalE_master), __ELECENERGY2__);
+#define __ELECENERGY__ "ElecEnergy"
+#define __ELECENERGY1__ "Energy [eV]", 1000, 0, 50, __ELECENERGY__
+#define __ELECENERGY2__ "Energy [eV]", 2000, 0, 100, __ELECENERGY__
+#define __CREATEELECENERGY__(X) \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE_ ## X), __ELECENERGY1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE_ ## X), __ELECENERGY1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE_ ## X), __ELECENERGY1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE_ ## X), __ELECENERGY1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_eTotalE_ ## X), __ELECENERGY2__);
+  __CREATEELECENERGY__(always)
+  __CREATEELECENERGY__(eMaster)
+  __CREATEELECENERGY__(master)
 
 // IonElecCorr
 #define __IONELECCORR__ "KER [eV]", "Electron Kinetic Energy [eV]", 400, 0, 100, 500, 0, 50, "IonElecCorr"
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE), __IONELECCORR__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE_master), __IONELECCORR__);
+#define __CREATEIONELECCORR__(X) \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iKER_e1hE_ ## X), __IONELECCORR__);
+  __CREATEIONELECCORR__(always)
+  __CREATEIONELECCORR__(master)
 
   // Others
 #define __OTHERS__ "Others"
@@ -753,6 +555,8 @@ void Analysis::AnalysisRun::createHists() {
 }
 
 void Analysis::AnalysisRun::fillHists() {
+  const bool always = true;
+
   const bool iDead1 = pIons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
   const bool iDead2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
   const bool iDead3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
@@ -1012,538 +816,337 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const eETotal = pElectrons->outputE();
 
   // IonImage
-  fill2d(h2_i1hImage, iX1, iY1);
-  fill2d(h2_i2hImage, iX2, iY2);
-  fill2d(h2_i3hImage, iX3, iY3);
-  fill2d(h2_i4hImage, iX4, iY4);
-  fill2d(h2_iCOMImage, iCOMX, iCOMY);
-  fill2d(h2_i1hImageDirDist, iDir1, iR1);
-  fill2d(h2_i2hImageDirDist, iDir2, iR2);
-  fill2d(h2_i3hImageDirDist, iDir3, iR3);
-  fill2d(h2_i4hImageDirDist, iDir4, iR4);
-  fill2d(h2_iCOMImageDirDist, iCOMDir, iCOMR);
-  if (master) {
-    fill2d(h2_i1hImage_master, iX1, iY1);
-    fill2d(h2_i2hImage_master, iX2, iY2);
-    fill2d(h2_i3hImage_master, iX3, iY3);
-    fill2d(h2_i4hImage_master, iX4, iY4);
-    fill2d(h2_iCOMImage_master, iCOMX, iCOMY);
-    fill2d(h2_i1hImageDirDist_master, iDir1, iR1);
-    fill2d(h2_i2hImageDirDist_master, iDir2, iR2);
-    fill2d(h2_i3hImageDirDist_master, iDir3, iR3);
-    fill2d(h2_i4hImageDirDist_master, iDir4, iR4);
-    fill2d(h2_iCOMImageDirDist_master, iCOMDir, iCOMR);
-  }
+#define __FILLIONIMAGE__(X) \
+  if (X) { \
+  fill2d(h2_i1hImage_ ## X, iX1, iY1); \
+  fill2d(h2_i2hImage_ ## X, iX2, iY2); \
+  fill2d(h2_i3hImage_ ## X, iX3, iY3); \
+  fill2d(h2_i4hImage_ ## X, iX4, iY4); \
+  fill2d(h2_iCOMImage_ ## X, iCOMX, iCOMY); \
+  fill2d(h2_i1hImageDirDist_ ## X, iDir1, iR1); \
+  fill2d(h2_i2hImageDirDist_ ## X, iDir2, iR2); \
+  fill2d(h2_i3hImageDirDist_ ## X, iDir3, iR3); \
+  fill2d(h2_i4hImageDirDist_ ## X, iDir4, iR4); \
+  fill2d(h2_iCOMImageDirDist_ ## X, iCOMDir, iCOMR); \
+}
+  __FILLIONIMAGE__(always)
+  __FILLIONIMAGE__(iMaster)
+  __FILLIONIMAGE__(master)
 
   // IonTOF
-  fill1d(h1_i1hTOF, iT1);
-  fill1d(h1_i2hTOF, iT2);
-  fill1d(h1_i3hTOF, iT3);
-  fill1d(h1_i4hTOF, iT4);
-  fill1d(h1_iTotalTOF, iTTotal);
-  fill2d(h2_i1h2hPIPICO, iT1, iT2);
-  fill2d(h2_i2h3hPIPICO, iT2, iT3);
-  fill2d(h2_i3h4hPIPICO, iT3, iT4);
-  fill2d(h2_i1h2hRotPIPICO, iT12, iTDiff12);
-  fill2d(h2_i1h2hRotPIPICO, iT23, iTDiff23);
-  fill2d(h2_i1h2hRotPIPICO, iT34, iTDiff34);
-  if (master) {
-    fill1d(h1_i1hTOF_master, iT1);
-    fill1d(h1_i2hTOF_master, iT2);
-    fill1d(h1_i3hTOF_master, iT3);
-    fill1d(h1_i4hTOF_master, iT4);
-    fill1d(h1_iTotalTOF_master, iTTotal);
-    fill2d(h2_i1h2hPIPICO_master, iT1, iT2);
-    fill2d(h2_i2h3hPIPICO_master, iT2, iT3);
-    fill2d(h2_i3h4hPIPICO_master, iT3, iT4);
-    fill2d(h2_i1h2hRotPIPICO_master, iT12, iTDiff12);
-    fill2d(h2_i1h2hRotPIPICO_master, iT23, iTDiff23);
-    fill2d(h2_i1h2hRotPIPICO_master, iT34, iTDiff34);
-  }
+#define __FILLIONTOF__(X) \
+  if (X) { \
+  fill1d(h1_i1hTOF_ ## X, iT1); \
+  fill1d(h1_i2hTOF_ ## X, iT2); \
+  fill1d(h1_i3hTOF_ ## X, iT3); \
+  fill1d(h1_i4hTOF_ ## X, iT4); \
+  fill1d(h1_iTotalTOF_ ## X, iTTotal); \
+  fill2d(h2_i1h2hPIPICO_ ## X, iT1, iT2); \
+  fill2d(h2_i2h3hPIPICO_ ## X, iT2, iT3); \
+  fill2d(h2_i3h4hPIPICO_ ## X, iT3, iT4); \
+  fill2d(h2_i1h2hRotPIPICO_ ## X, iT12, iTDiff12); \
+  fill2d(h2_i1h2hRotPIPICO_ ## X, iT23, iTDiff23); \
+  fill2d(h2_i1h2hRotPIPICO_ ## X, iT34, iTDiff34); \
+}
+  __FILLIONTOF__(always)
+  __FILLIONTOF__(iMaster)
+  __FILLIONTOF__(master)
 
 // IonFish
-  fill2d(h2_i1hXFish, iT1, iX1);
-  fill2d(h2_i1hYFish, iT1, iY1);
-  fill2d(h2_i1hRFish, iT1, iR1);
-  fill2d(h2_i2hXFish, iT2, iX2);
-  fill2d(h2_i2hYFish, iT2, iY2);
-  fill2d(h2_i2hRFish, iT2, iR2);
-  fill2d(h2_i3hXFish, iT3, iX3);
-  fill2d(h2_i3hYFish, iT3, iY3);
-  fill2d(h2_i3hRFish, iT3, iR3);
-  fill2d(h2_i4hXFish, iT4, iX4);
-  fill2d(h2_i4hYFish, iT4, iY4);
-  fill2d(h2_i4hRFish, iT4, iR4);
-  if (master) {
-    fill2d(h2_i1hXFish_master, iT1, iX1);
-    fill2d(h2_i1hYFish_master, iT1, iY1);
-    fill2d(h2_i1hRFish_master, iT1, iR1);
-    fill2d(h2_i2hXFish_master, iT2, iX2);
-    fill2d(h2_i2hYFish_master, iT2, iY2);
-    fill2d(h2_i2hRFish_master, iT2, iR2);
-    fill2d(h2_i3hXFish_master, iT3, iX3);
-    fill2d(h2_i3hYFish_master, iT3, iY3);
-    fill2d(h2_i3hRFish_master, iT3, iR3);
-    fill2d(h2_i4hXFish_master, iT4, iX4);
-    fill2d(h2_i4hYFish_master, iT4, iY4);
-    fill2d(h2_i4hRFish_master, iT4, iR4);
-  }
+#define __FILLIONFISH__(X) \
+  if (X) { \
+  fill2d(h2_i1hXFish_ ## X, iT1, iX1); \
+  fill2d(h2_i1hYFish_ ## X, iT1, iY1); \
+  fill2d(h2_i1hRFish_ ## X, iT1, iR1); \
+  fill2d(h2_i2hXFish_ ## X, iT2, iX2); \
+  fill2d(h2_i2hYFish_ ## X, iT2, iY2); \
+  fill2d(h2_i2hRFish_ ## X, iT2, iR2); \
+  fill2d(h2_i3hXFish_ ## X, iT3, iX3); \
+  fill2d(h2_i3hYFish_ ## X, iT3, iY3); \
+  fill2d(h2_i3hRFish_ ## X, iT3, iR3); \
+  fill2d(h2_i4hXFish_ ## X, iT4, iX4); \
+  fill2d(h2_i4hYFish_ ## X, iT4, iY4); \
+  fill2d(h2_i4hRFish_ ## X, iT4, iR4); \
+}
+  __FILLIONFISH__(always)
+  __FILLIONFISH__(iMaster)
+  __FILLIONFISH__(master)
 
 // IonMomentum
-  fill1d(h1_i1hPX, iPX1);
-  fill1d(h1_i1hPY, iPY1);
-  fill1d(h1_i1hPZ, iPZ1);
-  fill2d(h2_i1hPXY, iPX1, iPY1);
-  fill2d(h2_i1hPYZ, iPY1, iPZ1);
-  fill2d(h2_i1hPZX, iPZ1, iPX1);
-  fill1d(h1_i1hP, iP1);
-  fill1d(h1_i2hPX, iPX2);
-  fill1d(h1_i2hPY, iPY2);
-  fill1d(h1_i2hPZ, iPZ2);
-  fill2d(h2_i2hPXY, iPX2, iPY2);
-  fill2d(h2_i2hPYZ, iPY2, iPZ2);
-  fill2d(h2_i2hPZX, iPZ2, iPX2);
-  fill1d(h1_i2hP, iP2);
-  fill1d(h1_i3hPX, iPX3);
-  fill1d(h1_i3hPY, iPY3);
-  fill1d(h1_i3hPZ, iPZ3);
-  fill2d(h2_i3hPXY, iPX3, iPY3);
-  fill2d(h2_i3hPYZ, iPY3, iPZ3);
-  fill2d(h2_i3hPZX, iPZ3, iPX3);
-  fill1d(h1_i3hP, iP3);
-  fill1d(h1_i4hPX, iPX4);
-  fill1d(h1_i4hPY, iPY4);
-  fill1d(h1_i4hPZ, iPZ4);
-  fill2d(h2_i4hPXY, iPX4, iPY4);
-  fill2d(h2_i4hPYZ, iPY4, iPZ4);
-  fill2d(h2_i4hPZX, iPZ4, iPX4);
-  fill1d(h1_i4hP, iP4);
-  fill1d(h1_iTotalPX, iPXTotal);
-  fill1d(h1_iTotalPY, iPYTotal);
-  fill1d(h1_iTotalPZ, iPZTotal);
-  fill2d(h2_iTotalPXY, iPXTotal, iPYTotal);
-  fill2d(h2_iTotalPYZ, iPYTotal, iPZTotal);
-  fill2d(h2_iTotalPZX, iPZTotal, iPXTotal);
-  fill1d(h1_iTotalP, iPTotal);
-  fill2d(h2_i1hPDirDistX, iPDirX1, iPX1);
-  fill2d(h2_i1hPDirDistY, iPDirY1, iPY1);
-  fill2d(h2_i1hPDirDistZ, iPDirZ1, iPZ1);
-  fill2d(h2_i1hPDirDistXY, iPDirXY1, iPXY1);
-  fill2d(h2_i1hPDirDistYZ, iPDirYZ1, iPYZ1);
-  fill2d(h2_i1hPDirDistZX, iPDirZX1, iPZX1);
-  if (iPDirZ1Is90) fill2d(h2_i1hPDirDistXY_PDirZIs90, iPDirXY1, iPXY1);
-  if (iPDirX1Is90) fill2d(h2_i1hPDirDistYZ_PDirXIs90, iPDirYZ1, iPYZ1);
-  if (iPDirY1Is90) fill2d(h2_i1hPDirDistZX_PDirYIs90, iPDirZX1, iPZX1);
-  fill2d(h2_i1hPDirDist, iPDirXY1, iCosPDirZ1);
-  fill2d(h2_i2hPDirDistX, iPDirX2, iPX2);
-  fill2d(h2_i2hPDirDistY, iPDirY2, iPY2);
-  fill2d(h2_i2hPDirDistZ, iPDirZ2, iPZ2);
-  fill2d(h2_i2hPDirDistXY, iPDirXY2, iPXY2);
-  fill2d(h2_i2hPDirDistYZ, iPDirYZ2, iPYZ2);
-  fill2d(h2_i2hPDirDistZX, iPDirZX2, iPZX2);
-  if (iPDirZ2Is90) fill2d(h2_i2hPDirDistXY_PDirZIs90, iPDirXY2, iPXY2);
-  if (iPDirX2Is90) fill2d(h2_i2hPDirDistYZ_PDirXIs90, iPDirYZ2, iPYZ2);
-  if (iPDirY2Is90) fill2d(h2_i2hPDirDistZX_PDirYIs90, iPDirZX2, iPZX2);
-  fill2d(h2_i2hPDirDist, iPDirXY2, iCosPDirZ2);
-  fill2d(h2_i3hPDirDistX, iPDirX3, iPX3);
-  fill2d(h2_i3hPDirDistY, iPDirY3, iPY3);
-  fill2d(h2_i3hPDirDistZ, iPDirZ3, iPZ3);
-  fill2d(h2_i3hPDirDistXY, iPDirXY3, iPXY3);
-  fill2d(h2_i3hPDirDistYZ, iPDirYZ3, iPYZ3);
-  fill2d(h2_i3hPDirDistZX, iPDirZX3, iPZX3);
-  if (iPDirZ3Is90) fill2d(h2_i3hPDirDistXY_PDirZIs90, iPDirXY3, iPXY3);
-  if (iPDirX3Is90) fill2d(h2_i3hPDirDistYZ_PDirXIs90, iPDirYZ3, iPYZ3);
-  if (iPDirY3Is90) fill2d(h2_i3hPDirDistZX_PDirYIs90, iPDirZX3, iPZX3);
-  fill2d(h2_i3hPDirDist, iPDirXY3, iCosPDirZ3);
-  fill2d(h2_i4hPDirDistX, iPDirX4, iPX4);
-  fill2d(h2_i4hPDirDistY, iPDirY4, iPY4);
-  fill2d(h2_i4hPDirDistZ, iPDirZ4, iPZ4);
-  fill2d(h2_i4hPDirDistXY, iPDirXY4, iPXY4);
-  fill2d(h2_i4hPDirDistYZ, iPDirYZ4, iPYZ4);
-  fill2d(h2_i4hPDirDistZX, iPDirZX4, iPZX4);
-  if (iPDirZ4Is90) fill2d(h2_i4hPDirDistXY_PDirZIs90, iPDirXY4, iPXY4);
-  if (iPDirX4Is90) fill2d(h2_i4hPDirDistYZ_PDirXIs90, iPDirYZ4, iPYZ4);
-  if (iPDirY4Is90) fill2d(h2_i4hPDirDistZX_PDirYIs90, iPDirZX4, iPZX4);
-  fill2d(h2_i4hPDirDist, iPDirXY4, iCosPDirZ4);
-  fill2d(h2_iTotalPDirDistX, iPDirXTotal, iPXTotal);
-  fill2d(h2_iTotalPDirDistY, iPDirYTotal, iPYTotal);
-  fill2d(h2_iTotalPDirDistZ, iPDirZTotal, iPZTotal);
-  fill2d(h2_iTotalPDirDistXY, iPDirXYTotal, iPXYTotal);
-  fill2d(h2_iTotalPDirDistYZ, iPDirYZTotal, iPYZTotal);
-  fill2d(h2_iTotalPDirDistZX, iPDirZXTotal, iPZXTotal);
-  if (iPDirZTotalIs90) fill2d(h2_iTotalPDirDistXY_PDirZIs90, iPDirXYTotal, iPXYTotal);
-  if (iPDirXTotalIs90) fill2d(h2_iTotalPDirDistYZ_PDirXIs90, iPDirYZTotal, iPYZTotal);
-  if (iPDirYTotalIs90) fill2d(h2_iTotalPDirDistZX_PDirYIs90, iPDirZXTotal, iPZXTotal);
-  fill2d(h2_iTotalPDirDist, iPDirXYTotal, iCosPDirZTotal);
-  fill2d(h2_i1h2hP, iP1, iP2);
-  fill2d(h2_i2h3hP, iP2, iP3);
-  fill2d(h2_i3h4hP, iP3, iP4);
-  if (master) {
-    fill1d(h1_i1hPX_master, iPX1);
-    fill1d(h1_i1hPY_master, iPY1);
-    fill1d(h1_i1hPZ_master, iPZ1);
-    fill2d(h2_i1hPXY_master, iPX1, iPY1);
-    fill2d(h2_i1hPYZ_master, iPY1, iPZ1);
-    fill2d(h2_i1hPZX_master, iPZ1, iPX1);
-    fill1d(h1_i1hP_master, iP1);
-    fill1d(h1_i2hPX_master, iPX2);
-    fill1d(h1_i2hPY_master, iPY2);
-    fill1d(h1_i2hPZ_master, iPZ2);
-    fill2d(h2_i2hPXY_master, iPX2, iPY2);
-    fill2d(h2_i2hPYZ_master, iPY2, iPZ2);
-    fill2d(h2_i2hPZX_master, iPZ2, iPX2);
-    fill1d(h1_i2hP_master, iP2);
-    fill1d(h1_i3hPX_master, iPX3);
-    fill1d(h1_i3hPY_master, iPY3);
-    fill1d(h1_i3hPZ_master, iPZ3);
-    fill2d(h2_i3hPXY_master, iPX3, iPY3);
-    fill2d(h2_i3hPYZ_master, iPY3, iPZ3);
-    fill2d(h2_i3hPZX_master, iPZ3, iPX3);
-    fill1d(h1_i3hP_master, iP3);
-    fill1d(h1_i4hPX_master, iPX4);
-    fill1d(h1_i4hPY_master, iPY4);
-    fill1d(h1_i4hPZ_master, iPZ4);
-    fill2d(h2_i4hPXY_master, iPX4, iPY4);
-    fill2d(h2_i4hPYZ_master, iPY4, iPZ4);
-    fill2d(h2_i4hPZX_master, iPZ4, iPX4);
-    fill1d(h1_i4hP_master, iP4);
-    fill1d(h1_iTotalPX_master, iPXTotal);
-    fill1d(h1_iTotalPY_master, iPYTotal);
-    fill1d(h1_iTotalPZ_master, iPZTotal);
-    fill2d(h2_iTotalPXY_master, iPXTotal, iPYTotal);
-    fill2d(h2_iTotalPYZ_master, iPYTotal, iPZTotal);
-    fill2d(h2_iTotalPZX_master, iPZTotal, iPXTotal);
-    fill1d(h1_iTotalP_master, iPTotal);
-    fill2d(h2_i1hPDirDistX_master, iPDirX1, iPX1);
-    fill2d(h2_i1hPDirDistY_master, iPDirY1, iPY1);
-    fill2d(h2_i1hPDirDistZ_master, iPDirZ1, iPZ1);
-    fill2d(h2_i1hPDirDistXY_master, iPDirXY1, iPXY1);
-    fill2d(h2_i1hPDirDistYZ_master, iPDirYZ1, iPYZ1);
-    fill2d(h2_i1hPDirDistZX_master, iPDirZX1, iPZX1);
-    if (iPDirZ1Is90) fill2d(h2_i1hPDirDistXY_PDirZIs90_master, iPDirXY1, iPXY1);
-    if (iPDirX1Is90) fill2d(h2_i1hPDirDistYZ_PDirXIs90_master, iPDirYZ1, iPYZ1);
-    if (iPDirY1Is90) fill2d(h2_i1hPDirDistZX_PDirYIs90_master, iPDirZX1, iPZX1);
-    fill2d(h2_i1hPDirDist_master, iPDirXY1, iCosPDirZ1);
-    fill2d(h2_i2hPDirDistX_master, iPDirX2, iPX2);
-    fill2d(h2_i2hPDirDistY_master, iPDirY2, iPY2);
-    fill2d(h2_i2hPDirDistZ_master, iPDirZ2, iPZ2);
-    fill2d(h2_i2hPDirDistXY_master, iPDirXY2, iPXY2);
-    fill2d(h2_i2hPDirDistYZ_master, iPDirYZ2, iPYZ2);
-    fill2d(h2_i2hPDirDistZX_master, iPDirZX2, iPZX2);
-    if (iPDirZ2Is90) fill2d(h2_i2hPDirDistXY_PDirZIs90_master, iPDirXY2, iPXY2);
-    if (iPDirX2Is90) fill2d(h2_i2hPDirDistYZ_PDirXIs90_master, iPDirYZ2, iPYZ2);
-    if (iPDirY2Is90) fill2d(h2_i2hPDirDistZX_PDirYIs90_master, iPDirZX2, iPZX2);
-    fill2d(h2_i2hPDirDist_master, iPDirXY2, iCosPDirZ2);
-    fill2d(h2_i3hPDirDistX_master, iPDirX3, iPX3);
-    fill2d(h2_i3hPDirDistY_master, iPDirY3, iPY3);
-    fill2d(h2_i3hPDirDistZ_master, iPDirZ3, iPZ3);
-    fill2d(h2_i3hPDirDistXY_master, iPDirXY3, iPXY3);
-    fill2d(h2_i3hPDirDistYZ_master, iPDirYZ3, iPYZ3);
-    fill2d(h2_i3hPDirDistZX_master, iPDirZX3, iPZX3);
-    if (iPDirZ3Is90) fill2d(h2_i3hPDirDistXY_PDirZIs90_master, iPDirXY3, iPXY3);
-    if (iPDirX3Is90) fill2d(h2_i3hPDirDistYZ_PDirXIs90_master, iPDirYZ3, iPYZ3);
-    if (iPDirY3Is90) fill2d(h2_i3hPDirDistZX_PDirYIs90_master, iPDirZX3, iPZX3);
-    fill2d(h2_i3hPDirDist_master, iPDirXY3, iCosPDirZ3);
-    fill2d(h2_i4hPDirDistX_master, iPDirX4, iPX4);
-    fill2d(h2_i4hPDirDistY_master, iPDirY4, iPY4);
-    fill2d(h2_i4hPDirDistZ_master, iPDirZ4, iPZ4);
-    fill2d(h2_i4hPDirDistXY_master, iPDirXY4, iPXY4);
-    fill2d(h2_i4hPDirDistYZ_master, iPDirYZ4, iPYZ4);
-    fill2d(h2_i4hPDirDistZX_master, iPDirZX4, iPZX4);
-    if (iPDirZ4Is90) fill2d(h2_i4hPDirDistXY_PDirZIs90_master, iPDirXY4, iPXY4);
-    if (iPDirX4Is90) fill2d(h2_i4hPDirDistYZ_PDirXIs90_master, iPDirYZ4, iPYZ4);
-    if (iPDirY4Is90) fill2d(h2_i4hPDirDistZX_PDirYIs90_master, iPDirZX4, iPZX4);
-    fill2d(h2_i4hPDirDist_master, iPDirXY4, iCosPDirZ4);
-    fill2d(h2_iTotalPDirDistX_master, iPDirXTotal, iPXTotal);
-    fill2d(h2_iTotalPDirDistY_master, iPDirYTotal, iPYTotal);
-    fill2d(h2_iTotalPDirDistZ_master, iPDirZTotal, iPZTotal);
-    fill2d(h2_iTotalPDirDistXY_master, iPDirXYTotal, iPXYTotal);
-    fill2d(h2_iTotalPDirDistYZ_master, iPDirYZTotal, iPYZTotal);
-    fill2d(h2_iTotalPDirDistZX_master, iPDirZXTotal, iPZXTotal);
-    if (iPDirZTotalIs90) fill2d(h2_iTotalPDirDistXY_PDirZIs90_master, iPDirXYTotal, iPXYTotal);
-    if (iPDirXTotalIs90) fill2d(h2_iTotalPDirDistYZ_PDirXIs90_master, iPDirYZTotal, iPYZTotal);
-    if (iPDirYTotalIs90) fill2d(h2_iTotalPDirDistZX_PDirYIs90_master, iPDirZXTotal, iPZXTotal);
-    fill2d(h2_iTotalPDirDist_master, iPDirXYTotal, iCosPDirZTotal);
-    fill2d(h2_i1h2hP_master, iP1, iP2);
-    fill2d(h2_i2h3hP_master, iP2, iP3);
-    fill2d(h2_i3h4hP_master, iP3, iP4);
+#define __FILLIONMOMENTUM__(X) \
+  if (X) { \
+    fill1d(h1_i1hPX_ ## X, iPX1); \
+    fill1d(h1_i1hPY_ ## X, iPY1); \
+    fill1d(h1_i1hPZ_ ## X, iPZ1); \
+    fill2d(h2_i1hPXY_ ## X, iPX1, iPY1); \
+    fill2d(h2_i1hPYZ_ ## X, iPY1, iPZ1); \
+    fill2d(h2_i1hPZX_ ## X, iPZ1, iPX1); \
+    fill1d(h1_i1hP_ ## X, iP1); \
+    fill1d(h1_i2hPX_ ## X, iPX2); \
+    fill1d(h1_i2hPY_ ## X, iPY2); \
+    fill1d(h1_i2hPZ_ ## X, iPZ2); \
+    fill2d(h2_i2hPXY_ ## X, iPX2, iPY2); \
+    fill2d(h2_i2hPYZ_ ## X, iPY2, iPZ2); \
+    fill2d(h2_i2hPZX_ ## X, iPZ2, iPX2); \
+    fill1d(h1_i2hP_ ## X, iP2); \
+    fill1d(h1_i3hPX_ ## X, iPX3); \
+    fill1d(h1_i3hPY_ ## X, iPY3); \
+    fill1d(h1_i3hPZ_ ## X, iPZ3); \
+    fill2d(h2_i3hPXY_ ## X, iPX3, iPY3); \
+    fill2d(h2_i3hPYZ_ ## X, iPY3, iPZ3); \
+    fill2d(h2_i3hPZX_ ## X, iPZ3, iPX3); \
+    fill1d(h1_i3hP_ ## X, iP3); \
+    fill1d(h1_i4hPX_ ## X, iPX4); \
+    fill1d(h1_i4hPY_ ## X, iPY4); \
+    fill1d(h1_i4hPZ_ ## X, iPZ4); \
+    fill2d(h2_i4hPXY_ ## X, iPX4, iPY4); \
+    fill2d(h2_i4hPYZ_ ## X, iPY4, iPZ4); \
+    fill2d(h2_i4hPZX_ ## X, iPZ4, iPX4); \
+    fill1d(h1_i4hP_ ## X, iP4); \
+    fill1d(h1_iTotalPX_ ## X, iPXTotal); \
+    fill1d(h1_iTotalPY_ ## X, iPYTotal); \
+    fill1d(h1_iTotalPZ_ ## X, iPZTotal); \
+    fill2d(h2_iTotalPXY_ ## X, iPXTotal, iPYTotal); \
+    fill2d(h2_iTotalPYZ_ ## X, iPYTotal, iPZTotal); \
+    fill2d(h2_iTotalPZX_ ## X, iPZTotal, iPXTotal); \
+    fill1d(h1_iTotalP_ ## X, iPTotal); \
+    fill2d(h2_i1h2hP_ ## X, iP1, iP2); \
+    fill2d(h2_i2h3hP_ ## X, iP2, iP3); \
+    fill2d(h2_i3h4hP_ ## X, iP3, iP4); \
   }
+  __FILLIONMOMENTUM__(always)
+  __FILLIONMOMENTUM__(iMaster)
+  __FILLIONMOMENTUM__(master)
+
+// IonMomentumAngDist
+#define __FILLIONMOMENTUMANGDIST__(X) \
+  if (X) { \
+    fill2d(h2_i1hPDirDistX_ ## X, iPDirX1, iPX1); \
+    fill2d(h2_i1hPDirDistY_ ## X, iPDirY1, iPY1); \
+    fill2d(h2_i1hPDirDistZ_ ## X, iPDirZ1, iPZ1); \
+    fill2d(h2_i1hPDirDistXY_ ## X, iPDirXY1, iPXY1); \
+    fill2d(h2_i1hPDirDistYZ_ ## X, iPDirYZ1, iPYZ1); \
+    fill2d(h2_i1hPDirDistZX_ ## X, iPDirZX1, iPZX1); \
+    if (iPDirZ1Is90) fill2d(h2_i1hPDirDistXY_PDirZIs90_ ## X, iPDirXY1, iPXY1); \
+    if (iPDirX1Is90) fill2d(h2_i1hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ1, iPYZ1); \
+    if (iPDirY1Is90) fill2d(h2_i1hPDirDistZX_PDirYIs90_ ## X, iPDirZX1, iPZX1); \
+    fill2d(h2_i1hPDirDist_ ## X, iPDirXY1, iCosPDirZ1); \
+    fill2d(h2_i2hPDirDistX_ ## X, iPDirX2, iPX2); \
+    fill2d(h2_i2hPDirDistY_ ## X, iPDirY2, iPY2); \
+    fill2d(h2_i2hPDirDistZ_ ## X, iPDirZ2, iPZ2); \
+    fill2d(h2_i2hPDirDistXY_ ## X, iPDirXY2, iPXY2); \
+    fill2d(h2_i2hPDirDistYZ_ ## X, iPDirYZ2, iPYZ2); \
+    fill2d(h2_i2hPDirDistZX_ ## X, iPDirZX2, iPZX2); \
+    if (iPDirZ2Is90) fill2d(h2_i2hPDirDistXY_PDirZIs90_ ## X, iPDirXY2, iPXY2); \
+    if (iPDirX2Is90) fill2d(h2_i2hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ2, iPYZ2); \
+    if (iPDirY2Is90) fill2d(h2_i2hPDirDistZX_PDirYIs90_ ## X, iPDirZX2, iPZX2); \
+    fill2d(h2_i2hPDirDist_ ## X, iPDirXY2, iCosPDirZ2); \
+    fill2d(h2_i3hPDirDistX_ ## X, iPDirX3, iPX3); \
+    fill2d(h2_i3hPDirDistY_ ## X, iPDirY3, iPY3); \
+    fill2d(h2_i3hPDirDistZ_ ## X, iPDirZ3, iPZ3); \
+    fill2d(h2_i3hPDirDistXY_ ## X, iPDirXY3, iPXY3); \
+    fill2d(h2_i3hPDirDistYZ_ ## X, iPDirYZ3, iPYZ3); \
+    fill2d(h2_i3hPDirDistZX_ ## X, iPDirZX3, iPZX3); \
+    if (iPDirZ3Is90) fill2d(h2_i3hPDirDistXY_PDirZIs90_ ## X, iPDirXY3, iPXY3); \
+    if (iPDirX3Is90) fill2d(h2_i3hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ3, iPYZ3); \
+    if (iPDirY3Is90) fill2d(h2_i3hPDirDistZX_PDirYIs90_ ## X, iPDirZX3, iPZX3); \
+    fill2d(h2_i3hPDirDist_ ## X, iPDirXY3, iCosPDirZ3); \
+    fill2d(h2_i4hPDirDistX_ ## X, iPDirX4, iPX4); \
+    fill2d(h2_i4hPDirDistY_ ## X, iPDirY4, iPY4); \
+    fill2d(h2_i4hPDirDistZ_ ## X, iPDirZ4, iPZ4); \
+    fill2d(h2_i4hPDirDistXY_ ## X, iPDirXY4, iPXY4); \
+    fill2d(h2_i4hPDirDistYZ_ ## X, iPDirYZ4, iPYZ4); \
+    fill2d(h2_i4hPDirDistZX_ ## X, iPDirZX4, iPZX4); \
+    if (iPDirZ4Is90) fill2d(h2_i4hPDirDistXY_PDirZIs90_ ## X, iPDirXY4, iPXY4); \
+    if (iPDirX4Is90) fill2d(h2_i4hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ4, iPYZ4); \
+    if (iPDirY4Is90) fill2d(h2_i4hPDirDistZX_PDirYIs90_ ## X, iPDirZX4, iPZX4); \
+    fill2d(h2_i4hPDirDist_ ## X, iPDirXY4, iCosPDirZ4); \
+    fill2d(h2_iTotalPDirDistX_ ## X, iPDirXTotal, iPXTotal); \
+    fill2d(h2_iTotalPDirDistY_ ## X, iPDirYTotal, iPYTotal); \
+    fill2d(h2_iTotalPDirDistZ_ ## X, iPDirZTotal, iPZTotal); \
+    fill2d(h2_iTotalPDirDistXY_ ## X, iPDirXYTotal, iPXYTotal); \
+    fill2d(h2_iTotalPDirDistYZ_ ## X, iPDirYZTotal, iPYZTotal); \
+    fill2d(h2_iTotalPDirDistZX_ ## X, iPDirZXTotal, iPZXTotal); \
+    if (iPDirZTotalIs90) fill2d(h2_iTotalPDirDistXY_PDirZIs90_ ## X, iPDirXYTotal, iPXYTotal); \
+    if (iPDirXTotalIs90) fill2d(h2_iTotalPDirDistYZ_PDirXIs90_ ## X, iPDirYZTotal, iPYZTotal); \
+    if (iPDirYTotalIs90) fill2d(h2_iTotalPDirDistZX_PDirYIs90_ ## X, iPDirZXTotal, iPZXTotal); \
+    fill2d(h2_iTotalPDirDist_ ## X, iPDirXYTotal, iCosPDirZTotal); \
+  }
+  __FILLIONMOMENTUMANGDIST__(always)
+  __FILLIONMOMENTUMANGDIST__(iMaster)
+  __FILLIONMOMENTUMANGDIST__(master)
 
 // IonEnergy
-  fill1d(h1_i1hE, iE1);
-  fill1d(h1_i2hE, iE2);
-  fill1d(h1_i3hE, iE3);
-  fill1d(h1_i4hE, iE4);
-  fill1d(h1_iTotalE, iETotal);
-  fill2d(h2_i1hEDirDistXY, iPDirXY1, iE1);
-  fill2d(h2_i1hEDirDistYZ, iPDirYZ1, iE1);
-  fill2d(h2_i1hEDirDistZX, iPDirZX1, iE1);
-  fill2d(h2_i2hEDirDistXY, iPDirXY2, iE2);
-  fill2d(h2_i2hEDirDistYZ, iPDirYZ2, iE2);
-  fill2d(h2_i2hEDirDistZX, iPDirZX2, iE2);
-  fill2d(h2_i3hEDirDistXY, iPDirXY3, iE3);
-  fill2d(h2_i3hEDirDistYZ, iPDirYZ3, iE3);
-  fill2d(h2_i3hEDirDistZX, iPDirZX3, iE3);
-  fill2d(h2_i4hEDirDistXY, iPDirXY4, iE4);
-  fill2d(h2_i4hEDirDistYZ, iPDirYZ4, iE4);
-  fill2d(h2_i4hEDirDistZX, iPDirZX4, iE4);
-  fill2d(h2_iTotalEDirDistXY, iPDirXYTotal, iETotal);
-  fill2d(h2_iTotalEDirDistYZ, iPDirYZTotal, iETotal);
-  fill2d(h2_iTotalEDirDistZX, iPDirZXTotal, iETotal);
-  fill2d(h2_i1h2hE, iE1, iE2);
-  fill2d(h2_i2h3hE, iE2, iE3);
-  fill2d(h2_i3h4hE, iE3, iE4);
-  if (master) {
-    fill1d(h1_i1hE_master, iE1);
-    fill1d(h1_i2hE_master, iE2);
-    fill1d(h1_i3hE_master, iE3);
-    fill1d(h1_i4hE_master, iE4);
-    fill1d(h1_iTotalE_master, iETotal);
-    fill2d(h2_i1hEDirDistXY_master, iPDirXY1, iE1);
-    fill2d(h2_i1hEDirDistYZ_master, iPDirYZ1, iE1);
-    fill2d(h2_i1hEDirDistZX_master, iPDirZX1, iE1);
-    fill2d(h2_i2hEDirDistXY_master, iPDirXY2, iE2);
-    fill2d(h2_i2hEDirDistYZ_master, iPDirYZ2, iE2);
-    fill2d(h2_i2hEDirDistZX_master, iPDirZX2, iE2);
-    fill2d(h2_i3hEDirDistXY_master, iPDirXY3, iE3);
-    fill2d(h2_i3hEDirDistYZ_master, iPDirYZ3, iE3);
-    fill2d(h2_i3hEDirDistZX_master, iPDirZX3, iE3);
-    fill2d(h2_i4hEDirDistXY_master, iPDirXY4, iE4);
-    fill2d(h2_i4hEDirDistYZ_master, iPDirYZ4, iE4);
-    fill2d(h2_i4hEDirDistZX_master, iPDirZX4, iE4);
-    fill2d(h2_iTotalEDirDistXY_master, iPDirXYTotal, iETotal);
-    fill2d(h2_iTotalEDirDistYZ_master, iPDirYZTotal, iETotal);
-    fill2d(h2_iTotalEDirDistZX_master, iPDirZXTotal, iETotal);
-    fill2d(h2_i1h2hE_master, iE1, iE2);
-    fill2d(h2_i2h3hE_master, iE2, iE3);
-    fill2d(h2_i3h4hE_master, iE3, iE4);
+#define __FILLIONENERGY__(X) \
+  if (X) { \
+    fill1d(h1_i1hE_ ## X, iE1); \
+    fill1d(h1_i2hE_ ## X, iE2); \
+    fill1d(h1_i3hE_ ## X, iE3); \
+    fill1d(h1_i4hE_ ## X, iE4); \
+    fill1d(h1_iTotalE_ ## X, iETotal); \
+    fill2d(h2_i1h2hE_ ## X, iE1, iE2); \
+    fill2d(h2_i2h3hE_ ## X, iE2, iE3); \
+    fill2d(h2_i3h4hE_ ## X, iE3, iE4); \
   }
+  __FILLIONENERGY__(always)
+  __FILLIONENERGY__(iMaster)
+  __FILLIONENERGY__(master)
 
   // ElecImage
-  fill2d(h2_e1hImage, eX1, eY1);
-  fill2d(h2_e2hImage, eX2, eY2);
-  fill2d(h2_e3hImage, eX3, eY3);
-  fill2d(h2_e4hImage, eX4, eY4);
-  fill2d(h2_e1hImageDirDist, eDir1, eR1);
-  fill2d(h2_e2hImageDirDist, eDir2, eR2);
-  fill2d(h2_e3hImageDirDist, eDir3, eR3);
-  fill2d(h2_e4hImageDirDist, eDir4, eR4);
-  if (master) {
-    fill2d(h2_e1hImage_master, eX1, eY1);
-    fill2d(h2_e2hImage_master, eX2, eY2);
-    fill2d(h2_e3hImage_master, eX3, eY3);
-    fill2d(h2_e4hImage_master, eX4, eY4);
-    fill2d(h2_e1hImageDirDist_master, eDir1, eR1);
-    fill2d(h2_e2hImageDirDist_master, eDir2, eR2);
-    fill2d(h2_e3hImageDirDist_master, eDir3, eR3);
-    fill2d(h2_e4hImageDirDist_master, eDir4, eR4);
+  #define __FILLELECIMAGE__(X) \
+  if (X) { \
+    fill2d(h2_e1hImage_ ## X, eX1, eY1); \
+    fill2d(h2_e2hImage_ ## X, eX2, eY2); \
+    fill2d(h2_e3hImage_ ## X, eX3, eY3); \
+    fill2d(h2_e4hImage_ ## X, eX4, eY4); \
+    fill2d(h2_e1hImageDirDist_ ## X, eDir1, eR1); \
+    fill2d(h2_e2hImageDirDist_ ## X, eDir2, eR2); \
+    fill2d(h2_e3hImageDirDist_ ## X, eDir3, eR3); \
+    fill2d(h2_e4hImageDirDist_ ## X, eDir4, eR4); \
   }
+  __FILLELECIMAGE__(always)
+  __FILLELECIMAGE__(eMaster)
+  __FILLELECIMAGE__(master)
 
   // ElecTOF
-  fill1d(h1_e1hTOF, eT1);
-  fill1d(h1_e2hTOF, eT2);
-  fill1d(h1_e3hTOF, eT3);
-  fill1d(h1_e4hTOF, eT4);
-  fill2d(h2_e1h2hPEPECO, eT1, eT2);
-  fill2d(h2_e2h3hPEPECO, eT2, eT3);
-  fill2d(h2_e3h4hPEPECO, eT3, eT4);
-  if (master) {
-    fill1d(h1_e1hTOF_master, eT1);
-    fill1d(h1_e2hTOF_master, eT2);
-    fill1d(h1_e3hTOF_master, eT3);
-    fill1d(h1_e4hTOF_master, eT4);
-    fill2d(h2_e1h2hPEPECO_master, eT1, eT2);
-    fill2d(h2_e2h3hPEPECO_master, eT2, eT3);
-    fill2d(h2_e3h4hPEPECO_master, eT3, eT4);
+  #define __FILLELECTOF__(X) \
+  if (X) { \
+    fill1d(h1_e1hTOF_ ## X, eT1); \
+    fill1d(h1_e2hTOF_ ## X, eT2); \
+    fill1d(h1_e3hTOF_ ## X, eT3); \
+    fill1d(h1_e4hTOF_ ## X, eT4); \
+    fill2d(h2_e1h2hPEPECO_ ## X, eT1, eT2); \
+    fill2d(h2_e2h3hPEPECO_ ## X, eT2, eT3); \
+    fill2d(h2_e3h4hPEPECO_ ## X, eT3, eT4); \
   }
+  __FILLELECTOF__(always)
+  __FILLELECTOF__(eMaster)
+  __FILLELECTOF__(master)
 
   // ElecFish
-  fill2d(h2_e1hXFish, eT1, eX1);
-  fill2d(h2_e1hYFish, eT1, eY1);
-  fill2d(h2_e1hRFish, eT1, eR1);
-  fill2d(h2_e2hXFish, eT2, eX2);
-  fill2d(h2_e2hYFish, eT2, eY2);
-  fill2d(h2_e2hRFish, eT2, eR2);
-  fill2d(h2_e3hXFish, eT3, eX3);
-  fill2d(h2_e3hYFish, eT3, eY3);
-  fill2d(h2_e3hRFish, eT3, eR3);
-  fill2d(h2_e4hXFish, eT4, eX4);
-  fill2d(h2_e4hYFish, eT4, eY4);
-  fill2d(h2_e4hRFish, eT4, eR4);
-  if (master) {
-    fill2d(h2_e1hXFish_master, eT1, eX1);
-    fill2d(h2_e1hYFish_master, eT1, eY1);
-    fill2d(h2_e1hRFish_master, eT1, eR1);
-    fill2d(h2_e2hXFish_master, eT2, eX2);
-    fill2d(h2_e2hYFish_master, eT2, eY2);
-    fill2d(h2_e2hRFish_master, eT2, eR2);
-    fill2d(h2_e3hXFish_master, eT3, eX3);
-    fill2d(h2_e3hYFish_master, eT3, eY3);
-    fill2d(h2_e3hRFish_master, eT3, eR3);
-    fill2d(h2_e4hXFish_master, eT4, eX4);
-    fill2d(h2_e4hYFish_master, eT4, eY4);
-    fill2d(h2_e4hRFish_master, eT4, eR4);
+  #define __FILLELECFISH__(X) \
+  if (X) { \
+    fill2d(h2_e1hXFish_ ## X, eT1, eX1); \
+    fill2d(h2_e1hYFish_ ## X, eT1, eY1); \
+    fill2d(h2_e1hRFish_ ## X, eT1, eR1); \
+    fill2d(h2_e2hXFish_ ## X, eT2, eX2); \
+    fill2d(h2_e2hYFish_ ## X, eT2, eY2); \
+    fill2d(h2_e2hRFish_ ## X, eT2, eR2); \
+    fill2d(h2_e3hXFish_ ## X, eT3, eX3); \
+    fill2d(h2_e3hYFish_ ## X, eT3, eY3); \
+    fill2d(h2_e3hRFish_ ## X, eT3, eR3); \
+    fill2d(h2_e4hXFish_ ## X, eT4, eX4); \
+    fill2d(h2_e4hYFish_ ## X, eT4, eY4); \
+    fill2d(h2_e4hRFish_ ## X, eT4, eR4); \
   }
+  __FILLELECFISH__(always)
+  __FILLELECFISH__(eMaster)
+  __FILLELECFISH__(master)
 
   // ElecMomentum
-  fill1d(h1_e1hPX, ePX1);
-  fill1d(h1_e1hPY, ePY1);
-  fill1d(h1_e1hPZ, ePZ1);
-  fill2d(h2_e1hPXY, ePX1, ePY1);
-  fill2d(h2_e1hPYZ, ePY1, ePZ1);
-  fill2d(h2_e1hPZX, ePZ1, ePX1);
-  fill1d(h1_e1hP, eP1);
-  fill1d(h1_e2hPX, ePX2);
-  fill1d(h1_e2hPY, ePY2);
-  fill1d(h1_e2hPZ, ePZ2);
-  fill2d(h2_e2hPXY, ePX2, ePY2);
-  fill2d(h2_e2hPYZ, ePY2, ePZ2);
-  fill2d(h2_e2hPZX, ePZ2, ePX2);
-  fill1d(h1_e2hP, eP2);
-  fill1d(h1_e3hPX, ePX3);
-  fill1d(h1_e3hPY, ePY3);
-  fill1d(h1_e3hPZ, ePZ3);
-  fill2d(h2_e3hPXY, ePX3, ePY3);
-  fill2d(h2_e3hPYZ, ePY3, ePZ3);
-  fill2d(h2_e3hPZX, ePZ3, ePX3);
-  fill1d(h1_e3hP, eP3);
-  fill1d(h1_e4hPX, ePX4);
-  fill1d(h1_e4hPY, ePY4);
-  fill1d(h1_e4hPZ, ePZ4);
-  fill2d(h2_e4hPXY, ePX4, ePY4);
-  fill2d(h2_e4hPYZ, ePY4, ePZ4);
-  fill2d(h2_e4hPZX, ePZ4, ePX4);
-  fill1d(h1_e4hP, eP4);
-  fill2d(h2_e1hPDirDistX, ePDirX1, ePX1);
-  fill2d(h2_e1hPDirDistY, ePDirY1, ePY1);
-  fill2d(h2_e1hPDirDistZ, ePDirZ1, ePZ1);
-  fill2d(h2_e1hPDirDistXY, ePDirXY1, ePXY1);
-  fill2d(h2_e1hPDirDistYZ, ePDirYZ1, ePYZ1);
-  fill2d(h2_e1hPDirDistZX, ePDirZX1, ePZX1);
-  if (ePDirZ1Is90) fill2d(h2_e1hPDirDistXY_PDirZIs90, ePDirXY1, ePXY1);
-  if (ePDirX1Is90) fill2d(h2_e1hPDirDistYZ_PDirXIs90, ePDirYZ1, ePYZ1);
-  if (ePDirY1Is90) fill2d(h2_e1hPDirDistZX_PDirYIs90, ePDirZX1, ePZX1);
-  fill2d(h2_e1hPDirDist, ePDirXY1, eCosPDirZ1);
-  fill2d(h2_e2hPDirDistX, ePDirX2, ePX2);
-  fill2d(h2_e2hPDirDistY, ePDirY2, ePY2);
-  fill2d(h2_e2hPDirDistZ, ePDirZ2, ePZ2);
-  fill2d(h2_e2hPDirDistXY, ePDirXY2, ePXY2);
-  fill2d(h2_e2hPDirDistYZ, ePDirYZ2, ePYZ2);
-  fill2d(h2_e2hPDirDistZX, ePDirZX2, ePZX2);
-  if (ePDirZ2Is90) fill2d(h2_e2hPDirDistXY_PDirZIs90, ePDirXY2, ePXY2);
-  if (ePDirX2Is90) fill2d(h2_e2hPDirDistYZ_PDirXIs90, ePDirYZ2, ePYZ2);
-  if (ePDirY2Is90) fill2d(h2_e2hPDirDistZX_PDirYIs90, ePDirZX2, ePZX2);
-  fill2d(h2_e2hPDirDist, ePDirXY2, eCosPDirZ2);
-  fill2d(h2_e3hPDirDistX, ePDirX3, ePX3);
-  fill2d(h2_e3hPDirDistY, ePDirY3, ePY3);
-  fill2d(h2_e3hPDirDistZ, ePDirZ3, ePZ3);
-  fill2d(h2_e3hPDirDistXY, ePDirXY3, ePXY3);
-  fill2d(h2_e3hPDirDistYZ, ePDirYZ3, ePYZ3);
-  fill2d(h2_e3hPDirDistZX, ePDirZX3, ePZX3);
-  if (ePDirZ3Is90) fill2d(h2_e3hPDirDistXY_PDirZIs90, ePDirXY3, ePXY3);
-  if (ePDirX3Is90) fill2d(h2_e3hPDirDistYZ_PDirXIs90, ePDirYZ3, ePYZ3);
-  if (ePDirY3Is90) fill2d(h2_e3hPDirDistZX_PDirYIs90, ePDirZX3, ePZX3);
-  fill2d(h2_e3hPDirDist, ePDirXY3, eCosPDirZ3);
-  fill2d(h2_e4hPDirDistX, ePDirX4, ePX4);
-  fill2d(h2_e4hPDirDistY, ePDirY4, ePY4);
-  fill2d(h2_e4hPDirDistZ, ePDirZ4, ePZ4);
-  fill2d(h2_e4hPDirDistXY, ePDirXY4, ePXY4);
-  fill2d(h2_e4hPDirDistYZ, ePDirYZ4, ePYZ4);
-  fill2d(h2_e4hPDirDistZX, ePDirZX4, ePZX4);
-  if (ePDirZ4Is90) fill2d(h2_e4hPDirDistXY_PDirZIs90, ePDirXY4, ePXY4);
-  if (ePDirX4Is90) fill2d(h2_e4hPDirDistYZ_PDirXIs90, ePDirYZ4, ePYZ4);
-  if (ePDirY4Is90) fill2d(h2_e4hPDirDistZX_PDirYIs90, ePDirZX4, ePZX4);
-  fill2d(h2_e4hPDirDist, ePDirXY4, eCosPDirZ4);
-  if (master) {
-    fill1d(h1_e1hPX_master, ePX1);
-    fill1d(h1_e1hPY_master, ePY1);
-    fill1d(h1_e1hPZ_master, ePZ1);
-    fill2d(h2_e1hPXY_master, ePX1, ePY1);
-    fill2d(h2_e1hPYZ_master, ePY1, ePZ1);
-    fill2d(h2_e1hPZX_master, ePZ1, ePX1);
-    fill1d(h1_e1hP_master, eP1);
-    fill1d(h1_e2hPX_master, ePX2);
-    fill1d(h1_e2hPY_master, ePY2);
-    fill1d(h1_e2hPZ_master, ePZ2);
-    fill2d(h2_e2hPXY_master, ePX2, ePY2);
-    fill2d(h2_e2hPYZ_master, ePY2, ePZ2);
-    fill2d(h2_e2hPZX_master, ePZ2, ePX2);
-    fill1d(h1_e2hP_master, eP2);
-    fill1d(h1_e3hPX_master, ePX3);
-    fill1d(h1_e3hPY_master, ePY3);
-    fill1d(h1_e3hPZ_master, ePZ3);
-    fill2d(h2_e3hPXY_master, ePX3, ePY3);
-    fill2d(h2_e3hPYZ_master, ePY3, ePZ3);
-    fill2d(h2_e3hPZX_master, ePZ3, ePX3);
-    fill1d(h1_e3hP_master, eP3);
-    fill1d(h1_e4hPX_master, ePX4);
-    fill1d(h1_e4hPY_master, ePY4);
-    fill1d(h1_e4hPZ_master, ePZ4);
-    fill2d(h2_e4hPXY_master, ePX4, ePY4);
-    fill2d(h2_e4hPYZ_master, ePY4, ePZ4);
-    fill2d(h2_e4hPZX_master, ePZ4, ePX4);
-    fill1d(h1_e4hP_master, eP4);
-    fill2d(h2_e1hPDirDistX_master, ePDirX1, ePX1);
-    fill2d(h2_e1hPDirDistY_master, ePDirY1, ePY1);
-    fill2d(h2_e1hPDirDistZ_master, ePDirZ1, ePZ1);
-    fill2d(h2_e1hPDirDistXY_master, ePDirXY1, ePXY1);
-    fill2d(h2_e1hPDirDistYZ_master, ePDirYZ1, ePYZ1);
-    fill2d(h2_e1hPDirDistZX_master, ePDirZX1, ePZX1);
-    if (ePDirZ1Is90) fill2d(h2_e1hPDirDistXY_PDirZIs90_master, ePDirXY1, ePXY1);
-    if (ePDirX1Is90) fill2d(h2_e1hPDirDistYZ_PDirXIs90_master, ePDirYZ1, ePYZ1);
-    if (ePDirY1Is90) fill2d(h2_e1hPDirDistZX_PDirYIs90_master, ePDirZX1, ePZX1);
-    fill2d(h2_e1hPDirDist_master, ePDirXY1, eCosPDirZ1);
-    fill2d(h2_e2hPDirDistX_master, ePDirX2, ePX2);
-    fill2d(h2_e2hPDirDistY_master, ePDirY2, ePY2);
-    fill2d(h2_e2hPDirDistZ_master, ePDirZ2, ePZ2);
-    fill2d(h2_e2hPDirDistXY_master, ePDirXY2, ePXY2);
-    fill2d(h2_e2hPDirDistYZ_master, ePDirYZ2, ePYZ2);
-    fill2d(h2_e2hPDirDistZX_master, ePDirZX2, ePZX2);
-    if (ePDirZ2Is90) fill2d(h2_e2hPDirDistXY_PDirZIs90_master, ePDirXY2, ePXY2);
-    if (ePDirX2Is90) fill2d(h2_e2hPDirDistYZ_PDirXIs90_master, ePDirYZ2, ePYZ2);
-    if (ePDirY2Is90) fill2d(h2_e2hPDirDistZX_PDirYIs90_master, ePDirZX2, ePZX2);
-    fill2d(h2_e2hPDirDist_master, ePDirXY2, eCosPDirZ2);
-    fill2d(h2_e3hPDirDistX_master, ePDirX3, ePX3);
-    fill2d(h2_e3hPDirDistY_master, ePDirY3, ePY3);
-    fill2d(h2_e3hPDirDistZ_master, ePDirZ3, ePZ3);
-    fill2d(h2_e3hPDirDistXY_master, ePDirXY3, ePXY3);
-    fill2d(h2_e3hPDirDistYZ_master, ePDirYZ3, ePYZ3);
-    fill2d(h2_e3hPDirDistZX_master, ePDirZX3, ePZX3);
-    if (ePDirZ3Is90) fill2d(h2_e3hPDirDistXY_PDirZIs90_master, ePDirXY3, ePXY3);
-    if (ePDirX3Is90) fill2d(h2_e3hPDirDistYZ_PDirXIs90_master, ePDirYZ3, ePYZ3);
-    if (ePDirY3Is90) fill2d(h2_e3hPDirDistZX_PDirYIs90_master, ePDirZX3, ePZX3);
-    fill2d(h2_e3hPDirDist_master, ePDirXY3, eCosPDirZ3);
-    fill2d(h2_e4hPDirDistX_master, ePDirX4, ePX4);
-    fill2d(h2_e4hPDirDistY_master, ePDirY4, ePY4);
-    fill2d(h2_e4hPDirDistZ_master, ePDirZ4, ePZ4);
-    fill2d(h2_e4hPDirDistXY_master, ePDirXY4, ePXY4);
-    fill2d(h2_e4hPDirDistYZ_master, ePDirYZ4, ePYZ4);
-    fill2d(h2_e4hPDirDistZX_master, ePDirZX4, ePZX4);
-    if (ePDirZ4Is90) fill2d(h2_e4hPDirDistXY_PDirZIs90_master, ePDirXY4, ePXY4);
-    if (ePDirX4Is90) fill2d(h2_e4hPDirDistYZ_PDirXIs90_master, ePDirYZ4, ePYZ4);
-    if (ePDirY4Is90) fill2d(h2_e4hPDirDistZX_PDirYIs90_master, ePDirZX4, ePZX4);
-    fill2d(h2_e4hPDirDist_master, ePDirXY4, eCosPDirZ4);
+  #define __FILLELECMOMENTUM__(X) \
+  if (X) { \
+    fill1d(h1_e1hPX_ ## X, ePX1); \
+    fill1d(h1_e1hPY_ ## X, ePY1); \
+    fill1d(h1_e1hPZ_ ## X, ePZ1); \
+    fill2d(h2_e1hPXY_ ## X, ePX1, ePY1); \
+    fill2d(h2_e1hPYZ_ ## X, ePY1, ePZ1); \
+    fill2d(h2_e1hPZX_ ## X, ePZ1, ePX1); \
+    fill1d(h1_e1hP_ ## X, eP1); \
+    fill1d(h1_e2hPX_ ## X, ePX2); \
+    fill1d(h1_e2hPY_ ## X, ePY2); \
+    fill1d(h1_e2hPZ_ ## X, ePZ2); \
+    fill2d(h2_e2hPXY_ ## X, ePX2, ePY2); \
+    fill2d(h2_e2hPYZ_ ## X, ePY2, ePZ2); \
+    fill2d(h2_e2hPZX_ ## X, ePZ2, ePX2); \
+    fill1d(h1_e2hP_ ## X, eP2); \
+    fill1d(h1_e3hPX_ ## X, ePX3); \
+    fill1d(h1_e3hPY_ ## X, ePY3); \
+    fill1d(h1_e3hPZ_ ## X, ePZ3); \
+    fill2d(h2_e3hPXY_ ## X, ePX3, ePY3); \
+    fill2d(h2_e3hPYZ_ ## X, ePY3, ePZ3); \
+    fill2d(h2_e3hPZX_ ## X, ePZ3, ePX3); \
+    fill1d(h1_e3hP_ ## X, eP3); \
+    fill1d(h1_e4hPX_ ## X, ePX4); \
+    fill1d(h1_e4hPY_ ## X, ePY4); \
+    fill1d(h1_e4hPZ_ ## X, ePZ4); \
+    fill2d(h2_e4hPXY_ ## X, ePX4, ePY4); \
+    fill2d(h2_e4hPYZ_ ## X, ePY4, ePZ4); \
+    fill2d(h2_e4hPZX_ ## X, ePZ4, ePX4); \
+    fill1d(h1_e4hP_ ## X, eP4); \
   }
+  __FILLELECMOMENTUM__(always)
+  __FILLELECMOMENTUM__(eMaster)
+  __FILLELECMOMENTUM__(master)
+
+  // ElecMomentumAngDist 
+  #define __FILLELECMOMENTUMANGDIST__(X) \
+  if (X) { \
+    fill2d(h2_e1hPDirDistX_ ## X, ePDirX1, ePX1); \
+    fill2d(h2_e1hPDirDistY_ ## X, ePDirY1, ePY1); \
+    fill2d(h2_e1hPDirDistZ_ ## X, ePDirZ1, ePZ1); \
+    fill2d(h2_e1hPDirDistXY_ ## X, ePDirXY1, ePXY1); \
+    fill2d(h2_e1hPDirDistYZ_ ## X, ePDirYZ1, ePYZ1); \
+    fill2d(h2_e1hPDirDistZX_ ## X, ePDirZX1, ePZX1); \
+    if (ePDirZ1Is90) fill2d(h2_e1hPDirDistXY_PDirZIs90_ ## X, ePDirXY1, ePXY1); \
+    if (ePDirX1Is90) fill2d(h2_e1hPDirDistYZ_PDirXIs90_ ## X, ePDirYZ1, ePYZ1); \
+    if (ePDirY1Is90) fill2d(h2_e1hPDirDistZX_PDirYIs90_ ## X, ePDirZX1, ePZX1); \
+    fill2d(h2_e1hPDirDist_ ## X, ePDirXY1, eCosPDirZ1); \
+    fill2d(h2_e2hPDirDistX_ ## X, ePDirX2, ePX2); \
+    fill2d(h2_e2hPDirDistY_ ## X, ePDirY2, ePY2); \
+    fill2d(h2_e2hPDirDistZ_ ## X, ePDirZ2, ePZ2); \
+    fill2d(h2_e2hPDirDistXY_ ## X, ePDirXY2, ePXY2); \
+    fill2d(h2_e2hPDirDistYZ_ ## X, ePDirYZ2, ePYZ2); \
+    fill2d(h2_e2hPDirDistZX_ ## X, ePDirZX2, ePZX2); \
+    if (ePDirZ2Is90) fill2d(h2_e2hPDirDistXY_PDirZIs90_ ## X, ePDirXY2, ePXY2); \
+    if (ePDirX2Is90) fill2d(h2_e2hPDirDistYZ_PDirXIs90_ ## X, ePDirYZ2, ePYZ2); \
+    if (ePDirY2Is90) fill2d(h2_e2hPDirDistZX_PDirYIs90_ ## X, ePDirZX2, ePZX2); \
+    fill2d(h2_e2hPDirDist_ ## X, ePDirXY2, eCosPDirZ2); \
+    fill2d(h2_e3hPDirDistX_ ## X, ePDirX3, ePX3); \
+    fill2d(h2_e3hPDirDistY_ ## X, ePDirY3, ePY3); \
+    fill2d(h2_e3hPDirDistZ_ ## X, ePDirZ3, ePZ3); \
+    fill2d(h2_e3hPDirDistXY_ ## X, ePDirXY3, ePXY3); \
+    fill2d(h2_e3hPDirDistYZ_ ## X, ePDirYZ3, ePYZ3); \
+    fill2d(h2_e3hPDirDistZX_ ## X, ePDirZX3, ePZX3); \
+    if (ePDirZ3Is90) fill2d(h2_e3hPDirDistXY_PDirZIs90_ ## X, ePDirXY3, ePXY3); \
+    if (ePDirX3Is90) fill2d(h2_e3hPDirDistYZ_PDirXIs90_ ## X, ePDirYZ3, ePYZ3); \
+    if (ePDirY3Is90) fill2d(h2_e3hPDirDistZX_PDirYIs90_ ## X, ePDirZX3, ePZX3); \
+    fill2d(h2_e3hPDirDist_ ## X, ePDirXY3, eCosPDirZ3); \
+    fill2d(h2_e4hPDirDistX_ ## X, ePDirX4, ePX4); \
+    fill2d(h2_e4hPDirDistY_ ## X, ePDirY4, ePY4); \
+    fill2d(h2_e4hPDirDistZ_ ## X, ePDirZ4, ePZ4); \
+    fill2d(h2_e4hPDirDistXY_ ## X, ePDirXY4, ePXY4); \
+    fill2d(h2_e4hPDirDistYZ_ ## X, ePDirYZ4, ePYZ4); \
+    fill2d(h2_e4hPDirDistZX_ ## X, ePDirZX4, ePZX4); \
+    if (ePDirZ4Is90) fill2d(h2_e4hPDirDistXY_PDirZIs90_ ## X, ePDirXY4, ePXY4); \
+    if (ePDirX4Is90) fill2d(h2_e4hPDirDistYZ_PDirXIs90_ ## X, ePDirYZ4, ePYZ4); \
+    if (ePDirY4Is90) fill2d(h2_e4hPDirDistZX_PDirYIs90_ ## X, ePDirZX4, ePZX4); \
+    fill2d(h2_e4hPDirDist_ ## X, ePDirXY4, eCosPDirZ4); \
+  }
+  __FILLELECMOMENTUMANGDIST__(always)
+  __FILLELECMOMENTUMANGDIST__(eMaster)
+  __FILLELECMOMENTUMANGDIST__(master)
 
   // ElecEnergy
-  fill1d(h1_e1hE, eE1);
-  fill1d(h1_e2hE, eE2);
-  fill1d(h1_e3hE, eE3);
-  fill1d(h1_e4hE, eE4);
-  fill1d(h1_eTotalE, eETotal);
-  if (master) {
-    fill1d(h1_e1hE_master, eE1);
-    fill1d(h1_e2hE_master, eE2);
-    fill1d(h1_e3hE_master, eE3);
-    fill1d(h1_e4hE_master, eE4);
-    fill1d(h1_eTotalE_master, eETotal);
+#define __FILLELECENERGY__(X) \
+ if (X) { \
+    fill1d(h1_e1hE_ ## X, eE1); \
+    fill1d(h1_e2hE_ ## X, eE2); \
+    fill1d(h1_e3hE_ ## X, eE3); \
+    fill1d(h1_e4hE_ ## X, eE4); \
+    fill1d(h1_eTotalE_ ## X, eETotal); \
   }
+  __FILLELECENERGY__(always)
+  __FILLELECENERGY__(eMaster)
+  __FILLELECENERGY__(master)
 
   // IonElecCorr
-  fill2d(h2_iKER_e1hE, iETotal, eE1);
-  if (master) {
-    fill2d(h2_iKER_e1hE_master, iETotal, eE1);
+  #define __FILLIONELECCORR__(X) \
+  if (X) { \
+    fill2d(h2_iKER_e1hE_ ## X, iETotal, eE1); \
   }
+  __FILLIONELECCORR__(always)
+  __FILLIONELECCORR__(master)
 
   // Others
   if ((!iDead2) && (!iDead3)) {
