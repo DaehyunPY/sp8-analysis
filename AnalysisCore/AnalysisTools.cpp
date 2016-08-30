@@ -159,10 +159,8 @@ void Analysis::AnalysisTools::loadEventCounter() { this->eventNumber += 1; }
 Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
                                        const Analysis::JSONReader &reader)
     : AnalysisTools(Analysis::EquipmentParameters(unit, reader),
-                    Analysis::ObjectParameters(unit, reader, "ion_parameters."),
-                    Analysis::ObjectParameters(unit,
-                                               reader,
-                                               "electron_parameters."),
+                    Analysis::ObjectParameters(reader, "ion_parameters."),
+                    Analysis::ObjectParameters(reader, "electron_parameters."),
                     reader.hasMember("ID") ? reader.getStringAt("ID") : "") {
   return;
 }

@@ -1,23 +1,5 @@
 #include "ObjectParameters.h"
 
-void Analysis::ObjectParameters::inputParameters(const ParameterType tp,
-                                                 const double theta,
-                                                 const double dx,
-                                                 const double dy,
-                                                 const double t1,
-                                                 const double x0,
-                                                 const double y0,
-                                                 const double t0) {
-  type = tp;
-  angleOfDetector = theta;
-  pixelSizeOfX = dx;
-  pixelSizeOfY = dy;
-  deadTime = t1;
-  xZeroOfCOM = x0;
-  yZeroOfCOM = y0;
-  timeZeroOfTOF = t0;
-}
-
 Analysis::ObjectParameters::ObjectParameters(
     const ParameterType tp,
     const double theta,
@@ -27,58 +9,39 @@ Analysis::ObjectParameters::ObjectParameters(
     const double x0,
     const double y0,
     const double t0) {
-  inputParameters(tp, theta, dx, dy, t1, x0, y0, t0);
-}
-Analysis::ObjectParameters::ObjectParameters(
-    const Analysis::Unit &unit,
-    const std::string typeName,
-    const double theta,
-    const double dx,
-    const double dy,
-    const double t1,
-    const double x0,
-    const double y0,
-    const double t0) {
-  if (typeName.compare("legacy_ion_parameters") == 0) {
-    const double th = unit.readDegree(0);
-    inputParameters(
-        legacy_ion_parameters,
-        th,
-        dx,
-        dy,
-        unit.readNanoSec(t1),
-        unit.readMilliMeter(100 * dx + x0),
-        unit.readMilliMeter(100 * dy + y0),
-        unit.readNanoSec(2000 + t0));
-  } else if (typeName.compare("legacy_elec_parameters") == 0) {
-    const double th = unit.readDegree(-30);
-    inputParameters(
-        legacy_elec_parameters_not_corrected,
-        th,
-        dx,
-        dy,
-        unit.readNanoSec(t1),
-        unit.readMilliMeter(100 * (cos(th) - sin(th)) + x0),
-        unit.readMilliMeter(100 * (sin(th) + cos(th)) + y0),
-        unit.readNanoSec(1980 + t0));
+  type = tp;
+  if (type == default_type) {
+    angleOfDetector = kUnit.readDegree(theta);
+    pixelSizeOfX = dx;
+    pixelSizeOfY = dy;
+    deadTime = kUnit.readNanoSec(t1);
+    xZeroOfCOM = kUnit.readMilliMeter(x0);
+    yZeroOfCOM = kUnit.readMilliMeter(y0);
+    timeZeroOfTOF = kUnit.readNanoSec(t0);
+  } else if (type == legacy_ion_parameters) {
+    angleOfDetector = kUnit.readDegree(0);
+    pixelSizeOfX = dx;
+    pixelSizeOfY = dy;
+    deadTime = kUnit.readNanoSec(t1);
+    xZeroOfCOM = kUnit.readMilliMeter(100 * dx + x0);
+    yZeroOfCOM = kUnit.readMilliMeter(100 * y0 + y0);
+    timeZeroOfTOF = kUnit.readNanoSec(2000 + t0);
+  } else if (type == legacy_elec_parameters_not_corrected) {
+    angleOfDetector = kUnit.readDegree(-30);
+    pixelSizeOfX = dx;
+    pixelSizeOfY = dy;
+    deadTime = kUnit.readNanoSec(t1);
+    xZeroOfCOM = kUnit.readMilliMeter(100 * (cos(angleOfDetector) - sin(angleOfDetector)) + x0);
+    yZeroOfCOM = kUnit.readMilliMeter(100 * (sin(angleOfDetector) + cos(angleOfDetector)) + y0);
+    timeZeroOfTOF = kUnit.readNanoSec(1980 + t0);
   } else {
-    inputParameters(
-        default_type,
-        unit.readDegree(theta),
-        dx,
-        dy,
-        unit.readNanoSec(t1),
-        unit.readMilliMeter(x0),
-        unit.readMilliMeter(y0),
-        unit.readNanoSec(t0));
+    assert(false);
   }
   return;
 }
-Analysis::ObjectParameters::ObjectParameters(const Unit &unit,
-                                             const JSONReader &reader,
-                                             const std::string &prefix)
-    : ObjectParameters(unit,
-                       reader.getStringAt(prefix + "type"),
+Analysis::ObjectParameters::ObjectParameters(const JSONReader &reader, const std::string &prefix)
+    : ObjectParameters((reader.hasMember(prefix + "type") ?
+                        (ParameterType) reader.getIntAt(prefix + "type") : default_type),
                        reader.getDoubleAt(prefix + "angle_of_detector"),
                        reader.getDoubleAt(prefix + "pixel_size_of_x"),
                        reader.getDoubleAt(prefix + "pixel_size_of_y"),

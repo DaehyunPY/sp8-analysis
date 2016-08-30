@@ -8,10 +8,10 @@ namespace Analysis {
 class ObjectParameters {
  public:
   enum ParameterType {
-    default_type,
-    legacy_ion_parameters,
-    legacy_elec_parameters_not_corrected,
-    legacy_elec_parameters
+    default_type = 0,
+    legacy_ion_parameters = 1,
+    legacy_elec_parameters_not_corrected = 2,
+    legacy_elec_parameters = 3
   };
 
  private:
@@ -25,26 +25,14 @@ class ObjectParameters {
   double timeZeroOfTOF;
 
  private:
-  void inputParameters( // main initialization
+  ObjectParameters(
       const ParameterType tp,
-      const double theta,
-      const double dx, const double dy, const double t1,
-      const double x0, const double y0, const double t0);
-  ObjectParameters( // main initialization
-      const ParameterType tp,
-      const double theta,
-      const double dx, const double dy, const double t1,
-      const double x0, const double y0, const double t0);
-  ObjectParameters( // for unit and type
-      const Analysis::Unit &unit,
-      const std::string typeName,
       const double theta,
       const double dx, const double dy, const double t1,
       const double x0, const double y0, const double t0);
 
  public:
-  ObjectParameters(const Unit &unit, // todo: remove unit, set type to option
-                   const JSONReader &reader, const std::string &prefix);
+  ObjectParameters(const JSONReader &reader, const std::string &prefix);
   virtual ~ObjectParameters();
 
  public:
