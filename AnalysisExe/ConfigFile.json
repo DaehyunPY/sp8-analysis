@@ -16,17 +16,16 @@
     "length_of_D2": 67.4,   // [mm] parameter 212
     "length_of_D1": 33.0,   // [mm] parameter 211
     "length_of_L1": 16.5,   // [mm] parameter 210
-    "length_of_L2": 82.5,   // [mm] parameter 209
-    "length_of_L3": 10.0,   // [mm] parameter 208
+    "length_of_L2": 82.5,   // [mm] parameter 208
+    "length_of_L3": 10.0,   // [mm] parameter 209
     "magnetic_filed": 6.843 // [Gauss] parameter 217
   },
   "ion_parameters": {
-    //    "type"             : 0, // comment out=default type, 1=legacy ion type
+    // "type": 0, // comment out=default type, 1=legacy ion type
     "angle_of_detector": 0,            // [degree]
     "pixel_size_of_x"  : 0.927,        // [1] parameter 147
     "pixel_size_of_y"  : 0.927,        // [1] parameter 148
-    "dead_time": 13000,
-    // [ns]
+    "dead_time"        : 13000,        // [ns]
     "x_zero_of_image"  : 93.253363,    // [mm] parameter 196
     "y_zero_of_image"  : 94.9788,      // [mm] parameter 197
     "time_zero_of_TOF" : 1846.0035258, // [ns] parameter 220
@@ -62,7 +61,7 @@
     },
   },
   "electron_parameters": {
-    //    "type"             : 0, // comment out=default type, 2=legacy electron type
+    // "type": 0, // comment out=default type, 2=legacy electron type
     "angle_of_detector": -30,         // [dgree]
     "pixel_size_of_x"  : 0.925,       // [1] parameter 226
     "pixel_size_of_y"  : 0.925,       // [1] parameter 227
@@ -76,9 +75,6 @@
     "number_of_hits": 1,
     // "momentum_conservation": [0, 0], // [au] option (comment out=all region)
     // "energy_conservation"  : [0, 0], // [eV] option (comment out=all region)
-    "maximum_of_TOF": 45.0,
-    // [ns] parameter 225 (not compatibility with legacy option)
-    "minimum_of_TOF": 20.0,
-    // [ns] parameter 224 (not compatibility with legacy option)
+    "TOF": [20.0, 45.0], // [ns] parameter 225, 244 (not compatibility with legacy option)
   },
 }
