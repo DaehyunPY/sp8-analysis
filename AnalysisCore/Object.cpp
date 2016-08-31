@@ -50,13 +50,13 @@ Analysis::Object::Object(const FlagName f1, const FlagName f2,
     if (f2 == IonObject) {
       assert(m > 0e0);
       assert(q > 0e0);
+      mass = kUnit.readAtomicMass(m);
+      charge = kUnit.readElementaryCharge(q);
     } else if (f2 == ElecObject) {
-      m = kUnit.readElectronRestMass(1);
-      q = kUnit.readElementaryCharge(1);
+      mass = kUnit.readElectronRestMass(1);
+      charge = kUnit.readElementaryCharge(1);
     }
     assert(t0 <= t1);
-    mass = kUnit.readAtomicMass(m);
-    charge = kUnit.readElementaryCharge(q);
     minTOF = kUnit.readNanoSec(t0);
     maxTOF = kUnit.readNanoSec(t1);
   }

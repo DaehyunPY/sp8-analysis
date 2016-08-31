@@ -134,7 +134,7 @@ void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
     {
       const auto elec = Object(ObjectFlag::RealObject, ObjectFlag::ElecObject);
       logFile << "        TOF of Pz=0 Object [ns]: " <<
-          kUnit.writeNanoSec(analysisTools.calculateTOF(elec, 0)) << std::endl;
+          kUnit.writeNanoSec(analysisTools.calculateTOF(elec, 0e0)) << std::endl;
       logFile << "        Period of Cycle [ns]: " <<
           kUnit.writeNanoSec(analysisTools.calculatePeriodOfCycle(elec)) << std::endl;
     }

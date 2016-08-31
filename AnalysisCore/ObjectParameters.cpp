@@ -24,15 +24,15 @@ Analysis::ObjectParameters::ObjectParameters(
     pixelSizeOfY = dy;
     deadTime = kUnit.readNanoSec(t1);
     xZeroOfCOM = kUnit.readMilliMeter(100 * dx + x0);
-    yZeroOfCOM = kUnit.readMilliMeter(100 * y0 + y0);
+    yZeroOfCOM = kUnit.readMilliMeter(100 * dy + y0);
     timeZeroOfTOF = kUnit.readNanoSec(2000 + t0);
   } else if (type == legacy_elec_parameters_not_corrected) {
     angleOfDetector = kUnit.readDegree(-30);
     pixelSizeOfX = dx;
     pixelSizeOfY = dy;
     deadTime = kUnit.readNanoSec(t1);
-    xZeroOfCOM = kUnit.readMilliMeter(100 * (cos(angleOfDetector) - sin(angleOfDetector)) + x0);
-    yZeroOfCOM = kUnit.readMilliMeter(100 * (sin(angleOfDetector) + cos(angleOfDetector)) + y0);
+    xZeroOfCOM = kUnit.readMilliMeter(100 * (cos(angleOfDetector) - sin(angleOfDetector)) * dx + x0);
+    yZeroOfCOM = kUnit.readMilliMeter(100 * (sin(angleOfDetector) + cos(angleOfDetector)) * dy + y0);
     timeZeroOfTOF = kUnit.readNanoSec(1980 + t0);
   } else {
     assert(false);
