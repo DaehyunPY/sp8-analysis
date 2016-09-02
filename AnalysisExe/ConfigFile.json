@@ -1,12 +1,16 @@
 {
-  "ID": "Example",
-  // "working_directory": "PATH", // to set the same path with the config file, comment out it 
+  // "working_directory": "PATH", // to set the same path with the config file, comment out it
   "setup_input": {
     "filenames": "resortLess*.root",
     // wildcard is availble
     "tree_name": "resortedData",
     "max_number_of_ion_hits"     : 4,
     "max_number_of_electron_hits": 4,
+  },
+  "setup_output": {
+    "filename_prefix": "Example",
+    "limitation_of_entries": 100000,
+    "finish_after_filing_single_file": true,
   },
   "equipment_parameters": {
     "electric_potential_of_electron_region": -200,  // [V] parameter 213

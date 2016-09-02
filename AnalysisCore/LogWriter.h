@@ -11,20 +11,18 @@
 namespace Analysis {
 class LogWriter {
  private:
-  std::string ID;
+  std::string prefix;
+  std::time_t timeStamp;
   std::string filename;
   std::fstream logFile;
-  const int getRandomNumber() const;
-  const std::string getRandomID() const;
-  const std::string getObjectName(int) const;
+  const std::string getObjectName(int i) const;
 
  public:
-  LogWriter(const std::string &prefix = ""); // main initializer
-  LogWriter(const Analysis::JSONReader &);
+  LogWriter(const std::string prefix = "");
   ~LogWriter();
-  const std::string getID() const;
+  const std::string getPrefix() const;
+  const std::string getTimeStamp() const;
   const std::string getFilename() const;
-  void logResultOfLoadingJSONFile(const JSONReader &);
   void logAnalysisTools(const Unit &,
                         const AnalysisTools &,
                         const Objects &ions,

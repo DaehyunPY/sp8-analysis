@@ -20,13 +20,8 @@ class AnalysisTools {
   EquipmentParameters equipParameters;
   ObjectParameters ionParameters;
   ObjectParameters elecParameters;
-  std::string ID;
   int eventNumber;
-  AnalysisTools(
-      const EquipmentParameters &equip,
-      const ObjectParameters &ion,
-      const ObjectParameters &elec,
-      const std::string ID = "");
+  AnalysisTools(const EquipmentParameters &equip, const ObjectParameters &ion, const ObjectParameters &elec);
  public:
   AnalysisTools(const Unit &unit, const JSONReader &reader);
   ~AnalysisTools();
@@ -40,7 +35,6 @@ class AnalysisTools {
   const EquipmentParameters &getEquipmentParameters() const;
   const ObjectParameters &getIonParameters() const;
   const ObjectParameters &getElectronParameters() const;
-  const std::string &getID() const;
   const int &getEventNumber() const;
   void loadEventCounter();
   const double calculateTOF(const Object obj, const double d) const;

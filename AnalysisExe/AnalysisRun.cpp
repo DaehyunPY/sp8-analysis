@@ -4,22 +4,12 @@
 
 #include "AnalysisRun.h"
 
-Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
+Analysis::AnalysisRun::AnalysisRun(const Analysis::JSONReader &configReader)
     : Hist(false, numberOfHists) {
-  // Setup json file reader
-  Analysis::JSONReader configReader(configFilename);
-
-  // Change the working directory
-  if (configReader.hasMember("working_directory")) {
-    auto path = configReader.getStringAt("working_directory");
-    std::cout << "Changing path to `" << path << "'... ";
-    chdir(path.c_str());
-    std::cout << "ok" << std::endl;
-  }
 
   // Setup writer
-  pLogWriter = new Analysis::LogWriter(configReader);
-  pLogWriter->logResultOfLoadingJSONFile(configReader);
+  pLogWriter = new Analysis::LogWriter(
+      configReader.getStringAt("setup_output.filename_prefix"));
 
   // Setup input ROOT files
   std::cout << "Setting up input root files... ";
@@ -80,13 +70,7 @@ Analysis::AnalysisRun::AnalysisRun(const std::string configFilename)
 
   // Open ROOT file
   std::cout << "open a root file... ";
-  std::string rootFilename = "";
-  rootFilename += pTools->getID();
-  if (rootFilename != "") {
-    rootFilename += "-";
-  }
-  rootFilename += pLogWriter->getID();
-  rootFilename += ".root";
+  std::string rootFilename = pLogWriter->getFilename() + ".root";
   openRootFile(rootFilename.c_str(), "NEW");
   createHists();
   std::cout << "ok" << std::endl;

@@ -7,21 +7,15 @@
 //#endif
 
 #include <iomanip>
-#include <ctime>
-#include <locale>
-#include <chrono>
-#include <string>
 
 #include "LogWriter.h"
-Analysis::LogWriter::LogWriter(const std::string &prefix) {
-  std::time_t tt = std::chrono::system_clock::to_time_t (std::chrono::system_clock::now());
-  std::tm * ptm = std::localtime(&tt);
-  ID = std::to_string(tt);
+Analysis::LogWriter::LogWriter(const std::string prefix) : prefix(prefix) {
+  timeStamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  std::tm *ptm = std::localtime(&timeStamp);
   filename = prefix;
   if(!(prefix == "")) { filename += "-"; }
-  filename += ID;
-  filename += ".log";
-  logFile.open(filename, std::fstream::out);
+  filename += getTimeStamp();
+  logFile.open(filename + ".log", std::fstream::out);
   logFile << "It is written at " << std::put_time(ptm,"%c") << std::endl;
   logFile << "The path is set here." << std::endl;
   logFile << std::endl;
@@ -33,45 +27,14 @@ Analysis::LogWriter::~LogWriter() {
   logFile << "It is closed at " << std::put_time(ptm,"%c") << std::endl;
   logFile.close();
 }
-const int Analysis::LogWriter::getRandomNumber() const {
-  const char numbers[] = "0123456789";
-  const int n = 10;
-  return numbers[rand() %n];
-}
-const std::string Analysis::LogWriter::getRandomID() const {
-  std::string ID = "";
-  ID += getRandomNumber();
-  ID += getRandomNumber();
-  ID += getRandomNumber();
-  ID += getRandomNumber();
-  return ID;
-}
-const std::string Analysis::LogWriter::getID() const {
-  return ID;
-}
-void Analysis::LogWriter::logResultOfLoadingJSONFile(const Analysis::JSONReader &reader) {
-  if(reader.getFlag().fileIsClosedAndDataIsSaved()) {
-    logFile << "The JSON file '" << reader.getFilename().c_str() << "' is loaded successfully." << std::endl;
-  } else if(reader.getFlag().fileIsNotExist()) {
-    logFile << "There is not the JSON file '" << reader.getFilename().c_str() << "'." << std::endl;
-  }
-  if(reader.getFlag().hasNoParseError()) {
-    logFile << "The JSON file has no parse error." << std::endl;
-  } else if(reader.getFlag().hasParseError()){
-    logFile << "The JSON file has parse error." << std::endl;
-  }
-  logFile << std::endl;
-}
-Analysis::LogWriter::LogWriter(const Analysis::JSONReader &reader)
-    : LogWriter(reader.hasMember("ID") ? reader.getStringAt("ID") : ""){
-  return;
+const std::string Analysis::LogWriter::getTimeStamp() const {
+  return std::to_string(timeStamp);
 }
 void Analysis::LogWriter::logAnalysisTools(const Analysis::Unit &unit,
                                            const Analysis::AnalysisTools &analysisTools,
                                            const Analysis::Objects &ions,
                                            const Analysis::Objects &elecs) {
   logFile << "Loaded Parameters: " << std::endl;
-  logFile << "    ID: " << analysisTools.getID().c_str() << std::endl;
   logFile << "    Equipment Parameters: " << std::endl;
   logFile << "        Electric Potential of Electron Region: " << analysisTools.getEquipmentParameters().getElectricPotentialOfElectronRegion(unit) << std::endl;
   logFile << "        Electric Potential of Ion 1st: " << analysisTools.getEquipmentParameters().getElectricPotentialOfIon1st(unit) << std::endl;
@@ -178,3 +141,8 @@ std::fstream &Analysis::LogWriter::write() {
 const std::string Analysis::LogWriter::getFilename() const {
   return filename;
 }
+const std::string Analysis::LogWriter::getPrefix() const {
+  return prefix;
+}
+
+

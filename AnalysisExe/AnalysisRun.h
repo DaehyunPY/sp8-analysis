@@ -38,7 +38,7 @@ class AnalysisRun: Hist {
   Analysis::LogWriter *pLogWriter;
 
  public:
-  AnalysisRun(const std::string configFilename);
+  AnalysisRun(const Analysis::JSONReader &configReader);
   ~AnalysisRun();
   const long getEntries() const;
   void processEvent(const long raw);

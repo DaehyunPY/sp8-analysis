@@ -2,12 +2,10 @@
 
 Analysis::AnalysisTools::AnalysisTools(const EquipmentParameters &equip,
                                        const ObjectParameters &ion,
-                                       const ObjectParameters &elec,
-                                       const std::string ID)
+                                       const ObjectParameters &elec)
     : equipParameters(equip),
       ionParameters(ion),
-      elecParameters(elec),
-      ID(ID) {
+      elecParameters(elec) {
   if (elecParameters.getParameterType()
       == ObjectParameters::legacy_elec_parameters_not_corrected)
     elecParameters.correctLegacyParameters(
@@ -160,8 +158,7 @@ Analysis::AnalysisTools::AnalysisTools(const Analysis::Unit &unit,
                                        const Analysis::JSONReader &reader)
     : AnalysisTools(Analysis::EquipmentParameters(unit, reader),
                     Analysis::ObjectParameters(reader, "ion_parameters."),
-                    Analysis::ObjectParameters(reader, "electron_parameters."),
-                    reader.hasMember("ID") ? reader.getStringAt("ID") : "") {
+                    Analysis::ObjectParameters(reader, "electron_parameters.")) {
   return;
 }
 const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateMomentumXY(
@@ -362,7 +359,4 @@ const Analysis::AnalysisTools::XY Analysis::AnalysisTools::calculateRotation(
     const double &theta) const {
   return {xy.x * cos(theta) - xy.y * sin(theta),
           xy.x * sin(theta) + xy.y * cos(theta)};
-}
-const std::string &Analysis::AnalysisTools::getID() const {
-  return ID;
 }
