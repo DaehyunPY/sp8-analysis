@@ -34,12 +34,11 @@ void inputManager(StatusInfo &info) {
   std::string input;
   if (info != keepRunning) { return; }
   while (std::cin) {
-    std::cout << "Type something in:" << std::endl;
     std::getline(std::cin, input);
     if (input.empty()) {
       continue;
     }
-    std::cout << "You typed [" << input << "]" << std::endl;
+    std::cout << "typed: " << input << std::endl;
     if (input.compare("quit") == 0 && info == keepRunning) {
       info = quitProgramSafely;
     }
@@ -68,7 +67,7 @@ int main(int argc, char *argv[]) {
 
   // Setup json file reader
   Analysis::JSONReader *pReader = nullptr;
-  std::cout << "Opening the config file... ";
+  std::cout << "opening the config file... ";
   pReader = new Analysis::JSONReader(argv[1]);
   std::cout << "okay" << std::endl;
 
@@ -80,16 +79,16 @@ int main(int argc, char *argv[]) {
     path = argv[1];
     path = path.substr(0, path.find_last_of("/\\"));
   }
-  std::cout << "Changing path to `" << path << "'... ";
+  std::cout << "changing path to `" << path << "'... ";
   chdir(path.c_str());
   std::cout << "okay" << std::endl;
 
   // divid output files
   pRun = new Analysis::AnalysisRun(*pReader);
   const auto totalEntries = pRun->getEntries();
-  std::cout << "total entries: " << totalEntries << std::endl;
+  std::cout << "         total entries: " << totalEntries << std::endl;
   const auto limitEnt = pReader->getIntAt("setup_output.limitation_of_entries");
-  std::cout << "limitation of entries: " << limitEnt << std::endl;
+  std::cout << " limitation of entries: " << limitEnt << std::endl;
   const auto remainder = (int) (totalEntries % limitEnt);
   auto numFiles = (int) (totalEntries / limitEnt);
   if (remainder != 0) numFiles += 1;
@@ -97,7 +96,7 @@ int main(int argc, char *argv[]) {
   std::cout << "number of output files: " << numFiles << std::endl;
 
   // Make input thread
-  std::cout << "Make a thread to read keyboard hit... ";
+  std::cout << "make a thread to read keyboard hit... ";
   StatusInfo statusInfo = keepRunning;
   std::thread threadForInput(inputManager, std::ref(statusInfo));
   std::cout << "okay" << std::endl;
@@ -126,9 +125,10 @@ int main(int argc, char *argv[]) {
   delete pReader;
 
   // Finish the program
+  std::cout << "closing the program... ";
   statusInfo = done;
   threadForInput.detach();
   threadForInput.~thread();
-  std::cout << "The program is done. " << std::endl;
+  std::cout << "okay" << std::endl;
   return 0;
 }

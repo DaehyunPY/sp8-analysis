@@ -6,6 +6,10 @@
 #define ANALYSIS_LOGWRITER_H
 
 
+#ifdef _WIN32
+#include <chrono>
+#endif
+#include <iomanip>
 #include "AnalysisTools.h"
 
 namespace Analysis {

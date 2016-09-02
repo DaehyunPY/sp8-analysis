@@ -6,9 +6,8 @@
 //#define localtime localtime_s
 //#endif
 
-#include <iomanip>
-
 #include "LogWriter.h"
+
 Analysis::LogWriter::LogWriter(const std::string prefix) : prefix(prefix) {
   timeStamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   std::tm *ptm = std::localtime(&timeStamp);
