@@ -137,31 +137,10 @@ void Analysis::AnalysisRun::processEvent(const long raw) {
   if (pIons->areAllFlag(ObjectFlag::MostOrSecondMostReliable)
       && pElectrons->areAllFlag(ObjectFlag::MostOrSecondMostReliable)) {
 
-    // if all ion event data or all electron event data is dead, ignore the event
-    const bool ionsAreAllDead =
-        pIons->areAllFlag(ObjectFlag::Dead, Objects::RealOrDummy);
-    const bool elecAreAllDead =
-        pElectrons->areAllFlag(ObjectFlag::Dead, Objects::RealOrDummy);
-
-    // If all objects are dead, don't calculate momentum
-    if (!ionsAreAllDead) {
-      for (int i = 0; i < pIons->getNumberOfObjects(); i++) {
-        pTools->loadMomentumCalculator(*pIons);
-      }
-    }
-
-    // If all objects are dead, don't calculate momentum
-    if (!elecAreAllDead) {
-      for (int i = 0; i < pElectrons->getNumberOfObjects(); i++) {
-        pTools->loadMomentumCalculator(*pElectrons);
-      }
-    }
-
-    // Fill histograms
+    pTools->loadMomentumCalculator(*pIons);
+    pTools->loadMomentumCalculator(*pElectrons);
     fillHists();
   }
-
-  // Fill hists for resort resortElecFlags
 }
 
 const long Analysis::AnalysisRun::getEntries() const {

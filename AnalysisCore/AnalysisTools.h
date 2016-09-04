@@ -51,11 +51,8 @@ class AnalysisTools {
   void loadEventDataInputer(Analysis::Objects &, const EventDataReader &) const;
 
  public:
-  enum OptName {
-    OnlyWithinMasterRegion, OnlyNotDead, AllRegion
-  };
-  void loadMomentumCalculator(Object &obj, const OptName opt = OnlyWithinMasterRegion) const;
-  void loadMomentumCalculator(Objects &objs, const OptName opt = OnlyWithinMasterRegion) const;
+  void loadMomentumCalculator(Object &obj) const;
+  void loadMomentumCalculator(Objects &objs) const;
 };
 }
 #endif

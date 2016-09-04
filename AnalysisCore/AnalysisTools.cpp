@@ -63,14 +63,14 @@ const double Analysis::AnalysisTools::calculateDiffTOF(const Object &obj,
     const double &m = obj.getMass();
     const double &q = obj.getCharge();
     return -1.0 * pow(p0, 1.0)
-            * pow(2.0 * E2 * len2 * m * q + pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), 1.0), -0.5) / (E3 * q)
+        * pow(2.0 * E2 * len2 * m * q + pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), 1.0), -0.5) / (E3 * q)
         + 1.0 * pow(p0, 1.0)
             * pow(2.0 * E3 * len3 * m * q
                       + pow(2.0 * E2 * len2 * m * q + pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), 1.0), 1.0), -0.5)
             / (E3 * q)
         - 1.0 * pow(p0, 1.0) * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -0.5) / (E2 * q)
         + 1.0 * pow(p0, 1.0)
-                * pow(2.0 * E2 * len2 * m * q + pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), 1.0), -0.5) / (E2 * q)
+            * pow(2.0 * E2 * len2 * m * q + pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), 1.0), -0.5) / (E2 * q)
         + 1.0 * pow(p0, 1.0) * pow(2.0 * E1 * len1 * m * q + pow(p0, 2.0), -0.5) / (E1 * q) - 1 / (E1 * q);
   } else if (obj.isFlag(ObjectFlag::ElecObject)) {
     const double &len1 = getEquipmentParameters().getLengthOfD1();
@@ -180,7 +180,8 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
   const ObjectParameters *par = nullptr;
   if (obj.isFlag(ObjectFlag::IonObject)) par = &getIonParameters();
   else if (obj.isFlag(ObjectFlag::ElecObject)) par = &getElectronParameters();
-  else assert(false);
+  else
+    assert(false);
 
   const double &theta = par->getAngleOfDetector();
   const double &dx = par->getPixelSizeOfX();
@@ -205,69 +206,33 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
     obj.setFlag(ObjectFlag::HavingXYTData);
   }
 }
-void Analysis::AnalysisTools::loadMomentumCalculator(Object &obj, const OptName opt) const {
+void Analysis::AnalysisTools::loadMomentumCalculator(Object &obj) const {
   if (obj.isFlag(ObjectFlag::IonObject)) {
     if (obj.isFlag(ObjectFlag::DummyObject)) return;
-    else {
-      bool isTarget;
-      switch (opt) {
-        case OnlyWithinMasterRegion:
-          isTarget = obj.isFlag(ObjectFlag::WithinMasterRegion);
-          break;
-        case OnlyNotDead:
-          isTarget = !(obj.isFlag(ObjectFlag::Dead));
-          break;
-        case AllRegion:
-          isTarget = true;
-          break;
-        default:
-          assert(false);
-          isTarget = false;
-      }
-      if (isTarget) {
-        bool isHavingProperPz;
-        const XY &pxy = calculateMomentumXY(obj);
-        const double &pz = calculateMomentumZ(obj, isHavingProperPz);
-        if (isHavingProperPz) {
-          obj.setMomentumX(pxy.x);
-          obj.setMomentumY(pxy.y);
-          obj.setMomentumZ(pz);
-          obj.setFlag(ObjectFlag::HavingMomentumData);
-        }
-      }
-    }
+    if (!obj.isFlag(ObjectFlag::WithinMasterRegion)) return;
+    bool isHavingProperPz;
+    const XY &pxy = calculateMomentumXY(obj);
+    const double &pz = calculateMomentumZ(obj, isHavingProperPz);
+    if (isHavingProperPz) {
+      obj.setMomentumX(pxy.x);
+      obj.setMomentumY(pxy.y);
+      obj.setMomentumZ(pz);
+      obj.setFlag(ObjectFlag::HavingMomentumData);
+    } else obj.setFlag(ObjectFlag::OutOfMasterRegion);
   } else if (obj.isFlag(ObjectFlag::ElecObject)) {
-    if (obj.isFlag(ObjectFlag::DummyObject)) {
-      return;
-    } else {
-      bool isTarget;
-      switch (opt) {
-        case OnlyWithinMasterRegion:
-          isTarget = obj.isFlag(ObjectFlag::WithinMasterRegion);
-          break;
-        case OnlyNotDead:
-          isTarget = !(obj.isFlag(ObjectFlag::Dead));
-          break;
-        case AllRegion:
-          isTarget = true;
-          break;
-        default:
-          assert(false);
-          isTarget = false;
-      }
-      if (isTarget) {
-        bool isHavingProperPz;
-        const XY &pxy = calculateMomentumXY(obj);
-        const double &pz = calculateMomentumZ(obj, isHavingProperPz);
-        if (isHavingProperPz) {
-          obj.setMomentumX(pxy.x);
-          obj.setMomentumY(pxy.y);
-          obj.setMomentumZ(pz);
-          obj.setFlag(ObjectFlag::HavingMomentumData);
-        }
-      }
-    }
-  } else assert(false);
+    if (obj.isFlag(ObjectFlag::DummyObject)) return;
+    if (!obj.isFlag(ObjectFlag::WithinMasterRegion)) return;
+    bool isHavingProperPz;
+    const XY &pxy = calculateMomentumXY(obj);
+    const double &pz = calculateMomentumZ(obj, isHavingProperPz);
+    if (isHavingProperPz) {
+      obj.setMomentumX(pxy.x);
+      obj.setMomentumY(pxy.y);
+      obj.setMomentumZ(pz);
+      obj.setFlag(ObjectFlag::HavingMomentumData);
+    } else obj.setFlag(ObjectFlag::OutOfMasterRegion);
+  } else
+    assert(false);
 }
 const int &Analysis::AnalysisTools::getEventNumber() const {
   return eventNumber;
@@ -278,10 +243,9 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(
                                 object.getCharge(),
                                 getEquipmentParameters().getMagneticFiled());
 }
-void Analysis::AnalysisTools::loadMomentumCalculator(Objects &objs,
-                                                     const OptName opt) const {
+void Analysis::AnalysisTools::loadMomentumCalculator(Objects &objs) const {
   const int &n = objs.getNumberOfObjects();
-  for (int i = 0; i < n; i++) loadMomentumCalculator(objs.setObjectMembers(i), opt);
+  for (int i = 0; i < n; i++) loadMomentumCalculator(objs.setObjectMembers(i));
   if (!objs.isMomentumConserved()) objs.setAllFlag(ObjectFlag::OutOfMasterRegion);
   if (!objs.isEnergyConserved()) objs.setAllFlag(ObjectFlag::OutOfMasterRegion);
 }
