@@ -287,59 +287,60 @@ void Analysis::AnalysisRun::createHists() {
 
   // IonMomentumAngDist 
 #define __IONMOMENTUMANGDIST__ "IonMomentumAngDist"
-#define __IONMOMENTUMANGDIST1__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 400, 0, 500, __IONMOMENTUMANGDIST__
-#define __IONMOMENTUMANGDIST2__ "Direction XY [degree]", "Cos Direction Z [1]", 360, -180, 180, 400, -1, 1, __IONMOMENTUMANGDIST__
+#define __IONMOMENTUMANGDIST1__ "Cos Direction [degree]", "Momentum [au]", 400, -1, 1, 400, 0, 500, __IONMOMENTUMANGDIST__
+#define __IONMOMENTUMANGDIST2__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 400, 0, 500, __IONMOMENTUMANGDIST__
+#define __IONMOMENTUMANGDIST3__ "Direction XY [degree]", "Cos Direction Z [1]", 360, -180, 180, 400, -1, 1, __IONMOMENTUMANGDIST__
 #define __CREATEIONMOMENTUMANGDIST__(X) \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1hPDirDist_ ## X), __IONMOMENTUMANGDIST3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2hPDirDist_ ## X), __IONMOMENTUMANGDIST3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3hPDirDist_ ## X), __IONMOMENTUMANGDIST3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_ ## X), __IONMOMENTUMANGDIST3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist_ ## X), __IONMOMENTUMANGDIST2__); 
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDist_ ## X), __IONMOMENTUMANGDIST3__);
   __CREATEIONMOMENTUMANGDIST__(always)
   __CREATEIONMOMENTUMANGDIST__(iMaster)
   __CREATEIONMOMENTUMANGDIST__(master)
@@ -456,49 +457,50 @@ void Analysis::AnalysisRun::createHists() {
 
   // ElecMomentumAngDist 
 #define __ELECMOMENTUMANGDIST__ "ElecMomentumAngDist"
-#define __ELECMOMENTUMANGDIST1__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 500, 0, 4, __ELECMOMENTUMANGDIST__
-#define __ELECMOMENTUMANGDIST2__ "Direction XY [degree]", "Direction Z [1]", 360, -180, 180, 400, -1, 1, __ELECMOMENTUMANGDIST__
+#define __ELECMOMENTUMANGDIST1__ "Cos Direction [degree]", "Momentum [au]", 400, -1, 1, 400, 0, 4, __ELECMOMENTUMANGDIST__
+#define __ELECMOMENTUMANGDIST2__ "Direction [degree]", "Momentum [au]", 360, -180, 180, 500, 0, 4, __ELECMOMENTUMANGDIST__
+#define __ELECMOMENTUMANGDIST3__ "Direction XY [degree]", "Direction Z [1]", 360, -180, 180, 400, -1, 1, __ELECMOMENTUMANGDIST__
 #define __CREATEELECMOMENTUMANGDIST__(X) \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistX_ ## X), __ELECMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistY_ ## X), __ELECMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZ_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1hPDirDist_ ## X), __ELECMOMENTUMANGDIST3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistX_ ## X), __ELECMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistY_ ## X), __ELECMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZ_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2hPDirDist_ ## X), __ELECMOMENTUMANGDIST3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistX_ ## X), __ELECMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistY_ ## X), __ELECMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZ_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3hPDirDist_ ## X), __ELECMOMENTUMANGDIST3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistX_ ## X), __ELECMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistY_ ## X), __ELECMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZ_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist_ ## X), __ELECMOMENTUMANGDIST2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistXY_PDirZIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistYZ_PDirXIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDistZX_PDirYIs90_ ## X), __ELECMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e4hPDirDist_ ## X), __ELECMOMENTUMANGDIST3__);
   __CREATEELECMOMENTUMANGDIST__(always)
   __CREATEELECMOMENTUMANGDIST__(eMaster)
   __CREATEELECMOMENTUMANGDIST__(master)
@@ -638,6 +640,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXY1 = pIons->getRealOrDummyObject(0).outputPDirXY();
   const double *const iPDirYZ1 = pIons->getRealOrDummyObject(0).outputPDirYZ();
   const double *const iPDirZX1 = pIons->getRealOrDummyObject(0).outputPDirZX();
+  const double *const iCosPDirX1 = pIons->getRealOrDummyObject(0).outputCosPDirX();
+  const double *const iCosPDirY1 = pIons->getRealOrDummyObject(0).outputCosPDirY();
   const double *const iCosPDirZ1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
   const bool iPDirX1Is90 = iPDirX1 ? (85 <= *iPDirX1 && *iPDirX1 <= 95) : false;
   const bool iPDirY1Is90 = iPDirY1 ? (85 <= *iPDirY1 && *iPDirY1 <= 95) : false;
@@ -656,6 +660,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXY2 = pIons->getRealOrDummyObject(1).outputPDirXY();
   const double *const iPDirYZ2 = pIons->getRealOrDummyObject(1).outputPDirYZ();
   const double *const iPDirZX2 = pIons->getRealOrDummyObject(1).outputPDirZX();
+  const double *const iCosPDirX2 = pIons->getRealOrDummyObject(1).outputCosPDirX();
+  const double *const iCosPDirY2 = pIons->getRealOrDummyObject(1).outputCosPDirY();
   const double *const iCosPDirZ2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
   const bool iPDirX2Is90 = iPDirX2 ? (85 <= *iPDirX2 && *iPDirX2 <= 95) : false;
   const bool iPDirY2Is90 = iPDirY2 ? (85 <= *iPDirY2 && *iPDirY2 <= 95) : false;
@@ -674,6 +680,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXY3 = pIons->getRealOrDummyObject(2).outputPDirXY();
   const double *const iPDirYZ3 = pIons->getRealOrDummyObject(2).outputPDirYZ();
   const double *const iPDirZX3 = pIons->getRealOrDummyObject(2).outputPDirZX();
+  const double *const iCosPDirX3 = pIons->getRealOrDummyObject(2).outputCosPDirX();
+  const double *const iCosPDirY3 = pIons->getRealOrDummyObject(2).outputCosPDirY();
   const double *const iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
   const bool iPDirX3Is90 = iPDirX3 ? (85 <= *iPDirX3 && *iPDirX3 <= 95) : false;
   const bool iPDirY3Is90 = iPDirY3 ? (85 <= *iPDirY3 && *iPDirY3 <= 95) : false;
@@ -692,6 +700,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXY4 = pIons->getRealOrDummyObject(3).outputPDirXY();
   const double *const iPDirYZ4 = pIons->getRealOrDummyObject(3).outputPDirYZ();
   const double *const iPDirZX4 = pIons->getRealOrDummyObject(3).outputPDirZX();
+  const double *const iCosPDirX4 = pIons->getRealOrDummyObject(3).outputCosPDirX();
+  const double *const iCosPDirY4 = pIons->getRealOrDummyObject(3).outputCosPDirY();
   const double *const iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
   const bool iPDirX4Is90 = iPDirX4 ? (85 <= *iPDirX4 && *iPDirX4 <= 95) : false;
   const bool iPDirY4Is90 = iPDirY4 ? (85 <= *iPDirY4 && *iPDirY4 <= 95) : false;
@@ -710,6 +720,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const iPDirXYTotal = pIons->outputPDirXY();
   const double *const iPDirYZTotal = pIons->outputPDirYZ();
   const double *const iPDirZXTotal = pIons->outputPDirZX();
+  const double *const iCosPDirXTotal = pIons->outputCosPDirX();
+  const double *const iCosPDirYTotal = pIons->outputCosPDirY();
   const double *const iCosPDirZTotal = pIons->outputCosPDirZ();
   const bool iPDirXTotalIs90 = iPDirXTotal ? (85 <= *iPDirXTotal && *iPDirXTotal <= 95) : false;
   const bool iPDirYTotalIs90 = iPDirYTotal ? (85 <= *iPDirYTotal && *iPDirYTotal <= 95) : false;
@@ -728,6 +740,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirXY();
   const double *const ePDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
   const double *const ePDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
+  const double *const eCosPDirX1 = pElectrons->getRealOrDummyObject(0).outputCosPDirX();
+  const double *const eCosPDirY1 = pElectrons->getRealOrDummyObject(0).outputCosPDirY();
   const double *const eCosPDirZ1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
   const bool ePDirX1Is90 = ePDirX1 ? (85 <= *ePDirX1 && *ePDirX1 <= 95) : false;
   const bool ePDirY1Is90 = ePDirY1 ? (85 <= *ePDirY1 && *ePDirY1 <= 95) : false;
@@ -746,6 +760,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirXY();
   const double *const ePDirYZ2 = pElectrons->getRealOrDummyObject(1).outputPDirYZ();
   const double *const ePDirZX2 = pElectrons->getRealOrDummyObject(1).outputPDirZX();
+  const double *const eCosPDirX2 = pElectrons->getRealOrDummyObject(1).outputCosPDirX();
+  const double *const eCosPDirY2 = pElectrons->getRealOrDummyObject(1).outputCosPDirY();
   const double *const eCosPDirZ2 = pElectrons->getRealOrDummyObject(1).outputCosPDirZ();
   const bool ePDirX2Is90 = ePDirX2 ? (85 <= *ePDirX2 && *ePDirX2 <= 95) : false;
   const bool ePDirY2Is90 = ePDirY2 ? (85 <= *ePDirY2 && *ePDirY2 <= 95) : false;
@@ -764,6 +780,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirXY();
   const double *const ePDirYZ3 = pElectrons->getRealOrDummyObject(2).outputPDirYZ();
   const double *const ePDirZX3 = pElectrons->getRealOrDummyObject(2).outputPDirZX();
+  const double *const eCosPDirX3 = pElectrons->getRealOrDummyObject(2).outputCosPDirX();
+  const double *const eCosPDirY3 = pElectrons->getRealOrDummyObject(2).outputCosPDirY();
   const double *const eCosPDirZ3 = pElectrons->getRealOrDummyObject(2).outputCosPDirZ();
   const bool ePDirX3Is90 = ePDirX3 ? (85 <= *ePDirX3 && *ePDirX3 <= 95) : false;
   const bool ePDirY3Is90 = ePDirY3 ? (85 <= *ePDirY3 && *ePDirY3 <= 95) : false;
@@ -782,6 +800,8 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirXY();
   const double *const ePDirYZ4 = pElectrons->getRealOrDummyObject(3).outputPDirYZ();
   const double *const ePDirZX4 = pElectrons->getRealOrDummyObject(3).outputPDirZX();
+  const double *const eCosPDirX4 = pElectrons->getRealOrDummyObject(3).outputCosPDirX();
+  const double *const eCosPDirY4 = pElectrons->getRealOrDummyObject(3).outputCosPDirY();
   const double *const eCosPDirZ4 = pElectrons->getRealOrDummyObject(3).outputCosPDirZ();
   const bool ePDirX4Is90 = ePDirX4 ? (85 <= *ePDirX4 && *ePDirX4 <= 95) : false;
   const bool ePDirY4Is90 = ePDirY4 ? (85 <= *ePDirY4 && *ePDirY4 <= 95) : false;
@@ -905,9 +925,9 @@ void Analysis::AnalysisRun::fillHists() {
 // IonMomentumAngDist
 #define __FILLIONMOMENTUMANGDIST__(X) \
   if (X) { \
-    fill2d(h2_i1hPDirDistX_ ## X, iPDirX1, iPX1); \
-    fill2d(h2_i1hPDirDistY_ ## X, iPDirY1, iPY1); \
-    fill2d(h2_i1hPDirDistZ_ ## X, iPDirZ1, iPZ1); \
+    fill2d(h2_i1hPDirDistX_ ## X, iCosPDirX1, iP1); \
+    fill2d(h2_i1hPDirDistY_ ## X, iCosPDirY1, iP1); \
+    fill2d(h2_i1hPDirDistZ_ ## X, iCosPDirZ1, iP1); \
     fill2d(h2_i1hPDirDistXY_ ## X, iPDirXY1, iPXY1); \
     fill2d(h2_i1hPDirDistYZ_ ## X, iPDirYZ1, iPYZ1); \
     fill2d(h2_i1hPDirDistZX_ ## X, iPDirZX1, iPZX1); \
@@ -915,9 +935,9 @@ void Analysis::AnalysisRun::fillHists() {
     if (iPDirX1Is90) fill2d(h2_i1hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ1, iPYZ1); \
     if (iPDirY1Is90) fill2d(h2_i1hPDirDistZX_PDirYIs90_ ## X, iPDirZX1, iPZX1); \
     fill2d(h2_i1hPDirDist_ ## X, iPDirXY1, iCosPDirZ1); \
-    fill2d(h2_i2hPDirDistX_ ## X, iPDirX2, iPX2); \
-    fill2d(h2_i2hPDirDistY_ ## X, iPDirY2, iPY2); \
-    fill2d(h2_i2hPDirDistZ_ ## X, iPDirZ2, iPZ2); \
+    fill2d(h2_i2hPDirDistX_ ## X, iCosPDirX2, iP2); \
+    fill2d(h2_i2hPDirDistY_ ## X, iCosPDirY2, iP2); \
+    fill2d(h2_i2hPDirDistZ_ ## X, iCosPDirZ2, iP2); \
     fill2d(h2_i2hPDirDistXY_ ## X, iPDirXY2, iPXY2); \
     fill2d(h2_i2hPDirDistYZ_ ## X, iPDirYZ2, iPYZ2); \
     fill2d(h2_i2hPDirDistZX_ ## X, iPDirZX2, iPZX2); \
@@ -925,9 +945,9 @@ void Analysis::AnalysisRun::fillHists() {
     if (iPDirX2Is90) fill2d(h2_i2hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ2, iPYZ2); \
     if (iPDirY2Is90) fill2d(h2_i2hPDirDistZX_PDirYIs90_ ## X, iPDirZX2, iPZX2); \
     fill2d(h2_i2hPDirDist_ ## X, iPDirXY2, iCosPDirZ2); \
-    fill2d(h2_i3hPDirDistX_ ## X, iPDirX3, iPX3); \
-    fill2d(h2_i3hPDirDistY_ ## X, iPDirY3, iPY3); \
-    fill2d(h2_i3hPDirDistZ_ ## X, iPDirZ3, iPZ3); \
+    fill2d(h2_i3hPDirDistX_ ## X, iCosPDirX3, iP3); \
+    fill2d(h2_i3hPDirDistY_ ## X, iCosPDirY3, iP3); \
+    fill2d(h2_i3hPDirDistZ_ ## X, iCosPDirZ3, iP3); \
     fill2d(h2_i3hPDirDistXY_ ## X, iPDirXY3, iPXY3); \
     fill2d(h2_i3hPDirDistYZ_ ## X, iPDirYZ3, iPYZ3); \
     fill2d(h2_i3hPDirDistZX_ ## X, iPDirZX3, iPZX3); \
@@ -935,9 +955,9 @@ void Analysis::AnalysisRun::fillHists() {
     if (iPDirX3Is90) fill2d(h2_i3hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ3, iPYZ3); \
     if (iPDirY3Is90) fill2d(h2_i3hPDirDistZX_PDirYIs90_ ## X, iPDirZX3, iPZX3); \
     fill2d(h2_i3hPDirDist_ ## X, iPDirXY3, iCosPDirZ3); \
-    fill2d(h2_i4hPDirDistX_ ## X, iPDirX4, iPX4); \
-    fill2d(h2_i4hPDirDistY_ ## X, iPDirY4, iPY4); \
-    fill2d(h2_i4hPDirDistZ_ ## X, iPDirZ4, iPZ4); \
+    fill2d(h2_i4hPDirDistX_ ## X, iCosPDirX4, iP4); \
+    fill2d(h2_i4hPDirDistY_ ## X, iCosPDirY4, iP4); \
+    fill2d(h2_i4hPDirDistZ_ ## X, iCosPDirZ4, iP4); \
     fill2d(h2_i4hPDirDistXY_ ## X, iPDirXY4, iPXY4); \
     fill2d(h2_i4hPDirDistYZ_ ## X, iPDirYZ4, iPYZ4); \
     fill2d(h2_i4hPDirDistZX_ ## X, iPDirZX4, iPZX4); \
@@ -945,9 +965,9 @@ void Analysis::AnalysisRun::fillHists() {
     if (iPDirX4Is90) fill2d(h2_i4hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ4, iPYZ4); \
     if (iPDirY4Is90) fill2d(h2_i4hPDirDistZX_PDirYIs90_ ## X, iPDirZX4, iPZX4); \
     fill2d(h2_i4hPDirDist_ ## X, iPDirXY4, iCosPDirZ4); \
-    fill2d(h2_iTotalPDirDistX_ ## X, iPDirXTotal, iPXTotal); \
-    fill2d(h2_iTotalPDirDistY_ ## X, iPDirYTotal, iPYTotal); \
-    fill2d(h2_iTotalPDirDistZ_ ## X, iPDirZTotal, iPZTotal); \
+    fill2d(h2_iTotalPDirDistX_ ## X, iCosPDirXTotal, iPTotal); \
+    fill2d(h2_iTotalPDirDistY_ ## X, iCosPDirYTotal, iPTotal); \
+    fill2d(h2_iTotalPDirDistZ_ ## X, iCosPDirZTotal, iPTotal); \
     fill2d(h2_iTotalPDirDistXY_ ## X, iPDirXYTotal, iPXYTotal); \
     fill2d(h2_iTotalPDirDistYZ_ ## X, iPDirYZTotal, iPYZTotal); \
     fill2d(h2_iTotalPDirDistZX_ ## X, iPDirZXTotal, iPZXTotal); \
@@ -1066,9 +1086,9 @@ void Analysis::AnalysisRun::fillHists() {
   // ElecMomentumAngDist 
   #define __FILLELECMOMENTUMANGDIST__(X) \
   if (X) { \
-    fill2d(h2_e1hPDirDistX_ ## X, ePDirX1, ePX1); \
-    fill2d(h2_e1hPDirDistY_ ## X, ePDirY1, ePY1); \
-    fill2d(h2_e1hPDirDistZ_ ## X, ePDirZ1, ePZ1); \
+    fill2d(h2_e1hPDirDistX_ ## X, eCosPDirX1, eP1); \
+    fill2d(h2_e1hPDirDistY_ ## X, eCosPDirY1, eP1); \
+    fill2d(h2_e1hPDirDistZ_ ## X, eCosPDirZ1, eP1); \
     fill2d(h2_e1hPDirDistXY_ ## X, ePDirXY1, ePXY1); \
     fill2d(h2_e1hPDirDistYZ_ ## X, ePDirYZ1, ePYZ1); \
     fill2d(h2_e1hPDirDistZX_ ## X, ePDirZX1, ePZX1); \
@@ -1076,9 +1096,9 @@ void Analysis::AnalysisRun::fillHists() {
     if (ePDirX1Is90) fill2d(h2_e1hPDirDistYZ_PDirXIs90_ ## X, ePDirYZ1, ePYZ1); \
     if (ePDirY1Is90) fill2d(h2_e1hPDirDistZX_PDirYIs90_ ## X, ePDirZX1, ePZX1); \
     fill2d(h2_e1hPDirDist_ ## X, ePDirXY1, eCosPDirZ1); \
-    fill2d(h2_e2hPDirDistX_ ## X, ePDirX2, ePX2); \
-    fill2d(h2_e2hPDirDistY_ ## X, ePDirY2, ePY2); \
-    fill2d(h2_e2hPDirDistZ_ ## X, ePDirZ2, ePZ2); \
+    fill2d(h2_e2hPDirDistX_ ## X, eCosPDirX2, eP2); \
+    fill2d(h2_e2hPDirDistY_ ## X, eCosPDirY2, eP2); \
+    fill2d(h2_e2hPDirDistZ_ ## X, eCosPDirZ2, eP2); \
     fill2d(h2_e2hPDirDistXY_ ## X, ePDirXY2, ePXY2); \
     fill2d(h2_e2hPDirDistYZ_ ## X, ePDirYZ2, ePYZ2); \
     fill2d(h2_e2hPDirDistZX_ ## X, ePDirZX2, ePZX2); \
@@ -1086,9 +1106,9 @@ void Analysis::AnalysisRun::fillHists() {
     if (ePDirX2Is90) fill2d(h2_e2hPDirDistYZ_PDirXIs90_ ## X, ePDirYZ2, ePYZ2); \
     if (ePDirY2Is90) fill2d(h2_e2hPDirDistZX_PDirYIs90_ ## X, ePDirZX2, ePZX2); \
     fill2d(h2_e2hPDirDist_ ## X, ePDirXY2, eCosPDirZ2); \
-    fill2d(h2_e3hPDirDistX_ ## X, ePDirX3, ePX3); \
-    fill2d(h2_e3hPDirDistY_ ## X, ePDirY3, ePY3); \
-    fill2d(h2_e3hPDirDistZ_ ## X, ePDirZ3, ePZ3); \
+    fill2d(h2_e3hPDirDistX_ ## X, eCosPDirX3, eP3); \
+    fill2d(h2_e3hPDirDistY_ ## X, eCosPDirY3, eP3); \
+    fill2d(h2_e3hPDirDistZ_ ## X, eCosPDirZ3, eP3); \
     fill2d(h2_e3hPDirDistXY_ ## X, ePDirXY3, ePXY3); \
     fill2d(h2_e3hPDirDistYZ_ ## X, ePDirYZ3, ePYZ3); \
     fill2d(h2_e3hPDirDistZX_ ## X, ePDirZX3, ePZX3); \
@@ -1096,9 +1116,9 @@ void Analysis::AnalysisRun::fillHists() {
     if (ePDirX3Is90) fill2d(h2_e3hPDirDistYZ_PDirXIs90_ ## X, ePDirYZ3, ePYZ3); \
     if (ePDirY3Is90) fill2d(h2_e3hPDirDistZX_PDirYIs90_ ## X, ePDirZX3, ePZX3); \
     fill2d(h2_e3hPDirDist_ ## X, ePDirXY3, eCosPDirZ3); \
-    fill2d(h2_e4hPDirDistX_ ## X, ePDirX4, ePX4); \
-    fill2d(h2_e4hPDirDistY_ ## X, ePDirY4, ePY4); \
-    fill2d(h2_e4hPDirDistZ_ ## X, ePDirZ4, ePZ4); \
+    fill2d(h2_e4hPDirDistX_ ## X, eCosPDirX4, eP4); \
+    fill2d(h2_e4hPDirDistY_ ## X, eCosPDirY4, eP4); \
+    fill2d(h2_e4hPDirDistZ_ ## X, eCosPDirZ4, eP4); \
     fill2d(h2_e4hPDirDistXY_ ## X, ePDirXY4, ePXY4); \
     fill2d(h2_e4hPDirDistYZ_ ## X, ePDirYZ4, ePYZ4); \
     fill2d(h2_e4hPDirDistZX_ ## X, ePDirZX4, ePZX4); \

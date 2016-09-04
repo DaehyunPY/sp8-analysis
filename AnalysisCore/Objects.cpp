@@ -555,3 +555,11 @@ bool Analysis::Objects::isEnergyConserved() const {
     return false;
   }
 }
+double *const Analysis::Objects::outputCosPDirX() const {
+  if (areAllFlag(ObjectFlag::HavingMomentumData)) return new double(cos(getMotionalDirectionX()));
+  return nullptr;
+}
+double *const Analysis::Objects::outputCosPDirY() const {
+  if (areAllFlag(ObjectFlag::HavingMomentumData)) return new double(cos(getMotionalDirectionY()));
+  return nullptr;
+}

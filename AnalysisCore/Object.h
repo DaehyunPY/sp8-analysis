@@ -28,9 +28,12 @@ class Object: public ObjectFlag {
   Object getCopy() const;
 
  private:
-  bool isAdjecting;
+  bool hasOptDxAndDy;
   double dx;
   double dy;
+  bool hasOptPhi;
+  double frPhi;
+  double toPhi;
 
  public:
   void setLocationX(const double &);
@@ -93,6 +96,8 @@ public:
   double * const outputPDirYZ() const;
   double * const outputPDirZX() const;
   double * const outputPDirZY() const;
+  double * const outputCosPDirX() const;
+  double * const outputCosPDirY() const;
   double * const outputCosPDirZ() const;
   double * const outputE() const;
 };

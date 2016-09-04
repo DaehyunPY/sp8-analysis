@@ -23,13 +23,22 @@ Analysis::Object::Object(const FlagName f,
   minTOF = kUnit.readNanoSec(t0);
   maxTOF = kUnit.readNanoSec(t1);
   if (reader.hasMember(prefix+"dx_and_dy")) {
-    isAdjecting = true;
+    hasOptDxAndDy = true;
     dx = kUnit.readMilliMeter(reader.getDoubleAt(prefix+"dx_and_dy", 0));
     dy = kUnit.readMilliMeter(reader.getDoubleAt(prefix+"dx_and_dy", 1));
   } else {
-    isAdjecting = false;
+    hasOptDxAndDy = false;
     dx = 0;
     dy = 0;
+  }
+  if (reader.hasMember(prefix+"phi")) {
+    hasOptPhi = true;
+    frPhi = kUnit.readDegree(reader.getDoubleAt(prefix+"phi", 0));
+    toPhi = kUnit.readDegree(reader.getDoubleAt(prefix+"phi", 1));
+  } else {
+    hasOptPhi = false;
+    frPhi = 0;
+    toPhi = 0;
   }
   resetEventData();
   return;
@@ -60,9 +69,12 @@ Analysis::Object::Object(const FlagName f1, const FlagName f2,
     minTOF = kUnit.readNanoSec(t0);
     maxTOF = kUnit.readNanoSec(t1);
   }
-  isAdjecting = false;
+  hasOptDxAndDy = false;
   dx = 0;
   dy = 0;
+  hasOptPhi = false;
+  frPhi = 0;
+  toPhi = 0;
   resetEventData();
   return;
 }
@@ -79,21 +91,18 @@ void Analysis::Object::resetEventData() {
 }
 void Analysis::Object::setLocationX(const double &x) {
   locationX = x;
-  if (isAdjecting) locationX += dx;
+  if (hasOptDxAndDy) locationX += dx;
   return;
 }
 void Analysis::Object::setLocationY(const double &y) {
   locationY = y;
-  if (isAdjecting) locationY += dy;
+  if (hasOptDxAndDy) locationY += dy;
   return;
 }
 void Analysis::Object::setTOF(const double &t) {
   TOF = t;
-  if ((TOF < maxTOF) && (TOF > minTOF)) {
-    setFlag(WithinMasterRegion);
-  } else {
-    setFlag(OutOfMasterRegion);
-  }
+  if (minTOF <= TOF && TOF <= maxTOF) setFlag(WithinMasterRegion);
+  else setFlag(OutOfMasterRegion);
 }
 void Analysis::Object::setMomentumX(const double &px) {
   momentumX = px;
@@ -105,6 +114,10 @@ void Analysis::Object::setMomentumY(const double &py) {
 }
 void Analysis::Object::setMomentumZ(const double &pz) {
   momentumZ = pz;
+  if (hasOptPhi) {
+    const double phi = getMotionalDirectionZ();
+    if (!(frPhi <= phi && phi <= toPhi)) setFlag(OutOfMasterRegion);
+  }
   return;
 }
 const double &Analysis::Object::getMass() const {
@@ -315,4 +328,16 @@ double *const Analysis::Object::outputPDirZY() const {
 Analysis::Object Analysis::Object::getCopy() const {
   return *this;
 }
+double *const Analysis::Object::outputCosPDirX() const {
+  if (isFlag(HavingMomentumData))
+    return new double(cos(getMotionalDirectionX()));
+  return nullptr;
+}
+double *const Analysis::Object::outputCosPDirY() const {
+  if (isFlag(HavingMomentumData))
+    return new double(cos(getMotionalDirectionY()));
+  return nullptr;
+}
+
+
 

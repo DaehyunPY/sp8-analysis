@@ -117,6 +117,8 @@ class Objects {
   double *const outputPDirYZ() const;
   double *const outputPDirZX() const;
   double *const outputPDirZY() const;
+  double *const outputCosPDirX() const;
+  double *const outputCosPDirY() const;
   double *const outputCosPDirZ() const;
   double *const outputE() const;
 
