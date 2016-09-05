@@ -50,8 +50,9 @@ class AnalysisTools {
  public:
   void loadEventDataInputer(Analysis::Objects &, const EventDataReader &) const;
 
- public:
+ private: 
   void loadMomentumCalculator(Object &obj) const;
+ public:
   void loadMomentumCalculator(Objects &objs) const;
 };
 }

@@ -17,6 +17,7 @@ class Objects {
   int masterNumOfHits;
 //  int numOfHits;
   Object **ppObject;
+  // todo: stop dividing objects real or dummy from `masterNumOfHits'
   const int getNumberOfDeadObjects() const;
   const int getNumberOfDeadDummyObjects() const;
   const int getNumberOfDeadRealOrDummyObjects() const;

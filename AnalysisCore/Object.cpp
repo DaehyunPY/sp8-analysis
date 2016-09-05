@@ -4,22 +4,29 @@ Analysis::Object::Object(const FlagName f,
                          const JSONReader &reader,
                          const std::string prefix) : ObjectFlag() {
   assert(f == IonObject || f == ElecObject);
-  setFlag(RealObject);
   setFlag(f);
   if (f == IonObject) {
-    double m = reader.getDoubleAt(prefix+"mass");
-    double q = reader.getDoubleAt(prefix+"charge");
-    assert(m > 0e0);
-    assert(q > 0e0);
-    mass = kUnit.readAtomicMass(m);
-    charge = kUnit.readElementaryCharge(q);
+	  double m = 0; 
+	  if (reader.hasMember(prefix+"mass")) m = reader.getDoubleAt(prefix+"mass");
+	  if (m == 0) {
+		  setFlag(DummyObject);
+		  mass = 0;
+		  charge = 0;
+	  } else if (m > 0) {
+		  double q = reader.getDoubleAt(prefix + "charge");
+		  assert(q > 0e0);
+		  setFlag(RealObject);
+		  mass = kUnit.readAtomicMass(m);
+		  charge = kUnit.readElementaryCharge(q);
+	} else assert(false);
   } else if (f == ElecObject) {
-    mass = kUnit.readElectronRestMass(1e0);
-    charge = kUnit.readElementaryCharge(1e0);
+	  setFlag(RealObject);
+	  mass = kUnit.readElectronRestMass(1e0);
+	  charge = kUnit.readElementaryCharge(1e0);
   }
   double t0 = reader.getDoubleAt(prefix+"TOF", 0);
   double t1 = reader.getDoubleAt(prefix+"TOF", 1);
-  assert(t0 <= t1);
+  assert(0e0 <= t0 && t0 <= t1);
   minTOF = kUnit.readNanoSec(t0);
   maxTOF = kUnit.readNanoSec(t1);
   if (reader.hasMember(prefix+"dx_and_dy")) {
@@ -101,7 +108,8 @@ void Analysis::Object::setLocationY(const double &y) {
 }
 void Analysis::Object::setTOF(const double &t) {
   TOF = t;
-  if (minTOF <= TOF && TOF <= maxTOF) setFlag(WithinMasterRegion);
+  if (isFlag(DummyObject) && minTOF == 0e0 && maxTOF == 0e0) setFlag(WithinMasterRegion);
+  else if (minTOF <= TOF && TOF <= maxTOF) setFlag(WithinMasterRegion);
   else setFlag(OutOfMasterRegion);
 }
 void Analysis::Object::setMomentumX(const double &px) {

@@ -170,11 +170,11 @@ void Analysis::AnalysisRun::createHists() {
 
   // IonTOF
 #define __IONTOF__ "IonTOF"
-#define __IONTOF1__ "TOF [ns]", 2000, 0, 10000, __IONTOF__
-#define __IONTOF2__ "TOF [ns]", 4000, 0, 20000, __IONTOF__
-#define __IONTOF3__ "TOF [ns]", "TOF [ns]", 500, 0, 10000, 500, 0, 10000, __IONTOF__
-#define __IONTOF4__ "Sum of TOFs [ns]", "Diff of TOFs [ns]", 1000, 0, 20000, 500, 0, 10000, __IONTOF__
-#define __IONTOF5__ "TOF [ns]", "TOF [ns]", 1000, 0, 20000, 500, 0, 10000, __IONTOF__
+#define __IONTOF1__ "TOF [ns]", 4000, 0, 20000, __IONTOF__
+#define __IONTOF2__ "TOF [ns]", 8000, 0, 40000, __IONTOF__
+#define __IONTOF3__ "TOF [ns]", "TOF [ns]", 1000, 0, 20000, 1000, 0, 20000, __IONTOF__
+#define __IONTOF4__ "Sum of TOFs [ns]", "Diff of TOFs [ns]", 2000, 0, 40000, 1000, 0, 20000, __IONTOF__
+#define __IONTOF5__ "TOF [ns]", "TOF [ns]", 2000, 0, 40000, 1000, 0, 20000, __IONTOF__
 #define __CREATEIONTOF__(X) \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hTOF_ ## X), __IONTOF1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i2hTOF_ ## X), __IONTOF1__); \
@@ -196,8 +196,8 @@ void Analysis::AnalysisRun::createHists() {
 
   // IonFISH
 #define __IONFISH__ "IonFish"
-#define __IONFISH1__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 400, -50, 50, __IONFISH__
-#define __IONFISH2__ "TOF [ns]", "Location [mm]", 500, 0, 10000, 200, 0, 50, __IONFISH__
+#define __IONFISH1__ "TOF [ns]", "Location [mm]", 1000, 0, 20000, 400, -50, 50, __IONFISH__
+#define __IONFISH2__ "TOF [ns]", "Location [mm]", 1000, 0, 20000, 200, 0, 50, __IONFISH__
 #define __CREATEIONFISH__(X) \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hXFish_ ## X), __IONFISH1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hYFish_ ## X), __IONFISH1__); \

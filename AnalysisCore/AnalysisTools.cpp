@@ -174,14 +174,11 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
                                                    const double &y1,
                                                    const double &t1,
                                                    const int &f1) const {
-  if (obj.isFlag(ObjectFlag::DummyObject)) obj.setFlag(ObjectFlag::OutOfMasterRegion);
-
   // par
   const ObjectParameters *par = nullptr;
   if (obj.isFlag(ObjectFlag::IonObject)) par = &getIonParameters();
   else if (obj.isFlag(ObjectFlag::ElecObject)) par = &getElectronParameters();
-  else
-    assert(false);
+  else assert(false);
 
   const double &theta = par->getAngleOfDetector();
   const double &dx = par->getPixelSizeOfX();
@@ -207,9 +204,9 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
   }
 }
 void Analysis::AnalysisTools::loadMomentumCalculator(Object &obj) const {
-  if (obj.isFlag(ObjectFlag::IonObject)) {
-    if (obj.isFlag(ObjectFlag::DummyObject)) return;
-    if (!obj.isFlag(ObjectFlag::WithinMasterRegion)) return;
+  if (obj.isFlag(ObjectFlag::DummyObject)) return;
+  if (!obj.isFlag(ObjectFlag::WithinMasterRegion)) return;
+  if (obj.isFlag(ObjectFlag::IonObject) || obj.isFlag(ObjectFlag::ElecObject)) {
     bool isHavingProperPz;
     const XY &pxy = calculateMomentumXY(obj);
     const double &pz = calculateMomentumZ(obj, isHavingProperPz);
@@ -219,20 +216,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Object &obj) const {
       obj.setMomentumZ(pz);
       obj.setFlag(ObjectFlag::HavingMomentumData);
     } else obj.setFlag(ObjectFlag::OutOfMasterRegion);
-  } else if (obj.isFlag(ObjectFlag::ElecObject)) {
-    if (obj.isFlag(ObjectFlag::DummyObject)) return;
-    if (!obj.isFlag(ObjectFlag::WithinMasterRegion)) return;
-    bool isHavingProperPz;
-    const XY &pxy = calculateMomentumXY(obj);
-    const double &pz = calculateMomentumZ(obj, isHavingProperPz);
-    if (isHavingProperPz) {
-      obj.setMomentumX(pxy.x);
-      obj.setMomentumY(pxy.y);
-      obj.setMomentumZ(pz);
-      obj.setFlag(ObjectFlag::HavingMomentumData);
-    } else obj.setFlag(ObjectFlag::OutOfMasterRegion);
-  } else
-    assert(false);
+  } else assert(false);
 }
 const int &Analysis::AnalysisTools::getEventNumber() const {
   return eventNumber;
