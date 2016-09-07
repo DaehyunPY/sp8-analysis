@@ -15,15 +15,20 @@ Analysis::LogWriter::LogWriter(const std::string prefix) : prefix(prefix) {
   if(!(prefix == "")) { filename += "-"; }
   filename += getTimeStamp();
   logFile.open(filename + ".log", std::fstream::out);
+#ifndef __linux__
+  // todo: fix me 
   logFile << "It is written at " << std::put_time(ptm,"%c") << std::endl;
-  logFile << "The path is set here." << std::endl;
+#endif 
   logFile << std::endl;
   return;
 }
 Analysis::LogWriter::~LogWriter() {
   std::time_t tt = std::chrono::system_clock::to_time_t (std::chrono::system_clock::now());
   std::tm * ptm = std::localtime(&tt);
+#ifndef __linux__
+  // todo: fix me 
   logFile << "It is closed at " << std::put_time(ptm,"%c") << std::endl;
+#endif 
   logFile.close();
 }
 const std::string Analysis::LogWriter::getTimeStamp() const {
