@@ -6,11 +6,14 @@ Analysis::JSONReader::JSONReader(const std::string f) {
   std::fstream fileStream;
 
 //  Open json file.
+  std::cout << "reading a JSON file... ";
   fileStream.open(f, std::fstream::in);
   if(fileStream.is_open()) {
     setFlagMembers().fileIsOpen();
   } else {
     setFlagMembers().fileIsNotExist();
+    std::cout << "fail" << std::endl;
+    std::cout << "The JSON file does not exist!" << std::endl;
     assert(false);
   }
 
@@ -23,10 +26,13 @@ Analysis::JSONReader::JSONReader(const std::string f) {
 //  Check the parse.
   if(document.HasParseError()) {
     setFlagMembers().hasParseError();
+    std::cout << "fail" << std::endl;
+    std::cout << "The JSON file has parse error!" << std::endl;
     assert(false);
   } else {
     setFlagMembers().hasNoParseError();
   }
+  std::cout << "okay" << std::endl;
   return;
 }
 Analysis::JSONReader::~JSONReader() { }
@@ -46,7 +52,7 @@ const rapidjson::Value &Analysis::JSONReader::getValue(std::string str1) const {
     found = str1.find(".");
   }
   if (!(value->HasMember(str1.c_str()))) {
-    std::cout << "Member " << tmp << " doesn't exist!" << std::endl;
+    std::cout << "Member " << tmp << " does not exist!" << std::endl;
     assert(false);
   }
   return (*value)[str1.c_str()];
