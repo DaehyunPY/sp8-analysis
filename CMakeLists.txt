@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 2.8)
 project(Analysis)
 
 ### link ROOT
@@ -70,7 +70,7 @@ elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif ()
 
 ### link resort
-link_directories("./resort")
+link_directories("${CMAKE_CURRENT_SOURCE_DIR}/resort")
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     # link_libraries(libResort64c_x86.a)
     link_libraries(libResort64c_x64.a)
