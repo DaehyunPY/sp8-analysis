@@ -215,6 +215,7 @@ void Analysis::AnalysisTools::loadMomentumCalculator(Object &obj) const {
       obj.setMomentumY(pxy.y);
       obj.setMomentumZ(pz);
       obj.setFlag(ObjectFlag::HavingMomentumData);
+      if (!obj.isMomentumAndEnergyConserved()) obj.setFlag(ObjectFlag::OutOfMasterRegion);
     } else obj.setFlag(ObjectFlag::OutOfMasterRegion);
   } else assert(false);
 }
@@ -230,8 +231,7 @@ const double Analysis::AnalysisTools::calculatePeriodOfCycle(
 void Analysis::AnalysisTools::loadMomentumCalculator(Objects &objs) const {
   const int &n = objs.getNumberOfObjects();
   for (int i = 0; i < n; i++) loadMomentumCalculator(objs.setObjectMembers(i));
-  if (!objs.isMomentumConserved()) objs.setAllFlag(ObjectFlag::OutOfMasterRegion);
-  if (!objs.isEnergyConserved()) objs.setAllFlag(ObjectFlag::OutOfMasterRegion);
+  if (!objs.isMomentumAndEnergyConserved()) objs.setAllFlag(ObjectFlag::OutOfMasterRegion);
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
                                                    const EventDataReader &reader,

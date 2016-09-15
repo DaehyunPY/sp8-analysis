@@ -28,12 +28,11 @@ class Object: public ObjectFlag {
   Object getCopy() const;
 
  private:
-  bool hasOptDxAndDy;
-  double dx;
-  double dy;
-  bool hasOptPhi;
-  double frPhi;
-  double toPhi;
+  double dx, dy;
+  double frPhi, toPhi;
+  double frPx, toPx, frPy, toPy, frPz, toPz, frPr, toPr, frE, toE;
+ public:
+  bool isMomentumAndEnergyConserved() const;
 
  public:
   void setLocationX(const double &);
@@ -42,6 +41,8 @@ class Object: public ObjectFlag {
   void setMomentumX(const double &);
   void setMomentumY(const double &);
   void setMomentumZ(const double &);
+
+ public:
   const double &getMass() const;
   const double &getCharge() const;
   const double &getMinOfTOF() const;

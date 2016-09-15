@@ -1,7 +1,7 @@
 {
-  // "working_directory": "PATH", // comment out=same path with this file
+  "working_directory": "PATH", // comment out=same path with this file
   "setup_input": {
-    "filenames": "resortLess*.root", // wildcard works
+    "filenames": "resortLess*.root",
     "tree_name": "resortedData",
     "max_number_of_ion_hits"     : 4,
     "max_number_of_electron_hits": 4
@@ -36,36 +36,69 @@
   "ions": {
     "resort_flag"   : 14, // from 0 to # (inclue #)
     "number_of_hits": 1,
-    // "momentum_conservation": [0, 0], // [au] comment out=all region
-    // "energy_conservation"  : [0, 0], // [eV] comment out=all region
+    "conservation_raw": {
+      "x": [0, 0], // [au] comment out=all region
+      "y": [0, 0], // [au] comment out=all region
+      "z": [0, 0], // [au] comment out=all region
+      "r": [0, 0], // [au] comment out=all region
+      "e": [0, 0]  // [au] comment out=all region
+    },
     "1st_hit": {
       "mass"  : 20.1797,   // parameter 186, comment out or 0=dummy object
       "charge": 1,         // parameter 183
       "dx_and_dy": [0, 0], // [mm] comment out=[0, 0]
       "TOF"   : [0, 5000], // [ns] parameter 190, 191
-      "phi"   : [0, 180]   // [degree] comment out =[0, 180]
+      "phi"   : [0, 180],  // [degree] comment out =[0, 180]
+      "conservation_raw": {
+        "x": [0, 0], // [au] comment out=all region
+        "y": [0, 0], // [au] comment out=all region
+        "z": [0, 0], // [au] comment out=all region
+        "r": [0, 0], // [au] comment out=all region
+        "e": [0, 0]  // [au] comment out=all region
+      }
     },
     "2nd_hit": {
       "mass"  : 83.8,      // parameter 187, comment out or 0=dummy object
       "charge": 1,         // parameter 184
       "dx_and_dy": [0, 0], // [mm] comment out=[0, 0]
       "TOF"   : [0, 5000], // [ns] parameter 192, 193
-      "phi"   : [0, 180]   // [degree] comment out =[0, 180]
+      "phi"   : [0, 180],  // [degree] comment out =[0, 180]
+      "conservation_raw": {
+        "x": [0, 0], // [au] comment out=all region
+        "y": [0, 0], // [au] comment out=all region
+        "z": [0, 0], // [au] comment out=all region
+        "r": [0, 0], // [au] comment out=all region
+        "e": [0, 0]  // [au] comment out=all region
+      }
     },
     "3rd_hit": {
       "mass"  : 83.8,      // parameter 188, comment out or 0=dummy object
       "charge": 1,         // parameter 185
       "dx_and_dy": [0, 0], // [mm] comment out=[0, 0]
       "TOF"   : [0, 5000], // [ns] parameter 194, 195
-      "phi"   : [0, 180]   // [degree] comment out =[0, 180]
+      "phi"   : [0, 180],  // [degree] comment out =[0, 180]
+      "conservation_raw": {
+        "x": [0, 0], // [au] comment out=all region
+        "y": [0, 0], // [au] comment out=all region
+        "z": [0, 0], // [au] comment out=all region
+        "r": [0, 0], // [au] comment out=all region
+        "e": [0, 0]  // [au] comment out=all region
+      }
     },
     "4th_hit": {
       "mass"  : 83.8,      // parameter 264, comment out or 0=dummy object
       "charge": 1,         // parameter 270
       "dx_and_dy": [0, 0], // [mm] comment out=[0, 0]
       "TOF"   : [0, 5000], // [ns] parameter 265, 266
-      "phi"   : [0, 180]   // [degree] comment out =[0, 180]
-    },
+      "phi"   : [0, 180],  // [degree] comment out =[0, 180]
+      "conservation_raw": {
+        "x": [0, 0], // [au] comment out=all region
+        "y": [0, 0], // [au] comment out=all region
+        "z": [0, 0], // [au] comment out=all region
+        "r": [0, 0], // [au] comment out=all region
+        "e": [0, 0]  // [au] comment out=all region
+      }
+    }
   },
   "electron_parameters": {
     // "type": 0, // comment out or 0=default type, 2=legacy electron type
@@ -80,9 +113,14 @@
   "electrons": {
     "resort_flag"   : 14, // from 0 to # (inclue #)
     "number_of_hits": 1,
-    // "momentum_conservation": [0, 0], // [au] comment out=all region
-    // "energy_conservation"  : [0, 0], // [eV] comment out=all region
     "TOF": [20, 45], // [ns] parameter 225, 244
-    "phi": [0, 180]  // [degree] comment out =[0, 180]
+    "phi": [0, 180], // [degree] comment out =[0, 180]
+    "conservation_raw": {
+      "x": [0, 0], // [au] comment out=all region
+      "y": [0, 0], // [au] comment out=all region
+      "z": [0, 0], // [au] comment out=all region
+      "r": [0, 0], // [au] comment out=all region
+      "e": [0, 0]  // [au] comment out=all region
+    }
   }
 }

@@ -487,16 +487,15 @@ Analysis::Objects::Objects(ObjsType tp,
   if (tp == ions) {
     masterNumOfHits = reader.getIntAt(prefix+"number_of_hits");
     assert(0 <= masterNumOfHits && masterNumOfHits <= maxNumOfHits);
-    ppObject = new Object *[maxNumOfHits]{nullptr};
+    ppObject = new Object *[maxNumOfHits];
     for (int i = 0; i < masterNumOfHits; i++)
-      ppObject[i] = new Object(ObjectFlag::IonObject,
-                               reader, prefix + getStrNum(i) + "_hit.");
+      ppObject[i] = new Object(ObjectFlag::IonObject, reader, prefix + getStrNum(i) + "_hit.");
     for (int i = masterNumOfHits; i < maxNumOfHits; i++)
       ppObject[i] = new Object(ObjectFlag::DummyObject, ObjectFlag::IonObject);
   } else if (tp == elecs) {
     masterNumOfHits = reader.getIntAt(prefix+"number_of_hits");
     assert(0 <= masterNumOfHits && masterNumOfHits <= maxNumOfHits);
-    ppObject = new Object *[maxNumOfHits]{nullptr};
+    ppObject = new Object *[maxNumOfHits];
     for (int i = 0; i < masterNumOfHits; i++)
       ppObject[i] = new Object(ObjectFlag::ElecObject, reader, prefix);
     for (int i = masterNumOfHits; i < maxNumOfHits; i++)
@@ -504,24 +503,24 @@ Analysis::Objects::Objects(ObjsType tp,
   } else {
     assert(false);
   }
-  if (reader.hasMember(prefix+"momentum_conservation")) {
-    isThrowingObjsMomentumIsNotConserved = true;
-    p0 = kUnit.readAuMomentum(reader.getDoubleAt(prefix+"momentum_conservation", 0));
-    p1 = kUnit.readAuMomentum(reader.getDoubleAt(prefix+"momentum_conservation", 1));
-  } else {
-    isThrowingObjsMomentumIsNotConserved = false;
-    p0 = 0;
-    p1 = 0;
-  }
-  if (reader.hasMember(prefix+"energy_conservation")) {
-    isThrowingObjsEnergyIsNotConserved = true;
-    e0 = kUnit.readElectronVolt(reader.getDoubleAt(prefix+"energy_conservation", 0));
-    e1 = kUnit.readElectronVolt(reader.getDoubleAt(prefix+"energy_conservation", 1));
-  } else {
-    isThrowingObjsEnergyIsNotConserved = false;
-    e0 = 0;
-    e1 = 0;
-  }
+  auto read2DoublesIfItIs = [](const JSONReader &rd, double (*unit)(double)) {
+    return [&rd, unit](const std::string pos, double &v0, double &v1) {
+      if (rd.hasMember(pos)) {
+        v0 = unit(rd.getDoubleAt(pos, 0));
+        v1 = unit(rd.getDoubleAt(pos, 1));
+      } else {
+        v0 = 0;
+        v1 = 0;
+      }
+    };
+  };
+  auto readAt = read2DoublesIfItIs(reader, [&](double v)->double{ return kUnit.readAuMomentum(v); });
+  const auto str = "conservation_raw.";
+  readAt(prefix + str + "x", frPx, toPx);
+  readAt(prefix + str + "y", frPy, toPy);
+  readAt(prefix + str + "z", frPz, toPz);
+  readAt(prefix + str + "r", frPr, toPr);
+  readAt(prefix + str + "e", frE, toE);
 }
 const std::string Analysis::Objects::getStrNum(int i) const {
   i += 1;
@@ -537,24 +536,23 @@ const std::string Analysis::Objects::getStrNum(int i) const {
     else { return str + "th"; }
   }
 }
-bool Analysis::Objects::isMomentumConserved() const {
-  if (!isThrowingObjsMomentumIsNotConserved) return true;
-  if (areAllFlag(ObjectFlag::HavingMomentumData)) {
-    double p = getMomentum();
-    return (p0 <= p) && (p <= p1);
-  } else {
-    return false;
-  }
+bool Analysis::Objects::isMomentumAndEnergyConserved() const {
+  auto isBtw = [](double v, double fr, double to) {
+      if (fr == 0 && to == 0) return true;
+      else return fr <= v && v <= to;
+  };
+  auto isValidPx = [=](double p) { return isBtw(p, frPx, toPx); };
+  auto isValidPy = [=](double p) { return isBtw(p, frPy, toPy); };
+  auto isValidPz = [=](double p) { return isBtw(p, frPz, toPz); };
+  auto isValidPr = [=](double p) { return isBtw(p, frPr, toPr); };
+  auto isValidE = [=](double e) { return isBtw(e, frE, toE); };
+  return isValidPx(getMomentumX())
+         && isValidPy(getMomentumY())
+         && isValidPz(getMomentumZ())
+         && isValidPr(getMomentum())
+         && isValidE(getEnergy());
 }
-bool Analysis::Objects::isEnergyConserved() const {
-  if (!isThrowingObjsEnergyIsNotConserved) return true;
-  if (areAllFlag(ObjectFlag::HavingMomentumData)) {
-    double e = getEnergy();
-    return (e0 <= e) && (e <= e1);
-  } else {
-    return false;
-  }
-}
+
 double *const Analysis::Objects::outputCosPDirX() const {
   if (areAllFlag(ObjectFlag::HavingMomentumData)) return new double(cos(getMotionalDirectionX()));
   return nullptr;

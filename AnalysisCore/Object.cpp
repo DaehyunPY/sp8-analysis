@@ -19,7 +19,7 @@ Analysis::Object::Object(const FlagName f,
 		  mass = kUnit.readAtomicMass(m);
 		  charge = kUnit.readElementaryCharge(q);
 	} else assert(false);
-  } else if (f == ElecObject) {
+  } else { // ElecObject
 	  setFlag(RealObject);
 	  mass = kUnit.readElectronRestMass(1e0);
 	  charge = kUnit.readElementaryCharge(1e0);
@@ -29,24 +29,28 @@ Analysis::Object::Object(const FlagName f,
   assert(0e0 <= t0 && t0 <= t1);
   minTOF = kUnit.readNanoSec(t0);
   maxTOF = kUnit.readNanoSec(t1);
-  if (reader.hasMember(prefix+"dx_and_dy")) {
-    hasOptDxAndDy = true;
-    dx = kUnit.readMilliMeter(reader.getDoubleAt(prefix+"dx_and_dy", 0));
-    dy = kUnit.readMilliMeter(reader.getDoubleAt(prefix+"dx_and_dy", 1));
-  } else {
-    hasOptDxAndDy = false;
-    dx = 0;
-    dy = 0;
-  }
-  if (reader.hasMember(prefix+"phi")) {
-    hasOptPhi = true;
-    frPhi = kUnit.readDegree(reader.getDoubleAt(prefix+"phi", 0));
-    toPhi = kUnit.readDegree(reader.getDoubleAt(prefix+"phi", 1));
-  } else {
-    hasOptPhi = false;
-    frPhi = 0;
-    toPhi = 0;
-  }
+
+  // read options
+  auto read2DoublesIfItIs = [](const JSONReader &rd, double (*unit)(double)) {
+    return [&rd, unit](const std::string pos, double &v0, double &v1) {
+      if (rd.hasMember(pos)) {
+        v0 = unit(rd.getDoubleAt(pos, 0));
+        v1 = unit(rd.getDoubleAt(pos, 1));
+      } else {
+        v0 = 0;
+        v1 = 0;
+      }
+    };
+  };
+  auto readAt = read2DoublesIfItIs(reader, [&](double v)->double{ return kUnit.readAuMomentum(v); });
+  readAt(prefix + "dx_and_dy", dx, dy);
+  readAt(prefix + "phi", frPhi, toPhi);
+  const auto str = "conservation_raw.";
+  readAt(prefix + str + "x", frPx, toPx);
+  readAt(prefix + str + "y", frPy, toPy);
+  readAt(prefix + str + "z", frPz, toPz);
+  readAt(prefix + str + "r", frPr, toPr);
+  readAt(prefix + str + "e", frE, toE);
   resetEventData();
   return;
 }
@@ -62,13 +66,13 @@ Analysis::Object::Object(const FlagName f1, const FlagName f2,
     charge= 0;
     minTOF = 0;
     maxTOF = 0;
-  } else if (f1 == RealObject) {
+  } else { // RealObject
     if (f2 == IonObject) {
       assert(m > 0e0);
       assert(q > 0e0);
       mass = kUnit.readAtomicMass(m);
       charge = kUnit.readElementaryCharge(q);
-    } else if (f2 == ElecObject) {
+    } else { // ElecObject
       mass = kUnit.readElectronRestMass(1);
       charge = kUnit.readElementaryCharge(1);
     }
@@ -76,12 +80,20 @@ Analysis::Object::Object(const FlagName f1, const FlagName f2,
     minTOF = kUnit.readNanoSec(t0);
     maxTOF = kUnit.readNanoSec(t1);
   }
-  hasOptDxAndDy = false;
   dx = 0;
   dy = 0;
-  hasOptPhi = false;
   frPhi = 0;
   toPhi = 0;
+  frPx = 0;
+  toPx = 0;
+  frPy = 0;
+  toPy = 0;
+  frPz = 0;
+  toPz = 0;
+  frPr = 0;
+  toPr = 0;
+  frE = 0;
+  toE = 0;
   resetEventData();
   return;
 }
@@ -97,18 +109,16 @@ void Analysis::Object::resetEventData() {
   return;
 }
 void Analysis::Object::setLocationX(const double &x) {
-  locationX = x;
-  if (hasOptDxAndDy) locationX += dx;
+  locationX = x + dx;
   return;
 }
 void Analysis::Object::setLocationY(const double &y) {
-  locationY = y;
-  if (hasOptDxAndDy) locationY += dy;
+  locationY = y + dy;
   return;
 }
 void Analysis::Object::setTOF(const double &t) {
   TOF = t;
-  if (isFlag(DummyObject) && minTOF == 0e0 && maxTOF == 0e0) setFlag(WithinMasterRegion);
+  if (isFlag(DummyObject) && minTOF == 0 && maxTOF == 0) setFlag(WithinMasterRegion);
   else if (minTOF <= TOF && TOF <= maxTOF) setFlag(WithinMasterRegion);
   else setFlag(OutOfMasterRegion);
 }
@@ -122,7 +132,7 @@ void Analysis::Object::setMomentumY(const double &py) {
 }
 void Analysis::Object::setMomentumZ(const double &pz) {
   momentumZ = pz;
-  if (hasOptPhi) {
+  if (!(frPhi==0 && toPhi==0)) {
     const double phi = getMotionalDirectionZ();
     if (!(frPhi <= phi && phi <= toPhi)) setFlag(OutOfMasterRegion);
   }
@@ -345,6 +355,22 @@ double *const Analysis::Object::outputCosPDirY() const {
   if (isFlag(HavingMomentumData))
     return new double(cos(getMotionalDirectionY()));
   return nullptr;
+}
+bool Analysis::Object::isMomentumAndEnergyConserved() const {
+    auto isBtw = [](double v, double fr, double to) {
+      if (fr == 0 && to == 0) return true;
+      else return fr <= v && v <= to;
+    };
+    auto isValidPx = [=](double p) { return isBtw(p, frPx, toPx); };
+    auto isValidPy = [=](double p) { return isBtw(p, frPy, toPy); };
+    auto isValidPz = [=](double p) { return isBtw(p, frPz, toPz); };
+    auto isValidPr = [=](double p) { return isBtw(p, frPr, toPr); };
+    auto isValidE = [=](double e) { return isBtw(e, frE, toE); };
+    return isValidPx(getMomentumX())
+        && isValidPy(getMomentumY())
+        && isValidPz(getMomentumZ())
+        && isValidPr(getMomentum())
+        && isValidE(getEnergy());
 }
 
 

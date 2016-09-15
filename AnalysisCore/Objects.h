@@ -22,31 +22,22 @@ class Objects {
   const int getNumberOfDeadDummyObjects() const;
   const int getNumberOfDeadRealOrDummyObjects() const;
  public:
-  enum ObjsType {
-    none, ions, elecs
-  };
+  enum ObjsType { none, ions, elecs };
  private:
   const ObjsType type;
  protected:
   void setObject(const int &, Object &);
   void setDummyObject(const int &, Object &);
  public:
-  Objects(ObjsType tp,
-          const int maxNum,
-          const JSONReader &reader,
-          const std::string prefix="");
+  Objects(ObjsType tp, const int maxNum, const JSONReader &reader, const std::string prefix="");
   ~Objects();
 
  private:
-  bool isThrowingObjsMomentumIsNotConserved;
-  double p0, p1;
-  bool isThrowingObjsEnergyIsNotConserved;
-  double e0, e1;
+  double frPx, toPx, frPy, toPy, frPz, toPz, frPr, toPr, frE, toE;
  public:
-  bool isMomentumConserved() const;
-  bool isEnergyConserved() const;
+  bool isMomentumAndEnergyConserved() const;
 
- public:
+public:
   // set & reset
   Object &setObjectMembers(const int &);
   Object &setDummyObjectMembers(const int &);
@@ -70,8 +61,7 @@ class Objects {
   const double getLocationalDirectionYX() const;
   const double getSumOfTOF() const;
   const double getSumOfTOF(const int &, const int &) const;
-  const double
-  getSumOfTOF(const int &, const int &, const int &) const;
+  const double getSumOfTOF(const int &, const int &, const int &) const;
   const double getDiffOfTOF(const int &, const int &) const;
   const double getMomentumX() const;
   const double getMomentumY() const;
@@ -99,8 +89,7 @@ class Objects {
   double *const outputCOMLocDir() const;
   double *const outputTotalTOF() const;
   double *const outputSumOf2TOFs(const int i1, const int i2) const;
-  double *const
-  outputSumOf3TOFs(const int i1, const int i2, const int i3) const;
+  double *const outputSumOf3TOFs(const int i1, const int i2, const int i3) const;
   double *const outputDiffOfTOFs(const int i1, const int i2) const;
   double *const outputPX() const;
   double *const outputPY() const;
@@ -127,15 +116,10 @@ class Objects {
   const bool isDummyObject(const int &) const;
   const bool isRealObject(const int &) const;
   const bool isRealOrDummyObject(const int &) const;
-  enum OptName {
-    Real, Dummy, RealOrDummy
-  };
-  const bool areAllFlag(const ObjectFlag::FlagName flagName,
-                        const OptName optName = Real) const;
-  const bool existFlag(const ObjectFlag::FlagName flagName,
-                       const OptName optName = Real) const;
-  void
-  setAllFlag(const ObjectFlag::FlagName flagName, const OptName optName = Real);
+  enum OptName { Real, Dummy, RealOrDummy };
+  const bool areAllFlag(const ObjectFlag::FlagName flagName, const OptName optName = Real) const;
+  const bool existFlag(const ObjectFlag::FlagName flagName, const OptName optName = Real) const;
+  void setAllFlag(const ObjectFlag::FlagName flagName, const OptName optName = Real);
 
  private:
   const std::string getStrNum(int i) const;
