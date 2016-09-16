@@ -798,6 +798,15 @@ void Analysis::AnalysisRun::fillHists() {
   const double *const eE4 = pElectrons->getRealOrDummyObject(3).outputE();
   const double *const eETotal = pElectrons->outputE();
 
+  // functions
+  auto sum2doubles = [](const double *const d0, const double *const d1)->double * {
+    if(d0 && d1) return new double(*d0 + *d1);
+    else return nullptr;
+  };
+  auto sumDoubles = [=](const int n, const double *const ds[])->double *{
+    return std::accumulate(ds, ds+n, new double(0), sum2doubles);
+  };
+
   // IonImage
 #define __FILLIONIMAGE__(X) \
   if (X) { \
@@ -830,6 +839,12 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT12, iTDiff12); \
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT23, iTDiff23); \
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT34, iTDiff34); \
+  const double *const iT12[] = {iT1, iT2}; \
+  const double *const iT23[] = {iT2, iT3}; \
+  const double *const iT123[] = {iT1, iT2, iT3}; \
+  fill2d(h2_i1h2h3h3PICO_ ## X, sumDoubles(2, iT12), iT3); \
+  fill2d(h2_i2h3h4h3PICO_ ## X, sumDoubles(2, iT23), iT4); \
+  fill2d(h2_i1h2h3h4h4PICO_ ## X, sumDoubles(3, iT123), iT4); \
 }
   __FILLIONTOF__(always)
   __FILLIONTOF__(iMaster)

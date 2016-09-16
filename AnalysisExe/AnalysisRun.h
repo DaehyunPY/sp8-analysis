@@ -25,6 +25,7 @@
 #include "../Protocols/Unit.h"
 #include "../AnalysisCore/AnalysisTools.h"
 #include "../AnalysisCore/LogWriter.h"
+#include <numeric>
 
 namespace Analysis {
 class AnalysisRun: Hist {
