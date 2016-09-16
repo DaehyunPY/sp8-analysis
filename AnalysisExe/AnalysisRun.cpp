@@ -327,17 +327,16 @@ void Analysis::AnalysisRun::createHists() {
   // IonEnergy
 #define __IONENERGY__ "IonEnergy"
 #define __IONENERGY1__ "Energy [eV]", 1000, 0, 50, __IONENERGY__
-#define __IONENERGY2__ "Direction [degree]", "Energy [eV]", 360, -180, 180, 500, 0, 50, __IONENERGY__
-#define __IONENERGY3__ "Energy [eV]", "Energy [eV]", 500, 0, 50, 500, 0, 50, __IONENERGY__
+#define __IONENERGY2__ "Energy [eV]", "Energy [eV]", 500, 0, 50, 500, 0, 50, __IONENERGY__
 #define __CREATEIONENERGY__(X) \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i1hE_ ## X), __IONENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i2hE_ ## X), __IONENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i3hE_ ## X), __IONENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i4hE_ ## X), __IONENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalE_ ## X), __IONENERGY1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hE_ ## X), __IONENERGY3__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hE_ ## X), __IONENERGY3__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE_ ## X), __IONENERGY3__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hE_ ## X), __IONENERGY2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hE_ ## X), __IONENERGY2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE_ ## X), __IONENERGY2__);
   __CREATEIONENERGY__(always)
   __CREATEIONENERGY__(iMaster)
   __CREATEIONENERGY__(master)
@@ -487,13 +486,16 @@ void Analysis::AnalysisRun::createHists() {
   // ElecEnergy
 #define __ELECENERGY__ "ElecEnergy"
 #define __ELECENERGY1__ "Energy [eV]", 1000, 0, 50, __ELECENERGY__
-#define __ELECENERGY2__ "Energy [eV]", 2000, 0, 100, __ELECENERGY__
+#define __ELECENERGY2__ "Energy [eV]", "Energy [eV]", 500, 0, 50, 500, 0, 50, __ELECENERGY__
 #define __CREATEELECENERGY__(X) \
   create1d(SAME_TITLE_WITH_VALNAME(h1_e1hE_ ## X), __ELECENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_e2hE_ ## X), __ELECENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_e3hE_ ## X), __ELECENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_e4hE_ ## X), __ELECENERGY1__); \
-  create1d(SAME_TITLE_WITH_VALNAME(h1_eTotalE_ ## X), __ELECENERGY2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_eTotalE_ ## X), __ELECENERGY1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e1h2hE_ ## X), __ELECENERGY2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e2h3hE_ ## X), __ELECENERGY2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_e3h4hE_ ## X), __ELECENERGY2__);
   __CREATEELECENERGY__(always)
   __CREATEELECENERGY__(eMaster)
   __CREATEELECENERGY__(master)
@@ -1133,6 +1135,9 @@ void Analysis::AnalysisRun::fillHists() {
     fill1d(h1_e3hE_ ## X, eE3); \
     fill1d(h1_e4hE_ ## X, eE4); \
     fill1d(h1_eTotalE_ ## X, eETotal); \
+    fill2d(h2_e1h2hE_ ## X, eE1, eE2); \
+    fill2d(h2_e2h3hE_ ## X, eE2, eE3); \
+    fill2d(h2_e3h4hE_ ## X, eE3, eE4); \
   }
   __FILLELECENERGY__(always)
   __FILLELECENERGY__(eMaster)

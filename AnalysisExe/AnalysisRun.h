@@ -303,6 +303,9 @@ class AnalysisRun: Hist {
     __ELECHISTSET__(h1_e3hE),
     __ELECHISTSET__(h1_e4hE),
     __ELECHISTSET__(h1_eTotalE),
+    __ELECHISTSET__(h2_e1h2hE),
+    __ELECHISTSET__(h2_e2h3hE),
+    __ELECHISTSET__(h2_e3h4hE),
 
 #define __CORRHISTSET__(X) X ## _always, X ## _master
     // IonElecCorr
