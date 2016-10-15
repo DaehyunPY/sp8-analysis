@@ -4,6 +4,14 @@
 #include <math.h>
 
 namespace Analysis {
+
+enum UnitType {
+  None, Radian, Degree,
+  SI, MilliMeter, NanoSec, Gauss, ElectronVolt,
+  AU, AMU
+};
+static UnitType kUnitType;
+
 class Unit {
  private:
   static const double kPi;
@@ -54,6 +62,7 @@ class Unit {
   ~Unit();
 };
 static Unit kUnit;
+
 }
 
 #endif

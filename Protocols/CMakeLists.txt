@@ -7,10 +7,11 @@ elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
     # add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif ()
 set(SOURCE_FILES
-        Flag.cpp
-        Hist.cpp
-        JSONFlag.cpp
-        JSONReader.cpp
-        Unit.cpp
+        Flag.h Flag.cpp
+        Hist.h Hist.cpp
+        JSONFlag.h JSONFlag.cpp
+        JSONReader.h JSONReader.cpp
+        Unit.h Unit.cpp
+        PhysicalQuantity.h
         )
 add_library(Protocols STATIC ${SOURCE_FILES})
