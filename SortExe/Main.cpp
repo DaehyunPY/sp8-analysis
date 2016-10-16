@@ -362,8 +362,17 @@ int main(int argc, char *argv[]) {
   }
   std::cout << "ok" << std::endl;
 
-  // Change dir
-  chdir(pReader->getStringAt("working_directory").c_str());
+  // Change the working directory
+  std::string path;
+  if (pReader->hasMember("working_directory")) {
+    path = pReader->getStringAt("working_directory");
+  } else {
+    path = argv[1];
+    path = path.substr(0, path.find_last_of("/\\"));
+  }
+  std::cout << "changing path to `" << path << "'... ";
+  chdir(path.c_str());
+  std::cout << "okay" << std::endl;
   Analysis::SortRun *pRun;
 
   // Read options
@@ -371,11 +380,13 @@ int main(int argc, char *argv[]) {
   const int maxElecHits = pReader->getIntAt("maxium_of_electron_hits");
   const int maxIonHits = pReader->getIntAt("maxium_of_ion_hits");
   Analysis::SortRun::RmBunch rmBunch;
-  rmBunch.ch = pReader->getIntAt("delete_beam_bunch.electron_marker_channel");
-  rmBunch.isOn = pReader->getBoolAt("delete_beam_bunch.is_on");
-  if (rmBunch.isOn) {
-    rmBunch.region1 = pReader->getDoubleAt("delete_beam_bunch.bunch_region", 0);
-    rmBunch.region2 = pReader->getDoubleAt("delete_beam_bunch.bunch_region", 1);
+  rmBunch.ch = pReader->getIntAt("electron_marker_channel");
+  if (pReader->hasMember("remove_bunch_region")) {
+    rmBunch.isOn = true;
+    rmBunch.region1 = pReader->getDoubleAt("remove_bunch_region", 0);
+    rmBunch.region2 = pReader->getDoubleAt("remove_bunch_region", 1);
+  } else {
+    rmBunch.isOn = false;
   }
 
   // Setup LMF files
