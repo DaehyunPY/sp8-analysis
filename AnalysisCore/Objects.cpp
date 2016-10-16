@@ -503,7 +503,7 @@ Analysis::Objects::Objects(ObjsType tp,
   } else {
     assert(false);
   }
-  auto read2DoublesIfItIs = [](const JSONReader &rd, double (*unit)(double)) {
+  auto read2DoublesIfItIs = [](const JSONReader &rd, std::function<double(double)> unit) {
     return [&rd, unit](const std::string pos, double &v0, double &v1) {
       if (rd.hasMember(pos)) {
         v0 = unit(rd.getDoubleAt(pos, 0));

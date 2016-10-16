@@ -53,7 +53,12 @@
   },
   "ion_calibration_table": "IonCalibTab.txt",
   "ion_sorter": {
-    "mode": 1, // -1=detector does not exist, 0=only convert to new file format, 1=sort, 2=calibrate fu,fv,fw,w_offset, 3=generate correction tables and write them to disk
+    "mode": 
+        // -1, // detector does not exist
+        // 0, // only convert to new file format
+        1, // sort
+        // 2, // calibrate fu,fv,fw,w_offset
+        // 3, // generate correction tables and write them to disk
     "is_hexanode_used": true,
     "common_start_mode": true, // start=0, stop=1 // for TDC8HP and fADC always use 0
     "TDC_channel": { // counting starts at 1

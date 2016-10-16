@@ -546,14 +546,12 @@ int main(int argc, char *argv[]) {
     }
     std::cout << "A LMF file " << pLMFFilenames[iLMF] << " is open for reading." << std::endl;
 
+    // Setup Run
     pRun = new Analysis::SortRun("ResortLess", maxIonHits, maxElecHits);
     std::cout << "A root file is open for output." << std::endl;
-    // Setup ROOT canvases
     if (isDrawingCanvases) {
-      printf("creating ROOT canvases... ");
       if (ionSorter) pRun->createC1();
       if (elecSorter) pRun->createC2();
-      printf("ok\n");
     }
     gSystem->ProcessEvents(); // allow the system to show the histograms
 
@@ -563,6 +561,7 @@ int main(int argc, char *argv[]) {
     while (true) {
       if (pLMF->GetEventNumber() % 20000 == 1) {
         if (my_kbhit()) {
+          std::cout << "The keyboard is hit. Closing the program." << std::endl;
           theLoopIsOn = false;
           break;
         }
@@ -578,7 +577,10 @@ int main(int argc, char *argv[]) {
 
       // read one new event data block from the file:
       memset(count, 0, pLMF->number_of_channels * sizeof(int));
-      if (!pLMF->ReadNextEvent()) break;
+      if (!pLMF->ReadNextEvent()) {
+        std::cout << "Done with reading one LMF file." << std::endl;
+        break;
+      }
 
       pLMF->GetNumberOfHitsArray(count);
       //    double timestamp_s = pLMF->GetDoubleTimeStamp(); // absolute timestamp in seconds
@@ -622,6 +624,7 @@ int main(int argc, char *argv[]) {
 
         if (ionSorter->scalefactors_calibrator && ion_command >= 2) {
           if (ionSorter->scalefactors_calibrator->map_is_full_enough()) {
+            std::cout << "ionSorter: map is full enough" << std::endl;
             theLoopIsOn = false;
             break;
           }
@@ -638,7 +641,7 @@ int main(int argc, char *argv[]) {
           if (count[ionSorter->Cv1] > 0 && count[ionSorter->Cv2] > 0) {
             double u = ionSorter->fu * (tdc_ns[ionSorter->Cu1][0] - tdc_ns[ionSorter->Cu2][0]);
             double v = ionSorter->fv * (tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0]);
-            double y = (u - 2. * v) * 0.577350269; // 0.557 = 1/sqrt(3)
+            double y = (u - 2. * v) / sqrt(3.0); // 0.557 = 1/sqrt(3)
             pRun->fill2d(Analysis::SortRun::h2_ionXYRaw, u, y);
           }
         }
@@ -648,8 +651,10 @@ int main(int argc, char *argv[]) {
           if (ionSorter->use_MCP) {
             if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
           }
-          pRun->fill1d(Analysis::SortRun::h1_ionTimesumU,
-                       tdc_ns[ionSorter->Cu1][0] + tdc_ns[ionSorter->Cu2][0] - 2 * mcp);
+          const double timesum = tdc_ns[ionSorter->Cu1][0] + tdc_ns[ionSorter->Cu2][0] - 2 * mcp;
+          const double timediff = tdc_ns[ionSorter->Cu1][0] - tdc_ns[ionSorter->Cu2][0];
+          pRun->fill1d(Analysis::SortRun::h1_ionTimesumU, timesum);
+          pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffU, timediff, timesum);
         }
         if (count[ionSorter->Cv1] > 0 && count[ionSorter->Cv2] > 0) {
           pRun->fill1d(Analysis::SortRun::h1_ionV, tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0]);
@@ -657,8 +662,10 @@ int main(int argc, char *argv[]) {
           if (ionSorter->use_MCP) {
             if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
           }
-          pRun->fill1d(Analysis::SortRun::h1_ionTimesumV,
-                       tdc_ns[ionSorter->Cv1][0] + tdc_ns[ionSorter->Cv2][0] - 2 * mcp);
+          const double timesum = tdc_ns[ionSorter->Cv1][0] + tdc_ns[ionSorter->Cv2][0] - 2 * mcp;
+          const double timediff = tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0];
+          pRun->fill1d(Analysis::SortRun::h1_ionTimesumV, timesum);
+          pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffV, timediff, timesum);
         }
         if (ionSorter->use_HEX) {
           if (count[ionSorter->Cw1] > 0 && count[ionSorter->Cw2] > 0) {
@@ -667,8 +674,10 @@ int main(int argc, char *argv[]) {
             if (ionSorter->use_MCP) {
               if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
             }
-            pRun->fill1d(Analysis::SortRun::h1_ionTimesumW,
-                         tdc_ns[ionSorter->Cw1][0] + tdc_ns[ionSorter->Cw2][0] - 2 * mcp);
+            const double timesum = tdc_ns[ionSorter->Cw1][0] + tdc_ns[ionSorter->Cw2][0] - 2 * mcp;
+            const double timediff = tdc_ns[ionSorter->Cw1][0] - tdc_ns[ionSorter->Cw2][0];
+            pRun->fill1d(Analysis::SortRun::h1_ionTimesumW, timesum);
+            pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffW, timediff, timesum);
           }
         }
       }
@@ -711,6 +720,7 @@ int main(int argc, char *argv[]) {
 
         if (elecSorter->scalefactors_calibrator && elec_command >= 2) {
           if (elecSorter->scalefactors_calibrator->map_is_full_enough()) {
+            std::cout << "elecSorter: map is full enough." << std::endl;
             theLoopIsOn = false;
             break;
           }
@@ -737,8 +747,10 @@ int main(int argc, char *argv[]) {
           if (elecSorter->use_MCP) {
             if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
           }
-          pRun->fill1d(Analysis::SortRun::h1_elecTimesumU,
-                       tdc_ns[elecSorter->Cu1][0] + tdc_ns[elecSorter->Cu2][0] - 2 * mcp);
+          const double timesum = tdc_ns[elecSorter->Cu1][0] + tdc_ns[elecSorter->Cu2][0] - 2 * mcp;
+          const double timediff = tdc_ns[elecSorter->Cu1][0] - tdc_ns[elecSorter->Cu2][0];
+          pRun->fill1d(Analysis::SortRun::h1_elecTimesumU, timesum);
+          pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffU, timediff, timesum);
         }
         if (count[elecSorter->Cv1] > 0 && count[elecSorter->Cv2] > 0) {
           pRun->fill1d(Analysis::SortRun::h1_elecV, tdc_ns[elecSorter->Cv1][0] - tdc_ns[elecSorter->Cv2][0]);
@@ -746,8 +758,10 @@ int main(int argc, char *argv[]) {
           if (elecSorter->use_MCP) {
             if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
           }
-          pRun->fill1d(Analysis::SortRun::h1_elecTimesumV,
-                       tdc_ns[elecSorter->Cv1][0] + tdc_ns[elecSorter->Cv2][0] - 2 * mcp);
+          const double timesum = tdc_ns[elecSorter->Cv1][0] + tdc_ns[elecSorter->Cv2][0] - 2 * mcp;
+          const double timediff = tdc_ns[elecSorter->Cv1][0] - tdc_ns[elecSorter->Cv2][0];
+          pRun->fill1d(Analysis::SortRun::h1_elecTimesumV, timesum);
+          pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffV, timediff, timesum);
         }
         if (elecSorter->use_HEX) {
           if (count[elecSorter->Cw1] > 0 && count[elecSorter->Cw2] > 0) {
@@ -756,8 +770,10 @@ int main(int argc, char *argv[]) {
             if (elecSorter->use_MCP) {
               if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
             }
-            pRun->fill1d(Analysis::SortRun::h1_elecTimesumW,
-                         tdc_ns[elecSorter->Cw1][0] + tdc_ns[elecSorter->Cw2][0] - 2 * mcp);
+            const double timesum = tdc_ns[elecSorter->Cw1][0] + tdc_ns[elecSorter->Cw2][0] - 2 * mcp;
+            const double timediff = tdc_ns[elecSorter->Cw1][0] - tdc_ns[elecSorter->Cw2][0];
+            pRun->fill1d(Analysis::SortRun::h1_elecTimesumW, timesum);
+            pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffW, timediff, timesum);
           }
         }
       }
@@ -1037,7 +1053,9 @@ int main(int argc, char *argv[]) {
   while (true) {
     gSystem->Sleep(5);
     gSystem->ProcessEvents();
-    if (my_kbhit()) break;
+    if (my_kbhit()) {
+      break;
+    }
   }
 
   // Finish the program
