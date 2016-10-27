@@ -23,6 +23,7 @@ class Objects {
   const int getNumberOfDeadRealOrDummyObjects() const;
  public:
   enum ObjsType { none, ions, elecs };
+  bool isType(const ObjsType objsType) const;
  private:
   const ObjsType type;
  protected:

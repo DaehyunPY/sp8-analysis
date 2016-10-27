@@ -134,3 +134,7 @@ const int Analysis::JSONReader::getListSizeAt(const std::string str) const {
 		return -1;
 	}
 }
+bool Analysis::JSONReader::getBoolAtIfItIs(const std::string str, const bool def) const {
+  if (hasMember(str)) return getBoolAt(str);
+  else return def;
+}

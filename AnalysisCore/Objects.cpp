@@ -561,3 +561,6 @@ double *const Analysis::Objects::outputCosPDirY() const {
   if (areAllFlag(ObjectFlag::HavingMomentumData)) return new double(cos(getMotionalDirectionY()));
   return nullptr;
 }
+bool Analysis::Objects::isType(const Analysis::Objects::ObjsType objsType) const {
+  return type==objsType;
+}

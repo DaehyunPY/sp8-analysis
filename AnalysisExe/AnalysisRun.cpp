@@ -13,45 +13,50 @@ Analysis::AnalysisRun::AnalysisRun(const Analysis::JSONReader &configReader)
 
   // Setup input ROOT files
   std::cout << "Setting up input root files... ";
-  pEventChain =
-      new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
+  pEventChain = new TChain(configReader.getStringAt("setup_input.tree_name").c_str());
   pEventChain->Add(configReader.getStringAt("setup_input.filenames").c_str());
   pLogWriter->write() << "Filenames: "
                       << configReader.getStringAt("setup_input.filenames").c_str()
                       << std::endl;
-  maxNumOfIonHits =
-      configReader.getIntAt("setup_input.max_number_of_ion_hits");
-  maxNumOfElecHits =
-      configReader.getIntAt("setup_input.max_number_of_electron_hits");
-  pEventReader =
-      new Analysis::EventDataReader(maxNumOfIonHits, maxNumOfElecHits);
-  char ch[2];
-  for (int i = 0; i < maxNumOfIonHits; i++) {
-    for (std::string str : {"IonX", "IonY", "IonT"}) {
-      sprintf(ch, "%01d", i);
-      pEventChain->SetBranchAddress((str + ch).c_str(),
-                                    &(pEventReader->setEventDataAt(i,
-                                                                   str + ch)));
+  maxNumOfIonHits = configReader.getIntAt("setup_input.max_number_of_ion_hits");
+  maxNumOfElecHits = configReader.getIntAt("setup_input.max_number_of_electron_hits");
+  pEventReader = new Analysis::EventDataReader(maxNumOfIonHits, maxNumOfElecHits);
+  if (configReader.getBoolAtIfItIs("setup_input.is_having_number_of_hits", false)) {
+    for (EventDataReader::TreeName name : {EventDataReader::IonNum,
+                                           EventDataReader::ElecNum}) {
+      pEventChain->SetBranchAddress(
+          EventDataReader::getTreeName(name).c_str(),
+          &(pEventReader->setNumObjs(name)));
     }
-    for (std::string str : {"IonFlag"}) {
-      sprintf(ch, "%01d", i);
-      pEventChain->SetBranchAddress((str + ch).c_str(),
-                                    &(pEventReader->setFlagDataAt(i,
-                                                                  str + ch)));
+  }
+  for (int i = 0; i < maxNumOfIonHits; i++) {
+    for (EventDataReader::TreeName name : {EventDataReader::IonX,
+                                           EventDataReader::IonY,
+                                           EventDataReader::IonT}) {
+      pEventChain->SetBranchAddress(
+          EventDataReader::getTreeName(name, i).c_str(),
+          &(pEventReader->setEventDataAt(name, i)));
+    }
+    {
+      EventDataReader::TreeName name = EventDataReader::IonFlag;
+      pEventChain->SetBranchAddress(
+          EventDataReader::getTreeName(name, i).c_str(),
+          &(pEventReader->setFlagDataAt(name, i)));
     }
   }
   for (int i = 0; i < maxNumOfElecHits; i++) {
-    for (std::string str : {"ElecX", "ElecY", "ElecT"}) {
-      sprintf(ch, "%01d", i);
-      pEventChain->SetBranchAddress((str + ch).c_str(),
-                                    &(pEventReader->setEventDataAt(i,
-                                                                   str + ch)));
+    for (EventDataReader::TreeName name : {EventDataReader::ElecX,
+                                           EventDataReader::ElecY,
+                                           EventDataReader::ElecT}) {
+      pEventChain->SetBranchAddress(
+          EventDataReader::getTreeName(name, i).c_str(),
+          &(pEventReader->setEventDataAt(name, i)));
     }
-    for (std::string str : {"ElecFlag"}) {
-      sprintf(ch, "%01d", i);
-      pEventChain->SetBranchAddress((str + ch).c_str(),
-                                    &(pEventReader->setFlagDataAt(i,
-                                                                  str + ch)));
+    {
+      EventDataReader::TreeName name = EventDataReader::ElecNum;
+      pEventChain->SetBranchAddress(
+          EventDataReader::getTreeName(name, i).c_str(),
+          &(pEventReader->setFlagDataAt(name, i)));
     }
   }
   std::cout << "ok" << std::endl;

@@ -4,7 +4,8 @@
     "filenames": "resortLess*.root",
     "tree_name": "resortedData",
     "max_number_of_ion_hits"     : 4,
-    "max_number_of_electron_hits": 4
+    "max_number_of_electron_hits": 4,
+    "is_having_number_of_hits"   : true
   },
   "setup_output": {
     "filename_prefix": "Example",

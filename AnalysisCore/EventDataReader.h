@@ -7,23 +7,46 @@
 
 #include <assert.h>
 #include <string>
+#include <vector>
 
 namespace Analysis {
 class EventDataReader {
  private:
-  const int maxNumOfIonHits;
-  const int maxNumOfElecHits;
-  double *pEventData;
-  int *pFlagData;
-  const int getAdressAt(const int i, const std::string str) const;
+  const int maxIons, maxElecs;
+  const int intDum=-1;
+  const double doubleDum=-1e9;
+  int numIons, numElecs;
+  std::vector<double> eventData;
+  std::vector<int> flagData;
+ public:
+  EventDataReader(const int maxNumOfIons, const int maxNumOfElecs);
+  ~EventDataReader();
+  void reset();
 
  public:
-  EventDataReader(const int iNum, const int eNum);
-  ~EventDataReader();
-  double &setEventDataAt(const int i, std::string str);
-  int &setFlagDataAt(const int i, std::string str);
-  const double &getEventDataAt(const int i, const std::string str) const;
-  const int &getFlagDataAt(const int i, const std::string str) const;
+  enum TreeName{
+    IonNum, IonT, IonX, IonY, IonFlag,
+    ElecNum, ElecT, ElecX, ElecY, ElecFlag
+  };
+  double &setEventDataAt(const TreeName name, const int i);
+  int &setFlagDataAt(const TreeName name, const int i);
+  int &setNumObjs(const TreeName name);
+  double getEventDataAt(const TreeName name, const int i) const;
+  int getFlagDataAt(const TreeName name, const int i) const;
+  int getNumObjs(const TreeName name) const;
+  static std::string getTreeName(const TreeName name, const int i=-1);
+
+ private:
+  int getAdressAt(const TreeName name, const int i) const;
+  bool returnDum(const TreeName name, const int i) const;
+  bool isAnyIonTree(const TreeName name) const;
+  bool isAnyElecTree(const TreeName name) const;
+  bool isAnyNumTree(const TreeName name) const;
+  bool isAnyEventTree(const TreeName name) const;
+  bool isAnyTTree(const TreeName name) const;
+  bool isAnyXTree(const TreeName name) const;
+  bool isAnyYTree(const TreeName name) const;
+  bool isAnyFlagTree(const TreeName name) const;
 };
 }
 

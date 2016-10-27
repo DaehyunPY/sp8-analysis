@@ -238,22 +238,37 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
                                                    const int &iHit) const {
   if (obj.isFlag(ObjectFlag::IonObject))
     loadEventDataInputer(obj,
-                         kUnit.readMilliMeter(reader.getEventDataAt(iHit, "IonX")),
-                         kUnit.readMilliMeter(reader.getEventDataAt(iHit, "IonY")),
-                         kUnit.readNanoSec(reader.getEventDataAt(iHit, "IonT")),
-                         reader.getFlagDataAt(iHit, "IonFlag"));
+                         kUnit.readMilliMeter(reader.getEventDataAt(EventDataReader::IonX, iHit)),
+                         kUnit.readMilliMeter(reader.getEventDataAt(EventDataReader::IonY, iHit)),
+                         kUnit.readNanoSec(reader.getEventDataAt(EventDataReader::IonT, iHit)),
+                         reader.getFlagDataAt(EventDataReader::IonFlag, iHit));
   else if (obj.isFlag(ObjectFlag::ElecObject))
     loadEventDataInputer(obj,
-                         kUnit.readMilliMeter(reader.getEventDataAt(iHit, "ElecX")),
-                         kUnit.readMilliMeter(reader.getEventDataAt(iHit, "ElecY")),
-                         kUnit.readNanoSec(reader.getEventDataAt(iHit, "ElecT")),
-                         reader.getFlagDataAt(iHit, "ElecFlag"));
+                         kUnit.readMilliMeter(reader.getEventDataAt(EventDataReader::ElecX, iHit)),
+                         kUnit.readMilliMeter(reader.getEventDataAt(EventDataReader::ElecY, iHit)),
+                         kUnit.readNanoSec(reader.getEventDataAt(EventDataReader::ElecT, iHit)),
+                         reader.getFlagDataAt(EventDataReader::ElecFlag, iHit));
 }
 void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Objects &objs,
                                                    const EventDataReader &reader) const {
-  const int &m = objs.getNumberOfRealOrDummyObjects();
-  for (int i = 0; i < m; i++)
+  // todo: need to review
+  const int m = objs.getNumberOfRealOrDummyObjects();
+  for (int i = 0; i < m; i++) {
     loadEventDataInputer(objs.setRealOrDummyObjectMembers(i), reader, i);
+  }
+  if (objs.isType(Objects::ions)) {
+    const int n = reader.getNumObjs(EventDataReader::IonNum);
+    for (int i=n; i<m; i++) {
+      objs.setRealOrDummyObjectMembers(i).setFlag(Object::Dead);
+      objs.setRealOrDummyObjectMembers(i).setFlag(ObjectFlag::HavingNotProperData);
+    }
+  } else if (objs.isType(Objects::elecs)) {
+    const int n = reader.getNumObjs(EventDataReader::ElecNum);
+    for (int i=n; i<m; i++) {
+      objs.setRealOrDummyObjectMembers(i).setFlag(Object::Dead);
+      objs.setRealOrDummyObjectMembers(i).setFlag(ObjectFlag::HavingNotProperData);
+    }
+  }
 }
 const double Analysis::AnalysisTools::calculateFrequencyOfCycle(const double &m,
                                                                 const double &q,
