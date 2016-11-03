@@ -53,7 +53,7 @@ Analysis::AnalysisRun::AnalysisRun(const Analysis::JSONReader &configReader)
           &(pEventReader->setEventDataAt(name, i)));
     }
     {
-      EventDataReader::TreeName name = EventDataReader::ElecNum;
+      EventDataReader::TreeName name = EventDataReader::ElecFlag;
       pEventChain->SetBranchAddress(
           EventDataReader::getTreeName(name, i).c_str(),
           &(pEventReader->setFlagDataAt(name, i)));
