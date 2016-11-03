@@ -262,9 +262,18 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPYZ_ ## X), __IONMOMENTUM2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPZX_ ## X), __IONMOMENTUM2__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalP_ ## X), __IONMOMENTUM3__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPX_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPZ_ ## X), __IONMOMENTUM2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hP_ ## X), __IONMOMENTUM4__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPX_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPZ_ ## X), __IONMOMENTUM2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hP_ ## X), __IONMOMENTUM4__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP_ ## X), __IONMOMENTUM4__); 
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPX_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPZ_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP_ ## X), __IONMOMENTUM4__);
   __CREATEIONMOMENTUM__(always)
   __CREATEIONMOMENTUM__(iMaster)
   __CREATEIONMOMENTUM__(master)
@@ -915,8 +924,17 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_iTotalPYZ_ ## X, iPYTotal, iPZTotal); \
     fill2d(h2_iTotalPZX_ ## X, iPZTotal, iPXTotal); \
     fill1d(h1_iTotalP_ ## X, iPTotal); \
+    fill2d(h2_i1h2hPX_ ## X, iPX1, iPX2); \
+    fill2d(h2_i1h2hPY_ ## X, iPY1, iPY2); \
+    fill2d(h2_i1h2hPZ_ ## X, iPZ1, iPZ2); \
     fill2d(h2_i1h2hP_ ## X, iP1, iP2); \
+    fill2d(h2_i2h3hPX_ ## X, iPX2, iPX3); \
+    fill2d(h2_i2h3hPY_ ## X, iPY2, iPY3); \
+    fill2d(h2_i2h3hPZ_ ## X, iPZ2, iPZ3); \
     fill2d(h2_i2h3hP_ ## X, iP2, iP3); \
+    fill2d(h2_i3h4hPX_ ## X, iPX3, iPX4); \
+    fill2d(h2_i3h4hPY_ ## X, iPY3, iPY4); \
+    fill2d(h2_i3h4hPZ_ ## X, iPZ3, iPZ4); \
     fill2d(h2_i3h4hP_ ## X, iP3, iP4); \
   }
   __FILLIONMOMENTUM__(always)

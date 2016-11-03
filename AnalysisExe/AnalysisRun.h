@@ -125,8 +125,17 @@ class AnalysisRun: Hist {
     __IONHISTSET__(h2_iTotalPYZ),
     __IONHISTSET__(h2_iTotalPZX),
     __IONHISTSET__(h1_iTotalP),
+    __IONHISTSET__(h2_i1h2hPX),
+    __IONHISTSET__(h2_i1h2hPY),
+    __IONHISTSET__(h2_i1h2hPZ),
     __IONHISTSET__(h2_i1h2hP),
+    __IONHISTSET__(h2_i2h3hPX),
+    __IONHISTSET__(h2_i2h3hPY),
+    __IONHISTSET__(h2_i2h3hPZ),
     __IONHISTSET__(h2_i2h3hP),
+    __IONHISTSET__(h2_i3h4hPX),
+    __IONHISTSET__(h2_i3h4hPY),
+    __IONHISTSET__(h2_i3h4hPZ),
     __IONHISTSET__(h2_i3h4hP),
 
     // IonMomentumAngDist
