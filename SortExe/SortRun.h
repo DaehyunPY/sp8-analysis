@@ -93,7 +93,7 @@ class SortRun: public Hist {
     h2_elec2hitXFish, h2_elec2hitYFish, h2_elec2hitXY,
     h2_elec3hitXFish, h2_elec3hitYFish, h2_elec3hitXY,
     h2_elec4hitXFish, h2_elec4hitYFish, h2_elec4hitXY,
-    h2_elec1hit2hitPIPICO, h2_elec2hit3hitPIPICO, h2_elec3hit4hitPIPICO,
+    h2_elec1hit2hitPEPECO, h2_elec2hit3hitPEPECO, h2_elec3hit4hitPEPECO,
     h1_ionTimesumU, h1_ionU, h2_ionTimesumDiffU,
     h1_ionTimesumV, h1_ionV, h2_ionTimesumDiffV,
     h1_ionTimesumW, h1_ionW, h2_ionTimesumDiffW,
