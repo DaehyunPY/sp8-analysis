@@ -130,9 +130,9 @@ void Analysis::SortRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec2hit3hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec3hit4hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
 
-#define __TIMESUM_TITLE_BIN_REGION__ "Time [ns]", 5000, -250, 250
+#define __TIMESUM_TITLE_BIN_REGION__ "Time [ns]", 1000, -25, 25
 #define __TIMEDELAY_TITLE_BIN_REGION__ "Time [ns]", 1000, -250, 250
-#define __TIMESUMDIFF_TITLE_BIN_REGION__ "Time diff [ns]", "Time sum [ns]", 1000, -250, 250, 1000, -250, 250
+#define __TIMESUMDIFF_TITLE_BIN_REGION__ "Time diff [ns]", "Time sum [ns]", 500, -250, 250, 500, -25, 25
 #define __AFTERCALIB_TITLE_BIN_REGION__(X) "Time1 [ns]", "Time2 [ns]", X*2, -X, X, X*2, -X, X
   create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumU), __TIMESUM_TITLE_BIN_REGION__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumV), __TIMESUM_TITLE_BIN_REGION__);
