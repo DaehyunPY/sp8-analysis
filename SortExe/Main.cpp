@@ -875,7 +875,7 @@ int main(int argc, char *argv[]) {
           pRun->fill2d(Analysis::SortRun::h2_elec2hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_elec2hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_elec2hitXY, x, y);
-          pRun->fill2d(Analysis::SortRun::h2_elec1hit2hitPIPICO, tt, t);
+          pRun->fill2d(Analysis::SortRun::h2_elec1hit2hitPEPECO, tt, t);
         }
         if(number_of_electrons >= 3) {
           double &x = elecSorter->output_hit_array[2]->x;
@@ -885,7 +885,7 @@ int main(int argc, char *argv[]) {
           pRun->fill2d(Analysis::SortRun::h2_elec3hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_elec3hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_elec3hitXY, x, y);
-          pRun->fill2d(Analysis::SortRun::h2_elec2hit3hitPIPICO, tt, t);
+          pRun->fill2d(Analysis::SortRun::h2_elec2hit3hitPEPECO, tt, t);
         }
         if(number_of_electrons >= 4) {
           double &x = elecSorter->output_hit_array[3]->x;
@@ -895,7 +895,7 @@ int main(int argc, char *argv[]) {
           pRun->fill2d(Analysis::SortRun::h2_elec4hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_elec4hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_elec4hitXY, x, y);
-          pRun->fill2d(Analysis::SortRun::h2_elec3hit4hitPIPICO, tt, t);
+          pRun->fill2d(Analysis::SortRun::h2_elec3hit4hitPEPECO, tt, t);
         }
         Analysis::SortRun::DataSet *pIons, *pElecs;
         pIons = new Analysis::SortRun::DataSet[number_of_ions];

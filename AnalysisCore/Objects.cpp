@@ -2,6 +2,7 @@
 // Created by Daehyun You on 12/4/15.
 //
 
+#include <functional>
 #include "Objects.h"
 
 Analysis::Objects::~Objects() {

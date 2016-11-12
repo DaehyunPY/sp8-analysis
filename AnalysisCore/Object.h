@@ -6,6 +6,7 @@
 #include "../Protocols/Unit.h"
 #include "ObjectFlag.h"
 #include "../Protocols/JSONReader.h"
+#include <functional>
 
 namespace Analysis {
 class Object: public ObjectFlag {
