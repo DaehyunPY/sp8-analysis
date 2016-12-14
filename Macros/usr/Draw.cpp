@@ -5,7 +5,7 @@
 #include "Draw.h"
 
 Draw::Draw() {
-  pad = (TPad *) gROOT->GetSelectedPad();
+  pad = (TPad *) gPad;
   cnvs = pad->GetCanvas();
   if (!(pad && cnvs)) {
     std::cout << "The pad and the canvas are invalid." << std::endl;
