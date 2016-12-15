@@ -6,9 +6,14 @@
 
 Draw::Draw() {
   pad = (TPad *) gPad;
+  if (!pad) {
+    std::cout << "The pad is invalid." << std::endl;
+    delete this;
+    return;
+  }
   cnvs = pad->GetCanvas();
-  if (!(pad && cnvs)) {
-    std::cout << "The pad and the canvas are invalid." << std::endl;
+  if (!cnvs) {
+    std::cout << "The canvas is invalid." << std::endl;
     delete this;
     return;
   }
