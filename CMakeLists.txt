@@ -2,25 +2,18 @@ cmake_minimum_required(VERSION 2.8)
 project(Analysis)
 
 ### link ROOT
-set(ROOTSYS "$ENV{ROOTSYS}")
-include_directories("${ROOTSYS}/include")
-link_directories("${ROOTSYS}/lib")
-link_libraries(m dl)
+execute_process(COMMAND root-config --incdir OUTPUT_VARIABLE INCDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND root-config --libdir OUTPUT_VARIABLE LIBDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND root-config --auxcflags OUTPUT_VARIABLE CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+include_directories(${INCDIR})
+link_directories(${LIBDIR})
 link_libraries(
-    Core
-    RIO
-    Net
-    Hist
-    Graf
-    Graf3d
-    Gpad
-    Tree
-    Rint
-    Postscript
-    Matrix
-    Physics
-    MathCore
-    Thread
+    Core RIO Net
+    Hist Graf Graf3d Gpad
+    Tree Rint Postscript
+    Matrix Physics MathCore
+    Thread MultiProc
+    pthread m dl
 )
 
 ### link resort
@@ -32,15 +25,7 @@ add_subdirectory(AnalysisCore)
 add_subdirectory(Protocols)
 
 ### compiler
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -m64 -O3 -pthread")
-
-### AnalysisExe
-set(ANALYSISEXE_SOURCE_FILES
-    AnalysisExe/Main.cpp
-    AnalysisExe/AnalysisRun.cpp
-)
-add_executable(AnalysisExe ${ANALYSISEXE_SOURCE_FILES})
-target_link_libraries(AnalysisExe AnalysisCore Protocols)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 
 ### SortExe
 set(SORTEXE_SOURCE_FILES
@@ -50,3 +35,11 @@ set(SORTEXE_SOURCE_FILES
 )
 add_executable(SortExe ${SORTEXE_SOURCE_FILES})
 target_link_libraries(SortExe Protocols)
+
+### AnalysisExe
+set(ANALYSISEXE_SOURCE_FILES
+    AnalysisExe/Main.cpp
+    AnalysisExe/AnalysisRun.cpp
+)
+add_executable(AnalysisExe ${ANALYSISEXE_SOURCE_FILES})
+target_link_libraries(AnalysisExe AnalysisCore Protocols)
