@@ -23,7 +23,7 @@
 #include <TH3D.h>
 #include <TChain.h>
 #include <RooDataProjBinding.h>
-#include "../resort/resort64c.h"
+#include "resort64c.h"
 #include "../Core/Hist.h"
 #include "../Core/JSONReader.h"
 

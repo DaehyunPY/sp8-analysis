@@ -5,7 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
-#include "../rapidjson/document.h"
+#include "rapidjson/document.h"
 #include "JSONFlag.h"
 
 namespace Analysis {

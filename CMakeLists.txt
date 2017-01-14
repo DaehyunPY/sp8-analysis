@@ -16,8 +16,9 @@ link_libraries(
     pthread m dl
 )
 
-### link resort
-link_directories("${CMAKE_CURRENT_SOURCE_DIR}/resort")
+### link extra libraries
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+link_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")
 link_libraries(libResort64c_x64.a)
 
 ### add sub lib

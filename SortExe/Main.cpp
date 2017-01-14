@@ -19,7 +19,7 @@
 #include <TSystem.h>
 #include <TApplication.h>
 
-#include "../resort/resort64c.h"
+#include "resort64c.h"
 #include "LMF_IO.h"
 #include "SortRun.h"
 
