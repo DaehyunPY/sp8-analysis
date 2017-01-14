@@ -4,8 +4,7 @@ MAINTAINER Daehyun You <daehyun@mail.tagen.tohoku.ac.jp>
 WORKDIR /root
 
 ### install packages
-RUN dnf update -y \
-    && dnf install -y \
+RUN dnf update -y && dnf install -y \
         boost-devel rapidjson-devel \
     && dnf clean all
 
