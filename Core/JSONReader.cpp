@@ -19,7 +19,7 @@ Analysis::JSONReader::JSONReader(const std::string f) {
 
 //  Save the json file data.
   stringStream << fileStream.rdbuf();
-  document.Parse<rapidjson::kParseCommentsFlag+rapidjson::kParseTrailingCommasFlag>(stringStream.str().c_str());
+  document.Parse<parseFlags>(stringStream.str().c_str());
   fileStream.close();
   setFlagMembers().fileIsClosedAndDataIsSaved();
 

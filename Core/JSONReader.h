@@ -16,6 +16,10 @@ class JSONReader {
   const rapidjson::Document &getDocument() const;
   const rapidjson::Value &getValue(std::string) const;
   JSONFlag flag;
+    static const unsigned parseFlags =
+            rapidjson::kParseCommentsFlag
+            +rapidjson::kParseTrailingCommasFlag
+            +rapidjson::kParseNanAndInfFlag;
 
  public:
   JSONReader(const std::string f);
