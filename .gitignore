@@ -3,4 +3,4 @@
 *.pyc
 *tmp*
 *backup*
-build
+*build*
