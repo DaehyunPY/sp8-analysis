@@ -2,7 +2,6 @@
 #define ANALYSIS_OUTPUTHIST_H
 
 #include <iostream>
-
 #include <TFile.h>
 #include <TTree.h>
 #include <TGraph.h>

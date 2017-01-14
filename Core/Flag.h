@@ -5,7 +5,6 @@
 #ifndef ANALYSIS_FLAG_H
 #define ANALYSIS_FLAG_H
 
-
 #include <cmath>
 #include <stdlib.h>
 #include <string>

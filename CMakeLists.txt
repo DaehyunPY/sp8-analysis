@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.6)
 project(Analysis)
 
 ### link ROOT
@@ -22,7 +22,7 @@ link_libraries(libResort64c_x64.a)
 
 ### add sub lib
 add_subdirectory(AnalysisCore)
-add_subdirectory(Protocols)
+add_subdirectory(Core)
 
 ### compiler
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
@@ -34,7 +34,7 @@ set(SORTEXE_SOURCE_FILES
     SortExe/SortRun.cpp
 )
 add_executable(SortExe ${SORTEXE_SOURCE_FILES})
-target_link_libraries(SortExe Protocols)
+target_link_libraries(SortExe SP8Core)
 
 ### AnalysisExe
 set(ANALYSISEXE_SOURCE_FILES
@@ -42,4 +42,4 @@ set(ANALYSISEXE_SOURCE_FILES
     AnalysisExe/AnalysisRun.cpp
 )
 add_executable(AnalysisExe ${ANALYSISEXE_SOURCE_FILES})
-target_link_libraries(AnalysisExe AnalysisCore Protocols)
+target_link_libraries(AnalysisExe AnalysisCore SP8Core)

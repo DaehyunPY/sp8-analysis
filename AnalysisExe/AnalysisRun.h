@@ -21,8 +21,8 @@
 #include <TH2F.h>
 #include <TChain.h>
 #include <RooDataProjBinding.h>
-#include "../Protocols/Hist.h"
-#include "../Protocols/Unit.h"
+#include "../Core/Hist.h"
+#include "../Core/Unit.h"
 #include "../AnalysisCore/AnalysisTools.h"
 #include "../AnalysisCore/LogWriter.h"
 #include <numeric>

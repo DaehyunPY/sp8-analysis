@@ -5,7 +5,7 @@
 #ifndef ANALYSIS_JSONFLAG_H
 #define ANALYSIS_JSONFLAG_H
 
-#include "../Protocols/Flag.h"
+#include "Flag.h"
 
 namespace Analysis {
 class JSONFlag : Flag {

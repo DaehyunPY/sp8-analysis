@@ -2,7 +2,7 @@
   "working_directory": "PATH", // comment out=same path with this file
   "LMF_files": [
     "LMF_FILENAME1", 
-    "LMF_FILENAME2",
+    "LMF_FILENAME2"
   ],
   "draw_canvases"          : false,
   "maxium_of_electron_hits": 4,
@@ -21,7 +21,7 @@
         "v2" : 4,
         "w1" : 6, // HEX only
         "w2" : 5, // HEX only
-        "MCP": 7, // 0 if not used
+        "MCP": 7  // 0 if not used
     }, 
     "offset_setup": {
         "shift_of_timesum_u"    : -120, // [ns]
@@ -31,13 +31,13 @@
         "shift_of_position_y"   : 0.0, // [mm]
         "halfwidth_of_timesum_u": 5.0, // [ns]
         "halfwidth_of_timesum_v": 5.0, // [ns]
-        "halfwidth_of_timesum_w": 5.0, // [ns] HEX only
+        "halfwidth_of_timesum_w": 5.0  // [ns] HEX only
     }, 
     "scalefactors": {
         "u"       : 0.62, 
         "v"       : 0.598, 
         "w"       : 0.5915, // HEX only 
-        "offset_w": -2.875, // [ns] HEX only 
+        "offset_w": -2.875  // [ns] HEX only
     }, 
     "runtime": 173.0,
     // "runtime": {
@@ -49,7 +49,7 @@
     "deadtime_of_signals_from_the_anode": 20.0,
     "deadtime_of_signals_from_time_MCP": 20.0,
     "use_position_depended_correction_of_timesums": false,
-    "use_position_depended_NL_correction_of_position": false,
+    "use_position_depended_NL_correction_of_position": false
   },
   "ion_calibration_table": "IonCalibTab.txt",
   "ion_sorter": {
@@ -68,7 +68,7 @@
         "v2": 13,
         "w1": 15, // HEX only
         "w2": 14, // HEX only
-        "MCP": 16, // 0 if not used
+        "MCP": 16 // 0 if not used
     }, 
     "offset_setup": {
         "shift_of_timesum_u": -130.4, // [ns]
@@ -78,13 +78,13 @@
         "shift_of_position_y": 0.0, 
         "halfwidth_of_timesum_u": 5.0, // [ns]
         "halfwidth_of_timesum_v": 5.0, // [ns]
-        "halfwidth_of_timesum_w": 5.0, // [ns] HEX only
+        "halfwidth_of_timesum_w": 5.0  // [ns] HEX only
     }, 
     "scalefactors": {
         "u": 0.66, 
         "v": 0.7125, 
         "w": 1.675, // HEX only 
-        "offset_w": 1.675, // [ns] HEX only 
+        "offset_w": 1.675 // [ns] HEX only
     }, 
     "runtime": 119.0,
     // "runtime": {
@@ -96,6 +96,6 @@
     "deadtime_of_signals_from_the_anode": 20.0,
     "deadtime_of_signals_from_time_MCP": 20.0,
     "use_position_depended_correction_of_timesums": false,
-    "use_position_depended_NL_correction_of_position": false,
-  },
+    "use_position_depended_NL_correction_of_position": false
+  }
 }

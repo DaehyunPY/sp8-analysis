@@ -8,7 +8,7 @@
 #include <assert.h>
 #include <iostream>
 #include "Object.h"
-#include "../Protocols/JSONReader.h"
+#include "../Core/JSONReader.h"
 
 namespace Analysis {
 class Objects {
