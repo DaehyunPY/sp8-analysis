@@ -1,64 +1,7 @@
 #include "JSONReader.h"
 
-Analysis::JSONReader::JSONReader(const std::string f) {
-  filename = f;
-  std::stringstream stringStream;
-  std::fstream fileStream;
-
-//  Open json file.
-  std::cout << "reading a JSON file... ";
-  fileStream.open(f, std::fstream::in);
-  if(fileStream.is_open()) {
-    setFlagMembers().fileIsOpen();
-  } else {
-    setFlagMembers().fileIsNotExist();
-    std::cout << "fail" << std::endl;
-    std::cout << "The JSON file does not exist!" << std::endl;
-    assert(false);
-  }
-
-//  Save the json file data.
-  stringStream << fileStream.rdbuf();
-  document.Parse<parseFlags>(stringStream.str().c_str());
-  fileStream.close();
-  setFlagMembers().fileIsClosedAndDataIsSaved();
-
-//  Check the parse.
-  if(document.HasParseError()) {
-    setFlagMembers().hasParseError();
-    std::cout << "fail" << std::endl;
-    std::cout << "The JSON file has parse error!" << std::endl;
-    assert(false);
-  } else {
-    setFlagMembers().hasNoParseError();
-  }
-  std::cout << "okay" << std::endl;
-  return;
-}
-Analysis::JSONReader::~JSONReader() { }
-const rapidjson::Value &Analysis::JSONReader::getValue(std::string str1) const {
-  const auto tmp = str1;
-  std::string str0;
-  std::size_t found;
-  const rapidjson::Value *value;
-  value = &getDocument();
-  found = str1.find(".");
-  while (found != std::string::npos) {
-    str0 = str1.substr(0, found);
-    str1 = str1.substr(found + 1);
-    assert(value->HasMember(str0.c_str()));
-    assert((*value)[str0.c_str()].IsObject());
-    value = &((*value)[str0.c_str()]);
-    found = str1.find(".");
-  }
-  if (!(value->HasMember(str1.c_str()))) {
-    std::cout << "Member " << tmp << " does not exist!" << std::endl;
-    assert(false);
-  }
-  return (*value)[str1.c_str()];
-}
 const int Analysis::JSONReader::getIntAt(const std::string str, const int i) const {
-	const rapidjson::Value *pV = &getValue(str);
+	const rapidjson::Value *pV = getOptValue(str);
 	if(i != -1) { 
 		assert(i >= 0);
 		assert(pV->IsArray());
@@ -69,7 +12,7 @@ const int Analysis::JSONReader::getIntAt(const std::string str, const int i) con
 	return pV->GetInt();
 }
 const double Analysis::JSONReader::getDoubleAt(const std::string str, const int i) const {
-	const rapidjson::Value *pV = &getValue(str);
+	const rapidjson::Value *pV = getOptValue(str);
 	if(i != -1) { 
 		assert(i >= 0);
 		assert(pV->IsArray());
@@ -78,11 +21,8 @@ const double Analysis::JSONReader::getDoubleAt(const std::string str, const int 
 	assert(pV->IsNumber());
 	return pV->GetDouble();
 }
-const rapidjson::Document &Analysis::JSONReader::getDocument() const {
-  return document;
-}
 const bool Analysis::JSONReader::getBoolAt(const std::string str, const int i) const {
-	const rapidjson::Value *pV = &getValue(str);
+	const rapidjson::Value *pV = getOptValue(str);
 	if(i != -1) { 
 		assert(i >= 0);
 		assert(pV->IsArray());
@@ -91,17 +31,8 @@ const bool Analysis::JSONReader::getBoolAt(const std::string str, const int i) c
 	assert(pV->IsBool());
 	return pV->GetBool();
 }
-const std::string &Analysis::JSONReader::getFilename() const {
-  return filename;
-}
-const Analysis::JSONFlag &Analysis::JSONReader::getFlag() const {
-  return flag;
-}
-Analysis::JSONFlag &Analysis::JSONReader::setFlagMembers() {
-  return flag;
-}
 const std::string Analysis::JSONReader::getStringAt(const std::string str, const int i) const {
-	const rapidjson::Value *pV = &getValue(str);
+	const rapidjson::Value *pV = getOptValue(str);
 	if(i != -1) { 
 		assert(i >= 0);
 		assert(pV->IsArray());
@@ -110,24 +41,8 @@ const std::string Analysis::JSONReader::getStringAt(const std::string str, const
 	assert(pV->IsString());
 	return pV->GetString();
 }
-const bool Analysis::JSONReader::hasMember(std::string str1) const {
-  std::string str0;
-  std::size_t found;
-  const rapidjson::Value *value;
-  value = &getDocument();
-  found = str1.find(".");
-  while (found != std::string::npos) {
-    str0 = str1.substr(0, found);
-    str1 = str1.substr(found + 1);
-    if(!value->HasMember(str0.c_str())) { return false; }
-    if(!(*value)[str0.c_str()].IsObject()) { return false; }
-    value = &((*value)[str0.c_str()]);
-    found = str1.find(".");
-  }
-  return value->HasMember(str1.c_str());
-}
 const int Analysis::JSONReader::getListSizeAt(const std::string str) const {
-	const rapidjson::Value *pV = &getValue(str);
+	const rapidjson::Value *pV = getOptValue(str);
 	if(pV->IsArray()) {
 		return pV->Size();
 	} else {
@@ -137,4 +52,78 @@ const int Analysis::JSONReader::getListSizeAt(const std::string str) const {
 bool Analysis::JSONReader::getBoolAtIfItIs(const std::string str, const bool def) const {
   if (hasMember(str)) return getBoolAt(str);
   else return def;
+}
+template<typename T>
+const std::map<std::string, T> Analysis::JSONReader::getMap(std::string str) const {
+  if (!hasMember(str)) assert(false);
+  return std::map<std::string, T>();
+}
+
+void Analysis::JSONReader::ReadFromStr(const std::string str) {
+  auto *pNewDoc = new rapidjson::Document;
+  pNewDoc->Parse<parseFlags>(str.c_str());
+  if(pNewDoc->HasParseError()) throw std::invalid_argument("It has parse error!");
+  pDocs.insert(pDocs.begin(), pNewDoc);
+}
+void Analysis::JSONReader::ReadFromFile(const std::string filename) {
+  if(vvv) std::cout << "Reading JSON file: " << filename << std::endl;
+  std::fstream fileStream;
+  fileStream.open(filename, std::fstream::in);
+  if(!fileStream.is_open()) throw std::invalid_argument("The JSON file does not exist!");
+  std::stringstream stringStream;
+  stringStream << fileStream.rdbuf();
+  ReadFromStr(stringStream.str());
+  fileStream.close();
+}
+bool Analysis::JSONReader::hasMember(std::string str) const {
+  auto pV = getOptValue(str);
+  return pV != nullptr;
+}
+const rapidjson::Value *Analysis::JSONReader::_getOptValue(const std::string str1,
+                                                           const rapidjson::Value *v,
+                                                           const std::string str0) const {
+  if (str1=="") return v;
+  std::size_t found;
+  std::string tmp0, tmp1;
+  found = str1.find(".");
+  if (found == std::string::npos) {
+    tmp0 = str1;
+    tmp1 = "";
+  } else {
+    tmp0 = str1.substr(0, found);
+    tmp1 = str1.substr(found + 1);
+  }
+  if (isdigit(tmp0[0])) {
+    if (!(v->IsArray())) {
+      if(vvv) std::cout << "Member " << str0 << " is not array!" << std::endl;
+      return nullptr;
+    }
+    int i = std::stoi(tmp0);
+    return _getOptValue(tmp1, &(*v)[i], str0 + "." + tmp0);
+  } else {
+    if (!(v->HasMember(tmp0.c_str()))) {
+      if(vvv) std::cout << "Member " << str0+tmp0 << " does not exist!" << std::endl;
+      return nullptr;
+    }
+    return _getOptValue(tmp1, &(*v)[tmp0.c_str()], str0 + "." + tmp0);
+  }
+}
+void Analysis::JSONReader::appendDoc(const Analysis::JSONReader::ReadingType type, const std::string str) {
+  if(type==fromFile) ReadFromFile(str);
+  else if(type==fromStr) ReadFromStr(str);
+  else throw std::invalid_argument("Invalid type! It must be one of fromFile or fromStr!");
+}
+const rapidjson::Value *Analysis::JSONReader::getOptValue(const std::string str1) const {
+  for(auto pDoc: pDocs) {
+    auto pV = _getOptValue(str1, pDoc);
+    if(pV!=nullptr) return pV;
+  }
+  return nullptr;
+}
+Analysis::JSONReader::~JSONReader() {
+  for(auto pDoc: pDocs) {
+    delete pDoc;
+  }
+}
+Analysis::JSONReader::JSONReader(const bool v): vvv(v) {
 }

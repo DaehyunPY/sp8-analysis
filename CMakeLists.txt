@@ -44,3 +44,7 @@ set(ANALYSISEXE_SOURCE_FILES
 )
 add_executable(AnalysisExe ${ANALYSISEXE_SOURCE_FILES})
 target_link_libraries(AnalysisExe AnalysisCore SP8Core)
+
+### Examples
+add_executable(ExpJSONReader Examples/JSONReader.cpp)
+target_link_libraries(ExpJSONReader SP8Core)

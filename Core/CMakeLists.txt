@@ -4,7 +4,6 @@ project(SP8Core)
 set(SOURCE_FILES
         Flag.cpp
         Hist.cpp
-        JSONFlag.cpp
         JSONReader.cpp
         Unit.cpp
         )
