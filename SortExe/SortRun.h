@@ -8,6 +8,8 @@
 #else
 #include <unistd.h>
 #endif
+#include <string>
+#include <map>
 #include <fstream>
 #include <ctime>
 #include <TROOT.h>
@@ -28,6 +30,26 @@
 #include "../Core/JSONReader.h"
 
 namespace Analysis {
+
+typedef std::map<std::string, int> ChMap;
+
+template <typename T>
+struct Region {
+  T fr, to;
+  bool isIn(T value) const {
+    return (fr <= value) && (value <= to);
+  }
+};
+
+template <typename T>
+struct Regions {
+  std::vector<Region<T>> regions;
+  bool isIn(T value) const {
+    for(auto r : regions) if(r.isIn(value)) return true;
+    return false;
+  }
+};
+
 class SortRun: public Hist {
  private:
   char id[5];
@@ -45,7 +67,7 @@ class SortRun: public Hist {
       } else return false;
     }
   };
-
+  
  private:
   const int maxNumOfIons, maxNumOfElecs;
   int numOfIons, numOfElecs;
