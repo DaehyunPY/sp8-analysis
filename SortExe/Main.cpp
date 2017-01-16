@@ -433,7 +433,6 @@ int main(int argc, char *argv[]) {
 
   // Read options
   const auto isDrawingCanvases = pReader->get<bool>("draw_canvases");
-  const auto chMap = pReader->getMap<int>("channel_map");
   const auto maxElecHits = pReader->get<int>("maxium_of_electron_hits");
   const auto maxIonHits = pReader->get<int>("maxium_of_ion_hits");
   const auto bunchCh = pReader->get<int>("bunch_marker_ch")-1;
@@ -483,8 +482,8 @@ int main(int argc, char *argv[]) {
 
   // Open LMF file
   bool theLoopIsOn = true;
-  const unsigned long numLMF = aLMFWrapper.filenames.size();
-  for (int iLMF; iLMF < numLMF; iLMF++) {
+  const int numLMF = (const int) aLMFWrapper.filenames.size();
+  for (int iLMF=0; iLMF < numLMF; iLMF++) {
     // Check keyboard hit
     if (!theLoopIsOn) break;
 

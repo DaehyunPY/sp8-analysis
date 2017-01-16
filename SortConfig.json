@@ -35,8 +35,8 @@
       "halfwidth_u": 5.0, // [ns]
       "halfwidth_v": 5.0, // [ns]
       "halfwidth_w": 5.0, // [ns] HEX only
-      "offset_x": 0.0, // [mm]
-      "offset_y": 0.0, // [mm]
+      "offset_x": 0.0, // [ns]
+      "offset_y": 0.0, // [ns]
       "runtime": 173.0, // [ns]
       //      "runtime_u"  : 173.0,  // [ns] overwrite runtime
       //      "runtime_v"  : 173.0,  // [ns] overwrite runtime
@@ -78,8 +78,8 @@
       "halfwidth_u": 5.0, // [ns]
       "halfwidth_v": 5.0, // [ns]
       "halfwidth_w": 5.0, // [ns] HEX only
-      "offset_x": 0.0, // [mm]
-      "offset_y": 0.0, // [mm]
+      "offset_x": 0.0, // [ns]
+      "offset_y": 0.0, // [ns]
       "runtime": 119.0, // [ns]
       //      "runtime_u"  : 119.0,  // [ns] overwrite runtime
       //      "runtime_v"  : 119.0,  // [ns] overwrite runtime
