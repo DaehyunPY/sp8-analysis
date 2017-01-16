@@ -11,25 +11,50 @@
 #include "rapidjson/document.h"
 
 namespace Analysis {
+
+const rapidjson::Value *getOptValue(const std::string str1,
+                                    const rapidjson::Value *v,
+                                    const std::string str0 = "") {
+
+  if (str1=="") return v;
+  std::size_t found;
+  std::string tmp0, tmp1;
+  found = str1.find(".");
+  if (found == std::string::npos) {
+    tmp0 = str1;
+    tmp1 = "";
+  } else {
+    tmp0 = str1.substr(0, found);
+    tmp1 = str1.substr(found + 1);
+  }
+  if (isdigit(tmp0[0])) {
+    if (!(v->IsArray())) return nullptr;
+    int i = std::stoi(tmp0);
+    return getOptValue(tmp1, &(*v)[i], str0 + "." + tmp0);
+  } else {
+    if (!(v->HasMember(tmp0.c_str()))) return nullptr;
+    return getOptValue(tmp1, &(*v)[tmp0.c_str()], str0 + "." + tmp0);
+  }
+}
+
 class JSONReader {
  private:
-  const bool vvv;
   static const unsigned parseFlags =
       rapidjson::kParseCommentsFlag+rapidjson::kParseTrailingCommasFlag+rapidjson::kParseNanAndInfFlag;
-  std::vector<rapidjson::Document *> pDocs;
+  std::vector<const rapidjson::Document *> pDocs;
   void ReadFromFile(const std::string filename);
   void ReadFromStr(const std::string str);
+  void ReadFromDoc(const rapidjson::Document *pDoc);
  public:
-  enum ReadingType {fromFile, fromStr};
-  JSONReader(const bool v=false);
+  enum ReadingType {DoNothing, fromFile, fromStr, fromDoc};
+  JSONReader(const ReadingType type=DoNothing, const std::string str="", const rapidjson::Document *pDoc=nullptr);
   ~JSONReader();
-  void appendDoc(const ReadingType type, const std::string str);
+  void appendDoc(const ReadingType type, const std::string str="", const rapidjson::Document *pDoc=nullptr);
 
  private:
-  const rapidjson::Value *getOptValue(const std::string str1, const rapidjson::Value *v, const std::string str0 = "") const;
-  const rapidjson::Value *getOptValue(const std::string str1) const;
   bool hasMember(const std::string str, const rapidjson::Value *&pV) const;
  public:
+  const rapidjson::Value *getOptValue(const std::string str) const;
   bool hasMember(const std::string str) const;
 
  private:
@@ -58,6 +83,7 @@ class JSONReader {
     if (pT == nullptr) throw std::invalid_argument("Invalid member!");
     return *pT;
   }
+  const std::vector<std::string> getMapKeys(std::string str) const;
   template <typename T>
   const std::map<std::string, T> *getOptMap(std::string str) const {
     const rapidjson::Value *pV;
@@ -74,6 +100,7 @@ class JSONReader {
     if (pMap == nullptr) throw std::invalid_argument("Invalid member!");
     return *pMap;
   }
+  const int getArrSize(std::string str) const;
   template <typename T>
   const std::vector<T> *getOptArr(std::string str) const {
     const rapidjson::Value *pV;

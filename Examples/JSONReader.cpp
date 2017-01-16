@@ -26,10 +26,13 @@ int main() {
   std::cout << reader.get<double>("inf") << std::endl;
   std::cout << reader.get<double>("nan") << std::endl;
   std::cout << reader.get<int>("a.0") << std::endl;
-  std::cout << reader.get<int>("o.i") << std::endl;
   auto a = reader.getArr<int>("a");
   std::cout << a[0] << std::endl;
+  std::cout << reader.getArrSize("a") << std::endl;
+  std::cout << reader.get<int>("o.i") << std::endl;
   auto m = reader.getMap<int>("o");
   std::cout << m["i"] << std::endl;
+  auto keys = reader.getMapKeys("o");
+  std::cout << keys[0] << std::endl;
   return 0;
 }
