@@ -81,14 +81,14 @@ void Analysis::SortRun::createTree() {
     pRootTree->Branch((str + "Flag" + ch).c_str(), &pElecDataSet[i].flag, (str + "Flag" + ch + "/I").c_str());
   }
 }
-TCanvas *Analysis::SortRun::createCanvas(char *name,
-                                         char *titel,
+TCanvas *Analysis::SortRun::createCanvas(std::string name,
+                                         std::string titel,
                                          int xposition,
                                          int yposition,
                                          int pixelsx,
                                          int pixelsy) {
   TCanvas *canvaspointer;
-  canvaspointer = new TCanvas(name, titel, xposition, yposition, pixelsx, pixelsy);
+  canvaspointer = new TCanvas(name.c_str(), titel.c_str(), xposition, yposition, pixelsx, pixelsy);
   return canvaspointer;
 }
 void Analysis::SortRun::createHists() {

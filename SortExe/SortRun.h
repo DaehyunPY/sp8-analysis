@@ -72,7 +72,7 @@ class SortRun: public Hist {
   const int maxNumOfIons, maxNumOfElecs;
   int numOfIons, numOfElecs;
   bool isFileExist(const char *fileName);
-  TCanvas *createCanvas(char *name, char *titel, int xposition, int yposition, int pixelsx, int pixelsy);
+  TCanvas *createCanvas(std::string name, std::string titel, int xposition, int yposition, int pixelsx, int pixelsy);
  public:
   SortRun(const std::string pref, const int iNum, const int eNum);
   ~SortRun();
