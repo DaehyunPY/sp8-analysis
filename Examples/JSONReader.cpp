@@ -27,5 +27,7 @@ int main() {
   std::cout << *reader.getOpt<double>("nan") << std::endl;
   std::cout << *reader.getOpt<int>("a.1") << std::endl;
   std::cout << *reader.getOpt<int>("o.i") << std::endl;
+  const std::vector<int> *a = reader.getOptArr<int>("a");
+  const std::map<std::string, int> *m = reader.getOptMap<int>("o");
   return 0;
 }

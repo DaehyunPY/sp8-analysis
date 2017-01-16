@@ -53,12 +53,6 @@ bool Analysis::JSONReader::getBoolAtIfItIs(const std::string str, const bool def
   if (hasMember(str)) return getBoolAt(str);
   else return def;
 }
-template<typename T>
-const std::map<std::string, T> Analysis::JSONReader::getMap(std::string str) const {
-  if (!hasMember(str)) assert(false);
-  return std::map<std::string, T>();
-}
-
 void Analysis::JSONReader::ReadFromStr(const std::string str) {
   auto *pNewDoc = new rapidjson::Document;
   pNewDoc->Parse<parseFlags>(str.c_str());
