@@ -19,7 +19,10 @@ class JSONReader {
       rapidjson::kParseCommentsFlag+rapidjson::kParseTrailingCommasFlag+rapidjson::kParseNanAndInfFlag;
   const rapidjson::Value *getOptValue(const std::string str1) const;
   const rapidjson::Value *_getOptValue(const std::string str1, const rapidjson::Value *v, const std::string str0 = "") const;
+ public:
+  bool hasMember(const std::string str) const;
 
+  // delete this block
  public:
   const bool getBoolAt(const std::string str, const int i=-1) const;
   bool getBoolAtIfItIs(const std::string str, const bool def=false) const;
@@ -27,7 +30,6 @@ class JSONReader {
   const double getDoubleAt(const std::string str, const int i=-1) const;
   const std::string getStringAt(const std::string str, const int i=-1) const;
   const int getListSizeAt(const std::string str) const;
-  bool hasMember(const std::string str) const;
 
  public:
   enum ReadingType {fromFile, fromStr};
