@@ -11,32 +11,6 @@
 #include "rapidjson/document.h"
 
 namespace Analysis {
-
-const rapidjson::Value *getOptValue(const std::string str1,
-                                    const rapidjson::Value *v,
-                                    const std::string str0 = "") {
-
-  if (str1=="") return v;
-  std::size_t found;
-  std::string tmp0, tmp1;
-  found = str1.find(".");
-  if (found == std::string::npos) {
-    tmp0 = str1;
-    tmp1 = "";
-  } else {
-    tmp0 = str1.substr(0, found);
-    tmp1 = str1.substr(found + 1);
-  }
-  if (isdigit(tmp0[0])) {
-    if (!(v->IsArray())) return nullptr;
-    int i = std::stoi(tmp0);
-    return getOptValue(tmp1, &(*v)[i], str0 + "." + tmp0);
-  } else {
-    if (!(v->HasMember(tmp0.c_str()))) return nullptr;
-    return getOptValue(tmp1, &(*v)[tmp0.c_str()], str0 + "." + tmp0);
-  }
-}
-
 class JSONReader {
  private:
   static const unsigned parseFlags =
@@ -53,6 +27,7 @@ class JSONReader {
 
  private:
   bool hasMember(const std::string str, const rapidjson::Value *&pV) const;
+  const rapidjson::Value *getOptValue(const std::string str1, const rapidjson::Value *v, const std::string str0 = "") const;
  public:
   const rapidjson::Value *getOptValue(const std::string str) const;
   bool hasMember(const std::string str) const;

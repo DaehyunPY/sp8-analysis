@@ -83,7 +83,7 @@ void Analysis::JSONReader::appendDoc(const Analysis::JSONReader::ReadingType typ
 }
 const rapidjson::Value *Analysis::JSONReader::getOptValue(const std::string str) const {
   for(auto pDoc: pDocs) {
-    auto pV = Analysis::getOptValue(str, pDoc);
+    auto pV = getOptValue(str, pDoc);
     if(pV!=nullptr) return pV;
   }
   return nullptr;
@@ -121,4 +121,27 @@ const std::vector<std::string> Analysis::JSONReader::getMapKeys(std::string str)
 	if (!pV->IsObject()) return keys;
 	for (auto &v: pV->GetObject()) keys.push_back(v.name.GetString());
 	return keys;
+}
+const rapidjson::Value *Analysis::JSONReader::getOptValue(const std::string str1,
+														  const rapidjson::Value *v,
+														  const std::string str0) const {
+	if (str1=="") return v;
+	std::size_t found;
+	std::string tmp0, tmp1;
+	found = str1.find(".");
+	if (found == std::string::npos) {
+		tmp0 = str1;
+		tmp1 = "";
+	} else {
+		tmp0 = str1.substr(0, found);
+		tmp1 = str1.substr(found + 1);
+	}
+	if (isdigit(tmp0[0])) {
+		if (!(v->IsArray())) return nullptr;
+		int i = std::stoi(tmp0);
+		return getOptValue(tmp1, &(*v)[i], str0 + "." + tmp0);
+	} else {
+		if (!(v->HasMember(tmp0.c_str()))) return nullptr;
+		return getOptValue(tmp1, &(*v)[tmp0.c_str()], str0 + "." + tmp0);
+	}
 }
