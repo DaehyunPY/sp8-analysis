@@ -355,7 +355,8 @@ int main(int argc, char *argv[]) {
   // Open the JSON reader
   std::cout << "Opening the config file... ";
   Analysis::JSONReader *pReader;
-  pReader = new Analysis::JSONReader(argv[1]);
+  pReader = new Analysis::JSONReader();
+  pReader->appendDoc(Analysis::JSONReader::fromFile, argv[1]);
   if (!pReader) {
     std::cout << "fail" << std::endl;
     return 0;

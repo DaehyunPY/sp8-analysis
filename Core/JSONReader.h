@@ -46,10 +46,16 @@ class JSONReader {
     auto pV = getOptValue(str);
     if (pV == nullptr) return nullptr;
     if(!pV->Is<T>()) {
-      std::cout << "Check the type of member " << str << std::endl;
+      if(vvv) std::cout << "Check the type of member " << str << std::endl;
       return nullptr;
     }
     return new T(pV->Get<T>());
+  }
+  template <typename T>
+  const T get(const std::string str) const {
+    auto pV = getOpt(str);
+    if (pV == nullptr) throw std::invalid_argument("Invalid member!");
+    return *pV;
   }
 };
 }
