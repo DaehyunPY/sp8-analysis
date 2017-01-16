@@ -1,5 +1,28 @@
 #include "SortRun.h"
 
+Analysis::Regions<double> Analysis::getBunchMaskRm(const Analysis::JSONReader &reader, const std::string prefix) {
+  Regions<double> mask;
+  if (reader.hasMember(prefix)) {
+    {
+      auto pFr = reader.getOpt<double>(prefix + ".0");
+      auto pTo = reader.getOpt<double>(prefix + ".1");
+      if (pFr != nullptr && pTo != nullptr) {
+        mask.regions.push_back({*pFr, *pTo});
+        return mask;
+      }
+    }
+
+    const int n = reader.getArrSize(prefix);
+    for (int i; i < n; i++) {
+      const int m = reader.getArrSize(prefix + "." + std::to_string(i));
+      if (m != 2) throw std::invalid_argument("The array must have 2 elements!");
+      auto pFr = reader.getOpt<double>(prefix + "." + std::to_string(i) + ".0");
+      auto pTo = reader.getOpt<double>(prefix + "." + std::to_string(i) + ".1");
+      if (pFr != nullptr && pTo != nullptr) mask.regions.push_back({*pFr, *pTo});
+    }
+    return mask;
+  } else return mask;
+}
 bool Analysis::SortRun::isFileExist(const char *fileName) {
   std::ifstream file(fileName);
   return file.good();

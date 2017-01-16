@@ -1,24 +1,8 @@
-#ifdef WIN32
-#pragma warning(disable : 4005)
-#pragma warning(disable : 4996)
-#endif
-
-#ifdef WIN64
-#pragma warning(disable : 4005)
-#pragma warning(disable : 4996)
-#endif
-
-#ifndef LINUX
-#ifndef WIN32
-#ifndef WIN64
-#define LINUX
-#endif
-#endif
-#endif
-
+#include <cstdlib>
+#include <cmath>
+#include <termios.h>
 #include <TSystem.h>
 #include <TApplication.h>
-
 #include "resort64c.h"
 #include "LMF_IO.h"
 #include "SortRun.h"
@@ -26,32 +10,6 @@
 #define NUM_IONS 200
 #define NUM_CHANNELS 80
 
-sort_class *ionSorter = nullptr;
-std::string ionCalibTabFilename;
-double ion_offset_sum_u, ion_offset_sum_v, ion_offset_sum_w;
-double ion_w_offset, ion_pos_offset_x, ion_pos_offset_y;
-int ion_command;
-
-sort_class *elecSorter = nullptr;
-std::string elecClibTabFilename;
-double elec_offset_sum_u, elec_offset_sum_v, elec_offset_sum_w;
-double elec_w_offset;
-double elec_pos_offset_x, elec_pos_offset_y;
-int elec_command;
-
-LMF_IO *pLMF;
-
-#ifndef LINUX
-#include "conio.h"
-__int32 my_kbhit() {
-    if (!_kbhit()) return 0;
-    __int32 c = _getch();
-    while (_kbhit()) c = _getch(); // empty keyboard buffer
-    return c;
-}
-#else
-
-#include <termios.h>
 __int32 my_kbhit(void) {
   struct termios term, oterm;
   __int32 fd = 0;
@@ -67,7 +25,6 @@ __int32 my_kbhit(void) {
   if (c == -1) return 0;
   return c;
 }
-#endif
 
 void readline_from_config_file(FILE *ffile, char *text, __int32 max_len) {
   int i;
@@ -114,84 +71,13 @@ void readline_from_config_file(FILE *ffile, char *text, __int32 max_len) {
 int read_int(FILE *ffile) {
   char a[1024];
   readline_from_config_file(ffile, a, 1024);
-  return atoi(a);
+  return std::atoi(a);
 }
 
 double read_double(FILE *ffile) {
   char a[1024];
   readline_from_config_file(ffile, a, 1024);
-  return double(atof(a));
-}
-
-bool read_config_file(const Analysis::JSONReader &reader,
-                      const std::string prefix,
-                      sort_class *&sorter,
-                      int &command,
-                      double &offset_sum_u,
-                      double &offset_sum_v,
-                      double &offset_sum_w,
-                      double &w_offset,
-                      double &pos_offset_x,
-                      double &pos_offset_y) {
-  // read the config file:
-  std::cout << "Reading sorter config from the config file... ";
-  if (!reader.hasMember(prefix)) {
-    std::cout << "Member " << prefix << " was not found." << std::endl;
-    std::cout << "ok" << std::endl;
-    return false;
-  }
-  command = reader.getIntAt(prefix + ".mode");
-  if (command == -1) {
-    std::cout << "ok" << std::endl;
-    return false;
-  }
-
-  sorter->use_HEX = reader.getBoolAt(prefix + ".is_hexanode_used");
-  sorter->common_start_mode = reader.getBoolAt(prefix + ".common_start_mode");
-  sorter->Cu1 = reader.getIntAt(prefix + ".TDC_channel.u1") - 1;
-  sorter->Cu2 = reader.getIntAt(prefix + ".TDC_channel.u2") - 1;
-  sorter->Cv1 = reader.getIntAt(prefix + ".TDC_channel.v1") - 1;
-  sorter->Cv2 = reader.getIntAt(prefix + ".TDC_channel.v2") - 1;
-  sorter->Cw1 = reader.getIntAt(prefix + ".TDC_channel.w1") - 1;
-  sorter->Cw2 = reader.getIntAt(prefix + ".TDC_channel.w2") - 1;
-  sorter->Cmcp = reader.getIntAt(prefix + ".TDC_channel.MCP") - 1;
-  sorter->use_MCP = (sorter->Cmcp > -1) ? true : false;
-
-  offset_sum_u = reader.getDoubleAt(prefix + ".offset_setup.shift_of_timesum_u");
-  offset_sum_v = reader.getDoubleAt(prefix + ".offset_setup.shift_of_timesum_v");
-  offset_sum_w = reader.getDoubleAt(prefix + ".offset_setup.shift_of_timesum_w");
-  pos_offset_x = reader.getDoubleAt(prefix + ".offset_setup.shift_of_position_x");
-  pos_offset_y = reader.getDoubleAt(prefix + ".offset_setup.shift_of_position_y");
-  sorter->uncorrected_time_sum_half_width_u = reader.getDoubleAt(prefix + ".offset_setup.halfwidth_of_timesum_u");
-  sorter->uncorrected_time_sum_half_width_v = reader.getDoubleAt(prefix + ".offset_setup.halfwidth_of_timesum_v");
-  sorter->uncorrected_time_sum_half_width_w = reader.getDoubleAt(prefix + ".offset_setup.halfwidth_of_timesum_w");
-
-  sorter->fu = 0.5 * reader.getDoubleAt(prefix + ".scalefactors.u");
-  sorter->fv = 0.5 * reader.getDoubleAt(prefix + ".scalefactors.v");
-  sorter->fw = 0.5 * reader.getDoubleAt(prefix + ".scalefactors.w");
-  w_offset = reader.getDoubleAt(prefix + ".scalefactors.offset_w");
-
-  if (reader.hasMember(prefix + ".runtime.u")) {
-    sorter->runtime_u = reader.getDoubleAt(prefix + ".runtime.u");
-    sorter->runtime_v = reader.getDoubleAt(prefix + ".runtime.v");
-    sorter->runtime_w = reader.getDoubleAt(prefix + ".runtime.w");
-  } else {
-    double tmp;
-    tmp = reader.getDoubleAt(prefix + ".runtime");
-    sorter->runtime_u = tmp;
-    sorter->runtime_v = tmp;
-    sorter->runtime_w = tmp;
-  }
-
-  sorter->MCP_radius = reader.getDoubleAt(prefix + ".radius_of_active_MCP_area");
-  sorter->dead_time_anode = reader.getDoubleAt(prefix + ".deadtime_of_signals_from_the_anode");
-  sorter->dead_time_mcp = reader.getDoubleAt(prefix + ".deadtime_of_signals_from_time_MCP");
-  sorter->use_sum_correction = reader.getBoolAt(prefix + ".use_position_depended_correction_of_timesums");
-  sorter->use_pos_correction = reader.getBoolAt(prefix + ".use_position_depended_NL_correction_of_position");
-
-  // end of reading the config file:
-  std::cout << "ok" << std::endl;
-  return true;
+  return double(std::atof(a));
 }
 
 bool read_calibration_tables(const char *filename, sort_class *sorter) {
@@ -306,20 +192,189 @@ bool create_calibration_tables(const char *filename, sort_class *sorter) {
   return true;
 }
 
-void cleanUpSorters() {
-  printf("deleting the ion sorter... ");
-  if (ionSorter) {
-    delete ionSorter;
-    ionSorter = nullptr;
+namespace Analysis {
+struct LMFWrapper {
+  LMF_IO *pLMF;
+  std::vector<std::string> filenames;
+  const double TDCRes = 0.025; // 25ps tdc bin size
+  int TDC[NUM_CHANNELS][NUM_IONS];
+  double tdc_ns[NUM_CHANNELS][NUM_IONS];
+  unsigned int count[NUM_CHANNELS];
+
+  bool readConfig(const JSONReader &reader) {
+    auto pStr = reader.getOpt<const char *>("LMF_files");
+    if (pStr != nullptr) {
+      filenames.push_back(std::string(*pStr));
+      return true;
+    } else {
+      auto pArr = reader.getOptArr<const char *>("LMF_files");
+      if (pArr == nullptr) return false;
+      for (auto str: *pArr) filenames.push_back(std::string(str));
+      return true;
+    }
   }
-  printf("ok \n");
-  printf("deleting the elec sorter... ");
-  if (elecSorter) {
-    delete elecSorter;
-    elecSorter = nullptr;
+  bool readFile(const int i) {
+    pLMF = new LMF_IO(NUM_CHANNELS, NUM_IONS);
+    bool b;
+    b = pLMF->OpenInputLMF(filenames[i]);
+    if (b) {
+      std::cout << "A LMF file " << filenames[i] << " is open for reading!" << std::endl;
+      return true;
+    } else {
+      std::cout << "Could not open LMF file: " << filenames[i] << std::endl;
+      return false;
+    }
   }
-  printf("ok \n");
+};
+
+enum SortCmd {
+  // -1 = detector does not exist
+  //  0 = only convert to new file format
+  //  1 = sort and write new file
+  //  2 = calibrate fv, fw, w_offset
+  //  3 = create calibration table files
+      noDetector = -1,
+  onlyConvert = 0,
+  sort = 1,
+  calib = 2,
+  genCalibTab = 3
+};
+
+struct SortWrapper {
+  sort_class *sorter = new sort_class();
+  SortCmd cmd = noDetector;
+  std::string calibTabFilename;
+  std::map<std::string, int> chMap;
+  std::map<std::string, double> factors;
+
+  bool readConfig(const JSONReader &reader, const std::string prefix) {
+    std::cout << "Initialize sorter from config file... " << std::endl;
+    if (!reader.hasMember(prefix)) throw std::invalid_argument("The member does not exist!");
+
+    cmd = (SortCmd) reader.get<int>(prefix + ".cmd");
+    if (cmd == -1) {
+      std::cout << "ok" << std::endl;
+      return false;
+    }
+    calibTabFilename = reader.get<const char *>(prefix + ".calibration_table");
+
+    chMap = reader.getMap<int>(prefix + ".channel_map");
+    sorter->use_HEX = reader.getBoolAt(prefix + ".hexanode_used");
+    sorter->common_start_mode = reader.getBoolAt(prefix + ".common_start_mode");
+    sorter->Cu1 = chMap["u1"] - 1;
+    sorter->Cu2 = chMap["u2"] - 1;
+    sorter->Cv1 = chMap["v1"] - 1;
+    sorter->Cv2 = chMap["v2"] - 1;
+    sorter->Cw1 = chMap["w1"] - 1;
+    sorter->Cw2 = chMap["w2"] - 1;
+    sorter->Cmcp = chMap["MCP"] - 1;
+    sorter->use_MCP = (sorter->Cmcp) > -1;
+
+    factors = reader.getMap<double>(prefix + ".factors");
+    sorter->uncorrected_time_sum_half_width_u = factors["halfwidth_u"];
+    sorter->uncorrected_time_sum_half_width_v = factors["halfwidth_v"];
+    sorter->uncorrected_time_sum_half_width_w = factors["halfwidth_w"];
+    for (auto key: {"runtime_u", "runtime_v", "runtime_w"}) {
+      auto found = factors.find(key);
+      if (found == factors.end()) factors[key] = factors["runtime"];
+    }
+    sorter->runtime_u = factors["runtime_u"];
+    sorter->runtime_v = factors["runtime_v"];
+    sorter->runtime_w = factors["runtime_w"];
+    sorter->fu = 0.5 * factors["fu"];
+    sorter->fv = 0.5 * factors["fv"];
+    sorter->fw = 0.5 * factors["fw"];
+
+    sorter->MCP_radius = reader.getDoubleAt(prefix + ".MCP_radius");
+    sorter->dead_time_anode = reader.getDoubleAt(prefix + ".anode_deadtime");
+    sorter->dead_time_mcp = reader.getDoubleAt(prefix + ".MCP_deadtime");
+    sorter->use_sum_correction = reader.getBoolAt(prefix + ".correct_timesum");
+    sorter->use_pos_correction = reader.getBoolAt(prefix + ".correct_position");
+
+    // end of reading the config file:
+    std::cout << "ok" << std::endl;
+    return true;
+  }
+  bool init(const double TDCRes, double *pTDCns, int *pCount) {
+    if (sorter == nullptr) return true;
+    std::cout << "init sorter... " << std::endl;
+    sorter->TDC_resolution_ns = TDCRes;
+    sorter->tdc_array_row_length = NUM_IONS;
+    sorter->count = pCount;
+    sorter->tdc_pointer = pTDCns;
+    if (cmd >= calib) {
+      sorter->create_scalefactors_calibrator(
+          true, // BuildStack
+          sorter->runtime_u, sorter->runtime_v, sorter->runtime_w, // runtime u, v, w
+          0.78, // runtime inner fraction
+          sorter->fu, sorter->fv, sorter->fw // fu, fv, fw
+      );
+    }
+    int error_code = sorter->init_after_setting_parameters();
+    if (error_code) {
+      std::cout << "ion sorter could not be initialized" << std::endl;
+      char error_text[512];
+      sorter->get_error_text(error_code, 512, error_text);
+      printf("Error %i: %s\n", error_code, error_text);
+      return false;
+    }
+    std::cout << "ok" << std::endl;
+    return true;
+  }
+  bool readCalibTab() {
+    if (sorter == nullptr) return true;
+    if (sorter->use_sum_correction || sorter->use_pos_correction) {
+      std::cout << "Reading calibration table: " << calibTabFilename << "... ";
+      const bool result = read_calibration_tables(calibTabFilename.c_str(), sorter);
+      std::cout << "ok" << std::endl;
+      return result;
+    }
+    return false;
+  }
+  bool genClibTab() {
+    if (sorter == nullptr) return true;
+    if (cmd == genCalibTab) {
+      std::cout << "Generating calibration table: " << calibTabFilename << "... ";
+      const bool result = create_calibration_tables(calibTabFilename.c_str(), sorter);
+      std::cout << "ok" << std::endl;
+      return result;
+    }
+    return false;
+  }
+  bool calibFactors() {
+    if (sorter == nullptr) return true;
+    if (cmd == calib) {
+      std::cout << "Calibrating... ";
+      const bool result = sorter->do_calibration();
+      std::cout << "ok" << std::endl;
+      if (sorter->scalefactors_calibrator) {
+        printf("ion: Good scalefactors are:\nf_U = %lg\nf_V = %lg\nf_W = %lg\nOffset on layer W = %lg\n",
+               2. * sorter->fu,
+               2. * sorter->scalefactors_calibrator->best_fv,
+               2. * sorter->scalefactors_calibrator->best_fw,
+               sorter->scalefactors_calibrator->best_w_offset);
+      }
+      return result;
+    }
+    return false;
+  }
+  bool cleanup() {
+    if (sorter == nullptr) return true;
+    delete sorter;
+    sorter = nullptr;
+    return true;
+  }
+};
 }
+
+
+
+
+
+
+
+
+
 
 int main(int argc, char *argv[]) {
   // Inform status
@@ -377,96 +432,27 @@ int main(int argc, char *argv[]) {
   Analysis::SortRun *pRun;
 
   // Read options
-  const bool isDrawingCanvases = pReader->getBoolAt("draw_canvases");
-  const int maxElecHits = pReader->getIntAt("maxium_of_electron_hits");
-  const int maxIonHits = pReader->getIntAt("maxium_of_ion_hits");
-  Analysis::SortRun::RmBunch rmBunch;
-  rmBunch.ch = pReader->getIntAt("electron_marker_channel");
-  if (pReader->hasMember("remove_bunch_region")) {
-    rmBunch.isOn = true;
-    rmBunch.region1 = pReader->getDoubleAt("remove_bunch_region", 0);
-    rmBunch.region2 = pReader->getDoubleAt("remove_bunch_region", 1);
-  } else {
-    rmBunch.isOn = false;
-  }
+  const auto isDrawingCanvases = pReader->get<bool>("draw_canvases");
+  const auto chMap = pReader->getMap<int>("channel_map");
+  const auto maxElecHits = pReader->get<int>("maxium_of_electron_hits");
+  const auto maxIonHits = pReader->get<int>("maxium_of_ion_hits");
+  const auto bunchCh = pReader->get<int>("bunch_marker_ch")-1;
+  auto bunchMaskRm = Analysis::getBunchMaskRm(*pReader, "remove_bunch_region");
 
   // Setup LMF files
-  int numLMF = pReader->getListSizeAt("LMF_files");
-  std::string *pLMFFilenames = nullptr;
-  if (numLMF == -1) {
-    numLMF = 1;
-    pLMFFilenames = new std::string[numLMF];
-    pLMFFilenames[0] = pReader->getStringAt("LMF_files");
-  } else if (numLMF > 0) {
-    pLMFFilenames = new std::string[numLMF];
-    for (int i = 0; i < numLMF; i++) {
-      pLMFFilenames[i] = pReader->getStringAt("LMF_files", i);
-    }
-  } else {
-    numLMF = 0;
-  }
-
-  // Setup TDC
-  double TDCResolution = 0.025; // 25ps tdc bin size
-  int TDC[NUM_CHANNELS][NUM_IONS];
-  double tdc_ns[NUM_CHANNELS][NUM_IONS];
-  unsigned int count[NUM_CHANNELS];
-  ion_command = -1;
-  elec_command = -1;
-  // 0 = only convert to new file format
-  // 1 = sort and write new file
-  // 2 = calibrate fv, fw, w_offset
-  // 3 = create calibration table files
+  Analysis::LMFWrapper aLMFWrapper;
+  aLMFWrapper.readConfig(*pReader);
 
   // create the sorter:
-  printf("creating the ion sorter... ");
-  ionSorter = new sort_class();
-  printf("ok\n");
-
-  printf("creating the electron sorter... ");
-  elecSorter = new sort_class();
-  printf("ok\n");
-
-  { // read sorter config
-    bool readSuccessfully;
-    readSuccessfully = read_config_file(*pReader,
-                                        "ion_sorter",
-                                        ionSorter,
-                                        ion_command,
-                                        ion_offset_sum_u,
-                                        ion_offset_sum_v,
-                                        ion_offset_sum_w,
-                                        ion_w_offset,
-                                        ion_pos_offset_x,
-                                        ion_pos_offset_y);
-    if (!readSuccessfully) {
-      delete ionSorter;
-      ionSorter = nullptr;
-    }
-    ionCalibTabFilename = pReader->getStringAt("ion_calibration_table");
-    if (ionSorter) {
-      if (ionSorter->use_sum_correction || ionSorter->use_pos_correction)
-        read_calibration_tables(ionCalibTabFilename.c_str(), ionSorter);
-    }
-    readSuccessfully = read_config_file(*pReader,
-                                        "electron_sorter",
-                                        elecSorter,
-                                        elec_command,
-                                        elec_offset_sum_u,
-                                        elec_offset_sum_v,
-                                        elec_offset_sum_w,
-                                        elec_w_offset,
-                                        elec_pos_offset_x,
-                                        elec_pos_offset_y);
-    if (!readSuccessfully) {
-      delete elecSorter;
-      elecSorter = nullptr;
-    }
-    elecClibTabFilename = pReader->getStringAt("electron_calibration_table");
-    if (elecSorter) {
-      if (elecSorter->use_sum_correction || elecSorter->use_pos_correction)
-        read_calibration_tables(elecClibTabFilename.c_str(), elecSorter);
-    }
+  Analysis::SortWrapper iSortWrapper, eSortWrapper;
+  {
+    bool b;
+    b = iSortWrapper.readConfig(*pReader, "ion_sorter");
+    if (!b) throw std::invalid_argument("Fail to read the ion config!");
+    iSortWrapper.readCalibTab();
+    b = eSortWrapper.readConfig(*pReader, "electron_sorter");
+    if (!b) throw std::invalid_argument("Fail to read the electron config!");
+    eSortWrapper.readCalibTab();
   }
 
   // Close the JSON reader
@@ -477,82 +463,49 @@ int main(int argc, char *argv[]) {
   }
   std::cout << "ok" << std::endl;
 
-  if (ion_command > 1 && elec_command > 1) {
+  // Check cmd
+  if (iSortWrapper.cmd > Analysis::sort && eSortWrapper.cmd > Analysis::sort) {
     printf("Error: Do not calibrate 2 detectors simultaneously.\n");
     return 0;
   }
-  if (ion_command == -1 && elec_command == -1) {
+  if ((int) iSortWrapper.cmd == Analysis::noDetector && (int) eSortWrapper.cmd == Analysis::noDetector) {
     printf("no config file was read. Nothing to do.\n");
     return 0;
   }
 
-  // initialization of the sorters:
-  if (ionSorter) {
-    printf("init ion sorter... ");
-    ionSorter->TDC_resolution_ns = TDCResolution;
-    ionSorter->tdc_array_row_length = NUM_IONS;
-    ionSorter->count = (int *) count;
-    ionSorter->tdc_pointer = &tdc_ns[0][0];
-    if (ion_command >= 2) {
-      ionSorter->create_scalefactors_calibrator(true, ionSorter->runtime_u, ionSorter->runtime_v,
-                                                ionSorter->runtime_w, 0.78, ionSorter->fu, ionSorter->fv,
-                                                ionSorter->fw);
-    }
-    int error_code = ionSorter->init_after_setting_parameters();
-    if (error_code) {
-      printf("ion sorter could not be initialized\n");
-      char error_text[512];
-      ionSorter->get_error_text(error_code, 512, error_text);
-      printf("Error %i: %s\n", error_code, error_text);
-      return 0;
-    }
-    printf("ok\n");
+  { // initialization of the sorters
+    bool result;
+    result = iSortWrapper.init(aLMFWrapper.TDCRes, &aLMFWrapper.tdc_ns[0][0], (int *) aLMFWrapper.count);
+    if (!result) throw std::invalid_argument("Fail to init the ion sorter!");
+    result = eSortWrapper.init(aLMFWrapper.TDCRes, &aLMFWrapper.tdc_ns[0][0], (int *) aLMFWrapper.count);
+    if (!result) throw std::invalid_argument("Fail to init the electron sorter!");
   }
-  if (elecSorter) {
-    printf("init electron sorter... ");
-    elecSorter->TDC_resolution_ns = TDCResolution;
-    elecSorter->tdc_array_row_length = NUM_IONS;
-    elecSorter->count = (int *) count;
-    elecSorter->tdc_pointer = &tdc_ns[0][0];
-    if (elec_command >= 2) {
-      elecSorter->create_scalefactors_calibrator(true, elecSorter->runtime_u, elecSorter->runtime_v,
-                                                 elecSorter->runtime_w, 0.78, elecSorter->fu, elecSorter->fv,
-                                                 elecSorter->fw);
-    }
-    int error_code = elecSorter->init_after_setting_parameters();
-    if (error_code) {
-      printf("electron sorter could not be initialized\n");
-      char error_text[512];
-      elecSorter->get_error_text(error_code, 512, error_text);
-      printf("Error %i: %s\n", error_code, error_text);
-      return 0;
-    }
-    printf("ok\n");
-  }
-
 
   // Open LMF file
   bool theLoopIsOn = true;
-  for (int iLMF = 0; iLMF < numLMF; iLMF++) {
+  const unsigned long numLMF = aLMFWrapper.filenames.size();
+  for (int iLMF; iLMF < numLMF; iLMF++) {
     // Check keyboard hit
     if (!theLoopIsOn) break;
 
-    // Read a LMF file
-    pLMF = new LMF_IO(NUM_CHANNELS, NUM_IONS);
-    bool readSuccessfully;
-    readSuccessfully = pLMF->OpenInputLMF(pLMFFilenames[iLMF]);
-    if (!readSuccessfully) {
-      std::cout << "Could not open LMF file: " << pLMFFilenames[iLMF] << std::endl;
-      break;
+    { // Read a LMF file
+      bool result;
+      result = aLMFWrapper.readFile(iLMF);
+      if (!result) break;
     }
-    std::cout << "A LMF file " << pLMFFilenames[iLMF] << " is open for reading." << std::endl;
+    auto &pLMF = aLMFWrapper.pLMF;
+    const double TDCResolution = aLMFWrapper.TDCRes;
+    auto &TDC = aLMFWrapper.TDC;
+    auto &tdc_ns = aLMFWrapper.tdc_ns;
+    auto &count = aLMFWrapper.count;
+
 
     // Setup Run
     pRun = new Analysis::SortRun("ResortLess", maxIonHits, maxElecHits);
     std::cout << "A root file is open for output." << std::endl;
     if (isDrawingCanvases) {
-      if (ionSorter) pRun->createC1();
-      if (elecSorter) pRun->createC2();
+      if (iSortWrapper.sorter != nullptr) pRun->createC1();
+      if (eSortWrapper.sorter != nullptr) pRun->createC2();
     }
     gSystem->ProcessEvents(); // allow the system to show the histograms
 
@@ -587,192 +540,218 @@ int main(int argc, char *argv[]) {
       //    double timestamp_s = pLMF->GetDoubleTimeStamp(); // absolute timestamp in seconds
       pLMF->GetTDCDataArray((int *) TDC);
 
-      // convert the raw TDC data to nanoseconds:
-      if (ionSorter) {
-        if (ionSorter->Cmcp > -1) {
-          for (unsigned int i = 0; i < count[ionSorter->Cmcp]; ++i)
-            tdc_ns[ionSorter->Cmcp][i] = double(TDC[ionSorter->Cmcp][i]) * TDCResolution;
+
+
+
+
+      // convert the raw TDC data to nanoseconds
+      // ion
+      if (iSortWrapper.sorter != nullptr) {
+        auto &pSorter = iSortWrapper.sorter;
+        const auto cmd = iSortWrapper.cmd;
+        double &offset_u = iSortWrapper.factors["offset_u"],
+            &offset_v = iSortWrapper.factors["offset_v"],
+            &offset_w = iSortWrapper.factors["offset_w"],
+            &fw_offset = iSortWrapper.factors["fw_offset"],
+            &offset_x = iSortWrapper.factors["offset_x"],
+            &offset_y = iSortWrapper.factors["offset_y"];
+        if (pSorter->Cmcp > -1) {
+          for (unsigned int i = 0; i < count[pSorter->Cmcp]; ++i)
+            tdc_ns[pSorter->Cmcp][i] = double(TDC[pSorter->Cmcp][i]) * TDCResolution;
         }
-        for (unsigned int i = 0; i < count[ionSorter->Cu1]; ++i)
-          tdc_ns[ionSorter->Cu1][i] = double(TDC[ionSorter->Cu1][i]) * TDCResolution;
-        for (unsigned int i = 0; i < count[ionSorter->Cu2]; ++i)
-          tdc_ns[ionSorter->Cu2][i] = double(TDC[ionSorter->Cu2][i]) * TDCResolution;
-        for (unsigned int i = 0; i < count[ionSorter->Cv1]; ++i)
-          tdc_ns[ionSorter->Cv1][i] = double(TDC[ionSorter->Cv1][i]) * TDCResolution;
-        for (unsigned int i = 0; i < count[ionSorter->Cv2]; ++i)
-          tdc_ns[ionSorter->Cv2][i] = double(TDC[ionSorter->Cv2][i]) * TDCResolution;
-        if (ionSorter->use_HEX) {
-          for (unsigned int i = 0; i < count[ionSorter->Cw1]; ++i)
-            tdc_ns[ionSorter->Cw1][i] = double(TDC[ionSorter->Cw1][i]) * TDCResolution;
-          for (unsigned int i = 0; i < count[ionSorter->Cw2]; ++i)
-            tdc_ns[ionSorter->Cw2][i] = double(TDC[ionSorter->Cw2][i]) * TDCResolution;
+        for (unsigned int i = 0; i < count[pSorter->Cu1]; ++i)
+          tdc_ns[pSorter->Cu1][i] = double(TDC[pSorter->Cu1][i]) * TDCResolution;
+        for (unsigned int i = 0; i < count[pSorter->Cu2]; ++i)
+          tdc_ns[pSorter->Cu2][i] = double(TDC[pSorter->Cu2][i]) * TDCResolution;
+        for (unsigned int i = 0; i < count[pSorter->Cv1]; ++i)
+          tdc_ns[pSorter->Cv1][i] = double(TDC[pSorter->Cv1][i]) * TDCResolution;
+        for (unsigned int i = 0; i < count[pSorter->Cv2]; ++i)
+          tdc_ns[pSorter->Cv2][i] = double(TDC[pSorter->Cv2][i]) * TDCResolution;
+        if (pSorter->use_HEX) {
+          for (unsigned int i = 0; i < count[pSorter->Cw1]; ++i)
+            tdc_ns[pSorter->Cw1][i] = double(TDC[pSorter->Cw1][i]) * TDCResolution;
+          for (unsigned int i = 0; i < count[pSorter->Cw2]; ++i)
+            tdc_ns[pSorter->Cw2][i] = double(TDC[pSorter->Cw2][i]) * TDCResolution;
         }
-        if (ionSorter->use_HEX) {
+        if (pSorter->use_HEX) {
           // shift the time sums to zero:
-          ionSorter->shift_sums(+1, ion_offset_sum_u, ion_offset_sum_v, ion_offset_sum_w);
+          pSorter->shift_sums(+1, offset_u, offset_v, offset_w);
           // shift layer w so that the middle lines of all layers intersect in one point:
-          ionSorter->shift_layer_w(+1, ion_w_offset);
+          pSorter->shift_layer_w(+1, fw_offset);
         }
         else {
           // shift the time sums to zero:
-          ionSorter->shift_sums(+1, ion_offset_sum_u, ion_offset_sum_v);
+          pSorter->shift_sums(+1, offset_u, offset_v);
         }
         // shift all signals from the anode so that the center of the detector is at x=y=0:
-        ionSorter->shift_position_origin(+1, ion_pos_offset_x, ion_pos_offset_y);
+        pSorter->shift_position_origin(+1, offset_x, offset_y);
 
         // for calibration of fv, fw, w_offset and correction tables
-        ionSorter->feed_calibration_data(true, ion_w_offset);
+        pSorter->feed_calibration_data(true, fw_offset);
 
-        if (ionSorter->scalefactors_calibrator && ion_command >= 2) {
-          if (ionSorter->scalefactors_calibrator->map_is_full_enough()) {
+        if (pSorter->scalefactors_calibrator && cmd >= 2) {
+          if (pSorter->scalefactors_calibrator->map_is_full_enough()) {
             std::cout << "ionSorter: map is full enough" << std::endl;
             theLoopIsOn = false;
             break;
           }
         }
-        if (ionSorter->use_HEX)
+        if (pSorter->use_HEX)
           pRun->fill2d(Analysis::SortRun::h2_ionXYDev,
-                       ionSorter->scalefactors_calibrator->binx
-                           - ionSorter->scalefactors_calibrator->detector_map_size / 2.0,
-                       ionSorter->scalefactors_calibrator->biny
-                           - ionSorter->scalefactors_calibrator->detector_map_size / 2.0,
-                       ionSorter->scalefactors_calibrator->detector_map_devi_fill);
+                       pSorter->scalefactors_calibrator->binx
+                           - pSorter->scalefactors_calibrator->detector_map_size / 2.0,
+                       pSorter->scalefactors_calibrator->biny
+                           - pSorter->scalefactors_calibrator->detector_map_size / 2.0,
+                       pSorter->scalefactors_calibrator->detector_map_devi_fill);
 
-        if (count[ionSorter->Cu1] > 0 && count[ionSorter->Cu2] > 0) {
-          if (count[ionSorter->Cv1] > 0 && count[ionSorter->Cv2] > 0) {
-            double u = ionSorter->fu * (tdc_ns[ionSorter->Cu1][0] - tdc_ns[ionSorter->Cu2][0]);
-            double v = ionSorter->fv * (tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0]);
-            double y = (u - 2. * v) / sqrt(3.0); // 0.557 = 1/sqrt(3)
+        if (count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0) {
+          if (count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0) {
+            double u = pSorter->fu * (tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0]);
+            double v = pSorter->fv * (tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0]);
+            double y = (u - 2. * v) / std::sqrt(3.0);
             pRun->fill2d(Analysis::SortRun::h2_ionXYRaw, u, y);
           }
         }
-        if (count[ionSorter->Cu1] > 0 && count[ionSorter->Cu2] > 0) {
-          pRun->fill1d(Analysis::SortRun::h1_ionU, tdc_ns[ionSorter->Cu1][0] - tdc_ns[ionSorter->Cu2][0]);
+        if (count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0) {
+          pRun->fill1d(Analysis::SortRun::h1_ionU, tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0]);
           double mcp = 0.;
-          if (ionSorter->use_MCP) {
-            if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
+          if (pSorter->use_MCP) {
+            if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
           }
-          const double timesum = tdc_ns[ionSorter->Cu1][0] + tdc_ns[ionSorter->Cu2][0] - 2 * mcp;
-          const double timediff = tdc_ns[ionSorter->Cu1][0] - tdc_ns[ionSorter->Cu2][0];
+          const double timesum = tdc_ns[pSorter->Cu1][0] + tdc_ns[pSorter->Cu2][0] - 2 * mcp;
+          const double timediff = tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0];
           pRun->fill1d(Analysis::SortRun::h1_ionTimesumU, timesum);
           pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffU, timediff, timesum);
         }
-        if (count[ionSorter->Cv1] > 0 && count[ionSorter->Cv2] > 0) {
-          pRun->fill1d(Analysis::SortRun::h1_ionV, tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0]);
+        if (count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0) {
+          pRun->fill1d(Analysis::SortRun::h1_ionV, tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0]);
           double mcp = 0.;
-          if (ionSorter->use_MCP) {
-            if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
+          if (pSorter->use_MCP) {
+            if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
           }
-          const double timesum = tdc_ns[ionSorter->Cv1][0] + tdc_ns[ionSorter->Cv2][0] - 2 * mcp;
-          const double timediff = tdc_ns[ionSorter->Cv1][0] - tdc_ns[ionSorter->Cv2][0];
+          const double timesum = tdc_ns[pSorter->Cv1][0] + tdc_ns[pSorter->Cv2][0] - 2 * mcp;
+          const double timediff = tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0];
           pRun->fill1d(Analysis::SortRun::h1_ionTimesumV, timesum);
           pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffV, timediff, timesum);
         }
-        if (ionSorter->use_HEX) {
-          if (count[ionSorter->Cw1] > 0 && count[ionSorter->Cw2] > 0) {
-            pRun->fill1d(Analysis::SortRun::h1_ionW, tdc_ns[ionSorter->Cw1][0] - tdc_ns[ionSorter->Cw2][0]);
+        if (pSorter->use_HEX) {
+          if (count[pSorter->Cw1] > 0 && count[pSorter->Cw2] > 0) {
+            pRun->fill1d(Analysis::SortRun::h1_ionW, tdc_ns[pSorter->Cw1][0] - tdc_ns[pSorter->Cw2][0]);
             double mcp = 0.;
-            if (ionSorter->use_MCP) {
-              if (count[ionSorter->Cmcp] > 0) mcp = tdc_ns[ionSorter->Cmcp][0]; else mcp = -1.e100;
+            if (pSorter->use_MCP) {
+              if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
             }
-            const double timesum = tdc_ns[ionSorter->Cw1][0] + tdc_ns[ionSorter->Cw2][0] - 2 * mcp;
-            const double timediff = tdc_ns[ionSorter->Cw1][0] - tdc_ns[ionSorter->Cw2][0];
+            const double timesum = tdc_ns[pSorter->Cw1][0] + tdc_ns[pSorter->Cw2][0] - 2 * mcp;
+            const double timediff = tdc_ns[pSorter->Cw1][0] - tdc_ns[pSorter->Cw2][0];
             pRun->fill1d(Analysis::SortRun::h1_ionTimesumW, timesum);
             pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffW, timediff, timesum);
           }
         }
       }
 
-      if (elecSorter) {
-        if (elecSorter->Cmcp > -1) {
-          for (unsigned int i = 0; i < count[elecSorter->Cmcp]; ++i)
-            tdc_ns[elecSorter->Cmcp][i] = double(TDC[elecSorter->Cmcp][i]) * TDCResolution;
+
+
+
+
+      // electron
+      if (eSortWrapper.sorter != nullptr) {
+        auto &pSorter = eSortWrapper.sorter;
+        const auto cmd = eSortWrapper.cmd;
+        double &offset_u = eSortWrapper.factors["offset_u"],
+            &offset_v = eSortWrapper.factors["offset_v"],
+            &offset_w = eSortWrapper.factors["offset_w"],
+            &fw_offset = eSortWrapper.factors["fw_offset"],
+            &offset_x = eSortWrapper.factors["offset_x"],
+            &offset_y = eSortWrapper.factors["offset_y"];
+        if (pSorter->Cmcp > -1) {
+          for (unsigned int i = 0; i < count[pSorter->Cmcp]; ++i)
+            tdc_ns[pSorter->Cmcp][i] = double(TDC[pSorter->Cmcp][i]) * TDCResolution;
         }
-        for (unsigned int i = 0; i < count[elecSorter->Cu1]; ++i)
-          tdc_ns[elecSorter->Cu1][i] = double(TDC[elecSorter->Cu1][i]) * TDCResolution;
-        for (unsigned int i = 0; i < count[elecSorter->Cu2]; ++i)
-          tdc_ns[elecSorter->Cu2][i] = double(TDC[elecSorter->Cu2][i]) * TDCResolution;
-        for (unsigned int i = 0; i < count[elecSorter->Cv1]; ++i)
-          tdc_ns[elecSorter->Cv1][i] = double(TDC[elecSorter->Cv1][i]) * TDCResolution;
-        for (unsigned int i = 0; i < count[elecSorter->Cv2]; ++i)
-          tdc_ns[elecSorter->Cv2][i] = double(TDC[elecSorter->Cv2][i]) * TDCResolution;
-        if (elecSorter->use_HEX) {
-          for (unsigned int i = 0; i < count[elecSorter->Cw1]; ++i)
-            tdc_ns[elecSorter->Cw1][i] = double(TDC[elecSorter->Cw1][i]) * TDCResolution;
-          for (unsigned int i = 0; i < count[elecSorter->Cw2]; ++i)
-            tdc_ns[elecSorter->Cw2][i] = double(TDC[elecSorter->Cw2][i]) * TDCResolution;
+        for (unsigned int i = 0; i < count[pSorter->Cu1]; ++i)
+          tdc_ns[pSorter->Cu1][i] = double(TDC[pSorter->Cu1][i]) * TDCResolution;
+        for (unsigned int i = 0; i < count[pSorter->Cu2]; ++i)
+          tdc_ns[pSorter->Cu2][i] = double(TDC[pSorter->Cu2][i]) * TDCResolution;
+        for (unsigned int i = 0; i < count[pSorter->Cv1]; ++i)
+          tdc_ns[pSorter->Cv1][i] = double(TDC[pSorter->Cv1][i]) * TDCResolution;
+        for (unsigned int i = 0; i < count[pSorter->Cv2]; ++i)
+          tdc_ns[pSorter->Cv2][i] = double(TDC[pSorter->Cv2][i]) * TDCResolution;
+        if (pSorter->use_HEX) {
+          for (unsigned int i = 0; i < count[pSorter->Cw1]; ++i)
+            tdc_ns[pSorter->Cw1][i] = double(TDC[pSorter->Cw1][i]) * TDCResolution;
+          for (unsigned int i = 0; i < count[pSorter->Cw2]; ++i)
+            tdc_ns[pSorter->Cw2][i] = double(TDC[pSorter->Cw2][i]) * TDCResolution;
         }
-        if (elecSorter->use_HEX) {
+        if (pSorter->use_HEX) {
           // shift the time sums to zero:
-          elecSorter->shift_sums(+1, elec_offset_sum_u, elec_offset_sum_v, elec_offset_sum_w);
+          pSorter->shift_sums(+1, offset_u, offset_v, offset_w);
           // shift layer w so that the middle lines of all layers intersect in one point:
-          elecSorter->shift_layer_w(+1, elec_w_offset);
+          pSorter->shift_layer_w(+1, fw_offset);
         }
         else {
           // shift the time sums to zero:
-          elecSorter->shift_sums(+1, elec_offset_sum_u, elec_offset_sum_v);
+          pSorter->shift_sums(+1, offset_u, offset_v);
         }
 
         // shift all signals from the anode so that the center of the detector is at x=y=0:
-        elecSorter->shift_position_origin(+1, elec_pos_offset_x, elec_pos_offset_y);
+        pSorter->shift_position_origin(+1, offset_x, offset_y);
 
         // for calibration of fv, fw, w_offset and correction tables
-        elecSorter->feed_calibration_data(true, elec_w_offset);
+        pSorter->feed_calibration_data(true, fw_offset);
 
-        if (elecSorter->scalefactors_calibrator && elec_command >= 2) {
-          if (elecSorter->scalefactors_calibrator->map_is_full_enough()) {
+        if (pSorter->scalefactors_calibrator && cmd >= 2) {
+          if (pSorter->scalefactors_calibrator->map_is_full_enough()) {
             std::cout << "elecSorter: map is full enough." << std::endl;
             theLoopIsOn = false;
             break;
           }
         }
-        if (elecSorter->use_HEX)
+        if (pSorter->use_HEX)
           pRun->fill2d(Analysis::SortRun::h2_elecXYDev,
-                       elecSorter->scalefactors_calibrator->binx
-                           - elecSorter->scalefactors_calibrator->detector_map_size / 2.0,
-                       elecSorter->scalefactors_calibrator->biny
-                           - elecSorter->scalefactors_calibrator->detector_map_size / 2.0,
-                       elecSorter->scalefactors_calibrator->detector_map_devi_fill);
+                       pSorter->scalefactors_calibrator->binx
+                           - pSorter->scalefactors_calibrator->detector_map_size / 2.0,
+                       pSorter->scalefactors_calibrator->biny
+                           - pSorter->scalefactors_calibrator->detector_map_size / 2.0,
+                       pSorter->scalefactors_calibrator->detector_map_devi_fill);
 
-        if (count[elecSorter->Cu1] > 0 && count[elecSorter->Cu2] > 0) {
-          if (count[elecSorter->Cv1] > 0 && count[elecSorter->Cv2] > 0) {
-            double u = elecSorter->fu * (tdc_ns[elecSorter->Cu1][0] - tdc_ns[elecSorter->Cu2][0]);
-            double v = elecSorter->fv * (tdc_ns[elecSorter->Cv1][0] - tdc_ns[elecSorter->Cv2][0]);
+        if (count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0) {
+          if (count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0) {
+            double u = pSorter->fu * (tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0]);
+            double v = pSorter->fv * (tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0]);
             double y = (u - 2. * v) * 0.577350269; // 0.557 = 1/sqrt(3)
             pRun->fill2d(Analysis::SortRun::h2_elecXYRaw, u, y);
           }
         }
-        if (count[elecSorter->Cu1] > 0 && count[elecSorter->Cu2] > 0) {
-          pRun->fill1d(Analysis::SortRun::h1_elecU, tdc_ns[elecSorter->Cu1][0] - tdc_ns[elecSorter->Cu2][0]);
+        if (count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0) {
+          pRun->fill1d(Analysis::SortRun::h1_elecU, tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0]);
           double mcp = 0.;
-          if (elecSorter->use_MCP) {
-            if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
+          if (pSorter->use_MCP) {
+            if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
           }
-          const double timesum = tdc_ns[elecSorter->Cu1][0] + tdc_ns[elecSorter->Cu2][0] - 2 * mcp;
-          const double timediff = tdc_ns[elecSorter->Cu1][0] - tdc_ns[elecSorter->Cu2][0];
+          const double timesum = tdc_ns[pSorter->Cu1][0] + tdc_ns[pSorter->Cu2][0] - 2 * mcp;
+          const double timediff = tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0];
           pRun->fill1d(Analysis::SortRun::h1_elecTimesumU, timesum);
           pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffU, timediff, timesum);
         }
-        if (count[elecSorter->Cv1] > 0 && count[elecSorter->Cv2] > 0) {
-          pRun->fill1d(Analysis::SortRun::h1_elecV, tdc_ns[elecSorter->Cv1][0] - tdc_ns[elecSorter->Cv2][0]);
+        if (count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0) {
+          pRun->fill1d(Analysis::SortRun::h1_elecV, tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0]);
           double mcp = 0.;
-          if (elecSorter->use_MCP) {
-            if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
+          if (pSorter->use_MCP) {
+            if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
           }
-          const double timesum = tdc_ns[elecSorter->Cv1][0] + tdc_ns[elecSorter->Cv2][0] - 2 * mcp;
-          const double timediff = tdc_ns[elecSorter->Cv1][0] - tdc_ns[elecSorter->Cv2][0];
+          const double timesum = tdc_ns[pSorter->Cv1][0] + tdc_ns[pSorter->Cv2][0] - 2 * mcp;
+          const double timediff = tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0];
           pRun->fill1d(Analysis::SortRun::h1_elecTimesumV, timesum);
           pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffV, timediff, timesum);
         }
-        if (elecSorter->use_HEX) {
-          if (count[elecSorter->Cw1] > 0 && count[elecSorter->Cw2] > 0) {
-            pRun->fill1d(Analysis::SortRun::h1_elecW, tdc_ns[elecSorter->Cw1][0] - tdc_ns[elecSorter->Cw2][0]);
+        if (pSorter->use_HEX) {
+          if (count[pSorter->Cw1] > 0 && count[pSorter->Cw2] > 0) {
+            pRun->fill1d(Analysis::SortRun::h1_elecW, tdc_ns[pSorter->Cw1][0] - tdc_ns[pSorter->Cw2][0]);
             double mcp = 0.;
-            if (elecSorter->use_MCP) {
-              if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
+            if (pSorter->use_MCP) {
+              if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
             }
-            const double timesum = tdc_ns[elecSorter->Cw1][0] + tdc_ns[elecSorter->Cw2][0] - 2 * mcp;
-            const double timediff = tdc_ns[elecSorter->Cw1][0] - tdc_ns[elecSorter->Cw2][0];
+            const double timesum = tdc_ns[pSorter->Cw1][0] + tdc_ns[pSorter->Cw2][0] - 2 * mcp;
+            const double timediff = tdc_ns[pSorter->Cw1][0] - tdc_ns[pSorter->Cw2][0];
             pRun->fill1d(Analysis::SortRun::h1_elecTimesumW, timesum);
             pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffW, timediff, timesum);
           }
@@ -782,117 +761,124 @@ int main(int argc, char *argv[]) {
       // Fill the tree and hists
       int number_of_ions = 0;
       int number_of_electrons = 0;
-      if (ionSorter) {
-        if (ion_command == 1) {  // sort and write new file
+      if (iSortWrapper.sorter != nullptr) {
+        auto pSorter = iSortWrapper.sorter;
+        auto cmd = iSortWrapper.cmd;
+        if (cmd == Analysis::sort) {  // sort and write new file
           // sort/reconstruct the detector signals and apply the sum- and NL-correction.
-          number_of_ions = ionSorter->sort();
+          number_of_ions = pSorter->sort();
           // "number_of_ions" is the number of reconstructed number of particles
         }
         else {
-          number_of_ions = ionSorter->run_without_sorting();
+          number_of_ions = pSorter->run_without_sorting();
         }
         for (int i = 0; i < number_of_ions; i++) {
           pRun->fill2d(Analysis::SortRun::h2_ionXY,
-                       ionSorter->output_hit_array[i]->x,
-                       ionSorter->output_hit_array[i]->y);
+                       pSorter->output_hit_array[i]->x,
+                       pSorter->output_hit_array[i]->y);
         }
       }
-      if (elecSorter) {
-        if (elec_command == 1) {  // sort and write new file
+      if (eSortWrapper.sorter != nullptr) {
+        auto pSorter = eSortWrapper.sorter;
+        auto cmd = eSortWrapper.cmd;
+        if (cmd == 1) {  // sort and write new file
           // sort/reconstruct the detector signals and apply the sum- and NL-correction.
-          number_of_electrons = elecSorter->sort();
+          number_of_electrons = pSorter->sort();
           // "number_of_electrons" is the number of reconstructed number of particles
         }
         else {
-          number_of_electrons = elecSorter->run_without_sorting();
+          number_of_electrons = pSorter->run_without_sorting();
         }
         for (int i = 0; i < number_of_electrons; i++) {
           pRun->fill2d(Analysis::SortRun::h2_elecXY,
-                       elecSorter->output_hit_array[i]->x,
-                       elecSorter->output_hit_array[i]->y);
+                       pSorter->output_hit_array[i]->x,
+                       pSorter->output_hit_array[i]->y);
         }
       }
       double eMarker = 0;
-      if (elecSorter) {
+      if (eSortWrapper.sorter != nullptr) {
+        auto eSorter = eSortWrapper.sorter;
         double mcp = 0.;
-        if (elecSorter->use_MCP) {
-          if (count[elecSorter->Cmcp] > 0) mcp = tdc_ns[elecSorter->Cmcp][0]; else mcp = -1.e100;
+        if (eSorter->use_MCP) {
+          if (count[eSorter->Cmcp] > 0) mcp = tdc_ns[eSorter->Cmcp][0]; else mcp = -1.e100;
         }
-        eMarker = mcp - TDC[rmBunch.ch][0] * TDCResolution;
+        eMarker = mcp - TDC[bunchCh][0] * TDCResolution;
       }
-      if (!(rmBunch.isInTheRegion(eMarker))) {
+      if (!(bunchMaskRm.isIn(eMarker))) {
+        auto iSorter = iSortWrapper.sorter;
+        auto eSorter = eSortWrapper.sorter;
         pRun->fill1d(Analysis::SortRun::h1_eMarker, eMarker);
         if(number_of_ions >= 1) {
-          double &x = ionSorter->output_hit_array[0]->x;
-          double &y = ionSorter->output_hit_array[0]->y;
-          double &t = ionSorter->output_hit_array[0]->time;
+          double &x = iSorter->output_hit_array[0]->x;
+          double &y = iSorter->output_hit_array[0]->y;
+          double &t = iSorter->output_hit_array[0]->time;
           pRun->fill2d(Analysis::SortRun::h2_ion1hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_ion1hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_ion1hitXY, x, y);
         }
         if(number_of_ions >= 2) {
-          double &x = ionSorter->output_hit_array[1]->x;
-          double &y = ionSorter->output_hit_array[1]->y;
-          double &t = ionSorter->output_hit_array[1]->time;
-          double &tt = ionSorter->output_hit_array[0]->time;
+          double &x = iSorter->output_hit_array[1]->x;
+          double &y = iSorter->output_hit_array[1]->y;
+          double &t = iSorter->output_hit_array[1]->time;
+          double &tt = iSorter->output_hit_array[0]->time;
           pRun->fill2d(Analysis::SortRun::h2_ion2hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_ion2hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_ion2hitXY, x, y);
           pRun->fill2d(Analysis::SortRun::h2_ion1hit2hitPIPICO, tt, t);
         }
         if(number_of_ions >= 3) {
-          double &x = ionSorter->output_hit_array[2]->x;
-          double &y = ionSorter->output_hit_array[2]->y;
-          double &t = ionSorter->output_hit_array[2]->time;
-          double &tt = ionSorter->output_hit_array[1]->time;
+          double &x = iSorter->output_hit_array[2]->x;
+          double &y = iSorter->output_hit_array[2]->y;
+          double &t = iSorter->output_hit_array[2]->time;
+          double &tt = iSorter->output_hit_array[1]->time;
           pRun->fill2d(Analysis::SortRun::h2_ion3hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_ion3hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_ion3hitXY, x, y);
           pRun->fill2d(Analysis::SortRun::h2_ion2hit3hitPIPICO, tt, t);
         }
         if(number_of_ions >= 4) {
-          double &x = ionSorter->output_hit_array[3]->x;
-          double &y = ionSorter->output_hit_array[3]->y;
-          double &t = ionSorter->output_hit_array[3]->time;
-          double &tt = ionSorter->output_hit_array[2]->time;
+          double &x = iSorter->output_hit_array[3]->x;
+          double &y = iSorter->output_hit_array[3]->y;
+          double &t = iSorter->output_hit_array[3]->time;
+          double &tt = iSorter->output_hit_array[2]->time;
           pRun->fill2d(Analysis::SortRun::h2_ion4hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_ion4hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_ion4hitXY, x, y);
           pRun->fill2d(Analysis::SortRun::h2_ion3hit4hitPIPICO, tt, t);
         }
         if(number_of_electrons >= 1) {
-          double &x = elecSorter->output_hit_array[0]->x;
-          double &y = elecSorter->output_hit_array[0]->y;
-          double &t = elecSorter->output_hit_array[0]->time;
+          double &x = eSorter->output_hit_array[0]->x;
+          double &y = eSorter->output_hit_array[0]->y;
+          double &t = eSorter->output_hit_array[0]->time;
           pRun->fill2d(Analysis::SortRun::h2_elec1hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_elec1hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_elec1hitXY, x, y);
         }
         if(number_of_electrons >= 2) {
-          double &x = elecSorter->output_hit_array[1]->x;
-          double &y = elecSorter->output_hit_array[1]->y;
-          double &t = elecSorter->output_hit_array[1]->time;
-          double &tt = elecSorter->output_hit_array[0]->time;
+          double &x = eSorter->output_hit_array[1]->x;
+          double &y = eSorter->output_hit_array[1]->y;
+          double &t = eSorter->output_hit_array[1]->time;
+          double &tt = eSorter->output_hit_array[0]->time;
           pRun->fill2d(Analysis::SortRun::h2_elec2hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_elec2hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_elec2hitXY, x, y);
           pRun->fill2d(Analysis::SortRun::h2_elec1hit2hitPEPECO, tt, t);
         }
         if(number_of_electrons >= 3) {
-          double &x = elecSorter->output_hit_array[2]->x;
-          double &y = elecSorter->output_hit_array[2]->y;
-          double &t = elecSorter->output_hit_array[2]->time;
-          double &tt = elecSorter->output_hit_array[1]->time;
+          double &x = eSorter->output_hit_array[2]->x;
+          double &y = eSorter->output_hit_array[2]->y;
+          double &t = eSorter->output_hit_array[2]->time;
+          double &tt = eSorter->output_hit_array[1]->time;
           pRun->fill2d(Analysis::SortRun::h2_elec3hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_elec3hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_elec3hitXY, x, y);
           pRun->fill2d(Analysis::SortRun::h2_elec2hit3hitPEPECO, tt, t);
         }
         if(number_of_electrons >= 4) {
-          double &x = elecSorter->output_hit_array[3]->x;
-          double &y = elecSorter->output_hit_array[3]->y;
-          double &t = elecSorter->output_hit_array[3]->time;
-          double &tt = elecSorter->output_hit_array[2]->time;
+          double &x = eSorter->output_hit_array[3]->x;
+          double &y = eSorter->output_hit_array[3]->y;
+          double &t = eSorter->output_hit_array[3]->time;
+          double &tt = eSorter->output_hit_array[2]->time;
           pRun->fill2d(Analysis::SortRun::h2_elec4hitXFish, t, x);
           pRun->fill2d(Analysis::SortRun::h2_elec4hitYFish, t, y);
           pRun->fill2d(Analysis::SortRun::h2_elec4hitXY, x, y);
@@ -902,16 +888,16 @@ int main(int argc, char *argv[]) {
         pIons = new Analysis::SortRun::DataSet[number_of_ions];
         pElecs = new Analysis::SortRun::DataSet[number_of_electrons];
         for (int i = 0; i < number_of_ions; i++) {
-          pIons[i].x = ionSorter->output_hit_array[i]->x;
-          pIons[i].y = ionSorter->output_hit_array[i]->y;
-          pIons[i].t = ionSorter->output_hit_array[i]->time;
-          pIons[i].flag = ionSorter->output_hit_array[i]->method;
+          pIons[i].x = iSorter->output_hit_array[i]->x;
+          pIons[i].y = iSorter->output_hit_array[i]->y;
+          pIons[i].t = iSorter->output_hit_array[i]->time;
+          pIons[i].flag = iSorter->output_hit_array[i]->method;
         }
         for (int i = 0; i < number_of_electrons; i++) {
-          pElecs[i].x = elecSorter->output_hit_array[i]->x;
-          pElecs[i].y = elecSorter->output_hit_array[i]->y;
-          pElecs[i].t = elecSorter->output_hit_array[i]->time;
-          pElecs[i].flag = elecSorter->output_hit_array[i]->method;
+          pElecs[i].x = eSorter->output_hit_array[i]->x;
+          pElecs[i].y = eSorter->output_hit_array[i]->y;
+          pElecs[i].t = eSorter->output_hit_array[i]->time;
+          pElecs[i].flag = eSorter->output_hit_array[i]->method;
         }
         pRun->fillTree(number_of_ions, pIons, number_of_electrons, pElecs);
         if (pIons) {
@@ -924,69 +910,99 @@ int main(int argc, char *argv[]) {
         }
       }
 
+
+
+
+
       // Write to output file
       FILE *outfile = nullptr;
       if (outfile) {
-        if (ionSorter) {
+        // ion
+        if (iSortWrapper.sorter != nullptr) {
+          auto &pSorter = iSortWrapper.sorter;
+          const auto cmd = iSortWrapper.cmd;
+          double &offset_u = iSortWrapper.factors["offset_u"],
+              &offset_v = iSortWrapper.factors["offset_v"],
+              &offset_w = iSortWrapper.factors["offset_w"],
+              &fw_offset = iSortWrapper.factors["fw_offset"],
+              &offset_x = iSortWrapper.factors["offset_x"],
+              &offset_y = iSortWrapper.factors["offset_y"];
           // the following steps are necessary to make the new output look as the old one
           // (in respect to time offsets)
 
           // shift the detector signals back (note the -1 instead of the +1)
-          if (ionSorter->use_HEX)
-            ionSorter->shift_sums(-1, ion_offset_sum_u, ion_offset_sum_v, ion_offset_sum_w);
-          if (!ionSorter->use_HEX) ionSorter->shift_sums(-1, ion_offset_sum_u, ion_offset_sum_v);
-          ionSorter->shift_layer_w(-1, ion_w_offset);
-          ionSorter->shift_position_origin(-1, ion_pos_offset_x, ion_pos_offset_y);
+          if (pSorter->use_HEX)
+            pSorter->shift_sums(-1, offset_u, offset_v, offset_w);
+          if (!pSorter->use_HEX) pSorter->shift_sums(-1, offset_u, offset_v);
+          pSorter->shift_layer_w(-1, fw_offset);
+          pSorter->shift_position_origin(-1, offset_x, offset_y);
 
           // convert the times from nanoseconds back to raw channels:
-          if (ionSorter->Cmcp > -1) {
-            for (unsigned int i = 0; i < count[ionSorter->Cmcp]; ++i)
-              TDC[ionSorter->Cmcp][i] = int(tdc_ns[ionSorter->Cmcp][i] / TDCResolution);
+          if (pSorter->Cmcp > -1) {
+            for (unsigned int i = 0; i < count[pSorter->Cmcp]; ++i)
+              TDC[pSorter->Cmcp][i] = int(tdc_ns[pSorter->Cmcp][i] / TDCResolution);
           }
-          for (unsigned int i = 0; i < count[ionSorter->Cu1]; ++i)
-            TDC[ionSorter->Cu1][i] = int(tdc_ns[ionSorter->Cu1][i] / TDCResolution);
-          for (unsigned int i = 0; i < count[ionSorter->Cu2]; ++i)
-            TDC[ionSorter->Cu2][i] = int(tdc_ns[ionSorter->Cu2][i] / TDCResolution);
-          for (unsigned int i = 0; i < count[ionSorter->Cv1]; ++i)
-            TDC[ionSorter->Cv1][i] = int(tdc_ns[ionSorter->Cv1][i] / TDCResolution);
-          for (unsigned int i = 0; i < count[ionSorter->Cv2]; ++i)
-            TDC[ionSorter->Cv2][i] = int(tdc_ns[ionSorter->Cv2][i] / TDCResolution);
-          if (ionSorter->use_HEX) {
-            for (unsigned int i = 0; i < count[ionSorter->Cw1]; ++i)
-              TDC[ionSorter->Cw1][i] = int(tdc_ns[ionSorter->Cw1][i] / TDCResolution);
-            for (unsigned int i = 0; i < count[ionSorter->Cw2]; ++i)
-              TDC[ionSorter->Cw2][i] = int(tdc_ns[ionSorter->Cw2][i] / TDCResolution);
+          for (unsigned int i = 0; i < count[pSorter->Cu1]; ++i)
+            TDC[pSorter->Cu1][i] = int(tdc_ns[pSorter->Cu1][i] / TDCResolution);
+          for (unsigned int i = 0; i < count[pSorter->Cu2]; ++i)
+            TDC[pSorter->Cu2][i] = int(tdc_ns[pSorter->Cu2][i] / TDCResolution);
+          for (unsigned int i = 0; i < count[pSorter->Cv1]; ++i)
+            TDC[pSorter->Cv1][i] = int(tdc_ns[pSorter->Cv1][i] / TDCResolution);
+          for (unsigned int i = 0; i < count[pSorter->Cv2]; ++i)
+            TDC[pSorter->Cv2][i] = int(tdc_ns[pSorter->Cv2][i] / TDCResolution);
+          if (pSorter->use_HEX) {
+            for (unsigned int i = 0; i < count[pSorter->Cw1]; ++i)
+              TDC[pSorter->Cw1][i] = int(tdc_ns[pSorter->Cw1][i] / TDCResolution);
+            for (unsigned int i = 0; i < count[pSorter->Cw2]; ++i)
+              TDC[pSorter->Cw2][i] = int(tdc_ns[pSorter->Cw2][i] / TDCResolution);
           }
         }
 
-        if (elecSorter) {
+
+
+
+
+        // electron
+        if (eSortWrapper.sorter != nullptr) {
+          auto &pSorter = eSortWrapper.sorter;
+          const auto cmd = eSortWrapper.cmd;
+          double &offset_u = eSortWrapper.factors["offset_u"],
+              &offset_v = eSortWrapper.factors["offset_v"],
+              &offset_w = eSortWrapper.factors["offset_w"],
+              &fw_offset = eSortWrapper.factors["fw_offset"],
+              &offset_x = eSortWrapper.factors["offset_x"],
+              &offset_y = eSortWrapper.factors["offset_y"];
           // shift the detector signals back (note the -1 instead of the +1)
-          if (elecSorter->use_HEX)
-            elecSorter->shift_sums(-1, elec_offset_sum_u, elec_offset_sum_v, elec_offset_sum_w);
-          if (!elecSorter->use_HEX) elecSorter->shift_sums(-1, elec_offset_sum_u, elec_offset_sum_v);
-          elecSorter->shift_layer_w(-1, elec_w_offset);
-          elecSorter->shift_position_origin(-1, elec_pos_offset_x, elec_pos_offset_y);
+          if (pSorter->use_HEX)
+            pSorter->shift_sums(-1, offset_u, offset_v, offset_w);
+          if (!pSorter->use_HEX) pSorter->shift_sums(-1, offset_u, offset_v);
+          pSorter->shift_layer_w(-1, fw_offset);
+          pSorter->shift_position_origin(-1, offset_x, offset_y);
 
           // convert the times from nanoseconds back to raw channels:
-          if (elecSorter->Cmcp > -1) {
-            for (unsigned int i = 0; i < count[elecSorter->Cmcp]; ++i)
-              TDC[elecSorter->Cmcp][i] = int(tdc_ns[elecSorter->Cmcp][i] / TDCResolution);
+          if (pSorter->Cmcp > -1) {
+            for (unsigned int i = 0; i < count[pSorter->Cmcp]; ++i)
+              TDC[pSorter->Cmcp][i] = int(tdc_ns[pSorter->Cmcp][i] / TDCResolution);
           }
-          for (unsigned int i = 0; i < count[elecSorter->Cu1]; ++i)
-            TDC[elecSorter->Cu1][i] = int(tdc_ns[elecSorter->Cu1][i] / TDCResolution);
-          for (unsigned int i = 0; i < count[elecSorter->Cu2]; ++i)
-            TDC[elecSorter->Cu2][i] = int(tdc_ns[elecSorter->Cu2][i] / TDCResolution);
-          for (unsigned int i = 0; i < count[elecSorter->Cv1]; ++i)
-            TDC[elecSorter->Cv1][i] = int(tdc_ns[elecSorter->Cv1][i] / TDCResolution);
-          for (unsigned int i = 0; i < count[elecSorter->Cv2]; ++i)
-            TDC[elecSorter->Cv2][i] = int(tdc_ns[elecSorter->Cv2][i] / TDCResolution);
-          if (elecSorter->use_HEX) {
-            for (unsigned int i = 0; i < count[elecSorter->Cw1]; ++i)
-              TDC[elecSorter->Cw1][i] = int(tdc_ns[elecSorter->Cw1][i] / TDCResolution);
-            for (unsigned int i = 0; i < count[elecSorter->Cw2]; ++i)
-              TDC[elecSorter->Cw2][i] = int(tdc_ns[elecSorter->Cw2][i] / TDCResolution);
+          for (unsigned int i = 0; i < count[pSorter->Cu1]; ++i)
+            TDC[pSorter->Cu1][i] = int(tdc_ns[pSorter->Cu1][i] / TDCResolution);
+          for (unsigned int i = 0; i < count[pSorter->Cu2]; ++i)
+            TDC[pSorter->Cu2][i] = int(tdc_ns[pSorter->Cu2][i] / TDCResolution);
+          for (unsigned int i = 0; i < count[pSorter->Cv1]; ++i)
+            TDC[pSorter->Cv1][i] = int(tdc_ns[pSorter->Cv1][i] / TDCResolution);
+          for (unsigned int i = 0; i < count[pSorter->Cv2]; ++i)
+            TDC[pSorter->Cv2][i] = int(tdc_ns[pSorter->Cv2][i] / TDCResolution);
+          if (pSorter->use_HEX) {
+            for (unsigned int i = 0; i < count[pSorter->Cw1]; ++i)
+              TDC[pSorter->Cw1][i] = int(tdc_ns[pSorter->Cw1][i] / TDCResolution);
+            for (unsigned int i = 0; i < count[pSorter->Cw2]; ++i)
+              TDC[pSorter->Cw2][i] = int(tdc_ns[pSorter->Cw2][i] / TDCResolution);
           }
         }
+
+
+
+
 
         // output TDC data
         for (unsigned int i = 0; i < pLMF->number_of_channels; i++) {
@@ -998,50 +1014,19 @@ int main(int argc, char *argv[]) {
     } // end of the big while loop
     printf("ok\n");
 
-    if (ion_command == 2) {
-      printf("calibrating ion detector... ");
-      ionSorter->do_calibration();
-      printf("ok\n");
-      if (ionSorter->scalefactors_calibrator) {
-        printf("ion: Good scalefactors are:\nf_U = %lg\nf_V = %lg\nf_W = %lg\nOffset on layer W = %lg\n",
-               2. * ionSorter->fu, 2. * ionSorter->scalefactors_calibrator->best_fv,
-               2. * ionSorter->scalefactors_calibrator->best_fw,
-               ionSorter->scalefactors_calibrator->best_w_offset);
-      }
-    }
-    if (elec_command == 2) {
-      printf("calibrating elec detector... ");
-      elecSorter->do_calibration();
-      printf("ok\n");
-      if (elecSorter->scalefactors_calibrator) {
-        printf("elec: Good scalefactors are:\nf_U = %lg\nf_V = %lg\nf_W = %lg\nOffset on layer W = %lg\n",
-               2. * elecSorter->fu, 2. * elecSorter->scalefactors_calibrator->best_fv,
-               2. * elecSorter->scalefactors_calibrator->best_fw,
-               elecSorter->scalefactors_calibrator->best_w_offset);
-      }
-    }
-    if (ion_command == 3) {   // generate and print correction tables for sum- and position-correction
-      printf("ion: creating calibration tables...\n");
-      create_calibration_tables(ionCalibTabFilename.c_str(), ionSorter);
-      printf("\nfinished creating calibration tables\n");
-    }
-    if (elec_command == 3) {   // generate and print correction tables for sum- and position-correction
-      printf("elec: creating calibration tables...\n");
-      create_calibration_tables(elecClibTabFilename.c_str(), elecSorter);
-      printf("\nfinished creating calibration tables\n");
-    }
+    // calib
+    iSortWrapper.calibFactors();
+    eSortWrapper.calibFactors();
+    iSortWrapper.genClibTab();
+    eSortWrapper.genClibTab();
 
-    // Update canvases
-    {
+    if (pRun != nullptr) {
       pRun->updateC1(true);
       pRun->updateC2(true);
-    }
-
-    // Close IO file
-    if (pRun) {
       delete pRun;
       pRun = nullptr;
     }
+
     printf("deleting the LMF reader instance... ");
     if (pLMF) {
       delete pLMF;
@@ -1061,11 +1046,8 @@ int main(int argc, char *argv[]) {
 
   // Finish the program
   printf("terminating the root app.\n");
-  cleanUpSorters();
-  if (pLMFFilenames) {
-    delete[] pLMFFilenames;
-    pLMFFilenames = nullptr;
-  }
+  iSortWrapper.cleanup();
+  eSortWrapper.cleanup();
   theRootApp.Terminate();
   std::cout << "The program is done. " << std::endl;
   return 0;

@@ -30,9 +30,6 @@
 #include "../Core/JSONReader.h"
 
 namespace Analysis {
-
-typedef std::map<std::string, int> ChMap;
-
 template <typename T>
 struct Region {
   T fr, to;
@@ -50,24 +47,14 @@ struct Regions {
   }
 };
 
+Regions<double> getBunchMaskRm(const Analysis::JSONReader &reader, const std::string prefix = "remove_bunch_region");
+
 class SortRun: public Hist {
  private:
   char id[5];
   const std::string prefix;
   std::string rootFilename;
 
- public:
-  struct RmBunch {
-    bool isOn;
-    int ch;
-    double region1, region2;
-    bool isInTheRegion(const double bunch) const {
-      if (isOn) {
-        return (region1 <= bunch) && (bunch <= region2);
-      } else return false;
-    }
-  };
-  
  private:
   const int maxNumOfIons, maxNumOfElecs;
   int numOfIons, numOfElecs;
