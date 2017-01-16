@@ -19,15 +19,17 @@ int main() {
   Analysis::JSONReader reader;
   reader.appendDoc(Analysis::JSONReader::fromStr, defaultJSON);
   reader.appendDoc(Analysis::JSONReader::fromStr, userJSON);
-  std::cout << *reader.getOpt<const char*>("hello") << std::endl;
-  std::cout << (*reader.getOpt<bool>("b")? "true":"false") << std::endl;
-  std::cout << *reader.getOpt<int>("i") << std::endl;
-  std::cout << *reader.getOpt<double>("pi") << std::endl;
-  std::cout << *reader.getOpt<double>("inf") << std::endl;
-  std::cout << *reader.getOpt<double>("nan") << std::endl;
-  std::cout << *reader.getOpt<int>("a.1") << std::endl;
-  std::cout << *reader.getOpt<int>("o.i") << std::endl;
-  const std::vector<int> *a = reader.getOptArr<int>("a");
-  const std::map<std::string, int> *m = reader.getOptMap<int>("o");
+  std::cout << reader.get<const char*>("hello") << std::endl;
+  std::cout << (reader.get<bool>("b")? "true":"false") << std::endl;
+  std::cout << reader.get<int>("i") << std::endl;
+  std::cout << reader.get<double>("pi") << std::endl;
+  std::cout << reader.get<double>("inf") << std::endl;
+  std::cout << reader.get<double>("nan") << std::endl;
+  std::cout << reader.get<int>("a.0") << std::endl;
+  std::cout << reader.get<int>("o.i") << std::endl;
+  auto a = reader.getArr<int>("a");
+  std::cout << a[0] << std::endl;
+  auto m = reader.getMap<int>("o");
+  std::cout << m["i"] << std::endl;
   return 0;
 }

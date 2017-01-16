@@ -69,13 +69,9 @@ void Analysis::JSONReader::ReadFromFile(const std::string filename) {
   ReadFromStr(stringStream.str());
   fileStream.close();
 }
-bool Analysis::JSONReader::hasMember(std::string str) const {
-  auto pV = getOptValue(str);
-  return pV != nullptr;
-}
-const rapidjson::Value *Analysis::JSONReader::_getOptValue(const std::string str1,
-                                                           const rapidjson::Value *v,
-                                                           const std::string str0) const {
+const rapidjson::Value *Analysis::JSONReader::getOptValue(const std::string str1,
+                                                          const rapidjson::Value *v,
+                                                          const std::string str0) const {
   if (str1=="") return v;
   std::size_t found;
   std::string tmp0, tmp1;
@@ -93,13 +89,13 @@ const rapidjson::Value *Analysis::JSONReader::_getOptValue(const std::string str
       return nullptr;
     }
     int i = std::stoi(tmp0);
-    return _getOptValue(tmp1, &(*v)[i], str0 + "." + tmp0);
+    return getOptValue(tmp1, &(*v)[i], str0 + "." + tmp0);
   } else {
     if (!(v->HasMember(tmp0.c_str()))) {
       if(vvv) std::cout << "Member " << str0+tmp0 << " does not exist!" << std::endl;
       return nullptr;
     }
-    return _getOptValue(tmp1, &(*v)[tmp0.c_str()], str0 + "." + tmp0);
+    return getOptValue(tmp1, &(*v)[tmp0.c_str()], str0 + "." + tmp0);
   }
 }
 void Analysis::JSONReader::appendDoc(const Analysis::JSONReader::ReadingType type, const std::string str) {
@@ -109,7 +105,7 @@ void Analysis::JSONReader::appendDoc(const Analysis::JSONReader::ReadingType typ
 }
 const rapidjson::Value *Analysis::JSONReader::getOptValue(const std::string str1) const {
   for(auto pDoc: pDocs) {
-    auto pV = _getOptValue(str1, pDoc);
+    auto pV = getOptValue(str1, pDoc);
     if(pV!=nullptr) return pV;
   }
   return nullptr;
@@ -120,4 +116,12 @@ Analysis::JSONReader::~JSONReader() {
   }
 }
 Analysis::JSONReader::JSONReader(const bool v): vvv(v) {
+}
+bool Analysis::JSONReader::hasMember(const std::string str, const rapidjson::Value *&pV) const {
+  pV = getOptValue(str);
+  return pV != nullptr;
+}
+bool Analysis::JSONReader::hasMember(std::string str) const {
+  const rapidjson::Value *pV; 
+  return hasMember(str, pV); 
 }
