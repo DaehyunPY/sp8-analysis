@@ -1,5 +1,5 @@
 {
-  "working_directory": "PATH", // comment out=same path with this file
+  // "working_directory": "PATH", // comment out=same path with this file
   "LMF_files": [
     "LMF_FILENAME1", 
     "LMF_FILENAME2"
@@ -52,7 +52,6 @@
     "correct_timesum": false, // use position depended correction of timesums
     "correct_position": false // use position depended NL correction of position"
   },
-  "ion_calibration_table": "IonCalibTab.txt",
   "ion_sorter": {
     "cmd": 1,
     // -1 = detector does not exist
@@ -60,9 +59,9 @@
     //  1 = sort and write new file
     //  2 = calibrate fv, fw, w_offset
     //  3 = create calibration table files
+    "calibration_table": "IonCalibTab.txt",
     "hexanode_used": true,
-    "common_start_mode": true,
-    // for TDC8HP and fADC always use true
+    "common_start_mode": true, // for TDC8HP and fADC always use true
     "channel_map": { // counting starts at 1
       "u1": 10,
       "u2": 9,
