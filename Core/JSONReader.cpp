@@ -138,7 +138,9 @@ const rapidjson::Value *Analysis::JSONReader::getOptValue(const std::string str1
 	}
 	if (isdigit(tmp0[0])) {
 		if (!(v->IsArray())) return nullptr;
-		int i = std::stoi(tmp0);
+		const int i = std::stoi(tmp0);
+		const auto n = v->GetArray().Size();
+		if (i>=n) return nullptr;
 		return getOptValue(tmp1, &(*v)[i], str0 + "." + tmp0);
 	} else {
 		if (!(v->HasMember(tmp0.c_str()))) return nullptr;
