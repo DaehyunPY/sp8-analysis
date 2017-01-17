@@ -30,10 +30,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 
 ### SortExe
 set(SORTEXE_SOURCE_FILES
-    SortExe/LMF_IO.cpp
-    SortExe/Main.cpp
-    SortExe/SortRun.cpp
-)
+        SortExe/LMF_IO.cpp
+        SortExe/Main.cpp
+        SortExe/SortRun.cpp
+        SortExe/SortWrapper.cpp
+        )
 add_executable(SortExe ${SORTEXE_SOURCE_FILES})
 target_link_libraries(SortExe SP8Core)
 

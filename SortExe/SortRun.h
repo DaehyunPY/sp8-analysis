@@ -1,13 +1,7 @@
 #ifndef ANALYSIS_SORTRUN_H
 #define ANALYSIS_SORTRUN_H
 
-#ifdef _WIN32
-#include <direct.h>
-#define getcwd _getcwd
-#define chdir _chdir
-#else
 #include <unistd.h>
-#endif
 #include <string>
 #include <map>
 #include <fstream>
