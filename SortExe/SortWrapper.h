@@ -29,7 +29,7 @@ struct LMFWrapper {
   const double TDCRes = 0.025; // 25ps tdc bin size
   double timestamp;
   int TDC[NUM_CHANNELS][NUM_IONS];
-  double tdc_ns[NUM_CHANNELS][NUM_IONS];
+  double TDCns[NUM_CHANNELS][NUM_IONS];
   unsigned int count[NUM_CHANNELS];
   bool readConfig(const JSONReader &reader);
   bool readFile(const int i);
@@ -75,6 +75,20 @@ class SortWrapper {
   bool isNull() const;
   bool isFull() const;
   const sort_class &getSorter() const;
+
+ public:
+  const double *getMCP() const;
+  const double *getXDev() const;
+  const double *getYDev() const;
+  const double *getWeightDev() const;
+  const double *getXRaw() const;
+  const double *getYRaw() const;
+  const double *getUTimesum() const;
+  const double *getUTimediff() const;
+  const double *getVTimesum() const;
+  const double *getVTimediff() const;
+  const double *getWTimesum() const;
+  const double *getWTimediff() const;
 };
 }
 

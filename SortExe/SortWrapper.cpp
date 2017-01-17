@@ -221,7 +221,7 @@ bool Analysis::SortWrapper::init() {
     pSorter->TDC_resolution_ns = pLMFSource->TDCRes;
     pSorter->tdc_array_row_length = NUM_IONS;
     pSorter->count = (int *) pLMFSource->count;
-    pSorter->tdc_pointer = &pLMFSource->tdc_ns[0][0];
+    pSorter->tdc_pointer = &pLMFSource->TDCns[0][0];
     if (cmd >= kCalib) {
       pSorter->create_scalefactors_calibrator(
           true, // BuildStack
@@ -261,7 +261,7 @@ bool Analysis::SortWrapper::sort() {
   const double &Res = pLMFSource->TDCRes;
   const auto &count = pLMFSource->count;
   const auto &TDC = pLMFSource->TDC;
-  auto &tdc_ns = pLMFSource->tdc_ns;
+  auto &tdc_ns = pLMFSource->TDCns;
   if (pSorter->Cmcp > -1) {
     for (unsigned int i = 0; i < count[pSorter->Cmcp]; ++i)
       tdc_ns[pSorter->Cmcp][i] = double(TDC[pSorter->Cmcp][i]) * Res;
@@ -346,6 +346,89 @@ Analysis::SortWrapper::SortCmd Analysis::SortWrapper::getCmd() const {
 }
 const sort_class &Analysis::SortWrapper::getSorter() const {
   return *pSorter;
+}
+const double *Analysis::SortWrapper::getMCP() const {
+  if (pSorter==nullptr) return nullptr;
+  if (!pSorter->use_MCP) return new double(0);
+  const auto &count = pLMFSource->count;
+  const auto &TDCns = pLMFSource->TDCns;
+  if (count[pSorter->Cmcp] > 0) return new double(TDCns[pSorter->Cmcp][0]);
+  else return nullptr;
+}
+const double *Analysis::SortWrapper::getXDev() const {
+  if (pSorter==nullptr) return nullptr;
+  if (!pSorter->use_HEX) return nullptr;
+  return new double(pSorter->scalefactors_calibrator->binx - pSorter->scalefactors_calibrator->detector_map_size / 2.0);
+}
+const double *Analysis::SortWrapper::getYDev() const {
+  if (pSorter==nullptr) return nullptr;
+  if (!pSorter->use_HEX) return nullptr;
+  return new double(pSorter->scalefactors_calibrator->biny - pSorter->scalefactors_calibrator->detector_map_size / 2.0);
+}
+const double *Analysis::SortWrapper::getWeightDev() const {
+  if (pSorter==nullptr) return nullptr;
+  if (!pSorter->use_HEX) return nullptr;
+  return new double(pSorter->scalefactors_calibrator->detector_map_devi_fill);
+}
+const double *Analysis::SortWrapper::getXRaw() const {
+  const auto &count = pLMFSource->count;
+  const auto &TDCns = pLMFSource->TDCns;
+  if (!(count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0)) return nullptr;
+  if (!(count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0)) return nullptr;
+  double u_raw = pSorter->fu * (TDCns[pSorter->Cu1][0] - TDCns[pSorter->Cu2][0]);
+  return new double(u_raw);
+}
+const double *Analysis::SortWrapper::getYRaw() const {
+  const auto &count = pLMFSource->count;
+  const auto &TDCns = pLMFSource->TDCns;
+  if (!(count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0)) return nullptr;
+  if (!(count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0)) return nullptr;
+  double u_raw = pSorter->fu * (TDCns[pSorter->Cu1][0] - TDCns[pSorter->Cu2][0]);
+  double v_raw = pSorter->fv * (TDCns[pSorter->Cv1][0] - TDCns[pSorter->Cv2][0]);
+  double y_raw = (u_raw - 2. * v_raw) / std::sqrt(3.0);
+  return new double(y_raw);
+}
+const double *Analysis::SortWrapper::getUTimesum() const {
+  const auto &count = pLMFSource->count;
+  const auto &TDCns = pLMFSource->TDCns;
+  if (!(count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0)) return nullptr;
+  const auto mcp = getMCP();
+  if (mcp == nullptr) return nullptr;
+  return new double(TDCns[pSorter->Cu1][0] + TDCns[pSorter->Cu2][0] - 2 * *mcp);
+}
+const double *Analysis::SortWrapper::getUTimediff() const {
+  const auto &count = pLMFSource->count;
+  const auto &TDCns = pLMFSource->TDCns;
+  if (!(count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0)) return nullptr;
+  return new double(TDCns[pSorter->Cu1][0] - TDCns[pSorter->Cu2][0]);
+}
+const double *Analysis::SortWrapper::getVTimesum() const {
+  const auto &count = pLMFSource->count;
+  const auto &TDCns = pLMFSource->TDCns;
+  if (!(count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0)) return nullptr;
+  const auto mcp = getMCP();
+  if (mcp == nullptr) return nullptr;
+  return new double(TDCns[pSorter->Cv1][0] + TDCns[pSorter->Cv2][0] - 2 * *mcp);
+}
+const double *Analysis::SortWrapper::getVTimediff() const {
+  const auto &count = pLMFSource->count;
+  const auto &TDCns = pLMFSource->TDCns;
+  if (!(count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0)) return nullptr;
+  return new double(TDCns[pSorter->Cv1][0] - TDCns[pSorter->Cv2][0]);
+}
+const double *Analysis::SortWrapper::getWTimesum() const {
+  const auto &count = pLMFSource->count;
+  const auto &TDCns = pLMFSource->TDCns;
+  if (!(count[pSorter->Cw1] > 0 && count[pSorter->Cw2] > 0)) return nullptr;
+  const auto mcp = getMCP();
+  if (mcp == nullptr) return nullptr;
+  return new double(TDCns[pSorter->Cw1][0] + TDCns[pSorter->Cw2][0] - 2 * *mcp);
+}
+const double *Analysis::SortWrapper::getWTimediff() const {
+  const auto &count = pLMFSource->count;
+  const auto &TDCns = pLMFSource->TDCns;
+  if (!(count[pSorter->Cw1] > 0 && count[pSorter->Cw2] > 0)) return nullptr;
+  return new double(TDCns[pSorter->Cw1][0] - TDCns[pSorter->Cw2][0]);
 }
 bool Analysis::LMFWrapper::readConfig(const Analysis::JSONReader &reader) {
     auto pStr = reader.getOpt<const char *>("LMF_files");

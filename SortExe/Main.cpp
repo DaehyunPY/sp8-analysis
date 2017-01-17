@@ -135,11 +135,6 @@ int main(int argc, char *argv[]) {
       result = aLMFWrapper.readFile(iLMF);
       if (!result) break;
     }
-    const double TDCResolution = aLMFWrapper.TDCRes;
-    auto &TDC = aLMFWrapper.TDC;
-    auto &tdc_ns = aLMFWrapper.tdc_ns;
-    auto &count = aLMFWrapper.count;
-
 
     // Setup Run
     pRun = new Analysis::SortRun("ResortLess", maxIonHits, maxElecHits);
@@ -186,125 +181,66 @@ int main(int argc, char *argv[]) {
       eSortWrapper.sort();
 
       // fill
-      if (!iSortWrapper.isNull()) { // ion
-        auto &sorter = iSortWrapper.getSorter();
-        if (sorter.use_HEX)
-          pRun->fill2d(
-              Analysis::SortRun::h2_ionXYDev,
-              sorter.scalefactors_calibrator->binx - sorter.scalefactors_calibrator->detector_map_size / 2.0,
-              sorter.scalefactors_calibrator->biny - sorter.scalefactors_calibrator->detector_map_size / 2.0,
-              sorter.scalefactors_calibrator->detector_map_devi_fill);
-
+      { // TDC ns
+        auto &tdc_ns = aLMFWrapper.TDCns;
+        const int idxhist = Analysis::SortRun::h1_TDC01;
+        const int numhist = 17;
+        for (int i=0; i<numhist; i++) {
+          pRun->fill1d(idxhist+i, tdc_ns[i][0]);
+        }
       }
-//
-//        if (count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0) {
-//          if (count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0) {
-//            double u = pSorter->fu * (tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0]);
-//            double v = pSorter->fv * (tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0]);
-//            double y = (u - 2. * v) / std::sqrt(3.0);
-//            pRun->fill2d(Analysis::SortRun::h2_ionXYRaw, u, y);
-//          }
-//        }
-//        if (count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0) {
-//          pRun->fill1d(Analysis::SortRun::h1_ionU, tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0]);
-//          double mcp = 0.;
-//          if (pSorter->use_MCP) {
-//            if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
-//          }
-//          const double timesum = tdc_ns[pSorter->Cu1][0] + tdc_ns[pSorter->Cu2][0] - 2 * mcp;
-//          const double timediff = tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0];
-//          pRun->fill1d(Analysis::SortRun::h1_ionTimesumU, timesum);
-//          pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffU, timediff, timesum);
-//        }
-//        if (count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0) {
-//          pRun->fill1d(Analysis::SortRun::h1_ionV, tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0]);
-//          double mcp = 0.;
-//          if (pSorter->use_MCP) {
-//            if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
-//          }
-//          const double timesum = tdc_ns[pSorter->Cv1][0] + tdc_ns[pSorter->Cv2][0] - 2 * mcp;
-//          const double timediff = tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0];
-//          pRun->fill1d(Analysis::SortRun::h1_ionTimesumV, timesum);
-//          pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffV, timediff, timesum);
-//        }
-//        if (pSorter->use_HEX) {
-//          if (count[pSorter->Cw1] > 0 && count[pSorter->Cw2] > 0) {
-//            pRun->fill1d(Analysis::SortRun::h1_ionW, tdc_ns[pSorter->Cw1][0] - tdc_ns[pSorter->Cw2][0]);
-//            double mcp = 0.;
-//            if (pSorter->use_MCP) {
-//              if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
-//            }
-//            const double timesum = tdc_ns[pSorter->Cw1][0] + tdc_ns[pSorter->Cw2][0] - 2 * mcp;
-//            const double timediff = tdc_ns[pSorter->Cw1][0] - tdc_ns[pSorter->Cw2][0];
-//            pRun->fill1d(Analysis::SortRun::h1_ionTimesumW, timesum);
-//            pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffW, timediff, timesum);
-//          }
-//        }
-//      }
-//
-//        if (pSorter->use_HEX)
-//          pRun->fill2d(Analysis::SortRun::h2_elecXYDev,
-//                       pSorter->scalefactors_calibrator->binx
-//                           - pSorter->scalefactors_calibrator->detector_map_size / 2.0,
-//                       pSorter->scalefactors_calibrator->biny
-//                           - pSorter->scalefactors_calibrator->detector_map_size / 2.0,
-//                       pSorter->scalefactors_calibrator->detector_map_devi_fill);
-//
-//        if (count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0) {
-//          if (count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0) {
-//            double u = pSorter->fu * (tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0]);
-//            double v = pSorter->fv * (tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0]);
-//            double y = (u - 2. * v) * 0.577350269; // 0.557 = 1/sqrt(3)
-//            pRun->fill2d(Analysis::SortRun::h2_elecXYRaw, u, y);
-//          }
-//        }
-//        if (count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0) {
-//          pRun->fill1d(Analysis::SortRun::h1_elecU, tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0]);
-//          double mcp = 0.;
-//          if (pSorter->use_MCP) {
-//            if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
-//          }
-//          const double timesum = tdc_ns[pSorter->Cu1][0] + tdc_ns[pSorter->Cu2][0] - 2 * mcp;
-//          const double timediff = tdc_ns[pSorter->Cu1][0] - tdc_ns[pSorter->Cu2][0];
-//          pRun->fill1d(Analysis::SortRun::h1_elecTimesumU, timesum);
-//          pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffU, timediff, timesum);
-//        }
-//        if (count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0) {
-//          pRun->fill1d(Analysis::SortRun::h1_elecV, tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0]);
-//          double mcp = 0.;
-//          if (pSorter->use_MCP) {
-//            if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
-//          }
-//          const double timesum = tdc_ns[pSorter->Cv1][0] + tdc_ns[pSorter->Cv2][0] - 2 * mcp;
-//          const double timediff = tdc_ns[pSorter->Cv1][0] - tdc_ns[pSorter->Cv2][0];
-//          pRun->fill1d(Analysis::SortRun::h1_elecTimesumV, timesum);
-//          pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffV, timediff, timesum);
-//        }
-//        if (pSorter->use_HEX) {
-//          if (count[pSorter->Cw1] > 0 && count[pSorter->Cw2] > 0) {
-//            pRun->fill1d(Analysis::SortRun::h1_elecW, tdc_ns[pSorter->Cw1][0] - tdc_ns[pSorter->Cw2][0]);
-//            double mcp = 0.;
-//            if (pSorter->use_MCP) {
-//              if (count[pSorter->Cmcp] > 0) mcp = tdc_ns[pSorter->Cmcp][0]; else mcp = -1.e100;
-//            }
-//            const double timesum = tdc_ns[pSorter->Cw1][0] + tdc_ns[pSorter->Cw2][0] - 2 * mcp;
-//            const double timediff = tdc_ns[pSorter->Cw1][0] - tdc_ns[pSorter->Cw2][0];
-//            pRun->fill1d(Analysis::SortRun::h1_elecTimesumW, timesum);
-//            pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffW, timediff, timesum);
-//          }
-//        }
-//      }
-//
-//
-//      // Fill the tree and hists
-//      // fill TDC ns
-//      {
-//        const int idxhist = Analysis::SortRun::h1_TDC01;
-//        const int numhist = 17;
-//        for (int i=0; i<numhist; i++) {
-//          pRun->fill1d(idxhist+i, tdc_ns[i][0]);
-//        }
-//      }
+      if (!iSortWrapper.isNull()) { // ion
+        const auto &wrapper = iSortWrapper;
+        const auto x_dev = wrapper.getXDev();
+        const auto y_dev = wrapper.getYDev();
+        const auto weight_dev = wrapper.getWeightDev();
+        const auto x_raw = wrapper.getXRaw();
+        const auto y_raw = wrapper.getYRaw();
+        const auto u_timesum = wrapper.getUTimesum();
+        const auto u_timediff = wrapper.getUTimediff();
+        const auto v_timesum = wrapper.getVTimesum();
+        const auto v_timediff = wrapper.getVTimediff();
+        const auto w_timesum = wrapper.getWTimesum();
+        const auto w_timediff = wrapper.getWTimediff();
+
+        pRun->fill2d(Analysis::SortRun::h2_ionXYDev, x_dev, y_dev, *weight_dev);
+        pRun->fill2d(Analysis::SortRun::h2_ionXYRaw, x_raw, y_raw);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimesumU, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimediffU, u_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffU, u_timediff, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimesumV, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimediffV, v_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffV, v_timediff, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimesumW, w_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimediffW, w_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffW, w_timediff, w_timesum);
+      }
+      if (!eSortWrapper.isNull()) { // electron
+        const auto &wrapper = eSortWrapper;
+        const auto x_dev = wrapper.getXDev();
+        const auto y_dev = wrapper.getYDev();
+        const auto weight_dev = wrapper.getWeightDev();
+        const auto x_raw = wrapper.getXRaw();
+        const auto y_raw = wrapper.getYRaw();
+        const auto u_timesum = wrapper.getUTimesum();
+        const auto u_timediff = wrapper.getUTimediff();
+        const auto v_timesum = wrapper.getVTimesum();
+        const auto v_timediff = wrapper.getVTimediff();
+        const auto w_timesum = wrapper.getWTimesum();
+        const auto w_timediff = wrapper.getWTimediff();
+
+        pRun->fill2d(Analysis::SortRun::h2_elecXYDev, x_dev, y_dev, *weight_dev);
+        pRun->fill2d(Analysis::SortRun::h2_elecXYRaw, x_raw, y_raw);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimesumU, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimediffU, u_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffU, u_timediff, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimesumV, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimediffV, v_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffV, v_timediff, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimesumW, w_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimediffW, w_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffW, w_timediff, w_timesum);
+      }
 //      int number_of_ions = 0;
 //      int number_of_electrons = 0;
 //      if (iSortWrapper.pSorter != nullptr) {
@@ -346,7 +282,7 @@ int main(int argc, char *argv[]) {
 //        auto eSorter = eSortWrapper.pSorter;
 //        double mcp = 0.;
 //        if (eSorter->use_MCP) {
-//          if (count[eSorter->Cmcp] > 0) mcp = tdc_ns[eSorter->Cmcp][0]; else mcp = -1.e100;
+//          if (count[eSorter->Cmcp] > 0) mcp = TDCns[eSorter->Cmcp][0]; else mcp = -1.e100;
 //        }
 //        eMarker = mcp - TDC[bunchCh][0] * TDCResolution;
 //      }
@@ -455,99 +391,6 @@ int main(int argc, char *argv[]) {
 //		  pElecs = nullptr;
 //        }
 //      }
-
-//      // Write to output file
-//      FILE *outfile = nullptr;
-//      if (outfile) {
-//        // ion
-//        if (iSortWrapper.pSorter != nullptr) {
-//          auto &pSorter = iSortWrapper.pSorter;
-//          const auto cmd = iSortWrapper.cmd;
-//          double &offset_u = iSortWrapper.factors["offset_u"],
-//              &offset_v = iSortWrapper.factors["offset_v"],
-//              &offset_w = iSortWrapper.factors["offset_w"],
-//              &fw_offset = iSortWrapper.factors["fw_offset"],
-//              &offset_x = iSortWrapper.factors["offset_x"],
-//              &offset_y = iSortWrapper.factors["offset_y"];
-//          // the following steps are necessary to make the new output look as the old one
-//          // (in respect to time offsets)
-//
-//          // shift the detector signals back (note the -1 instead of the +1)
-//          if (pSorter->use_HEX)
-//            pSorter->shift_sums(-1, offset_u, offset_v, offset_w);
-//          if (!pSorter->use_HEX) pSorter->shift_sums(-1, offset_u, offset_v);
-//          pSorter->shift_layer_w(-1, fw_offset);
-//          pSorter->shift_position_origin(-1, offset_x, offset_y);
-//
-//          // convert the times from nanoseconds back to raw channels:
-//          if (pSorter->Cmcp > -1) {
-//            for (unsigned int i = 0; i < count[pSorter->Cmcp]; ++i)
-//              TDC[pSorter->Cmcp][i] = int(tdc_ns[pSorter->Cmcp][i] / TDCResolution);
-//          }
-//          for (unsigned int i = 0; i < count[pSorter->Cu1]; ++i)
-//            TDC[pSorter->Cu1][i] = int(tdc_ns[pSorter->Cu1][i] / TDCResolution);
-//          for (unsigned int i = 0; i < count[pSorter->Cu2]; ++i)
-//            TDC[pSorter->Cu2][i] = int(tdc_ns[pSorter->Cu2][i] / TDCResolution);
-//          for (unsigned int i = 0; i < count[pSorter->Cv1]; ++i)
-//            TDC[pSorter->Cv1][i] = int(tdc_ns[pSorter->Cv1][i] / TDCResolution);
-//          for (unsigned int i = 0; i < count[pSorter->Cv2]; ++i)
-//            TDC[pSorter->Cv2][i] = int(tdc_ns[pSorter->Cv2][i] / TDCResolution);
-//          if (pSorter->use_HEX) {
-//            for (unsigned int i = 0; i < count[pSorter->Cw1]; ++i)
-//              TDC[pSorter->Cw1][i] = int(tdc_ns[pSorter->Cw1][i] / TDCResolution);
-//            for (unsigned int i = 0; i < count[pSorter->Cw2]; ++i)
-//              TDC[pSorter->Cw2][i] = int(tdc_ns[pSorter->Cw2][i] / TDCResolution);
-//          }
-//        }
-//
-//
-//
-//      }
-//
-//
-//        // electron
-//        if (eSortWrapper.pSorter != nullptr) {
-//          auto &pSorter = eSortWrapper.pSorter;
-//          const auto cmd = eSortWrapper.cmd;
-//          double &offset_u = eSortWrapper.factors["offset_u"],
-//              &offset_v = eSortWrapper.factors["offset_v"],
-//              &offset_w = eSortWrapper.factors["offset_w"],
-//              &fw_offset = eSortWrapper.factors["fw_offset"],
-//              &offset_x = eSortWrapper.factors["offset_x"],
-//              &offset_y = eSortWrapper.factors["offset_y"];
-//          // shift the detector signals back (note the -1 instead of the +1)
-//          if (pSorter->use_HEX)
-//            pSorter->shift_sums(-1, offset_u, offset_v, offset_w);
-//          if (!pSorter->use_HEX) pSorter->shift_sums(-1, offset_u, offset_v);
-//          pSorter->shift_layer_w(-1, fw_offset);
-//          pSorter->shift_position_origin(-1, offset_x, offset_y);
-//
-//          // convert the times from nanoseconds back to raw channels:
-//          if (pSorter->Cmcp > -1) {
-//            for (unsigned int i = 0; i < count[pSorter->Cmcp]; ++i)
-//              TDC[pSorter->Cmcp][i] = int(tdc_ns[pSorter->Cmcp][i] / TDCResolution);
-//          }
-//          for (unsigned int i = 0; i < count[pSorter->Cu1]; ++i)
-//            TDC[pSorter->Cu1][i] = int(tdc_ns[pSorter->Cu1][i] / TDCResolution);
-//          for (unsigned int i = 0; i < count[pSorter->Cu2]; ++i)
-//            TDC[pSorter->Cu2][i] = int(tdc_ns[pSorter->Cu2][i] / TDCResolution);
-//          for (unsigned int i = 0; i < count[pSorter->Cv1]; ++i)
-//            TDC[pSorter->Cv1][i] = int(tdc_ns[pSorter->Cv1][i] / TDCResolution);
-//          for (unsigned int i = 0; i < count[pSorter->Cv2]; ++i)
-//            TDC[pSorter->Cv2][i] = int(tdc_ns[pSorter->Cv2][i] / TDCResolution);
-//          if (pSorter->use_HEX) {
-//            for (unsigned int i = 0; i < count[pSorter->Cw1]; ++i)
-//              TDC[pSorter->Cw1][i] = int(tdc_ns[pSorter->Cw1][i] / TDCResolution);
-//            for (unsigned int i = 0; i < count[pSorter->Cw2]; ++i)
-//              TDC[pSorter->Cw2][i] = int(tdc_ns[pSorter->Cw2][i] / TDCResolution);
-//          }
-//        }
-//
-//        // output TDC data
-//        for (unsigned int i = 0; i < pLMF->number_of_channels; i++) {
-//          fwrite(&count[i], sizeof(int), 1, outfile);
-//          for (unsigned int j = 0; j < count[i]; j++) fwrite(&TDC[i][j], sizeof(int), 1, outfile);
-//        }
 
       { // check if it's full
         bool b1, b2;
