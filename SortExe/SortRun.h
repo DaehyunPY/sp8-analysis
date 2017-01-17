@@ -93,6 +93,9 @@ class SortRun: public Hist {
   void createHists();
  public:
   enum HistList {
+    h1_TDC01, h1_TDC02, h1_TDC03, h1_TDC04, h1_TDC05, h1_TDC06, h1_TDC07, h1_TDC08,
+    h1_TDC09, h1_TDC10, h1_TDC11, h1_TDC12, h1_TDC13, h1_TDC14, h1_TDC15, h1_TDC16,
+    h1_TDC17,
     h2_ion1hitXFish, h2_ion1hitYFish, h2_ion1hitXY,
     h2_ion2hitXFish, h2_ion2hitYFish, h2_ion2hitXY,
     h2_ion3hitXFish, h2_ion3hitYFish, h2_ion3hitXY,

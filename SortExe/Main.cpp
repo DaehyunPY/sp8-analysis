@@ -650,8 +650,6 @@ int main(int argc, char *argv[]) {
 
 
 
-
-
       // electron
       if (eSortWrapper.sorter != nullptr) {
         auto &pSorter = eSortWrapper.sorter;
@@ -757,7 +755,24 @@ int main(int argc, char *argv[]) {
         }
       }
 
+
+
+
+
+
+
+
+
+
       // Fill the tree and hists
+      // fill TDC ns
+      {
+        const int idxhist = Analysis::SortRun::h1_TDC01;
+        const int numhist = 17;
+        for (int i=0; i<numhist; i++) {
+          pRun->fill1d(idxhist+i, tdc_ns[i][0]);
+        }
+      }
       int number_of_ions = 0;
       int number_of_electrons = 0;
       if (iSortWrapper.sorter != nullptr) {
@@ -913,6 +928,11 @@ int main(int argc, char *argv[]) {
 
 
 
+
+
+
+
+
       // Write to output file
       FILE *outfile = nullptr;
       if (outfile) {
@@ -998,10 +1018,6 @@ int main(int argc, char *argv[]) {
               TDC[pSorter->Cw2][i] = int(tdc_ns[pSorter->Cw2][i] / TDCResolution);
           }
         }
-
-
-
-
 
         // output TDC data
         for (unsigned int i = 0; i < pLMF->number_of_channels; i++) {

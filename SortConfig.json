@@ -1,13 +1,13 @@
 {
   // "working_directory": "PATH", // comment out=same path with this file
   "LMF_files": [
-    "LMF_FILENAME1", 
+    "LMF_FILENAME1",
     "LMF_FILENAME2"
   ],
-  "draw_canvases": false,
+  "draw_canvases": true,
   "maxium_of_electron_hits": 4,
   "maxium_of_ion_hits"     : 4,
-  "bunch_marker_ch": 16, // counting starts at 1
+  "bunch_marker_ch": 17, // counting starts at 1
   "remove_bunch_region": [[-5000, -3000]], // [ns] comment out=off
   "electron_sorter": {
     "cmd": 1,
@@ -20,10 +20,10 @@
     "hexanode_used": true,
     "common_start_mode": true, // for TDC8HP and fADC always use true
     "channel_map": { // counting starts at 1
-      "u1": 2,
-      "u2": 1,
-      "v1": 4,
-      "v2": 3,
+      "u1": 1,
+      "u2": 2,
+      "v1": 3,
+      "v2": 4,
       "w1": 6, // HEX only
       "w2": 5, // HEX only
       "MCP": 7 // 0 if not used
@@ -64,12 +64,12 @@
     "common_start_mode": true, // for TDC8HP and fADC always use true
     "channel_map": { // counting starts at 1
       "u1": 10,
-      "u2": 9,
+      "u2": 11,
       "v1": 12,
-      "v2": 11,
-      "w1": 14, // HEX only
-      "w2": 13, // HEX only
-      "MCP": 15 // 0 if not used
+      "v2": 13,
+      "w1": 15, // HEX only
+      "w2": 14, // HEX only
+      "MCP": 16 // 0 if not used
     },
     "factors": {
       "offset_u": -130.4, // [ns]

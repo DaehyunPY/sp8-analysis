@@ -115,6 +115,26 @@ TCanvas *Analysis::SortRun::createCanvas(std::string name,
   return canvaspointer;
 }
 void Analysis::SortRun::createHists() {
+#define __TDC_NS1__ "Time [ns]", 2000, -100, 100
+#define __TDC_NS2__ "Time [ns]", 2000, -10000, 10000
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC01), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC02), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC03), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC04), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC05), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC06), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC07), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC08), __TDC_NS2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC09), __TDC_NS2__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC10), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC11), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC12), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC13), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC14), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC15), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC16), __TDC_NS1__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC17), __TDC_NS2__);
+
 #define __ION_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 500, -3000, 12000, 200, -100, 100
 #define __ION_XY_TITLE_BIN_REGION__ "Location X [mm]", "Location Y [mm]", 200, -100, 100, 200, -100, 100
 #define __ION_PIPICO_TITLE_BIN_REGION__ "Time 1 [ns]", "Time 2 [ns]", 500, -3000, 12000, 500, -3000, 12000
@@ -233,10 +253,10 @@ void Analysis::SortRun::createC2() {
   getHist2d(h2_elecXYDev)->Draw();
 }
 const bool Analysis::SortRun::existC1() const {
-  return pC1 ? true : false;
+  return pC1 != nullptr;
 }
 const bool Analysis::SortRun::existC2() const {
-  return pC2 ? true : false;
+  return pC2 != nullptr;
 }
 void Analysis::SortRun::updateC1() {
   if (existC1()) {
