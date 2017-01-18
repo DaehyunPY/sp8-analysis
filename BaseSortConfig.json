@@ -1,0 +1,41 @@
+{
+  "maxium_of_electron_hits": 4,
+  "maxium_of_ion_hits": 4,
+  "bunch_marker_ch": 17, // counting starts at 1
+  "electron_sorter": {
+    "calibration_table": "ElecCalibTab.txt",
+    "hexanode_used": true,
+    "common_start_mode": true, // for TDC8HP and fADC always use true
+    "channel_map": { // counting starts at 1
+      "u1": 1,
+      "u2": 2,
+      "v1": 3,
+      "v2": 4,
+      "w1": 6, // HEX only
+      "w2": 5, // HEX only
+      "MCP": 7, // 0 if not used
+      "t0": 8
+    },
+    "MCP_radius": 63.0, // [mm] always a bit larger than the real radius
+    "anode_deadtime": 20.0,
+    "MCP_deadtime": 20.0
+  },
+  "ion_sorter": {
+    "calibration_table": "IonCalibTab.txt",
+    "hexanode_used": true,
+    "common_start_mode": true, // for TDC8HP and fADC always use true
+    "channel_map": { // counting starts at 1
+      "u1": 10,
+      "u2": 11,
+      "v1": 12,
+      "v2": 13,
+      "w1": 15, // HEX only
+      "w2": 14, // HEX only
+      "MCP": 16, // 0 if not used
+      "t0": 8
+    },
+    "MCP_radius": 43.0, // [mm] always a bit larger than the real radius
+    "anode_deadtime": 20.0,
+    "MCP_deadtime": 20.0
+  }
+}

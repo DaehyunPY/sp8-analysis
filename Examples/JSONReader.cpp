@@ -17,8 +17,8 @@ int main() {
       "    \"b\": false,\n"
       "}";
   Analysis::JSONReader reader;
-  reader.appendDoc(Analysis::JSONReader::fromStr, defaultJSON);
   reader.appendDoc(Analysis::JSONReader::fromStr, userJSON);
+  reader.appendDoc(Analysis::JSONReader::fromStr, defaultJSON);
   std::cout << reader.get<const char*>("hello") << std::endl;
   std::cout << (reader.get<bool>("b")? "true":"false") << std::endl;
   std::cout << reader.get<int>("i") << std::endl;

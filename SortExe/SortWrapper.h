@@ -55,8 +55,9 @@ class SortWrapper {
  private:
   LMFWrapper *pLMFSource;
   sort_class *pSorter;
-  SortCmd cmd = kNoDetector;
-  std::map<std::string, int> chMap;
+  SortCmd cmd;
+  const int *pChT0;
+  double t0;
   std::map<std::string, double> factors;
   std::string calibTabFilename;
   int numHits;
@@ -73,10 +74,8 @@ class SortWrapper {
 
  public:
   SortCmd getCmd() const;
-  bool isCmd(SortCmd c) const;
   bool isNull() const;
   bool isFull() const;
-  const sort_class &getSorter() const;
   int getNumHits() const;
   hit_class **getOutputArr() const;
   const double *getNthX(const int i) const;

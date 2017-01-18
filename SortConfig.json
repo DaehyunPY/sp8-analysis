@@ -1,16 +1,13 @@
 {
   // "working_directory": "PATH", // comment out=same path with this file
-  // "base_config_file:": "", // not working now 
+  "base_config_file": "BaseSortConfig.json",
   "LMF_files": [
     "LMF_FILENAME1",
     "LMF_FILENAME2",
     "LMF_FILENAME3"
   ],
   "draw_canvases": true,
-  "maxium_of_electron_hits": 4,
-  "maxium_of_ion_hits"     : 4,
-  "bunch_marker_ch": 17, // counting starts at 1
-  "remove_bunch_region": [[-5000.0, -3000.0]], // [ns] comment out=off
+  // "remove_bunch_region": [[-5000.0, -3000.0]], // [ns] comment out=off
   "electron_sorter": {
     "cmd": 1,
     // -1 = detector does not exist
@@ -18,20 +15,8 @@
     //  1 = sort and write new file
     //  2 = calibrate fv, fw, w_offset
     //  3 = create calibration table files
-    "calibration_table": "ElecCalibTab.txt",
-    "hexanode_used": true,
-    "common_start_mode": true, // for TDC8HP and fADC always use true
-    "channel_map": { // counting starts at 1
-      "u1": 1,
-      "u2": 2,
-      "v1": 3,
-      "v2": 4,
-      "w1": 6, // HEX only
-      "w2": 5, // HEX only
-      "MCP": 7 // 0 if not used
-    },
     "factors": {
-      "offset_u": -120.0, // [ns]
+      "offset_u": -125.0, // [ns]
       "offset_v": -125.0, // [ns]
       "offset_w": -125.0, // [ns] HEX only
       "halfwidth_u": 5.0, // [ns]
@@ -40,19 +25,16 @@
       "offset_x": 0.0, // [ns]
       "offset_y": 0.0, // [ns]
       "runtime": 173.0, // [ns]
-      //      "runtime_u"  : 173.0,  // [ns] overwrite runtime
-      //      "runtime_v"  : 173.0,  // [ns] overwrite runtime
-      //      "runtime_w"  : 173.0,  // [ns] overwrite runtime
+      // "runtime_u" : 173.0, // [ns] overwrite runtime
+      // "runtime_v" : 173.0, // [ns] overwrite runtime
+      // "runtime_w" : 173.0, // [ns] overwrite runtime
       "fu": 0.62,
-      "fv": 0.60,
-      "fw": 0.59, // HEX only
-      "fw_offset": -2.63 // [ns] HEX only
+      "fv": 0.62,
+      "fw": 0.62, // HEX only
+      "fw_offset": -2.60 // [ns] HEX only
     },
-    "MCP_radius": 63.0, // [mm] always a bit larger than the real radius
-    "anode_deadtime": 20.0,
-    "MCP_deadtime": 20.0,
     "correct_timesum": false, // use position depended correction of timesums
-    "correct_position": false // use position depended NL correction of position"
+    "correct_position": false // use position depended NL correction of position
   },
   "ion_sorter": {
     "cmd": 1,
@@ -61,40 +43,25 @@
     //  1 = sort and write new file
     //  2 = calibrate fv, fw, w_offset
     //  3 = create calibration table files
-    "calibration_table": "IonCalibTab.txt",
-    "hexanode_used": true,
-    "common_start_mode": true, // for TDC8HP and fADC always use true
-    "channel_map": { // counting starts at 1
-      "u1": 10,
-      "u2": 11,
-      "v1": 12,
-      "v2": 13,
-      "w1": 15, // HEX only
-      "w2": 14, // HEX only
-      "MCP": 16 // 0 if not used
-    },
     "factors": {
-      "offset_u": -26.6, // [ns]
-      "offset_v": -20.0, // [ns]
-      "offset_w": -24.3, // [ns] HEX only
+      "offset_u": -25.0, // [ns]
+      "offset_v": -25.0, // [ns]
+      "offset_w": -25.0, // [ns] HEX only
       "halfwidth_u": 5.0, // [ns]
       "halfwidth_v": 5.0, // [ns]
       "halfwidth_w": 5.0, // [ns] HEX only
       "offset_x": 0.0, // [ns]
       "offset_y": 0.0, // [ns]
       "runtime": 119.0, // [ns]
-      //      "runtime_u"  : 119.0,  // [ns] overwrite runtime
-      //      "runtime_v"  : 119.0,  // [ns] overwrite runtime
-      //      "runtime_w"  : 119.0,  // [ns] overwrite runtime
+      // "runtime_u" : 119.0, // [ns] overwrite runtime
+      // "runtime_v" : 119.0, // [ns] overwrite runtime
+      // "runtime_w" : 119.0, // [ns] overwrite runtime
       "fu": 0.66,
-      "fv": 0.71,
-      "fw": 1.68, // HEX only
+      "fv": 0.66,
+      "fw": 0.66, // HEX only
       "fw_offset": -0.10 // [ns] HEX only
     },
-    "MCP_radius": 43.0, // [mm] always a bit larger than the real radius
-    "anode_deadtime": 20.0,
-    "MCP_deadtime": 20.0,
     "correct_timesum": false, // use position depended correction of timesums
-    "correct_position": false // use position depended NL correction of position"
+    "correct_position": false // use position depended NL correction of position
   }
 }

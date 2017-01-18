@@ -54,7 +54,7 @@ bool Analysis::JSONReader::getBoolAtIfItIs(const std::string str, const bool def
   else return def;
 }
 void Analysis::JSONReader::ReadFromDoc(const rapidjson::Document *pDoc) {
-	pDocs.insert(pDocs.begin(), pDoc);
+	pDocs.push_back(pDoc);
 }
 void Analysis::JSONReader::ReadFromStr(const std::string str) {
   auto *pNewDoc = new rapidjson::Document;
