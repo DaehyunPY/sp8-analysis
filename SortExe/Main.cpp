@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
       { // TDC ns
         auto &tdc_ns = aLMFWrapper.TDCns;
         const int idxhist = Analysis::SortRun::h1_TDC01;
-        const int numhist = 17;
+        const int numhist = 16;
         for (int i=0; i<numhist; i++) {
           pRun->fill1d(idxhist+i, tdc_ns[i][0]);
         }
@@ -260,11 +260,13 @@ int main(int argc, char *argv[]) {
           const auto TDCRes = aLMFWrapper.TDCRes;
           pBunchMarker = new auto(*mcp - TDC[bunchCh][0] * TDCRes);
         }
+        pRun->fill1d(Analysis::SortRun::h1_bunchMarker, pBunchMarker);
       }
       if (!bunchMaskRm.isIn(pBunchMarker)) {
+        pRun->fill1d(Analysis::SortRun::h1_bunchMarkerAfterRm, pBunchMarker);
 //        auto iSorter = iSortWrapper.pSorter;
 //        auto eSorter = eSortWrapper.pSorter;
-//        pRun->fill1d(Analysis::SortRun::h1_eMarker, eMarker);
+//        pRun->fill1d(Analysis::SortRun::h1_bunchMarker, eMarker);
 //        if(number_of_ions >= 1) {
 //          double &x = iSorter->output_hit_array[0]->x;
 //          double &y = iSorter->output_hit_array[0]->y;

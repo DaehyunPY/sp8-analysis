@@ -93,7 +93,7 @@ class SortRun: public Hist {
   enum HistList {
     h1_TDC01, h1_TDC02, h1_TDC03, h1_TDC04, h1_TDC05, h1_TDC06, h1_TDC07, h1_TDC08,
     h1_TDC09, h1_TDC10, h1_TDC11, h1_TDC12, h1_TDC13, h1_TDC14, h1_TDC15, h1_TDC16,
-    h1_TDC17,
+    h1_bunchMarker, h1_bunchMarkerAfterRm,
     h2_ion1hitXFish, h2_ion1hitYFish, h2_ion1hitXY,
     h2_ion2hitXFish, h2_ion2hitYFish, h2_ion2hitXY,
     h2_ion3hitXFish, h2_ion3hitYFish, h2_ion3hitXY,
@@ -112,7 +112,6 @@ class SortRun: public Hist {
     h1_elecTimesumV, h1_elecTimediffV, h2_elecTimesumDiffV,
     h1_elecTimesumW, h1_elecTimediffW, h2_elecTimesumDiffW,
     h2_elecXYRaw, h2_elecXY, h2_elecXYDev,
-    h1_eMarker,
     numHists
   };
 };

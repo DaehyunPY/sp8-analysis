@@ -115,25 +115,26 @@ TCanvas *Analysis::SortRun::createCanvas(std::string name,
   return canvaspointer;
 }
 void Analysis::SortRun::createHists() {
-#define __TDC_NS1__ "Time [ns]", 2000, -100, 100
-#define __TDC_NS2__ "Time [ns]", 2000, -10000, 10000
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC01), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC02), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC03), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC04), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC05), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC06), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC07), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC08), __TDC_NS2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC09), __TDC_NS2__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC10), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC11), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC12), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC13), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC14), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC15), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC16), __TDC_NS1__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC17), __TDC_NS2__);
+#define __TDC_NS__ "Time [ns]", 1000, -500, 500, "TDC"
+#define __BUNCHMARKER__ "Time [ns]", 2000, -7500, 2500, "TDC"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC01), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC02), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC03), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC04), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC05), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC06), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC07), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC08), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC09), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC10), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC11), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC12), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC13), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC14), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC15), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC16), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_bunchMarker), __BUNCHMARKER__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_bunchMarkerAfterRm), __BUNCHMARKER__);
 
 #define __ION_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 500, -3000, 12000, 200, -100, 100
 #define __ION_XY_TITLE_BIN_REGION__ "Location X [mm]", "Location Y [mm]", 200, -100, 100, 200, -100, 100
@@ -202,9 +203,6 @@ void Analysis::SortRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYRaw), __AFTERCALIB_TITLE_BIN_REGION__(60));
   create2d(SAME_TITLE_WITH_VALNAME(h2_elecXY), __AFTERCALIB_TITLE_BIN_REGION__(60));
   create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYDev), __AFTERCALIB_TITLE_BIN_REGION__(100));
-
-#define __EMARKER_TITLE_BIN_REGION__ "Time [ns]", 2000, -7500, 2500
-  create1d(SAME_TITLE_WITH_VALNAME(h1_eMarker), __EMARKER_TITLE_BIN_REGION__);
 }
 void Analysis::SortRun::createC1() {
   closeC1();
