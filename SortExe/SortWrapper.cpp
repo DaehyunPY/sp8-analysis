@@ -246,11 +246,12 @@ Analysis::SortWrapper::SortWrapper(Analysis::LMFWrapper *p) {
   pLMFSource = p;
   pSorter = new sort_class();
   cmd = kNoDetector;
+  numHits = 0;
 }
 bool Analysis::SortWrapper::isNull() const {
   return pSorter == nullptr;
 }
-bool Analysis::SortWrapper::sort() {
+bool Analysis::SortWrapper::convertTDC() {
   if (pSorter == nullptr) return true;
   const double &offset_u = factors["offset_u"];
   const double &offset_v = factors["offset_v"];
@@ -429,6 +430,26 @@ const double *Analysis::SortWrapper::getWTimediff() const {
   const auto &TDCns = pLMFSource->TDCns;
   if (!(count[pSorter->Cw1] > 0 && count[pSorter->Cw2] > 0)) return nullptr;
   return new double(TDCns[pSorter->Cw1][0] - TDCns[pSorter->Cw2][0]);
+}
+bool Analysis::SortWrapper::sort() {
+  if (pSorter == nullptr) return true;
+  if (cmd == kSort) { // sort and write new file
+    // sort/reconstruct the detector signals and apply the sum- and NL-correction.
+    const int n = pSorter->sort();
+    numHits = n;
+    return true;
+    // "number_of_ions" is the number of reconstructed number of particles
+  } else {
+    const int n = pSorter->run_without_sorting();
+    numHits = n;
+    return true;
+  }
+}
+int Analysis::SortWrapper::getNumHits() const {
+  return numHits;
+}
+hit_class **Analysis::SortWrapper::getOutputArr() const {
+  return pSorter->output_hit_array;
 }
 bool Analysis::LMFWrapper::readConfig(const Analysis::JSONReader &reader) {
     auto pStr = reader.getOpt<const char *>("LMF_files");

@@ -55,10 +55,6 @@ int main(int argc, char *argv[]) {
   Analysis::JSONReader *pReader;
   pReader = new Analysis::JSONReader();
   pReader->appendDoc(Analysis::JSONReader::fromFile, argv[1]);
-  if (!pReader) {
-    std::cout << "fail" << std::endl;
-    return 0;
-  }
   std::cout << "ok" << std::endl;
 
   // Change the working directory
@@ -79,7 +75,7 @@ int main(int argc, char *argv[]) {
   const auto maxElecHits = pReader->get<int>("maxium_of_electron_hits");
   const auto maxIonHits = pReader->get<int>("maxium_of_ion_hits");
   const auto bunchCh = pReader->get<int>("bunch_marker_ch")-1;
-  auto bunchMaskRm = Analysis::getBunchMaskRm(*pReader, "remove_bunch_region");
+  auto bunchMaskRm = Analysis::readBunchMaskRm(*pReader, "remove_bunch_region");
 
   // Setup LMF files
   Analysis::LMFWrapper aLMFWrapper;
@@ -177,8 +173,8 @@ int main(int argc, char *argv[]) {
       }
 
       // convert the raw TDC data to nanoseconds
-      iSortWrapper.sort();
-      eSortWrapper.sort();
+      iSortWrapper.convertTDC();
+      eSortWrapper.convertTDC();
 
       // fill
       { // TDC ns
@@ -241,52 +237,31 @@ int main(int argc, char *argv[]) {
         pRun->fill1d(Analysis::SortRun::h1_elecTimediffW, w_timediff);
         pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffW, w_timediff, w_timesum);
       }
-//      int number_of_ions = 0;
-//      int number_of_electrons = 0;
-//      if (iSortWrapper.pSorter != nullptr) {
-//        auto pSorter = iSortWrapper.pSorter;
-//        auto cmd = iSortWrapper.cmd;
-//        if (cmd == Analysis::sort) {  // sort and write new file
-//          // sort/reconstruct the detector signals and apply the sum- and NL-correction.
-//          number_of_ions = pSorter->sort();
-//          // "number_of_ions" is the number of reconstructed number of particles
-//        }
-//        else {
-//          number_of_ions = pSorter->run_without_sorting();
-//        }
-//        for (int i = 0; i < number_of_ions; i++) {
-//          pRun->fill2d(Analysis::SortRun::h2_ionXY,
-//                       pSorter->output_hit_array[i]->x,
-//                       pSorter->output_hit_array[i]->y);
-//        }
-//      }
-//      if (eSortWrapper.pSorter != nullptr) {
-//        auto pSorter = eSortWrapper.pSorter;
-//        auto cmd = eSortWrapper.cmd;
-//        if (cmd == 1) {  // sort and write new file
-//          // sort/reconstruct the detector signals and apply the sum- and NL-correction.
-//          number_of_electrons = pSorter->sort();
-//          // "number_of_electrons" is the number of reconstructed number of particles
-//        }
-//        else {
-//          number_of_electrons = pSorter->run_without_sorting();
-//        }
-//        for (int i = 0; i < number_of_electrons; i++) {
-//          pRun->fill2d(Analysis::SortRun::h2_elecXY,
-//                       pSorter->output_hit_array[i]->x,
-//                       pSorter->output_hit_array[i]->y);
-//        }
-//      }
-//      double eMarker = 0;
-//      if (eSortWrapper.pSorter != nullptr) {
-//        auto eSorter = eSortWrapper.pSorter;
-//        double mcp = 0.;
-//        if (eSorter->use_MCP) {
-//          if (count[eSorter->Cmcp] > 0) mcp = TDCns[eSorter->Cmcp][0]; else mcp = -1.e100;
-//        }
-//        eMarker = mcp - TDC[bunchCh][0] * TDCResolution;
-//      }
-//      if (!(bunchMaskRm.isIn(eMarker))) {
+
+      iSortWrapper.sort();
+      eSortWrapper.sort();
+      const int numHitIons = iSortWrapper.getNumHits();
+      const int numHitElecs = eSortWrapper.getNumHits();
+      for (int i=0; i<numHitIons; i++)
+        pRun->fill2d(Analysis::SortRun::h2_ionXY,
+                     iSortWrapper.getOutputArr()[i]->x,
+                     iSortWrapper.getOutputArr()[i]->y);
+      for (int i=0; i<numHitElecs; i++)
+        pRun->fill2d(Analysis::SortRun::h2_elecXY,
+                     eSortWrapper.getOutputArr()[i]->x,
+                     eSortWrapper.getOutputArr()[i]->y);
+
+      // get bunch marker
+      const double *pBunchMarker = nullptr;
+      if (!eSortWrapper.isNull()) {
+        const auto mcp = eSortWrapper.getMCP();
+        if (mcp != nullptr) {
+          const auto &TDC = aLMFWrapper.TDC;
+          const auto TDCRes = aLMFWrapper.TDCRes;
+          pBunchMarker = new auto(*mcp - TDC[bunchCh][0] * TDCRes);
+        }
+      }
+      if (!bunchMaskRm.isIn(pBunchMarker)) {
 //        auto iSorter = iSortWrapper.pSorter;
 //        auto eSorter = eSortWrapper.pSorter;
 //        pRun->fill1d(Analysis::SortRun::h1_eMarker, eMarker);
@@ -390,7 +365,7 @@ int main(int argc, char *argv[]) {
 //          delete[] pElecs;
 //		  pElecs = nullptr;
 //        }
-//      }
+      }
 
       { // check if it's full
         bool b1, b2;

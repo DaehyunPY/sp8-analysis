@@ -53,18 +53,20 @@ class SortWrapper {
   };
 
  private:
-  sort_class *pSorter;
   LMFWrapper *pLMFSource;
+  sort_class *pSorter;
   SortCmd cmd = kNoDetector;
   std::map<std::string, int> chMap;
   std::map<std::string, double> factors;
   std::string calibTabFilename;
+  int numHits;
  public:
   SortWrapper(LMFWrapper *p);
   ~SortWrapper();
   bool readConfig(const JSONReader &reader, const std::string prefix);
   bool readCalibTab();
   bool init();
+  bool convertTDC();
   bool sort();
   bool calibFactors() const;
   bool genClibTab() const;
@@ -75,6 +77,8 @@ class SortWrapper {
   bool isNull() const;
   bool isFull() const;
   const sort_class &getSorter() const;
+  int getNumHits() const;
+  hit_class **getOutputArr() const;
 
  public:
   const double *getMCP() const;

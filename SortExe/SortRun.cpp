@@ -1,6 +1,6 @@
 #include "SortRun.h"
 
-Analysis::Regions<double> Analysis::getBunchMaskRm(const Analysis::JSONReader &reader, const std::string prefix) {
+Analysis::Regions<double> Analysis::readBunchMaskRm(const Analysis::JSONReader &reader, const std::string prefix) {
   Regions<double> mask;
   if (reader.hasMember(prefix)) {
     {

@@ -35,13 +35,17 @@ struct Region {
 template <typename T>
 struct Regions {
   std::vector<Region<T>> regions;
-  bool isIn(T value) const {
+  bool isIn(const T value) const {
     for(auto r : regions) if(r.isIn(value)) return true;
     return false;
   }
+  bool isIn(const T *pV) const {
+    if (pV == nullptr) return true;
+    return isIn(*pV);
+  }
 };
 
-Regions<double> getBunchMaskRm(const Analysis::JSONReader &reader, const std::string prefix = "remove_bunch_region");
+Regions<double> readBunchMaskRm(const Analysis::JSONReader &reader, const std::string prefix);
 
 class SortRun: public Hist {
  private:
