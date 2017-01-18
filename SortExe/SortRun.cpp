@@ -144,8 +144,8 @@ void Analysis::SortRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_elecXY), __AFTERCALIB_TITLE_BIN_REGION__(60));
   create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYDev), __AFTERCALIB_TITLE_BIN_REGION__(100));
 
-#define __TIMESTAMP__ "Time [s]", 4000, 0, 4000
-  create1d(SAME_TITLE_WITH_VALNAME(h1_timestamp), __TIMESTAMP__);
+#define __TIMESTAMP__TITLE__BIN__REGION__ "Time [s]", 4000, 0, 4000
+  create1d(SAME_TITLE_WITH_VALNAME(h1_timestamp), __TIMESTAMP__TITLE__BIN__REGION__);
 
 #define __TDC_NS__ "Time [ns]", 1000, -500, 500, "TDC"
 #define __BUNCHMARKER__ "Time [ns]", 2000, -7500, 2500, "TDC"
@@ -187,9 +187,9 @@ void Analysis::SortRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion2hit3hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion3hit4hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
 
-#define __ELEC_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 2000, -300, 700, 200, -100, 100, "electron"
+#define __ELEC_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 1500, -1000, 500, 200, -100, 100, "electron"
 #define __ELEC_XY_TITLE_BIN_REGION__ "Location X [mm]", "Location Y [mm]", 200, -100, 100, 200, -100, 100, "electron"
-#define __ELEC_PIPICO_TITLE_BIN_REGION__ "Time 1 [ns]", "Time 2 [ns]", 2000, -300, 700, 2000, -300, 700, "electron"
+#define __ELEC_PIPICO_TITLE_BIN_REGION__ "Time 1 [ns]", "Time 2 [ns]", 1500, -1000, 500, 1500, -1000, 500, "electron"
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec1hitXFish), __ELEC_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec1hitYFish), __ELEC_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec1hitXY), __ELEC_XY_TITLE_BIN_REGION__);

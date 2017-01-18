@@ -51,37 +51,35 @@ int main(int argc, char *argv[]) {
   std::cout << "ok" << std::endl;
 
   // Open the JSON reader
-  std::cout << "Opening the config file... ";
+  std::cout << "Reading the config file... " << std::endl;
   Analysis::JSONReader *pReader;
   pReader = new Analysis::JSONReader();
   pReader->appendDoc(Analysis::JSONReader::fromFile, argv[1]);
-  std::cout << "ok" << std::endl;
-
-  // Change the working directory
-  std::string path;
-  if (pReader->hasMember("working_directory")) {
-    path = pReader->getStringAt("working_directory");
-  } else {
-    path = argv[1];
-    path = path.substr(0, path.find_last_of("/\\"));
+  { // Change the working directory
+    std::string path;
+    if (pReader->hasMember("working_directory")) {
+      path = pReader->getStringAt("working_directory");
+    } else {
+      path = argv[1];
+      path = path.substr(0, path.find_last_of("/\\"));
+    }
+    std::cout << "changing path to `" << path << std::endl;
+    chdir(path.c_str());
   }
-  std::cout << "changing path to `" << path << "'... ";
-  chdir(path.c_str());
-  std::cout << "okay" << std::endl;
-  Analysis::SortRun *pRun;
-
-  // Read options
+  { // read base config file
+    const auto base = pReader->getOpt<const char *>("base_config_file");
+    if (base != nullptr) pReader->appendDoc(Analysis::JSONReader::fromFile, *base);
+  }
   const auto isDrawingCanvases = pReader->get<bool>("draw_canvases");
   const auto maxElecHits = pReader->get<int>("maxium_of_electron_hits");
   const auto maxIonHits = pReader->get<int>("maxium_of_ion_hits");
   const auto bunchCh = pReader->get<int>("bunch_marker_ch") -1;
   auto bunchMaskRm = Analysis::readBunchMaskRm(*pReader, "remove_bunch_region");
 
-  // Setup LMF files
+  // Setup helpers
+  Analysis::SortRun *pRun;
   Analysis::LMFWrapper aLMFWrapper;
   aLMFWrapper.readConfig(*pReader);
-
-  // create the sorter
   Analysis::SortWrapper iSortWrapper(&aLMFWrapper), eSortWrapper(&aLMFWrapper);
   {
     bool b1, b2;

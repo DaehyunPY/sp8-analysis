@@ -165,59 +165,66 @@ bool create_calibration_tables(const char *filename, sort_class *sorter) {
   return true;
 }
 Analysis::SortWrapper::~SortWrapper() {
-    if (pSorter == nullptr) return;
+  pLMFSource = nullptr;
+  if (pSorter != nullptr) {
     delete pSorter;
     pSorter = nullptr;
-    return;
+  }
+  if (pChT0 != nullptr) {
+    delete pChT0;
+    pChT0 = nullptr;
+  }
 }
 bool Analysis::SortWrapper::readConfig(const Analysis::JSONReader &reader, const std::string prefix) {
-    std::cout << "Initialize sorter from config file... " << std::endl;
-    if (!reader.hasMember(prefix)) throw std::invalid_argument("The member does not exist!");
+  std::cout << "Initialize sorter from config file... " << std::endl;
+  if (!reader.hasMember(prefix)) throw std::invalid_argument("The member does not exist!");
 
-    cmd = (SortCmd) reader.get<int>(prefix + ".cmd");
-    if (cmd == -1) {
-      std::cout << "ok" << std::endl;
-      return false;
-    }
-    calibTabFilename = reader.get<const char *>(prefix + ".calibration_table");
+  cmd = (SortCmd) reader.get<int>(prefix + ".cmd");
+  if (cmd == -1) {
+    std::cout << "ok" << std::endl;
+    return false;
+  }
+  calibTabFilename = reader.get<const char *>(prefix + ".calibration_table");
 
-    chMap = reader.getMap<int>(prefix + ".channel_map");
-    pSorter->use_HEX = reader.getBoolAt(prefix + ".hexanode_used");
-    pSorter->common_start_mode = reader.getBoolAt(prefix + ".common_start_mode");
-    pSorter->Cu1 = chMap["u1"] - 1;
-    pSorter->Cu2 = chMap["u2"] - 1;
-    pSorter->Cv1 = chMap["v1"] - 1;
-    pSorter->Cv2 = chMap["v2"] - 1;
-    pSorter->Cw1 = chMap["w1"] - 1;
-    pSorter->Cw2 = chMap["w2"] - 1;
-    pSorter->Cmcp = chMap["MCP"] - 1;
-    pSorter->use_MCP = (pSorter->Cmcp) > -1;
+  std::map<std::string, int> chMap;
+  chMap = reader.getMap<int>(prefix + ".channel_map");
+  pSorter->use_HEX = reader.getBoolAt(prefix + ".hexanode_used");
+  pSorter->common_start_mode = reader.getBoolAt(prefix + ".common_start_mode");
+  pSorter->Cu1 = chMap["u1"] - 1;
+  pSorter->Cu2 = chMap["u2"] - 1;
+  pSorter->Cv1 = chMap["v1"] - 1;
+  pSorter->Cv2 = chMap["v2"] - 1;
+  pSorter->Cw1 = chMap["w1"] - 1;
+  pSorter->Cw2 = chMap["w2"] - 1;
+  pSorter->Cmcp = chMap["MCP"] - 1;
+  pSorter->use_MCP = (pSorter->Cmcp) > -1;
+  if (chMap["t0"] != 0) pChT0 = new auto(chMap["t0"] -1);
 
-    factors = reader.getMap<double>(prefix + ".factors");
-    pSorter->uncorrected_time_sum_half_width_u = factors["halfwidth_u"];
-    pSorter->uncorrected_time_sum_half_width_v = factors["halfwidth_v"];
-    pSorter->uncorrected_time_sum_half_width_w = factors["halfwidth_w"];
-    for (auto key: {"runtime_u", "runtime_v", "runtime_w"}) {
-      auto found = factors.find(key);
-      if (found == factors.end()) factors[key] = factors["runtime"];
-    }
-    pSorter->runtime_u = factors["runtime_u"];
-    pSorter->runtime_v = factors["runtime_v"];
-    pSorter->runtime_w = factors["runtime_w"];
-    pSorter->fu = 0.5 * factors["fu"];
-    pSorter->fv = 0.5 * factors["fv"];
-    pSorter->fw = 0.5 * factors["fw"];
+  factors = reader.getMap<double>(prefix + ".factors");
+  pSorter->uncorrected_time_sum_half_width_u = factors["halfwidth_u"];
+  pSorter->uncorrected_time_sum_half_width_v = factors["halfwidth_v"];
+  pSorter->uncorrected_time_sum_half_width_w = factors["halfwidth_w"];
+  for (auto key: {"runtime_u", "runtime_v", "runtime_w"}) {
+    auto found = factors.find(key);
+    if (found == factors.end()) factors[key] = factors["runtime"];
+  }
+  pSorter->runtime_u = factors["runtime_u"];
+  pSorter->runtime_v = factors["runtime_v"];
+  pSorter->runtime_w = factors["runtime_w"];
+  pSorter->fu = 0.5 * factors["fu"];
+  pSorter->fv = 0.5 * factors["fv"];
+  pSorter->fw = 0.5 * factors["fw"];
 
-    pSorter->MCP_radius = reader.getDoubleAt(prefix + ".MCP_radius");
-    pSorter->dead_time_anode = reader.getDoubleAt(prefix + ".anode_deadtime");
-    pSorter->dead_time_mcp = reader.getDoubleAt(prefix + ".MCP_deadtime");
-    pSorter->use_sum_correction = reader.getBoolAt(prefix + ".correct_timesum");
-    pSorter->use_pos_correction = reader.getBoolAt(prefix + ".correct_position");
-    return true;
+  pSorter->MCP_radius = reader.getDoubleAt(prefix + ".MCP_radius");
+  pSorter->dead_time_anode = reader.getDoubleAt(prefix + ".anode_deadtime");
+  pSorter->dead_time_mcp = reader.getDoubleAt(prefix + ".MCP_deadtime");
+  pSorter->use_sum_correction = reader.getBoolAt(prefix + ".correct_timesum");
+  pSorter->use_pos_correction = reader.getBoolAt(prefix + ".correct_position");
+  return true;
 }
 bool Analysis::SortWrapper::init() {
     if (pSorter == nullptr) return true;
-    std::cout << "init sorter... " << std::endl;
+    std::cout << "init sorter... ";
     pSorter->TDC_resolution_ns = pLMFSource->TDCRes;
     pSorter->tdc_array_row_length = NUM_IONS;
     pSorter->count = (int *) pLMFSource->count;
@@ -246,6 +253,10 @@ Analysis::SortWrapper::SortWrapper(Analysis::LMFWrapper *p) {
   pLMFSource = p;
   pSorter = new sort_class();
   cmd = kNoDetector;
+  pChT0 = nullptr;
+  t0 = 0;
+  factors.clear();
+  calibTabFilename = "";
   numHits = 0;
 }
 bool Analysis::SortWrapper::isNull() const {
@@ -281,6 +292,7 @@ bool Analysis::SortWrapper::convertTDC() {
     for (unsigned int i = 0; i < count[pSorter->Cw2]; ++i)
       tdc_ns[pSorter->Cw2][i] = double(TDC[pSorter->Cw2][i]) * Res;
   }
+  if (pChT0 != nullptr) t0 = double(TDC[*pChT0][0]) * Res;
   if (pSorter->use_HEX) {
     // shift the time sums to zero:
     pSorter->shift_sums(+1, offset_u, offset_v, offset_w);
@@ -312,9 +324,6 @@ bool Analysis::SortWrapper::readCalibTab() {
   }
   return true;
 }
-bool Analysis::SortWrapper::isCmd(Analysis::SortWrapper::SortCmd c) const {
-  return cmd==c;
-}
 bool Analysis::SortWrapper::genClibTab() const {
     if (pSorter == nullptr) return true;
     if (cmd == kGenCalibTab) {
@@ -344,9 +353,6 @@ bool Analysis::SortWrapper::calibFactors() const {
 }
 Analysis::SortWrapper::SortCmd Analysis::SortWrapper::getCmd() const {
   return cmd;
-}
-const sort_class &Analysis::SortWrapper::getSorter() const {
-  return *pSorter;
 }
 const double *Analysis::SortWrapper::getMCP() const {
   if (pSorter==nullptr) return nullptr;
@@ -464,7 +470,11 @@ const double *Analysis::SortWrapper::getNthY(const int i) const {
 const double *Analysis::SortWrapper::getNthT(const int i) const {
   if (i<0) return nullptr;
   if (i>=numHits) return nullptr;
-  return new auto(pSorter->output_hit_array[i]->time);
+  if (pChT0 == nullptr) {
+    return new auto(pSorter->output_hit_array[i]->time);
+  } else {
+    return new auto(pSorter->output_hit_array[i]->time -t0);
+  }
 }
 const int *Analysis::SortWrapper::getNthMethod(const int i) const {
   if (i<0) return nullptr;
