@@ -68,7 +68,8 @@ int main(int argc, char *argv[]) {
   // Setup json file reader
   Analysis::JSONReader *pReader = nullptr;
   std::cout << "opening the config file... ";
-  pReader = new Analysis::JSONReader(argv[1]);
+  pReader = new Analysis::JSONReader();
+  pReader->appendDoc(Analysis::JSONReader::fromFile, argv[1]);
   std::cout << "okay" << std::endl;
 
   // Change the working directory

@@ -1,5 +1,28 @@
 #include "SortRun.h"
 
+Analysis::Regions<double> Analysis::readBunchMaskRm(const Analysis::JSONReader &reader, const std::string prefix) {
+  Regions<double> mask;
+  if (reader.hasMember(prefix)) {
+    {
+      auto pFr = reader.getOpt<double>(prefix + ".0");
+      auto pTo = reader.getOpt<double>(prefix + ".1");
+      if (pFr != nullptr && pTo != nullptr) {
+        mask.regions.push_back({*pFr, *pTo});
+        return mask;
+      }
+    }
+
+    const int n = reader.getArrSize(prefix);
+    for (int i=0; i < n; i++) {
+      const int m = reader.getArrSize(prefix + "." + std::to_string(i));
+      if (m != 2) throw std::invalid_argument("The array must have 2 elements!");
+      auto fr = reader.get<double>(prefix + "." + std::to_string(i) + ".0");
+      auto to = reader.get<double>(prefix + "." + std::to_string(i) + ".1");
+      mask.regions.push_back({fr, to});
+    }
+    return mask;
+  } else return mask;
+}
 bool Analysis::SortRun::isFileExist(const char *fileName) {
   std::ifstream file(fileName);
   return file.good();
@@ -81,20 +104,73 @@ void Analysis::SortRun::createTree() {
     pRootTree->Branch((str + "Flag" + ch).c_str(), &pElecDataSet[i].flag, (str + "Flag" + ch + "/I").c_str());
   }
 }
-TCanvas *Analysis::SortRun::createCanvas(char *name,
-                                         char *titel,
+TCanvas *Analysis::SortRun::createCanvas(std::string name,
+                                         std::string titel,
                                          int xposition,
                                          int yposition,
                                          int pixelsx,
                                          int pixelsy) {
   TCanvas *canvaspointer;
-  canvaspointer = new TCanvas(name, titel, xposition, yposition, pixelsx, pixelsy);
+  canvaspointer = new TCanvas(name.c_str(), titel.c_str(), xposition, yposition, pixelsx, pixelsy);
   return canvaspointer;
 }
 void Analysis::SortRun::createHists() {
-#define __ION_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 500, -3000, 12000, 200, -100, 100
-#define __ION_XY_TITLE_BIN_REGION__ "Location X [mm]", "Location Y [mm]", 200, -100, 100, 200, -100, 100
-#define __ION_PIPICO_TITLE_BIN_REGION__ "Time 1 [ns]", "Time 2 [ns]", 500, -3000, 12000, 500, -3000, 12000
+#define __TIMESUM_TITLE_BIN_REGION__ "Time [ns]", 1000, -25, 25, "timesum"
+#define __TIMEDELAY_TITLE_BIN_REGION__ "Time [ns]", 1000, -250, 250, "timesum"
+#define __TIMESUMDIFF_TITLE_BIN_REGION__ "Time diff [ns]", "Time sum [ns]", 500, -250, 250, 500, -25, 25, "timesum"
+#define __AFTERCALIB_TITLE_BIN_REGION__(X) "Time1 [ns]", "Time2 [ns]", X*2, -X, X, X*2, -X, X, "timesum"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumU), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumV), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumW), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffU), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffV), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffW), __TIMEDELAY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffU), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffV), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffW), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYRaw), __AFTERCALIB_TITLE_BIN_REGION__(60));
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionXY), __AFTERCALIB_TITLE_BIN_REGION__(60));
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYDev), __AFTERCALIB_TITLE_BIN_REGION__(100));
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumU), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumV), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumW), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffU), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffV), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffW), __TIMEDELAY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffU), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffV), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffW), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYRaw), __AFTERCALIB_TITLE_BIN_REGION__(60));
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecXY), __AFTERCALIB_TITLE_BIN_REGION__(60));
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYDev), __AFTERCALIB_TITLE_BIN_REGION__(100));
+
+#define __TIMESTAMP__ "Time [s]", 4000, 0, 4000
+  create1d(SAME_TITLE_WITH_VALNAME(h1_timestamp), __TIMESTAMP__);
+
+#define __TDC_NS__ "Time [ns]", 1000, -500, 500, "TDC"
+#define __BUNCHMARKER__ "Time [ns]", 2000, -7500, 2500, "TDC"
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC01), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC02), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC03), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC04), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC05), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC06), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC07), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC08), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC09), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC10), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC11), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC12), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC13), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC14), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC15), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_TDC16), __TDC_NS__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_bunchMarker), __BUNCHMARKER__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_bunchMarkerAfterRm), __BUNCHMARKER__);
+
+#define __ION_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 500, -3000, 12000, 200, -100, 100, "ion"
+#define __ION_XY_TITLE_BIN_REGION__ "Location X [mm]", "Location Y [mm]", 200, -100, 100, 200, -100, 100, "ion"
+#define __ION_PIPICO_TITLE_BIN_REGION__ "Time 1 [ns]", "Time 2 [ns]", 500, -3000, 12000, 500, -3000, 12000, "ion"
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion1hitXFish), __ION_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion1hitYFish), __ION_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion1hitXY), __ION_XY_TITLE_BIN_REGION__);
@@ -111,9 +187,9 @@ void Analysis::SortRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion2hit3hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion3hit4hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
 
-#define __ELEC_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 1200, -100, 500, 200, -100, 100
-#define __ELEC_XY_TITLE_BIN_REGION__ "Location X [mm]", "Location Y [mm]", 200, -100, 100, 200, -100, 100
-#define __ELEC_PIPICO_TITLE_BIN_REGION__ "Time 1 [ns]", "Time 2 [ns]", 1200, -100, 500, 1200, -100, 500
+#define __ELEC_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 2000, -300, 700, 200, -100, 100, "electron"
+#define __ELEC_XY_TITLE_BIN_REGION__ "Location X [mm]", "Location Y [mm]", 200, -100, 100, 200, -100, 100, "electron"
+#define __ELEC_PIPICO_TITLE_BIN_REGION__ "Time 1 [ns]", "Time 2 [ns]", 2000, -300, 700, 2000, -300, 700, "electron"
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec1hitXFish), __ELEC_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec1hitYFish), __ELEC_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec1hitXY), __ELEC_XY_TITLE_BIN_REGION__);
@@ -129,39 +205,6 @@ void Analysis::SortRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec1hit2hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec2hit3hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec3hit4hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
-
-#define __TIMESUM_TITLE_BIN_REGION__ "Time [ns]", 1000, -25, 25
-#define __TIMEDELAY_TITLE_BIN_REGION__ "Time [ns]", 1000, -250, 250
-#define __TIMESUMDIFF_TITLE_BIN_REGION__ "Time diff [ns]", "Time sum [ns]", 500, -250, 250, 500, -25, 25
-#define __AFTERCALIB_TITLE_BIN_REGION__(X) "Time1 [ns]", "Time2 [ns]", X*2, -X, X, X*2, -X, X
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumU), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumV), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumW), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionU), __TIMEDELAY_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionV), __TIMEDELAY_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionW), __TIMEDELAY_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffU), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffV), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffW), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYRaw), __AFTERCALIB_TITLE_BIN_REGION__(60));
-  create2d(SAME_TITLE_WITH_VALNAME(h2_ionXY), __AFTERCALIB_TITLE_BIN_REGION__(60));
-  create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYDev), __AFTERCALIB_TITLE_BIN_REGION__(100));
-
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumU), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumV), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumW), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecU), __TIMEDELAY_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecV), __TIMEDELAY_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecW), __TIMEDELAY_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffU), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffV), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffW), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYRaw), __AFTERCALIB_TITLE_BIN_REGION__(60));
-  create2d(SAME_TITLE_WITH_VALNAME(h2_elecXY), __AFTERCALIB_TITLE_BIN_REGION__(60));
-  create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYDev), __AFTERCALIB_TITLE_BIN_REGION__(100));
-
-#define __EMARKER_TITLE_BIN_REGION__ "Time [ns]", 2000, -7500, 2500
-  create1d(SAME_TITLE_WITH_VALNAME(h1_eMarker), __EMARKER_TITLE_BIN_REGION__);
 }
 void Analysis::SortRun::createC1() {
   closeC1();
@@ -174,11 +217,11 @@ void Analysis::SortRun::createC1() {
   pC1->cd(3);
   getHist1d(h1_ionTimesumW)->Draw();
   pC1->cd(4);
-  getHist1d(h1_ionU)->Draw();
+  getHist1d(h1_ionTimediffU)->Draw();
   pC1->cd(5);
-  getHist1d(h1_ionV)->Draw();
+  getHist1d(h1_ionTimediffV)->Draw();
   pC1->cd(6);
-  getHist1d(h1_ionW)->Draw();
+  getHist1d(h1_ionTimediffW)->Draw();
   pC1->cd(7);
   getHist2d(h2_ionXYRaw)->Draw();
   pC1->cd(8);
@@ -197,11 +240,11 @@ void Analysis::SortRun::createC2() {
   pC1->cd(3);
   getHist1d(h1_elecTimesumW)->Draw();
   pC1->cd(4);
-  getHist1d(h1_elecU)->Draw();
+  getHist1d(h1_elecTimediffU)->Draw();
   pC1->cd(5);
-  getHist1d(h1_elecV)->Draw();
+  getHist1d(h1_elecTimediffV)->Draw();
   pC1->cd(6);
-  getHist1d(h1_elecW)->Draw();
+  getHist1d(h1_elecTimediffW)->Draw();
   pC1->cd(7);
   getHist2d(h2_elecXYRaw)->Draw();
   pC1->cd(8);
@@ -210,10 +253,10 @@ void Analysis::SortRun::createC2() {
   getHist2d(h2_elecXYDev)->Draw();
 }
 const bool Analysis::SortRun::existC1() const {
-  return pC1 ? true : false;
+  return pC1 != nullptr;
 }
 const bool Analysis::SortRun::existC2() const {
-  return pC2 ? true : false;
+  return pC2 != nullptr;
 }
 void Analysis::SortRun::updateC1() {
   if (existC1()) {

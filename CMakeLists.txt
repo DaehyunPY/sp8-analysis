@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.6)
 project(Analysis)
 
 ### link ROOT
@@ -16,25 +16,27 @@ link_libraries(
     pthread m dl
 )
 
-### link resort
-link_directories("${CMAKE_CURRENT_SOURCE_DIR}/resort")
+### link extra libraries
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+link_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")
 link_libraries(libResort64c_x64.a)
 
 ### add sub lib
 add_subdirectory(AnalysisCore)
-add_subdirectory(Protocols)
+add_subdirectory(Core)
 
 ### compiler
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 
 ### SortExe
 set(SORTEXE_SOURCE_FILES
-    SortExe/LMF_IO.cpp
-    SortExe/Main.cpp
-    SortExe/SortRun.cpp
-)
+        SortExe/LMF_IO.cpp
+        SortExe/Main.cpp
+        SortExe/SortRun.cpp
+        SortExe/SortWrapper.cpp
+        )
 add_executable(SortExe ${SORTEXE_SOURCE_FILES})
-target_link_libraries(SortExe Protocols)
+target_link_libraries(SortExe SP8Core)
 
 ### AnalysisExe
 set(ANALYSISEXE_SOURCE_FILES
@@ -42,4 +44,8 @@ set(ANALYSISEXE_SOURCE_FILES
     AnalysisExe/AnalysisRun.cpp
 )
 add_executable(AnalysisExe ${ANALYSISEXE_SOURCE_FILES})
-target_link_libraries(AnalysisExe AnalysisCore Protocols)
+target_link_libraries(AnalysisExe AnalysisCore SP8Core)
+
+### Examples
+add_executable(ExpJSONReader Examples/JSONReader.cpp)
+target_link_libraries(ExpJSONReader SP8Core)

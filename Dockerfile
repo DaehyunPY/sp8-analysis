@@ -1,7 +1,12 @@
-FROM david9107/mydesktop:develop
+FROM david9107/mydesktop
 MAINTAINER Daehyun You <daehyun@mail.tagen.tohoku.ac.jp>
 
 WORKDIR /root
+
+### install packages
+RUN dnf update -y && dnf install -y \
+        boost-devel rapidjson-devel \
+    && dnf clean all
 
 ### analysis
 ADD ./ /opt/analysis/

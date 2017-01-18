@@ -3,4 +3,6 @@
 *.pyc
 *tmp*
 *backup*
-build
+*build*
+.directory
+/.project

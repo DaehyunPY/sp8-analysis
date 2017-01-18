@@ -1,8 +1,8 @@
 #ifndef ANALYSIS_EQUIPMENTPARAMETERS_H
 #define ANALYSIS_EQUIPMENTPARAMETERS_H
 
-#include "../Protocols/Unit.h"
-#include "../Protocols/JSONReader.h"
+#include "../Core/Unit.h"
+#include "../Core/JSONReader.h"
 
 namespace Analysis {
 class EquipmentParameters {

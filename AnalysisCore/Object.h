@@ -3,9 +3,9 @@
 
 
 #include <assert.h>
-#include "../Protocols/Unit.h"
+#include "../Core/Unit.h"
 #include "ObjectFlag.h"
-#include "../Protocols/JSONReader.h"
+#include "../Core/JSONReader.h"
 #include <functional>
 
 namespace Analysis {
