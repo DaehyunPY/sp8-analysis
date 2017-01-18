@@ -1,14 +1,16 @@
 {
   // "working_directory": "PATH", // comment out=same path with this file
+  // "base_config_file:": "", // not working now 
   "LMF_files": [
     "LMF_FILENAME1",
-    "LMF_FILENAME2"
+    "LMF_FILENAME2",
+    "LMF_FILENAME3"
   ],
   "draw_canvases": true,
   "maxium_of_electron_hits": 4,
   "maxium_of_ion_hits"     : 4,
   "bunch_marker_ch": 17, // counting starts at 1
-  "remove_bunch_region": [[-5000, -3000]], // [ns] comment out=off
+  "remove_bunch_region": [[-5000.0, -3000.0]], // [ns] comment out=off
   "electron_sorter": {
     "cmd": 1,
     // -1 = detector does not exist
@@ -42,9 +44,9 @@
       //      "runtime_v"  : 173.0,  // [ns] overwrite runtime
       //      "runtime_w"  : 173.0,  // [ns] overwrite runtime
       "fu": 0.62,
-      "fv": 0.598,
-      "fw": 0.5915, // HEX only
-      "fw_offset": -2.875 // [ns] HEX only
+      "fv": 0.60,
+      "fw": 0.59, // HEX only
+      "fw_offset": -2.63 // [ns] HEX only
     },
     "MCP_radius": 63.0, // [mm] always a bit larger than the real radius
     "anode_deadtime": 20.0,
@@ -72,9 +74,9 @@
       "MCP": 16 // 0 if not used
     },
     "factors": {
-      "offset_u": -130.4, // [ns]
-      "offset_v": -122.6, // [ns]
-      "offset_w": -130.0, // [ns] HEX only
+      "offset_u": -26.6, // [ns]
+      "offset_v": -20.0, // [ns]
+      "offset_w": -24.3, // [ns] HEX only
       "halfwidth_u": 5.0, // [ns]
       "halfwidth_v": 5.0, // [ns]
       "halfwidth_w": 5.0, // [ns] HEX only
@@ -85,9 +87,9 @@
       //      "runtime_v"  : 119.0,  // [ns] overwrite runtime
       //      "runtime_w"  : 119.0,  // [ns] overwrite runtime
       "fu": 0.66,
-      "fv": 0.7125,
-      "fw": 1.675, // HEX only
-      "fw_offset": 1.675// [ns] HEX only
+      "fv": 0.71,
+      "fw": 1.68, // HEX only
+      "fw_offset": -0.10 // [ns] HEX only
     },
     "MCP_radius": 43.0, // [mm] always a bit larger than the real radius
     "anode_deadtime": 20.0,

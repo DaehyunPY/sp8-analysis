@@ -91,6 +91,15 @@ class SortRun: public Hist {
   void createHists();
  public:
   enum HistList {
+    h1_ionTimesumU, h1_ionTimediffU, h2_ionTimesumDiffU,
+    h1_ionTimesumV, h1_ionTimediffV, h2_ionTimesumDiffV,
+    h1_ionTimesumW, h1_ionTimediffW, h2_ionTimesumDiffW,
+    h2_ionXYRaw, h2_ionXY, h2_ionXYDev,
+    h1_elecTimesumU, h1_elecTimediffU, h2_elecTimesumDiffU,
+    h1_elecTimesumV, h1_elecTimediffV, h2_elecTimesumDiffV,
+    h1_elecTimesumW, h1_elecTimediffW, h2_elecTimesumDiffW,
+    h2_elecXYRaw, h2_elecXY, h2_elecXYDev,
+    h1_timestamp,
     h1_TDC01, h1_TDC02, h1_TDC03, h1_TDC04, h1_TDC05, h1_TDC06, h1_TDC07, h1_TDC08,
     h1_TDC09, h1_TDC10, h1_TDC11, h1_TDC12, h1_TDC13, h1_TDC14, h1_TDC15, h1_TDC16,
     h1_bunchMarker, h1_bunchMarkerAfterRm,
@@ -104,14 +113,6 @@ class SortRun: public Hist {
     h2_elec3hitXFish, h2_elec3hitYFish, h2_elec3hitXY,
     h2_elec4hitXFish, h2_elec4hitYFish, h2_elec4hitXY,
     h2_elec1hit2hitPEPECO, h2_elec2hit3hitPEPECO, h2_elec3hit4hitPEPECO,
-    h1_ionTimesumU, h1_ionTimediffU, h2_ionTimesumDiffU,
-    h1_ionTimesumV, h1_ionTimediffV, h2_ionTimesumDiffV,
-    h1_ionTimesumW, h1_ionTimediffW, h2_ionTimesumDiffW,
-    h2_ionXYRaw, h2_ionXY, h2_ionXYDev,
-    h1_elecTimesumU, h1_elecTimediffU, h2_elecTimesumDiffU,
-    h1_elecTimesumV, h1_elecTimediffV, h2_elecTimesumDiffV,
-    h1_elecTimesumW, h1_elecTimediffW, h2_elecTimesumDiffW,
-    h2_elecXYRaw, h2_elecXY, h2_elecXYDev,
     numHists
   };
 };

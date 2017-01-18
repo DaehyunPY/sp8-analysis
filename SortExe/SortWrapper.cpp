@@ -451,6 +451,26 @@ int Analysis::SortWrapper::getNumHits() const {
 hit_class **Analysis::SortWrapper::getOutputArr() const {
   return pSorter->output_hit_array;
 }
+const double *Analysis::SortWrapper::getNthX(const int i) const {
+  if (i<0) return nullptr;
+  if (i>=numHits) return nullptr;
+  return new auto(pSorter->output_hit_array[i]->x);
+}
+const double *Analysis::SortWrapper::getNthY(const int i) const {
+  if (i<0) return nullptr;
+  if (i>=numHits) return nullptr;
+  return new auto(pSorter->output_hit_array[i]->y);
+}
+const double *Analysis::SortWrapper::getNthT(const int i) const {
+  if (i<0) return nullptr;
+  if (i>=numHits) return nullptr;
+  return new auto(pSorter->output_hit_array[i]->time);
+}
+const int *Analysis::SortWrapper::getNthMethod(const int i) const {
+  if (i<0) return nullptr;
+  if (i>=numHits) return nullptr;
+  return new auto(pSorter->output_hit_array[i]->method);
+}
 bool Analysis::LMFWrapper::readConfig(const Analysis::JSONReader &reader) {
     auto pStr = reader.getOpt<const char *>("LMF_files");
     if (pStr != nullptr) {

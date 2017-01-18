@@ -79,6 +79,10 @@ class SortWrapper {
   const sort_class &getSorter() const;
   int getNumHits() const;
   hit_class **getOutputArr() const;
+  const double *getNthX(const int i) const;
+  const double *getNthY(const int i) const;
+  const double *getNthT(const int i) const;
+  const int *getNthMethod(const int i) const;
 
  public:
   const double *getMCP() const;

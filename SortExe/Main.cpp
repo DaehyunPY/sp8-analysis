@@ -25,14 +25,14 @@ int main(int argc, char *argv[]) {
     printf("Please provide a filename.\n");
     printf("syntax: SortExe filename\n");
     printf("        This file will be sorted and\n");
-    printf("        a new file will be written.\n\n");
+    printf("        a new file will be written.\n");
     return 0;
   }
   if (argc > 2) {
     printf("Too many arguments\n");
     printf("syntax: SortExe filename\n");
     printf("        This file will be sorted and\n");
-    printf("        a new file will be written.\n\n");
+    printf("        a new file will be written.\n");
     return 0;
   }
   std::cout << "The exe file which place at " << argv[0] << ", is running now. " << std::endl;
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
   const auto isDrawingCanvases = pReader->get<bool>("draw_canvases");
   const auto maxElecHits = pReader->get<int>("maxium_of_electron_hits");
   const auto maxIonHits = pReader->get<int>("maxium_of_ion_hits");
-  const auto bunchCh = pReader->get<int>("bunch_marker_ch")-1;
+  const auto bunchCh = pReader->get<int>("bunch_marker_ch") -1;
   auto bunchMaskRm = Analysis::readBunchMaskRm(*pReader, "remove_bunch_region");
 
   // Setup LMF files
@@ -177,6 +177,7 @@ int main(int argc, char *argv[]) {
       eSortWrapper.convertTDC();
 
       // fill
+      pRun->fill1d(Analysis::SortRun::h1_timestamp, aLMFWrapper.timestamp);
       { // TDC ns
         auto &tdc_ns = aLMFWrapper.TDCns;
         const int idxhist = Analysis::SortRun::h1_TDC01;
@@ -264,109 +265,92 @@ int main(int argc, char *argv[]) {
       }
       if (!bunchMaskRm.isIn(pBunchMarker)) {
         pRun->fill1d(Analysis::SortRun::h1_bunchMarkerAfterRm, pBunchMarker);
-//        auto iSorter = iSortWrapper.pSorter;
-//        auto eSorter = eSortWrapper.pSorter;
-//        pRun->fill1d(Analysis::SortRun::h1_bunchMarker, eMarker);
-//        if(number_of_ions >= 1) {
-//          double &x = iSorter->output_hit_array[0]->x;
-//          double &y = iSorter->output_hit_array[0]->y;
-//          double &t = iSorter->output_hit_array[0]->time;
-//          pRun->fill2d(Analysis::SortRun::h2_ion1hitXFish, t, x);
-//          pRun->fill2d(Analysis::SortRun::h2_ion1hitYFish, t, y);
-//          pRun->fill2d(Analysis::SortRun::h2_ion1hitXY, x, y);
-//        }
-//        if(number_of_ions >= 2) {
-//          double &x = iSorter->output_hit_array[1]->x;
-//          double &y = iSorter->output_hit_array[1]->y;
-//          double &t = iSorter->output_hit_array[1]->time;
-//          double &tt = iSorter->output_hit_array[0]->time;
-//          pRun->fill2d(Analysis::SortRun::h2_ion2hitXFish, t, x);
-//          pRun->fill2d(Analysis::SortRun::h2_ion2hitYFish, t, y);
-//          pRun->fill2d(Analysis::SortRun::h2_ion2hitXY, x, y);
-//          pRun->fill2d(Analysis::SortRun::h2_ion1hit2hitPIPICO, tt, t);
-//        }
-//        if(number_of_ions >= 3) {
-//          double &x = iSorter->output_hit_array[2]->x;
-//          double &y = iSorter->output_hit_array[2]->y;
-//          double &t = iSorter->output_hit_array[2]->time;
-//          double &tt = iSorter->output_hit_array[1]->time;
-//          pRun->fill2d(Analysis::SortRun::h2_ion3hitXFish, t, x);
-//          pRun->fill2d(Analysis::SortRun::h2_ion3hitYFish, t, y);
-//          pRun->fill2d(Analysis::SortRun::h2_ion3hitXY, x, y);
-//          pRun->fill2d(Analysis::SortRun::h2_ion2hit3hitPIPICO, tt, t);
-//        }
-//        if(number_of_ions >= 4) {
-//          double &x = iSorter->output_hit_array[3]->x;
-//          double &y = iSorter->output_hit_array[3]->y;
-//          double &t = iSorter->output_hit_array[3]->time;
-//          double &tt = iSorter->output_hit_array[2]->time;
-//          pRun->fill2d(Analysis::SortRun::h2_ion4hitXFish, t, x);
-//          pRun->fill2d(Analysis::SortRun::h2_ion4hitYFish, t, y);
-//          pRun->fill2d(Analysis::SortRun::h2_ion4hitXY, x, y);
-//          pRun->fill2d(Analysis::SortRun::h2_ion3hit4hitPIPICO, tt, t);
-//        }
-//        if(number_of_electrons >= 1) {
-//          double &x = eSorter->output_hit_array[0]->x;
-//          double &y = eSorter->output_hit_array[0]->y;
-//          double &t = eSorter->output_hit_array[0]->time;
-//          pRun->fill2d(Analysis::SortRun::h2_elec1hitXFish, t, x);
-//          pRun->fill2d(Analysis::SortRun::h2_elec1hitYFish, t, y);
-//          pRun->fill2d(Analysis::SortRun::h2_elec1hitXY, x, y);
-//        }
-//        if(number_of_electrons >= 2) {
-//          double &x = eSorter->output_hit_array[1]->x;
-//          double &y = eSorter->output_hit_array[1]->y;
-//          double &t = eSorter->output_hit_array[1]->time;
-//          double &tt = eSorter->output_hit_array[0]->time;
-//          pRun->fill2d(Analysis::SortRun::h2_elec2hitXFish, t, x);
-//          pRun->fill2d(Analysis::SortRun::h2_elec2hitYFish, t, y);
-//          pRun->fill2d(Analysis::SortRun::h2_elec2hitXY, x, y);
-//          pRun->fill2d(Analysis::SortRun::h2_elec1hit2hitPEPECO, tt, t);
-//        }
-//        if(number_of_electrons >= 3) {
-//          double &x = eSorter->output_hit_array[2]->x;
-//          double &y = eSorter->output_hit_array[2]->y;
-//          double &t = eSorter->output_hit_array[2]->time;
-//          double &tt = eSorter->output_hit_array[1]->time;
-//          pRun->fill2d(Analysis::SortRun::h2_elec3hitXFish, t, x);
-//          pRun->fill2d(Analysis::SortRun::h2_elec3hitYFish, t, y);
-//          pRun->fill2d(Analysis::SortRun::h2_elec3hitXY, x, y);
-//          pRun->fill2d(Analysis::SortRun::h2_elec2hit3hitPEPECO, tt, t);
-//        }
-//        if(number_of_electrons >= 4) {
-//          double &x = eSorter->output_hit_array[3]->x;
-//          double &y = eSorter->output_hit_array[3]->y;
-//          double &t = eSorter->output_hit_array[3]->time;
-//          double &tt = eSorter->output_hit_array[2]->time;
-//          pRun->fill2d(Analysis::SortRun::h2_elec4hitXFish, t, x);
-//          pRun->fill2d(Analysis::SortRun::h2_elec4hitYFish, t, y);
-//          pRun->fill2d(Analysis::SortRun::h2_elec4hitXY, x, y);
-//          pRun->fill2d(Analysis::SortRun::h2_elec3hit4hitPEPECO, tt, t);
-//        }
-//        Analysis::SortRun::DataSet *pIons, *pElecs;
-//        pIons = new Analysis::SortRun::DataSet[number_of_ions];
-//        pElecs = new Analysis::SortRun::DataSet[number_of_electrons];
-//        for (int i = 0; i < number_of_ions; i++) {
-//          pIons[i].x = iSorter->output_hit_array[i]->x;
-//          pIons[i].y = iSorter->output_hit_array[i]->y;
-//          pIons[i].t = iSorter->output_hit_array[i]->time;
-//          pIons[i].flag = iSorter->output_hit_array[i]->method;
-//        }
-//        for (int i = 0; i < number_of_electrons; i++) {
-//          pElecs[i].x = eSorter->output_hit_array[i]->x;
-//          pElecs[i].y = eSorter->output_hit_array[i]->y;
-//          pElecs[i].t = eSorter->output_hit_array[i]->time;
-//          pElecs[i].flag = eSorter->output_hit_array[i]->method;
-//        }
-//        pRun->fillTree(number_of_ions, pIons, number_of_electrons, pElecs);
-//        if (pIons) {
-//          delete[] pIons;
-//          pIons = nullptr;
-//        }
-//        if (pElecs) {
-//          delete[] pElecs;
-//		  pElecs = nullptr;
-//        }
+        { // ion
+          const auto &wrapper = iSortWrapper;
+          const auto x1 = wrapper.getNthX(0);
+          const auto y1 = wrapper.getNthY(0);
+          const auto t1 = wrapper.getNthT(0);
+          const auto x2 = wrapper.getNthX(1);
+          const auto y2 = wrapper.getNthY(1);
+          const auto t2 = wrapper.getNthT(1);
+          const auto x3 = wrapper.getNthX(2);
+          const auto y3 = wrapper.getNthY(2);
+          const auto t3 = wrapper.getNthT(2);
+          const auto x4 = wrapper.getNthX(3);
+          const auto y4 = wrapper.getNthY(3);
+          const auto t4 = wrapper.getNthT(3);
+          pRun->fill2d(Analysis::SortRun::h2_ion1hitXFish, t1, x1);
+          pRun->fill2d(Analysis::SortRun::h2_ion1hitYFish, t1, y1);
+          pRun->fill2d(Analysis::SortRun::h2_ion1hitXY, x1, y1);
+          pRun->fill2d(Analysis::SortRun::h2_ion2hitXFish, t2, x2);
+          pRun->fill2d(Analysis::SortRun::h2_ion2hitYFish, t2, y2);
+          pRun->fill2d(Analysis::SortRun::h2_ion2hitXY, x2, y2);
+          pRun->fill2d(Analysis::SortRun::h2_ion3hitXFish, t3, x3);
+          pRun->fill2d(Analysis::SortRun::h2_ion3hitYFish, t3, y3);
+          pRun->fill2d(Analysis::SortRun::h2_ion3hitXY, x3, y3);
+          pRun->fill2d(Analysis::SortRun::h2_ion4hitXFish, t4, x4);
+          pRun->fill2d(Analysis::SortRun::h2_ion4hitYFish, t4, y4);
+          pRun->fill2d(Analysis::SortRun::h2_ion4hitXY, x4, y4);
+          pRun->fill2d(Analysis::SortRun::h2_ion1hit2hitPIPICO, t1, t2);
+          pRun->fill2d(Analysis::SortRun::h2_ion2hit3hitPIPICO, t2, t3);
+          pRun->fill2d(Analysis::SortRun::h2_ion3hit4hitPIPICO, t3, t4);
+        }
+        { // electron
+          const auto &wrapper = eSortWrapper;
+          const auto x1 = wrapper.getNthX(0);
+          const auto y1 = wrapper.getNthY(0);
+          const auto t1 = wrapper.getNthT(0);
+          const auto x2 = wrapper.getNthX(1);
+          const auto y2 = wrapper.getNthY(1);
+          const auto t2 = wrapper.getNthT(1);
+          const auto x3 = wrapper.getNthX(2);
+          const auto y3 = wrapper.getNthY(2);
+          const auto t3 = wrapper.getNthT(2);
+          const auto x4 = wrapper.getNthX(3);
+          const auto y4 = wrapper.getNthY(3);
+          const auto t4 = wrapper.getNthT(3);
+          pRun->fill2d(Analysis::SortRun::h2_elec1hitXFish, t1, x1);
+          pRun->fill2d(Analysis::SortRun::h2_elec1hitYFish, t1, y1);
+          pRun->fill2d(Analysis::SortRun::h2_elec1hitXY, x1, y1);
+          pRun->fill2d(Analysis::SortRun::h2_elec2hitXFish, t2, x2);
+          pRun->fill2d(Analysis::SortRun::h2_elec2hitYFish, t2, y2);
+          pRun->fill2d(Analysis::SortRun::h2_elec2hitXY, x2, y2);
+          pRun->fill2d(Analysis::SortRun::h2_elec3hitXFish, t3, x3);
+          pRun->fill2d(Analysis::SortRun::h2_elec3hitYFish, t3, y3);
+          pRun->fill2d(Analysis::SortRun::h2_elec3hitXY, x3, y3);
+          pRun->fill2d(Analysis::SortRun::h2_elec4hitXFish, t4, x4);
+          pRun->fill2d(Analysis::SortRun::h2_elec4hitYFish, t4, y4);
+          pRun->fill2d(Analysis::SortRun::h2_elec4hitXY, x4, y4);
+          pRun->fill2d(Analysis::SortRun::h2_elec1hit2hitPEPECO, t1, t2);
+          pRun->fill2d(Analysis::SortRun::h2_elec2hit3hitPEPECO, t2, t3);
+          pRun->fill2d(Analysis::SortRun::h2_elec3hit4hitPEPECO, t3, t4);
+        }
+        { // fill tree
+          Analysis::SortRun::DataSet *pIons, *pElecs;
+          pIons = new Analysis::SortRun::DataSet[numHitIons];
+          pElecs = new Analysis::SortRun::DataSet[numHitElecs];
+          for (int i = 0; i < numHitIons; i++) {
+            pIons[i].x = *iSortWrapper.getNthX(i);
+            pIons[i].y = *iSortWrapper.getNthY(i);
+            pIons[i].t = *iSortWrapper.getNthT(i);
+            pIons[i].flag = *iSortWrapper.getNthMethod(i);
+          }
+          for (int i = 0; i < numHitElecs; i++) {
+            pElecs[i].x = *eSortWrapper.getNthX(i);
+            pElecs[i].y = *eSortWrapper.getNthY(i);
+            pElecs[i].t = *eSortWrapper.getNthT(i);
+            pElecs[i].flag = *eSortWrapper.getNthMethod(i);
+          }
+          pRun->fillTree(numHitIons, pIons, numHitElecs, pElecs);
+          if (pIons) {
+            delete[] pIons;
+            pIons = nullptr;
+          }
+          if (pElecs) {
+            delete[] pElecs;
+            pElecs = nullptr;
+          }
+        }
       }
 
       { // check if it's full
