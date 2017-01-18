@@ -1,7 +1,7 @@
 {
-  "working_directory": "PATH", // comment out=same path with this file
+  // "working_directory": "PATH", // comment out=same path with this file
   "setup_input": {
-    "filenames": "resortLess*.root",
+    "filenames": "ResortLess*.root",
     "tree_name": "resortedData",
     "max_number_of_ion_hits"     : 4,
     "max_number_of_electron_hits": 4,

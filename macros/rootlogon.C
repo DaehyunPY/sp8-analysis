@@ -7,4 +7,6 @@
   gROOT->LoadMacro("usr/fg.C");
   gROOT->LoadMacro("usr/projx.C");
   gROOT->LoadMacro("usr/projy.C");
+  
+  TBrowser b;
 }

@@ -9,8 +9,8 @@ RUN dnf update -y && dnf install -y \
     && dnf clean all
 
 ### analysis
-ADD ./ /opt/analysis/
-RUN cd /opt/analysis && mkdir build && cd build && cmake .. && make all \
+ADD ./ /opt/sp8-analysis/
+RUN cd /opt/sp8-analysis && mkdir build && cd build && cmake .. && make all \
     && cd .. && cp -fr macros/* /usr/share/root/macros/
 
 CMD /sbin/init
