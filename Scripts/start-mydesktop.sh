@@ -1,20 +1,19 @@
 #!/bin/sh
 
 ### parameters 
-img=sp8-analysis
+img=david9107/sp8-analysis
+container=mydesktop-$user
 cperiod=100000
 cquota=200000
 memory=16g
 user=daehyun
+hhome=/home/$user
 userp=10000
-###
-container=mydesktop-$user
 sshp=22
 vncp=5900
 dp=1
 stime=30s
 uid=$(id -u $user)
-hhome=/home/$user
 ghome=/home/$user
 vncd="vncserver-$user@:$dp.service"
 
@@ -45,9 +44,8 @@ vncd="vncserver-$user@:$dp.service"
         && sed -i 's/<USER>/'$user'/g' /etc/systemd/system/$vncd \
         && sleep $stime \
         && systemctl daemon-reload \
-        && systemctl enable $vncd \
-        && systemctl start sshd \
-        && systemctl start $vncd \
+        && systemctl enable sshd && systemctl start sshd \
+        && systemctl enable $vncd && systemctl start $vncd \
         && firewall-cmd --permanent --zone=public --add-port=$(expr $vncp + $dp)/tcp \
         && firewall-cmd --reload") \
 || docker start $container
