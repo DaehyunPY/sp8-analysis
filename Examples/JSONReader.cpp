@@ -2,20 +2,20 @@
 
 int main() {
   const char *defaultJSON = "{\n"
-      "    \"hello\": \"world\",\n"
+          "    \"hello\": \"world\",\n"
           "    \"bool\": false,\n"
-      "    \"i\": 123,\n"
-      "    \"pi\": 3.1416,\n"
-      "    \"inf\": Inf,\n"
-      "    \"nan\": NaN,\n"
+          "    \"i\": 123,\n"
+          "    \"pi\": 3.1416,\n"
+          "    \"inf\": Inf,\n"
+          "    \"nan\": NaN,\n"
           "    \"arr\": [1, 2, 3, 4],\n"
           "    \"obj\": {\"i\": 456, \"j\": 789}\n"
-      "}";
+          "}";
   const char *userJSON = "{\n"
-      "    \"hello\": \"it's me!\",\n"
+          "    \"hello\": \"it's me!\",\n"
           "    \"bool\": true,\n"
           "    \"1st\": \"key can include num\"\n"
-      "}";
+          "}";
 
   Analysis::JSONReader reader;
   reader.appendDoc(Analysis::JSONReader::fromStr, userJSON);
