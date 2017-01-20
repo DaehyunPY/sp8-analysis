@@ -136,14 +136,25 @@ const rapidjson::Value *Analysis::JSONReader::getOptValue(const std::string str1
 		tmp0 = str1.substr(0, found);
 		tmp1 = str1.substr(found + 1);
 	}
-	if (isdigit(tmp0[0])) {
+    auto appendKw = [](std::string s0, std::string s1) -> std::string {
+        if (s0 == "") return s1;
+        else return s0 + "." + s1;
+    };
+    auto isNum = [](std::string s) -> bool {
+        for (auto c: s) {
+            const auto b = isdigit(c);
+            if (!b) return false;
+        }
+        return true;
+    };
+    if (isNum(tmp0)) {
 		if (!(v->IsArray())) return nullptr;
 		const int i = std::stoi(tmp0);
 		const auto n = v->GetArray().Size();
 		if (i>=n) return nullptr;
-		return getOptValue(tmp1, &(*v)[i], str0 + "." + tmp0);
+        return getOptValue(tmp1, &(*v)[i], appendKw(str0, tmp0));
 	} else {
 		if (!(v->HasMember(tmp0.c_str()))) return nullptr;
-		return getOptValue(tmp1, &(*v)[tmp0.c_str()], str0 + "." + tmp0);
+        return getOptValue(tmp1, &(*v)[tmp0.c_str()], appendKw(str0, tmp0));
 	}
 }
