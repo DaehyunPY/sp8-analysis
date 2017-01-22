@@ -1,11 +1,8 @@
 {
   // "working_directory": "PATH", // comment out=same path with this file
+  "base_config_file": "BaseAnalysisConfig.json",
   "setup_input": {
-    "filenames": "ResortLess*.root",
-    "tree_name": "resortedData",
-    "max_number_of_ion_hits"     : 4,
-    "max_number_of_electron_hits": 4,
-    "is_having_number_of_hits"   : true
+    "filenames": "ResortLess*.root"
   },
   "setup_output": {
     "filename_prefix": "Example",
@@ -18,110 +15,109 @@
     "length_of_L1": 16.5, // [mm] parameter 210
     "length_of_L2": 82.5, // [mm] parameter 208
     "length_of_L3": 10.0, // [mm] parameter 209
-    "electric_potential_of_electron_region": -200,  // [V] parameter 213
-    "electric_potential_of_ion_1st"        : -285,  // [V] parameter 214
-    "electric_potential_of_ion_2nd"        : -2000, // [V] parameter 215
-    "electric_potential_of_ion_MCP"        : -3585, // [V] parameter 216
+    "electric_potential_of_electron_region": -200.0,  // [V] parameter 213
+    "electric_potential_of_ion_1st"        : -285.0,  // [V] parameter 214
+    "electric_potential_of_ion_2nd"        : -2000.0, // [V] parameter 215
+    "electric_potential_of_ion_MCP"        : -3585.0, // [V] parameter 216
     "magnetic_filed": 6.843 // [Gauss] parameter 217
   },
   "ion_parameters": {
-    // "type": 0, // comment out or 0=default type, 1=legacy ion type
-    "angle_of_detector": 0,           // [degree]
-    "dead_time"        : 13000,       // [ns]
-    "pixel_size_of_x"  : 0.927,       // [1] parameter 147
-    "pixel_size_of_y"  : 0.927,       // [1] parameter 148
-    "x_zero_of_image"  : 93.253363,   // [mm] parameter 196
-    "y_zero_of_image"  : 94.9788,     // [mm] parameter 197
-    "time_zero_of_TOF" : 1846.0035258 // [ns] parameter 220
+    "angle_of_detector": 0.0,     // [degree]
+    "dead_time"        : 13000.0, // [ns]
+    "pixel_size_of_x"  : 0.93,    // [1] parameter 147
+    "pixel_size_of_y"  : 0.93,    // [1] parameter 148
+    "x_zero_of_image"  : 93.3,    // [mm] parameter 196
+    "y_zero_of_image"  : 95.0,    // [mm] parameter 197
+    "time_zero_of_TOF" : 1846.0   // [ns] parameter 220
   },
   "ions": {
     "resort_flag"   : 14, // from 0 to # (inclue #)
     "number_of_hits": 1,
-    "conservation_raw": {
-      "x": [0, 0], // [au] comment out=all region
-      "y": [0, 0], // [au] comment out=all region
-      "z": [0, 0], // [au] comment out=all region
-      "r": [0, 0], // [au] comment out=all region
-      "e": [0, 0]  // [au] comment out=all region
-    },
+//    "conservation_raw": {
+//      "x": [0.0, 0.0], // [au] comment out=all region
+//      "y": [0.0, 0.0], // [au] comment out=all region
+//      "z": [0.0, 0.0], // [au] comment out=all region
+//      "r": [0.0, 0.0], // [au] comment out=all region
+//      "e": [0.0, 0.0]  // [au] comment out=all region
+//    },
     "1st_hit": {
-      "mass"  : 20.1797,   // parameter 186, comment out or 0=dummy object
-      "charge": 1,         // parameter 183
-      "dx_and_dy": [0, 0], // [mm] comment out=[0, 0]
-      "TOF"   : [0, 5000], // [ns] parameter 190, 191
-      "phi"   : [0, 180],  // [degree] comment out =[0, 180]
-      "conservation_raw": {
-        "x": [0, 0], // [au] comment out=all region
-        "y": [0, 0], // [au] comment out=all region
-        "z": [0, 0], // [au] comment out=all region
-        "r": [0, 0], // [au] comment out=all region
-        "e": [0, 0]  // [au] comment out=all region
-      }
+//      "mass"  : 20.1797,       // parameter 186, comment out or 0=dummy object
+//      "charge": 1.0,           // parameter 183
+//      "dx_and_dy": [0.0, 0.0], // [mm] comment out=[0, 0]
+      "TOF"   : [0.0, 5000.0], // [ns] parameter 190, 191
+//      "phi"   : [0.0, 180.0],  // [degree] comment out =[0, 180]
+//      "conservation_raw": {
+//        "x": [0.0, 0.0], // [au] comment out=all region
+//        "y": [0.0, 0.0], // [au] comment out=all region
+//        "z": [0.0, 0.0], // [au] comment out=all region
+//        "r": [0.0, 0.0], // [au] comment out=all region
+//        "e": [0.0, 0.0]  // [au] comment out=all region
+//      }
     },
     "2nd_hit": {
-      "mass"  : 83.8,      // parameter 187, comment out or 0=dummy object
-      "charge": 1,         // parameter 184
-      "dx_and_dy": [0, 0], // [mm] comment out=[0, 0]
-      "TOF"   : [0, 5000], // [ns] parameter 192, 193
-      "phi"   : [0, 180],  // [degree] comment out =[0, 180]
-      "conservation_raw": {
-        "x": [0, 0], // [au] comment out=all region
-        "y": [0, 0], // [au] comment out=all region
-        "z": [0, 0], // [au] comment out=all region
-        "r": [0, 0], // [au] comment out=all region
-        "e": [0, 0]  // [au] comment out=all region
-      }
+//      "mass"  : 83.8,          // parameter 187, comment out or 0=dummy object
+//      "charge": 1.0,           // parameter 184
+//      "dx_and_dy": [0.0, 0.0], // [mm] comment out=[0, 0]
+      "TOF"   : [0.0, 5000.0], // [ns] parameter 192, 193
+//      "phi"   : [0.0, 180.0],  // [degree] comment out =[0, 180]
+//      "conservation_raw": {
+//        "x": [0.0, 0.0], // [au] comment out=all region
+//        "y": [0.0, 0.0], // [au] comment out=all region
+//        "z": [0.0, 0.0], // [au] comment out=all region
+//        "r": [0.0, 0.0], // [au] comment out=all region
+//        "e": [0.0, 0.0]  // [au] comment out=all region
+//      }
     },
     "3rd_hit": {
-      "mass"  : 83.8,      // parameter 188, comment out or 0=dummy object
-      "charge": 1,         // parameter 185
-      "dx_and_dy": [0, 0], // [mm] comment out=[0, 0]
-      "TOF"   : [0, 5000], // [ns] parameter 194, 195
-      "phi"   : [0, 180],  // [degree] comment out =[0, 180]
-      "conservation_raw": {
-        "x": [0, 0], // [au] comment out=all region
-        "y": [0, 0], // [au] comment out=all region
-        "z": [0, 0], // [au] comment out=all region
-        "r": [0, 0], // [au] comment out=all region
-        "e": [0, 0]  // [au] comment out=all region
-      }
+//      "mass"  : 83.8,          // parameter 188, comment out or 0=dummy object
+//      "charge": 1.0,           // parameter 185
+//      "dx_and_dy": [0.0, 0.0], // [mm] comment out=[0, 0]
+      "TOF"   : [0.0, 5000.0], // [ns] parameter 194, 195
+//      "phi"   : [0.0, 180.0],  // [degree] comment out =[0, 180]
+//      "conservation_raw": {
+//        "x": [0.0, 0.0], // [au] comment out=all region
+//        "y": [0.0, 0.0], // [au] comment out=all region
+//        "z": [0.0, 0.0], // [au] comment out=all region
+//        "r": [0.0, 0.0], // [au] comment out=all region
+//        "e": [0.0, 0.0]  // [au] comment out=all region
+//      }
     },
     "4th_hit": {
-      "mass"  : 83.8,      // parameter 264, comment out or 0=dummy object
-      "charge": 1,         // parameter 270
-      "dx_and_dy": [0, 0], // [mm] comment out=[0, 0]
-      "TOF"   : [0, 5000], // [ns] parameter 265, 266
-      "phi"   : [0, 180],  // [degree] comment out =[0, 180]
-      "conservation_raw": {
-        "x": [0, 0], // [au] comment out=all region
-        "y": [0, 0], // [au] comment out=all region
-        "z": [0, 0], // [au] comment out=all region
-        "r": [0, 0], // [au] comment out=all region
-        "e": [0, 0]  // [au] comment out=all region
-      }
+//      "mass"  : 83.8,          // parameter 264, comment out or 0=dummy object
+//      "charge": 1.0,           // parameter 270
+//      "dx_and_dy": [0.0, 0.0], // [mm] comment out=[0, 0]
+      "TOF"   : [0.0, 5000.0], // [ns] parameter 265, 266
+//      "phi"   : [0.0, 180.0],  // [degree] comment out =[0, 180]
+//      "conservation_raw": {
+//        "x": [0.0, 0.0], // [au] comment out=all region
+//        "y": [0.0, 0.0], // [au] comment out=all region
+//        "z": [0.0, 0.0], // [au] comment out=all region
+//        "r": [0.0, 0.0], // [au] comment out=all region
+//        "e": [0.0, 0.0]  // [au] comment out=all region
+//      }
     }
   },
   "electron_parameters": {
     // "type": 0, // comment out or 0=default type, 2=legacy electron type
-    "angle_of_detector": -30,        // [dgree]
-    "dead_time"        : 60,         // [ns]
-    "pixel_size_of_x"  : 0.925,      // [1] parameter 226
-    "pixel_size_of_y"  : 0.925,      // [1] parameter 227
-    "x_zero_of_image"  : 125.104,    // [mm] parameter 228
-    "y_zero_of_image"  : 34.50485,   // [mm] parameter 229
-    "time_zero_of_TOF" : 1805.536719 // [ns] parameter 221
+    "angle_of_detector": -30.0, // [dgree]
+    "dead_time"        : 60.0,  // [ns]
+    "pixel_size_of_x"  : 0.93,  // [1] parameter 226
+    "pixel_size_of_y"  : 0.93,  // [1] parameter 227
+    "x_zero_of_image"  : 125.1, // [mm] parameter 228
+    "y_zero_of_image"  : 34.5,  // [mm] parameter 229
+    "time_zero_of_TOF" : 1805.5 // [ns] parameter 221
   },
   "electrons": {
     "resort_flag"   : 14, // from 0 to # (inclue #)
     "number_of_hits": 1,
-    "TOF": [20, 45], // [ns] parameter 225, 244
-    "phi": [0, 180], // [degree] comment out =[0, 180]
-    "conservation_raw": {
-      "x": [0, 0], // [au] comment out=all region
-      "y": [0, 0], // [au] comment out=all region
-      "z": [0, 0], // [au] comment out=all region
-      "r": [0, 0], // [au] comment out=all region
-      "e": [0, 0]  // [au] comment out=all region
-    }
+    "TOF": [20.0, 45.0],  // [ns] parameter 225, 244
+//    "phi": [0.0, 180.0],  // [degree] comment out =[0, 180]
+//    "conservation_raw": {
+//      "x": [0.0, 0.0], // [au] comment out=all region
+//      "y": [0.0, 0.0], // [au] comment out=all region
+//      "z": [0.0, 0.0], // [au] comment out=all region
+//      "r": [0.0, 0.0], // [au] comment out=all region
+//      "e": [0.0, 0.0]  // [au] comment out=all region
+//    }
   }
 }

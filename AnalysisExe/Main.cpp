@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <thread>
+#include <stdlib.h>
 #include "AnalysisRun.h"
 
 void showProgressBar(const float prog = 0) {
@@ -65,24 +66,26 @@ int main(int argc, char *argv[]) {
   // Setup to run
   Analysis::AnalysisRun *pRun = nullptr;
 
-  // Setup json file reader
-  Analysis::JSONReader *pReader = nullptr;
-  std::cout << "opening the config file... ";
+  // Open the JSON reader
+  std::cout << "Reading the config file... " << std::endl;
+  Analysis::JSONReader *pReader;
   pReader = new Analysis::JSONReader();
   pReader->appendDoc(Analysis::JSONReader::fromFile, argv[1]);
-  std::cout << "okay" << std::endl;
-
-  // Change the working directory
-  std::string path;
-  if (pReader->hasMember("working_directory")) {
-    path = pReader->getStringAt("working_directory");
-  } else {
-    path = argv[1];
-    path = path.substr(0, path.find_last_of("/\\"));
+  { // Change the working directory
+    std::string path;
+    if (pReader->hasMember("working_directory")) {
+      path = pReader->getStringAt("working_directory");
+    } else {
+      path = argv[1];
+      path = path.substr(0, path.find_last_of("/\\"));
+    }
+    std::cout << "changing path to `" << path << std::endl;
+    chdir(path.c_str());
   }
-  std::cout << "changing path to `" << path << "'... ";
-  chdir(path.c_str());
-  std::cout << "okay" << std::endl;
+  { // read base config file
+    const auto base = pReader->getOpt<const char *>("base_config_file");
+    if (base != nullptr) pReader->appendDoc(Analysis::JSONReader::fromFile, *base);
+  }
 
   // divid output files
   pRun = new Analysis::AnalysisRun(*pReader);
