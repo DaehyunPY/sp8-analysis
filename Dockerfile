@@ -1,17 +1,20 @@
-FROM david9107/mydesktop
+FROM fedora:latest
 MAINTAINER Daehyun You <daehyun@mail.tagen.tohoku.ac.jp>
 
-WORKDIR /root
-
-### install packages
 RUN dnf update -y && dnf install -y \
+        @'C Development Tools and Libraries' \
+        cmake gdb-gdbserver \
         boost-devel rapidjson-devel \
+        root root-roofit \
     && dnf clean all
 
-### analysis
+WORKDIR /root/
 ADD ./ /opt/sp8-analysis/
-RUN cd /opt/sp8-analysis && mkdir build && cd build && cmake .. && make all \
-    && cd .. && cp -fr macros/* /usr/share/root/macros/
+RUN mkdir build && cd build && cmake /opt/sp8-analysis/ -DCMAKE_BUILD_TYPE=Release && make all && cd .. \
+    && ln -s build/SortExe sort.exe && ln -s build/AnalysisExe ana.exe
+RUN mkdir build-debug && cd build-debug && cmake /opt/sp8-analysis/ -DCMAKE_BUILD_TYPE=Debug && make all && cd .. \
+    && ln -s build-debug/SortExe sort-debug.exe && ln -s build-debug/AnalysisExe ana-debug.exe
 
-CMD /sbin/init
-EXPOSE 22 5901 8888
+EXPOSE 2222
+CMD bash
+

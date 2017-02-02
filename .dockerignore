@@ -1,11 +1,7 @@
+.gitignore
 .dockerignore
 Dockerfile
-.DS_Store
-.git
-.gitignore
-.vs
-.idea
-*.pyc
-*tmp*
-*backup*
-build
+macros
+Scripts
+*.json
+*.sh
