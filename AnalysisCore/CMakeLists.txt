@@ -11,4 +11,4 @@ set(SOURCE_FILES
     ObjectParameters.cpp
     Objects.cpp
     )
-add_library(AnalysisCore STATIC ${SOURCE_FILES})
+add_library(anacore STATIC ${SOURCE_FILES})
