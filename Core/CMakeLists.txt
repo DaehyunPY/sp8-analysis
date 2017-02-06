@@ -7,4 +7,4 @@ set(SOURCE_FILES
         JSONReader.cpp
         Unit.cpp
         )
-add_library(SP8Core STATIC ${SOURCE_FILES})
+add_library(sp8core STATIC ${SOURCE_FILES})

@@ -1,8 +1,0 @@
-.vs
-.idea
-*.pyc
-*tmp*
-*backup*
-*build*
-.directory
-/.project
