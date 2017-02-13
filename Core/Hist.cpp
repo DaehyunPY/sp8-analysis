@@ -1,4 +1,4 @@
-#include "Hist.h"
+#include "Core/Hist.h"
 
 Analysis::Hist::Hist(const bool verbose, int size)
     : optionForVerbose(verbose) {

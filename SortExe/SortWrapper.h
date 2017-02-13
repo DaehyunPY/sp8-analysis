@@ -11,7 +11,7 @@
 #include <map>
 #include "resort64c.h"
 #include "LMF_IO.h"
-#include "../Core/JSONReader.h"
+#include "Core/JSONReader.h"
 
 #define NUM_IONS 200
 #define NUM_CHANNELS 80

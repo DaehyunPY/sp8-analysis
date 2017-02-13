@@ -1,4 +1,4 @@
-#include "Object.h"
+#include "AnalysisCore/Object.h"
 
 Analysis::Object::Object(const FlagName f,
                          const JSONReader &reader,

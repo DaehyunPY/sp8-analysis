@@ -1,4 +1,4 @@
-#include "JSONReader.h"
+#include "Core/JSONReader.h"
 
 const int Analysis::JSONReader::getIntAt(const std::string str, const int i) const {
 	const rapidjson::Value *pV = getOptValue(str);

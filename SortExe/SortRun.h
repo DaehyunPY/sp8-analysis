@@ -20,8 +20,8 @@
 #include <TChain.h>
 #include <RooDataProjBinding.h>
 #include "resort64c.h"
-#include "../Core/Hist.h"
-#include "../Core/JSONReader.h"
+#include "Core/Hist.h"
+#include "Core/JSONReader.h"
 
 namespace Analysis {
 template <typename T>

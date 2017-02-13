@@ -1,4 +1,4 @@
-#include "EquipmentParameters.h"
+#include "AnalysisCore/EquipmentParameters.h"
 
 Analysis::EquipmentParameters::EquipmentParameters(const double &lenD2,
                                                    const double &lenD1,

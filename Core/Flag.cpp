@@ -2,7 +2,7 @@
 // Created by Daehyun You on 11/27/15.
 //
 
-#include "Flag.h"
+#include "Core/Flag.h"
 
 Analysis::Flag::Flag() {
   flag = initFlag;

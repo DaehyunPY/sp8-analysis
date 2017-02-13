@@ -2,8 +2,7 @@
 // Created by Daehyun You on 12/4/15.
 //
 
-#include <functional>
-#include "Objects.h"
+#include "AnalysisCore/Objects.h"
 
 Analysis::Objects::~Objects() {
   for (int i = 0; i < maxNumOfHits; i++) {

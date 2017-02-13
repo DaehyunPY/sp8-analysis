@@ -6,7 +6,7 @@
 //#define localtime localtime_s
 //#endif
 
-#include "LogWriter.h"
+#include "AnalysisCore/LogWriter.h"
 
 Analysis::LogWriter::LogWriter(const std::string prefix) : prefix(prefix) {
   timeStamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

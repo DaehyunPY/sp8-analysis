@@ -2,7 +2,7 @@
 // Created by Daehyun You on 11/27/15.
 //
 
-#include "ObjectFlag.h"
+#include "AnalysisCore/ObjectFlag.h"
 
 Analysis::ObjectFlag::ObjectFlag() : Flag() {
   return;
