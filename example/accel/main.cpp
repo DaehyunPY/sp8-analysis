@@ -49,9 +49,10 @@ int main() {
 
 //  Calculate momentum from flight time
   double t=2;
-  double p=map.getPAtT(t);
+  double p=map.getInitMomentum(t);
   std::cout << "Input Flight Time: " << t << std::endl;
   std::cout << "Result Momentum: " << p << std::endl;
-  std::cout << "Check the Result: " << map.getTAtP(p)-t << std::endl;
+  std::cout << "Check the Result: " << map.getFlightTime(p)-t << std::endl;
+
   return 0;
 }

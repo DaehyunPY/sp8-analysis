@@ -25,8 +25,9 @@ using std::vector;
 using std::reverse;
 
 typedef function<tuple<double, double>(double, double, double)> Acc;
-Acc genAcc(double E, double len);
+typedef function<double(double)> SimpleFunc;
 
+Acc genAcc(double E, double len);
 template <typename... As> Acc mulAccs(Acc a1, Acc a2, As... as);
 template <> Acc mulAccs<>(Acc a1, Acc a2);
 template <typename... As>
@@ -35,10 +36,7 @@ Acc mulAccs(Acc a1, Acc a2, As... as) {
 }
 
 class AccMap {
-  const double m, q;
-  const Acc acc;
-  const double pfr, pto;
-  const int bin;
+  SimpleFunc flightTime;
   double tfr, tto;
   vector<double> parr, tarr;
   gsl_interp_accel *intpAcc;
@@ -47,12 +45,12 @@ class AccMap {
  public:
   AccMap(Acc acc, double m, double q, double pfr, double pto, int bin);
   ~AccMap();
-  double getTAtP(double p) const;
-  double getPAtT(double t) const;
-  tuple<double, double> getPLimit() const;
-  tuple<double, double> getTLimit() const;
+  tuple<double, double> getTimeLimit() const;
+  bool isValidTime(double t) const;
   vector<double> getPArr() const;
   vector<double> getTArr() const;
+  double getFlightTime(double p) const;
+  double getInitMomentum(double t) const;
 };
 }
 
