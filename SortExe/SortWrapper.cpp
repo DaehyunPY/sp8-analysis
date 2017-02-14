@@ -341,7 +341,7 @@ bool Analysis::SortWrapper::calibFactors() const {
       const bool b = pSorter->do_calibration();
       std::cout << "ok" << std::endl;
       if (pSorter->scalefactors_calibrator) {
-        printf("ion: Good scalefactors are:\nf_U = %lg\nf_V = %lg\nf_W = %lg\nOffset on layer W = %lg\n",
+        printf("Good scalefactors are:\nf_U = %lg\nf_V = %lg\nf_W = %lg\nOffset on layer W = %lg\n",
                2. * pSorter->fu,
                2. * pSorter->scalefactors_calibrator->best_fv,
                2. * pSorter->scalefactors_calibrator->best_fw,
