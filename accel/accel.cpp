@@ -26,16 +26,17 @@ sp8::Acc sp8::genAcc(double E, double len) {
     return {p1, dt};
   };
 }
-template<> sp8::Acc sp8::mulAccs(sp8::Acc a1, sp8::Acc a2) {
+template<> sp8::Acc sp8::mulAccs(sp8::Acc acc1, sp8::Acc acc2) {
   return [=](double m, double q, double p0)->tuple<double, double> {
   double p1, dt1;
-  tie(p1, dt1) = a1(m, q, p0);
+  tie(p1, dt1) = acc1(m, q, p0);
   double p2, dt2;
-  tie(p2, dt2) = a2(m, q, p1);
+  tie(p2, dt2) = acc2(m, q, p1);
   return {p2, dt1 + dt2};
   };
 }
-sp8::AccMap::AccMap(sp8::Acc acc, double m, double q, double pfr, double pto, int bin) {
+sp8::AccMap::AccMap(sp8::Acc acc, double m, double q, double pfr, double pto, int bin)
+    : pfr(pfr), pto(pto) {
   if (!(pfr < pto)) throw invalid_argument("Upper limit of p is smaller than lower limit!");
   if (!(bin > 1)) throw invalid_argument("Number of bins has to be 2 or larger!");
 
@@ -62,23 +63,26 @@ sp8::AccMap::AccMap(sp8::Acc acc, double m, double q, double pfr, double pto, in
     reverse(tarr.begin(), tarr.end());
   }
 
-  intpAcc = gsl_interp_accel_alloc();
+  interp = gsl_interp_accel_alloc();
   spline = gsl_spline_alloc(gsl_interp_cspline, (size_t) bin);
   gsl_spline_init(spline, tarr.data(), parr.data(), (size_t) bin);
 }
 double sp8::AccMap::getInitMomentum(double t) const {
   if (!isValidTime(t)) throw range_error("Arg t is over the range!");
-  return gsl_spline_eval(spline, t, intpAcc);
+  return gsl_spline_eval(spline, t, interp);
 }
 sp8::AccMap::~AccMap() {
   gsl_spline_free(spline);
-  gsl_interp_accel_free(intpAcc);
+  gsl_interp_accel_free(interp);
 }
 std::vector<double> sp8::AccMap::getPArr() const {
   return parr;
 }
 std::tuple<double, double> sp8::AccMap::getTimeLimit() const {
   return {tfr, tto};
+}
+std::tuple<double, double> sp8::AccMap::getMomentumLimit() const {
+  return {pfr, pto};
 }
 std::vector<double> sp8::AccMap::getTArr() const {
   return tarr;

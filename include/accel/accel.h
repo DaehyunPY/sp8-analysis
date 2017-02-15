@@ -28,23 +28,25 @@ typedef function<tuple<double, double>(double, double, double)> Acc;
 typedef function<double(double)> SimpleFunc;
 
 Acc genAcc(double E, double len);
-template <typename... As> Acc mulAccs(Acc a1, Acc a2, As... as);
-template <> Acc mulAccs<>(Acc a1, Acc a2);
+template <typename... As> Acc mulAccs(Acc acc1, Acc acc2, As... accs);
+template <> Acc mulAccs<>(Acc acc1, Acc acc2);
 template <typename... As>
-Acc mulAccs(Acc a1, Acc a2, As... as) {
-  return mulAccs(mulAccs(a1, a2), as...);
+Acc mulAccs(Acc acc1, Acc acc2, As... accs) {
+  return mulAccs(mulAccs(acc1, acc2), accs...);
 }
 
 class AccMap {
   SimpleFunc flightTime;
+  const double pfr, pto;
   double tfr, tto;
   vector<double> parr, tarr;
-  gsl_interp_accel *intpAcc;
+  gsl_interp_accel *interp;
   gsl_spline *spline;
 
  public:
   AccMap(Acc acc, double m, double q, double pfr, double pto, int bin);
   ~AccMap();
+  tuple<double, double> getMomentumLimit() const;
   tuple<double, double> getTimeLimit() const;
   bool isValidTime(double t) const;
   vector<double> getPArr() const;
