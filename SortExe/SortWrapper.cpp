@@ -354,38 +354,38 @@ bool Analysis::SortWrapper::calibFactors() const {
 Analysis::SortWrapper::SortCmd Analysis::SortWrapper::getCmd() const {
   return cmd;
 }
-const double *Analysis::SortWrapper::getMCP() const {
+std::shared_ptr<double> Analysis::SortWrapper::getMCP() const {
   if (pSorter==nullptr) return nullptr;
-  if (!pSorter->use_MCP) return new double(0);
+  if (!pSorter->use_MCP) return std::make_shared<double>(0);
   const auto &count = pLMFSource->count;
   const auto &TDCns = pLMFSource->TDCns;
-  if (count[pSorter->Cmcp] > 0) return new double(TDCns[pSorter->Cmcp][0]);
+  if (count[pSorter->Cmcp] > 0) return std::make_shared<double>(TDCns[pSorter->Cmcp][0]);
   else return nullptr;
 }
-const double *Analysis::SortWrapper::getXDev() const {
+std::shared_ptr<double> Analysis::SortWrapper::getXDev() const {
   if (pSorter==nullptr) return nullptr;
   if (!pSorter->use_HEX) return nullptr;
-  return new double(pSorter->scalefactors_calibrator->binx - pSorter->scalefactors_calibrator->detector_map_size / 2.0);
+  return std::make_shared<double>(pSorter->scalefactors_calibrator->binx - pSorter->scalefactors_calibrator->detector_map_size / 2.0);
 }
-const double *Analysis::SortWrapper::getYDev() const {
+std::shared_ptr<double> Analysis::SortWrapper::getYDev() const {
   if (pSorter==nullptr) return nullptr;
   if (!pSorter->use_HEX) return nullptr;
-  return new double(pSorter->scalefactors_calibrator->biny - pSorter->scalefactors_calibrator->detector_map_size / 2.0);
+  return std::make_shared<double>(pSorter->scalefactors_calibrator->biny - pSorter->scalefactors_calibrator->detector_map_size / 2.0);
 }
-const double *Analysis::SortWrapper::getWeightDev() const {
+std::shared_ptr<double> Analysis::SortWrapper::getWeightDev() const {
   if (pSorter==nullptr) return nullptr;
   if (!pSorter->use_HEX) return nullptr;
-  return new double(pSorter->scalefactors_calibrator->detector_map_devi_fill);
+  return std::make_shared<double>(pSorter->scalefactors_calibrator->detector_map_devi_fill);
 }
-const double *Analysis::SortWrapper::getXRaw() const {
+std::shared_ptr<double> Analysis::SortWrapper::getXRaw() const {
   const auto &count = pLMFSource->count;
   const auto &TDCns = pLMFSource->TDCns;
   if (!(count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0)) return nullptr;
   if (!(count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0)) return nullptr;
   double u_raw = pSorter->fu * (TDCns[pSorter->Cu1][0] - TDCns[pSorter->Cu2][0]);
-  return new double(u_raw);
+  return std::make_shared<double>(u_raw);
 }
-const double *Analysis::SortWrapper::getYRaw() const {
+std::shared_ptr<double> Analysis::SortWrapper::getYRaw() const {
   const auto &count = pLMFSource->count;
   const auto &TDCns = pLMFSource->TDCns;
   if (!(count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0)) return nullptr;
@@ -393,49 +393,49 @@ const double *Analysis::SortWrapper::getYRaw() const {
   double u_raw = pSorter->fu * (TDCns[pSorter->Cu1][0] - TDCns[pSorter->Cu2][0]);
   double v_raw = pSorter->fv * (TDCns[pSorter->Cv1][0] - TDCns[pSorter->Cv2][0]);
   double y_raw = (u_raw - 2. * v_raw) / std::sqrt(3.0);
-  return new double(y_raw);
+  return std::make_shared<double>(y_raw);
 }
-const double *Analysis::SortWrapper::getUTimesum() const {
+std::shared_ptr<double> Analysis::SortWrapper::getUTimesum() const {
   const auto &count = pLMFSource->count;
   const auto &TDCns = pLMFSource->TDCns;
   if (!(count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0)) return nullptr;
   const auto mcp = getMCP();
   if (mcp == nullptr) return nullptr;
-  return new double(TDCns[pSorter->Cu1][0] + TDCns[pSorter->Cu2][0] - 2 * *mcp);
+  return std::make_shared<double>(TDCns[pSorter->Cu1][0] + TDCns[pSorter->Cu2][0] - 2 * *mcp);
 }
-const double *Analysis::SortWrapper::getUTimediff() const {
+std::shared_ptr<double> Analysis::SortWrapper::getUTimediff() const {
   const auto &count = pLMFSource->count;
   const auto &TDCns = pLMFSource->TDCns;
   if (!(count[pSorter->Cu1] > 0 && count[pSorter->Cu2] > 0)) return nullptr;
-  return new double(TDCns[pSorter->Cu1][0] - TDCns[pSorter->Cu2][0]);
+  return std::make_shared<double>(TDCns[pSorter->Cu1][0] - TDCns[pSorter->Cu2][0]);
 }
-const double *Analysis::SortWrapper::getVTimesum() const {
+std::shared_ptr<double> Analysis::SortWrapper::getVTimesum() const {
   const auto &count = pLMFSource->count;
   const auto &TDCns = pLMFSource->TDCns;
   if (!(count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0)) return nullptr;
   const auto mcp = getMCP();
   if (mcp == nullptr) return nullptr;
-  return new double(TDCns[pSorter->Cv1][0] + TDCns[pSorter->Cv2][0] - 2 * *mcp);
+  return std::make_shared<double>(TDCns[pSorter->Cv1][0] + TDCns[pSorter->Cv2][0] - 2 * *mcp);
 }
-const double *Analysis::SortWrapper::getVTimediff() const {
+std::shared_ptr<double> Analysis::SortWrapper::getVTimediff() const {
   const auto &count = pLMFSource->count;
   const auto &TDCns = pLMFSource->TDCns;
   if (!(count[pSorter->Cv1] > 0 && count[pSorter->Cv2] > 0)) return nullptr;
-  return new double(TDCns[pSorter->Cv1][0] - TDCns[pSorter->Cv2][0]);
+  return std::make_shared<double>(TDCns[pSorter->Cv1][0] - TDCns[pSorter->Cv2][0]);
 }
-const double *Analysis::SortWrapper::getWTimesum() const {
+std::shared_ptr<double> Analysis::SortWrapper::getWTimesum() const {
   const auto &count = pLMFSource->count;
   const auto &TDCns = pLMFSource->TDCns;
   if (!(count[pSorter->Cw1] > 0 && count[pSorter->Cw2] > 0)) return nullptr;
   const auto mcp = getMCP();
   if (mcp == nullptr) return nullptr;
-  return new double(TDCns[pSorter->Cw1][0] + TDCns[pSorter->Cw2][0] - 2 * *mcp);
+  return std::make_shared<double>(TDCns[pSorter->Cw1][0] + TDCns[pSorter->Cw2][0] - 2 * *mcp);
 }
-const double *Analysis::SortWrapper::getWTimediff() const {
+std::shared_ptr<double> Analysis::SortWrapper::getWTimediff() const {
   const auto &count = pLMFSource->count;
   const auto &TDCns = pLMFSource->TDCns;
   if (!(count[pSorter->Cw1] > 0 && count[pSorter->Cw2] > 0)) return nullptr;
-  return new double(TDCns[pSorter->Cw1][0] - TDCns[pSorter->Cw2][0]);
+  return std::make_shared<double>(TDCns[pSorter->Cw1][0] - TDCns[pSorter->Cw2][0]);
 }
 bool Analysis::SortWrapper::sort() {
   if (pSorter == nullptr) return true;
@@ -457,29 +457,29 @@ int Analysis::SortWrapper::getNumHits() const {
 hit_class **Analysis::SortWrapper::getOutputArr() const {
   return pSorter->output_hit_array;
 }
-const double *Analysis::SortWrapper::getNthX(const int i) const {
+std::shared_ptr<double> Analysis::SortWrapper::getNthX(const int i) const {
   if (i<0) return nullptr;
   if (i>=numHits) return nullptr;
-  return new auto(pSorter->output_hit_array[i]->x);
+  return std::make_shared<double>(pSorter->output_hit_array[i]->x);
 }
-const double *Analysis::SortWrapper::getNthY(const int i) const {
+std::shared_ptr<double> Analysis::SortWrapper::getNthY(const int i) const {
   if (i<0) return nullptr;
   if (i>=numHits) return nullptr;
-  return new auto(pSorter->output_hit_array[i]->y);
+  return std::make_shared<double>(pSorter->output_hit_array[i]->y);
 }
-const double *Analysis::SortWrapper::getNthT(const int i) const {
+std::shared_ptr<double> Analysis::SortWrapper::getNthT(const int i) const {
   if (i<0) return nullptr;
   if (i>=numHits) return nullptr;
   if (pChT0 == nullptr) {
-    return new auto(pSorter->output_hit_array[i]->time);
+    return std::make_shared<double>(pSorter->output_hit_array[i]->time);
   } else {
-    return new auto(pSorter->output_hit_array[i]->time -t0);
+    return std::make_shared<double>(pSorter->output_hit_array[i]->time -t0);
   }
 }
-const int *Analysis::SortWrapper::getNthMethod(const int i) const {
+std::shared_ptr<int> Analysis::SortWrapper::getNthMethod(const int i) const {
   if (i<0) return nullptr;
   if (i>=numHits) return nullptr;
-  return new auto(pSorter->output_hit_array[i]->method);
+  return std::make_shared<int>(pSorter->output_hit_array[i]->method);
 }
 bool Analysis::LMFWrapper::readConfig(const Analysis::JSONReader &reader) {
     auto pStr = reader.getOpt<const char *>("LMF_files");

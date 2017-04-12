@@ -5,6 +5,7 @@
 #ifndef ANALYSIS_SORTWRAPPER_H
 #define ANALYSIS_SORTWRAPPER_H
 
+#include <memory>
 #include <cstdlib>
 #include <cmath>
 #include <termios.h>
@@ -78,26 +79,24 @@ class SortWrapper {
   bool isFull() const;
   int getNumHits() const;
   hit_class **getOutputArr() const;
-    // **caution! these methods return pointer which ref dyn value
-  const double *getNthX(const int i) const;
-  const double *getNthY(const int i) const;
-  const double *getNthT(const int i) const;
-  const int *getNthMethod(const int i) const;
+  std::shared_ptr<double> getNthX(const int i) const;
+  std::shared_ptr<double> getNthY(const int i) const;
+  std::shared_ptr<double> getNthT(const int i) const;
+  std::shared_ptr<int> getNthMethod(const int i) const;
 
  public:
-    // **caution! these methods return pointer which ref dyn value
-  const double *getMCP() const;
-  const double *getXDev() const;
-  const double *getYDev() const;
-  const double *getWeightDev() const;
-  const double *getXRaw() const;
-  const double *getYRaw() const;
-  const double *getUTimesum() const;
-  const double *getUTimediff() const;
-  const double *getVTimesum() const;
-  const double *getVTimediff() const;
-  const double *getWTimesum() const;
-  const double *getWTimediff() const;
+  std::shared_ptr<double> getMCP() const;
+  std::shared_ptr<double> getXDev() const;
+  std::shared_ptr<double> getYDev() const;
+  std::shared_ptr<double> getWeightDev() const;
+  std::shared_ptr<double> getXRaw() const;
+  std::shared_ptr<double> getYRaw() const;
+  std::shared_ptr<double> getUTimesum() const;
+  std::shared_ptr<double> getUTimediff() const;
+  std::shared_ptr<double> getVTimesum() const;
+  std::shared_ptr<double> getVTimediff() const;
+  std::shared_ptr<double> getWTimesum() const;
+  std::shared_ptr<double> getWTimediff() const;
 };
 }
 
