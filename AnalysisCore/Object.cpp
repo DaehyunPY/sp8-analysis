@@ -228,132 +228,132 @@ const double Analysis::Object::getMotionalDirectionZY() const {
 }
 
 // output
-double *const Analysis::Object::outputLocX() const {
+std::shared_ptr<double> Analysis::Object::outputLocX() const {
   if (isFlag(HavingXYTData))
-    return new double(kUnit.writeMilliMeter(getLocationX()));
+    return std::make_shared<double>(kUnit.writeMilliMeter(getLocationX()));
   return nullptr;
 }
-double *const Analysis::Object::outputLocY() const {
+std::shared_ptr<double> Analysis::Object::outputLocY() const {
   if (isFlag(HavingXYTData))
-    return new double(kUnit.writeMilliMeter(getLocationY()));
+    return std::make_shared<double>(kUnit.writeMilliMeter(getLocationY()));
   return nullptr;
 }
-double *const Analysis::Object::outputLocR() const {
+std::shared_ptr<double> Analysis::Object::outputLocR() const {
   if (isFlag(HavingXYTData))
-    return new double(kUnit.writeMilliMeter(getLocation()));
+    return std::make_shared<double>(kUnit.writeMilliMeter(getLocation()));
   return nullptr;
 }
-double *const Analysis::Object::outputLocDir() const {
+std::shared_ptr<double> Analysis::Object::outputLocDir() const {
   if (isFlag(HavingXYTData))
-    return new double(kUnit.writeDegree(getLocationalDirectionXY()));
+    return std::make_shared<double>(kUnit.writeDegree(getLocationalDirectionXY()));
   return nullptr;
 }
-double *const Analysis::Object::outputTOF() const {
+std::shared_ptr<double> Analysis::Object::outputTOF() const {
   if (isFlag(HavingXYTData))
-    return new double(kUnit.writeNanoSec(getTOF()));
+    return std::make_shared<double>(kUnit.writeNanoSec(getTOF()));
   return nullptr;
 }
-double *const Analysis::Object::outputPX() const {
+std::shared_ptr<double> Analysis::Object::outputPX() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeAuMomentum(getMomentumX()));
+    return std::make_shared<double>(kUnit.writeAuMomentum(getMomentumX()));
   return nullptr;
 }
-double *const Analysis::Object::outputPY() const {
+std::shared_ptr<double> Analysis::Object::outputPY() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeAuMomentum(getMomentumY()));
+    return std::make_shared<double>(kUnit.writeAuMomentum(getMomentumY()));
   return nullptr;
 }
-double *const Analysis::Object::outputPZ() const {
+std::shared_ptr<double> Analysis::Object::outputPZ() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeAuMomentum(getMomentumZ()));
+    return std::make_shared<double>(kUnit.writeAuMomentum(getMomentumZ()));
   return nullptr;
 }
-double *const Analysis::Object::outputPXY() const {
+std::shared_ptr<double> Analysis::Object::outputPXY() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeAuMomentum(getMomentumXY()));
+    return std::make_shared<double>(kUnit.writeAuMomentum(getMomentumXY()));
   return nullptr;
 }
-double *const Analysis::Object::outputPYZ() const {
+std::shared_ptr<double> Analysis::Object::outputPYZ() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeAuMomentum(getMomentumYZ()));
+    return std::make_shared<double>(kUnit.writeAuMomentum(getMomentumYZ()));
   return nullptr;
 }
-double *const Analysis::Object::outputPZX() const {
+std::shared_ptr<double> Analysis::Object::outputPZX() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeAuMomentum(getMomentumZX()));
+    return std::make_shared<double>(kUnit.writeAuMomentum(getMomentumZX()));
   return nullptr;
 }
-double *const Analysis::Object::outputP() const {
+std::shared_ptr<double> Analysis::Object::outputP() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeAuMomentum(getMomentum()));
+    return std::make_shared<double>(kUnit.writeAuMomentum(getMomentum()));
   return nullptr;
 }
-double *const Analysis::Object::outputPDirX() const {
+std::shared_ptr<double> Analysis::Object::outputPDirX() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeDegree(getMotionalDirectionX()));
+    return std::make_shared<double>(kUnit.writeDegree(getMotionalDirectionX()));
   return nullptr;
 }
-double *const Analysis::Object::outputPDirY() const {
+std::shared_ptr<double> Analysis::Object::outputPDirY() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeDegree(getMotionalDirectionY()));
+    return std::make_shared<double>(kUnit.writeDegree(getMotionalDirectionY()));
   return nullptr;
 }
-double *const Analysis::Object::outputPDirZ() const {
+std::shared_ptr<double> Analysis::Object::outputPDirZ() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeDegree(getMotionalDirectionZ()));
+    return std::make_shared<double>(kUnit.writeDegree(getMotionalDirectionZ()));
   return nullptr;
 }
-double *const Analysis::Object::outputE() const {
+std::shared_ptr<double> Analysis::Object::outputE() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeElectronVolt(getEnergy()));
+    return std::make_shared<double>(kUnit.writeElectronVolt(getEnergy()));
   return nullptr;
 }
-double *const Analysis::Object::outputCosPDirZ() const {
+std::shared_ptr<double> Analysis::Object::outputCosPDirZ() const {
   if (isFlag(HavingMomentumData))
-    return new double(cos(getMotionalDirectionZ()));
+    return std::make_shared<double>(cos(getMotionalDirectionZ()));
   return nullptr;
 }
-double *const Analysis::Object::outputPDirXY() const {
+std::shared_ptr<double> Analysis::Object::outputPDirXY() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeDegree(getMotionalDirectionXY()));
+    return std::make_shared<double>(kUnit.writeDegree(getMotionalDirectionXY()));
   return nullptr;
 }
-double *const Analysis::Object::outputPDirXZ() const {
+std::shared_ptr<double> Analysis::Object::outputPDirXZ() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeDegree(getMotionalDirectionXZ()));
+    return std::make_shared<double>(kUnit.writeDegree(getMotionalDirectionXZ()));
   return nullptr;
 }
-double *const Analysis::Object::outputPDirYX() const {
+std::shared_ptr<double> Analysis::Object::outputPDirYX() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeDegree(getMotionalDirectionYX()));
+    return std::make_shared<double>(kUnit.writeDegree(getMotionalDirectionYX()));
   return nullptr;
 }
-double *const Analysis::Object::outputPDirYZ() const {
+std::shared_ptr<double> Analysis::Object::outputPDirYZ() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeDegree(getMotionalDirectionYZ()));
+    return std::make_shared<double>(kUnit.writeDegree(getMotionalDirectionYZ()));
   return nullptr;
 }
-double *const Analysis::Object::outputPDirZX() const {
+std::shared_ptr<double> Analysis::Object::outputPDirZX() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeDegree(getMotionalDirectionZX()));
+    return std::make_shared<double>(kUnit.writeDegree(getMotionalDirectionZX()));
   return nullptr;
 }
-double *const Analysis::Object::outputPDirZY() const {
+std::shared_ptr<double> Analysis::Object::outputPDirZY() const {
   if (isFlag(HavingMomentumData))
-    return new double(kUnit.writeDegree(getMotionalDirectionZY()));
+    return std::make_shared<double>(kUnit.writeDegree(getMotionalDirectionZY()));
   return nullptr;
 }
 Analysis::Object Analysis::Object::getCopy() const {
   return *this;
 }
-double *const Analysis::Object::outputCosPDirX() const {
+std::shared_ptr<double> Analysis::Object::outputCosPDirX() const {
   if (isFlag(HavingMomentumData))
-    return new double(cos(getMotionalDirectionX()));
+    return std::make_shared<double>(cos(getMotionalDirectionX()));
   return nullptr;
 }
-double *const Analysis::Object::outputCosPDirY() const {
+std::shared_ptr<double> Analysis::Object::outputCosPDirY() const {
   if (isFlag(HavingMomentumData))
-    return new double(cos(getMotionalDirectionY()));
+    return std::make_shared<double>(cos(getMotionalDirectionY()));
   return nullptr;
 }
 bool Analysis::Object::isMomentumAndEnergyConserved() const {

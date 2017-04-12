@@ -84,35 +84,34 @@ public:
 
   // output 
  public:
-    // **caution! these methods return pointer which ref dyn value
-  double *const outputCOMLocX() const;
-  double *const outputCOMLocY() const;
-  double *const outputCOMLocR() const;
-  double *const outputCOMLocDir() const;
-  double *const outputTotalTOF() const;
-  double *const outputSumOf2TOFs(const int i1, const int i2) const;
-  double *const outputSumOf3TOFs(const int i1, const int i2, const int i3) const;
-  double *const outputDiffOfTOFs(const int i1, const int i2) const;
-  double *const outputPX() const;
-  double *const outputPY() const;
-  double *const outputPZ() const;
-  double *const outputPXY() const;
-  double *const outputPYZ() const;
-  double *const outputPZX() const;
-  double *const outputP() const;
-  double *const outputPDirX() const;
-  double *const outputPDirY() const;
-  double *const outputPDirZ() const;
-  double *const outputPDirXY() const;
-  double *const outputPDirXZ() const;
-  double *const outputPDirYX() const;
-  double *const outputPDirYZ() const;
-  double *const outputPDirZX() const;
-  double *const outputPDirZY() const;
-  double *const outputCosPDirX() const;
-  double *const outputCosPDirY() const;
-  double *const outputCosPDirZ() const;
-  double *const outputE() const;
+  std::shared_ptr<double> outputCOMLocX() const;
+  std::shared_ptr<double> outputCOMLocY() const;
+  std::shared_ptr<double> outputCOMLocR() const;
+  std::shared_ptr<double> outputCOMLocDir() const;
+  std::shared_ptr<double> outputTotalTOF() const;
+  std::shared_ptr<double> outputSumOf2TOFs(const int i1, const int i2) const;
+  std::shared_ptr<double> outputSumOf3TOFs(const int i1, const int i2, const int i3) const;
+  std::shared_ptr<double> outputDiffOfTOFs(const int i1, const int i2) const;
+  std::shared_ptr<double> outputPX() const;
+  std::shared_ptr<double> outputPY() const;
+  std::shared_ptr<double> outputPZ() const;
+  std::shared_ptr<double> outputPXY() const;
+  std::shared_ptr<double> outputPYZ() const;
+  std::shared_ptr<double> outputPZX() const;
+  std::shared_ptr<double> outputP() const;
+  std::shared_ptr<double> outputPDirX() const;
+  std::shared_ptr<double> outputPDirY() const;
+  std::shared_ptr<double> outputPDirZ() const;
+  std::shared_ptr<double> outputPDirXY() const;
+  std::shared_ptr<double> outputPDirXZ() const;
+  std::shared_ptr<double> outputPDirYX() const;
+  std::shared_ptr<double> outputPDirYZ() const;
+  std::shared_ptr<double> outputPDirZX() const;
+  std::shared_ptr<double> outputPDirZY() const;
+  std::shared_ptr<double> outputCosPDirX() const;
+  std::shared_ptr<double> outputCosPDirY() const;
+  std::shared_ptr<double> outputCosPDirZ() const;
+  std::shared_ptr<double> outputE() const;
 
   // bools
   const bool isDummyObject(const int &) const;

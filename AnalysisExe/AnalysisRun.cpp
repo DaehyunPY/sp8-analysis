@@ -559,268 +559,268 @@ void Analysis::AnalysisRun::fillHists() {
   const bool eMaster = pElectrons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool master = iMaster && eMaster;
 
-  const double *iX1 = pIons->getRealOrDummyObject(0).outputLocX();
-  const double *iY1 = pIons->getRealOrDummyObject(0).outputLocY();
-  const double *iR1 = pIons->getRealOrDummyObject(0).outputLocR();
-  const double *iDir1 = pIons->getRealOrDummyObject(0).outputLocDir();
-  const double *iT1 = pIons->getRealOrDummyObject(0).outputTOF();
-  const double *iX2 = pIons->getRealOrDummyObject(1).outputLocX();
-  const double *iY2 = pIons->getRealOrDummyObject(1).outputLocY();
-  const double *iDir2 = pIons->getRealOrDummyObject(1).outputLocDir();
-  const double *iR2 = pIons->getRealOrDummyObject(1).outputLocR();
-  const double *iT2 = pIons->getRealOrDummyObject(1).outputTOF();
-  const double *iX3 = pIons->getRealOrDummyObject(2).outputLocX();
-  const double *iY3 = pIons->getRealOrDummyObject(2).outputLocY();
-  const double *iDir3 = pIons->getRealOrDummyObject(2).outputLocDir();
-  const double *iR3 = pIons->getRealOrDummyObject(2).outputLocR();
-  const double *iT3 = pIons->getRealOrDummyObject(2).outputTOF();
-  const double *iX4 = pIons->getRealOrDummyObject(3).outputLocX();
-  const double *iY4 = pIons->getRealOrDummyObject(3).outputLocY();
-  const double *iDir4 = pIons->getRealOrDummyObject(3).outputLocDir();
-  const double *iR4 = pIons->getRealOrDummyObject(3).outputLocR();
-  const double *iT4 = pIons->getRealOrDummyObject(3).outputTOF();
+  auto iX1 = pIons->getRealOrDummyObject(0).outputLocX();
+  auto iY1 = pIons->getRealOrDummyObject(0).outputLocY();
+  auto iR1 = pIons->getRealOrDummyObject(0).outputLocR();
+  auto iDir1 = pIons->getRealOrDummyObject(0).outputLocDir();
+  auto iT1 = pIons->getRealOrDummyObject(0).outputTOF();
+  auto iX2 = pIons->getRealOrDummyObject(1).outputLocX();
+  auto iY2 = pIons->getRealOrDummyObject(1).outputLocY();
+  auto iDir2 = pIons->getRealOrDummyObject(1).outputLocDir();
+  auto iR2 = pIons->getRealOrDummyObject(1).outputLocR();
+  auto iT2 = pIons->getRealOrDummyObject(1).outputTOF();
+  auto iX3 = pIons->getRealOrDummyObject(2).outputLocX();
+  auto iY3 = pIons->getRealOrDummyObject(2).outputLocY();
+  auto iDir3 = pIons->getRealOrDummyObject(2).outputLocDir();
+  auto iR3 = pIons->getRealOrDummyObject(2).outputLocR();
+  auto iT3 = pIons->getRealOrDummyObject(2).outputTOF();
+  auto iX4 = pIons->getRealOrDummyObject(3).outputLocX();
+  auto iY4 = pIons->getRealOrDummyObject(3).outputLocY();
+  auto iDir4 = pIons->getRealOrDummyObject(3).outputLocDir();
+  auto iR4 = pIons->getRealOrDummyObject(3).outputLocR();
+  auto iT4 = pIons->getRealOrDummyObject(3).outputTOF();
 
-  const double *iCOMX = pIons->outputCOMLocX();
-  const double *iCOMY = pIons->outputCOMLocY();
-  const double *iCOMR = pIons->outputCOMLocR();
-  const double *iCOMDir = pIons->outputCOMLocDir();
-  const double *iTTotal = pIons->outputTotalTOF();
-  const double *iT12 = pIons->outputSumOf2TOFs(0, 1);
-  const double *iT23 = pIons->outputSumOf2TOFs(1, 2);
-  const double *iT34 = pIons->outputSumOf2TOFs(2, 3);
-  const double *iTDiff12 = pIons->outputDiffOfTOFs(0, 1);
-  const double *iTDiff23 = pIons->outputDiffOfTOFs(1, 2);
-  const double *iTDiff34 = pIons->outputDiffOfTOFs(2, 3);
+  auto iCOMX = pIons->outputCOMLocX();
+  auto iCOMY = pIons->outputCOMLocY();
+  auto iCOMR = pIons->outputCOMLocR();
+  auto iCOMDir = pIons->outputCOMLocDir();
+  auto iTTotal = pIons->outputTotalTOF();
+  auto iT12 = pIons->outputSumOf2TOFs(0, 1);
+  auto iT23 = pIons->outputSumOf2TOFs(1, 2);
+  auto iT34 = pIons->outputSumOf2TOFs(2, 3);
+  auto iTDiff12 = pIons->outputDiffOfTOFs(0, 1);
+  auto iTDiff23 = pIons->outputDiffOfTOFs(1, 2);
+  auto iTDiff34 = pIons->outputDiffOfTOFs(2, 3);
 
-  const double *eX1 = pElectrons->getRealOrDummyObject(0).outputLocX();
-  const double *eY1 = pElectrons->getRealOrDummyObject(0).outputLocY();
-  const double *eR1 = pElectrons->getRealOrDummyObject(0).outputLocR();
-  const double *eDir1 = pElectrons->getRealOrDummyObject(0).outputLocDir();
-  const double *eT1 = pElectrons->getRealOrDummyObject(0).outputTOF();
-  const double *eX2 = pElectrons->getRealOrDummyObject(1).outputLocX();
-  const double *eY2 = pElectrons->getRealOrDummyObject(1).outputLocY();
-  const double *eR2 = pElectrons->getRealOrDummyObject(1).outputLocR();
-  const double *eDir2 = pElectrons->getRealOrDummyObject(1).outputLocDir();
-  const double *eT2 = pElectrons->getRealOrDummyObject(1).outputTOF();
-  const double *eX3 = pElectrons->getRealOrDummyObject(2).outputLocX();
-  const double *eY3 = pElectrons->getRealOrDummyObject(2).outputLocY();
-  const double *eR3 = pElectrons->getRealOrDummyObject(2).outputLocR();
-  const double *eDir3 = pElectrons->getRealOrDummyObject(2).outputLocDir();
-  const double *eT3 = pElectrons->getRealOrDummyObject(2).outputTOF();
-  const double *eX4 = pElectrons->getRealOrDummyObject(3).outputLocX();
-  const double *eY4 = pElectrons->getRealOrDummyObject(3).outputLocY();
-  const double *eR4 = pElectrons->getRealOrDummyObject(3).outputLocR();
-  const double *eDir4 = pElectrons->getRealOrDummyObject(3).outputLocDir();
-  const double *eT4 = pElectrons->getRealOrDummyObject(3).outputTOF();
+  auto eX1 = pElectrons->getRealOrDummyObject(0).outputLocX();
+  auto eY1 = pElectrons->getRealOrDummyObject(0).outputLocY();
+  auto eR1 = pElectrons->getRealOrDummyObject(0).outputLocR();
+  auto eDir1 = pElectrons->getRealOrDummyObject(0).outputLocDir();
+  auto eT1 = pElectrons->getRealOrDummyObject(0).outputTOF();
+  auto eX2 = pElectrons->getRealOrDummyObject(1).outputLocX();
+  auto eY2 = pElectrons->getRealOrDummyObject(1).outputLocY();
+  auto eR2 = pElectrons->getRealOrDummyObject(1).outputLocR();
+  auto eDir2 = pElectrons->getRealOrDummyObject(1).outputLocDir();
+  auto eT2 = pElectrons->getRealOrDummyObject(1).outputTOF();
+  auto eX3 = pElectrons->getRealOrDummyObject(2).outputLocX();
+  auto eY3 = pElectrons->getRealOrDummyObject(2).outputLocY();
+  auto eR3 = pElectrons->getRealOrDummyObject(2).outputLocR();
+  auto eDir3 = pElectrons->getRealOrDummyObject(2).outputLocDir();
+  auto eT3 = pElectrons->getRealOrDummyObject(2).outputTOF();
+  auto eX4 = pElectrons->getRealOrDummyObject(3).outputLocX();
+  auto eY4 = pElectrons->getRealOrDummyObject(3).outputLocY();
+  auto eR4 = pElectrons->getRealOrDummyObject(3).outputLocR();
+  auto eDir4 = pElectrons->getRealOrDummyObject(3).outputLocDir();
+  auto eT4 = pElectrons->getRealOrDummyObject(3).outputTOF();
 
-  const double *eCOMX = pElectrons->outputCOMLocX();
-  const double *eCOMY = pElectrons->outputCOMLocY();
-  const double *eT12 = pElectrons->outputSumOf2TOFs(0, 1);
-  const double *eT23 = pElectrons->outputSumOf2TOFs(1, 2);
-  const double *eT34 = pElectrons->outputSumOf2TOFs(2, 3);
-  const double *eTDiff12 = pElectrons->outputDiffOfTOFs(0, 1);
-  const double *eTDiff23 = pElectrons->outputDiffOfTOFs(1, 2);
-  const double *eTDiff34 = pElectrons->outputDiffOfTOFs(2, 3);
+  auto eCOMX = pElectrons->outputCOMLocX();
+  auto eCOMY = pElectrons->outputCOMLocY();
+  auto eT12 = pElectrons->outputSumOf2TOFs(0, 1);
+  auto eT23 = pElectrons->outputSumOf2TOFs(1, 2);
+  auto eT34 = pElectrons->outputSumOf2TOFs(2, 3);
+  auto eTDiff12 = pElectrons->outputDiffOfTOFs(0, 1);
+  auto eTDiff23 = pElectrons->outputDiffOfTOFs(1, 2);
+  auto eTDiff34 = pElectrons->outputDiffOfTOFs(2, 3);
 
-  const double *iPX1 = pIons->getRealOrDummyObject(0).outputPX();
-  const double *iPY1 = pIons->getRealOrDummyObject(0).outputPY();
-  const double *iPZ1 = pIons->getRealOrDummyObject(0).outputPZ();
-  const double *iPXY1 = pIons->getRealOrDummyObject(0).outputPXY();
-  const double *iPYZ1 = pIons->getRealOrDummyObject(0).outputPYZ();
-  const double *iPZX1 = pIons->getRealOrDummyObject(0).outputPZX();
-  const double *iP1 = pIons->getRealOrDummyObject(0).outputP();
-  const double *iPDirX1 = pIons->getRealOrDummyObject(0).outputPDirX();
-  const double *iPDirY1 = pIons->getRealOrDummyObject(0).outputPDirY();
-  const double *iPDirZ1 = pIons->getRealOrDummyObject(0).outputPDirZ();
-  const double *iPDirXY1 = pIons->getRealOrDummyObject(0).outputPDirXY();
-  const double *iPDirYZ1 = pIons->getRealOrDummyObject(0).outputPDirYZ();
-  const double *iPDirZX1 = pIons->getRealOrDummyObject(0).outputPDirZX();
-  const double *iCosPDirX1 = pIons->getRealOrDummyObject(0).outputCosPDirX();
-  const double *iCosPDirY1 = pIons->getRealOrDummyObject(0).outputCosPDirY();
-  const double *iCosPDirZ1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
+  auto iPX1 = pIons->getRealOrDummyObject(0).outputPX();
+  auto iPY1 = pIons->getRealOrDummyObject(0).outputPY();
+  auto iPZ1 = pIons->getRealOrDummyObject(0).outputPZ();
+  auto iPXY1 = pIons->getRealOrDummyObject(0).outputPXY();
+  auto iPYZ1 = pIons->getRealOrDummyObject(0).outputPYZ();
+  auto iPZX1 = pIons->getRealOrDummyObject(0).outputPZX();
+  auto iP1 = pIons->getRealOrDummyObject(0).outputP();
+  auto iPDirX1 = pIons->getRealOrDummyObject(0).outputPDirX();
+  auto iPDirY1 = pIons->getRealOrDummyObject(0).outputPDirY();
+  auto iPDirZ1 = pIons->getRealOrDummyObject(0).outputPDirZ();
+  auto iPDirXY1 = pIons->getRealOrDummyObject(0).outputPDirXY();
+  auto iPDirYZ1 = pIons->getRealOrDummyObject(0).outputPDirYZ();
+  auto iPDirZX1 = pIons->getRealOrDummyObject(0).outputPDirZX();
+  auto iCosPDirX1 = pIons->getRealOrDummyObject(0).outputCosPDirX();
+  auto iCosPDirY1 = pIons->getRealOrDummyObject(0).outputCosPDirY();
+  auto iCosPDirZ1 = pIons->getRealOrDummyObject(0).outputCosPDirZ();
   const bool iPDirX1Is90 = iPDirX1 ? (85 <= *iPDirX1 && *iPDirX1 <= 95) : false;
   const bool iPDirY1Is90 = iPDirY1 ? (85 <= *iPDirY1 && *iPDirY1 <= 95) : false;
   const bool iPDirZ1Is90 = iPDirZ1 ? (85 <= *iPDirZ1 && *iPDirZ1 <= 95) : false;
 
-  const double *iPX2 = pIons->getRealOrDummyObject(1).outputPX();
-  const double *iPY2 = pIons->getRealOrDummyObject(1).outputPY();
-  const double *iPZ2 = pIons->getRealOrDummyObject(1).outputPZ();
-  const double *iPXY2 = pIons->getRealOrDummyObject(1).outputPXY();
-  const double *iPYZ2 = pIons->getRealOrDummyObject(1).outputPYZ();
-  const double *iPZX2 = pIons->getRealOrDummyObject(1).outputPZX();
-  const double *iP2 = pIons->getRealOrDummyObject(1).outputP();
-  const double *iPDirX2 = pIons->getRealOrDummyObject(1).outputPDirX();
-  const double *iPDirY2 = pIons->getRealOrDummyObject(1).outputPDirY();
-  const double *iPDirZ2 = pIons->getRealOrDummyObject(1).outputPDirZ();
-  const double *iPDirXY2 = pIons->getRealOrDummyObject(1).outputPDirXY();
-  const double *iPDirYZ2 = pIons->getRealOrDummyObject(1).outputPDirYZ();
-  const double *iPDirZX2 = pIons->getRealOrDummyObject(1).outputPDirZX();
-  const double *iCosPDirX2 = pIons->getRealOrDummyObject(1).outputCosPDirX();
-  const double *iCosPDirY2 = pIons->getRealOrDummyObject(1).outputCosPDirY();
-  const double *iCosPDirZ2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
+  auto iPX2 = pIons->getRealOrDummyObject(1).outputPX();
+  auto iPY2 = pIons->getRealOrDummyObject(1).outputPY();
+  auto iPZ2 = pIons->getRealOrDummyObject(1).outputPZ();
+  auto iPXY2 = pIons->getRealOrDummyObject(1).outputPXY();
+  auto iPYZ2 = pIons->getRealOrDummyObject(1).outputPYZ();
+  auto iPZX2 = pIons->getRealOrDummyObject(1).outputPZX();
+  auto iP2 = pIons->getRealOrDummyObject(1).outputP();
+  auto iPDirX2 = pIons->getRealOrDummyObject(1).outputPDirX();
+  auto iPDirY2 = pIons->getRealOrDummyObject(1).outputPDirY();
+  auto iPDirZ2 = pIons->getRealOrDummyObject(1).outputPDirZ();
+  auto iPDirXY2 = pIons->getRealOrDummyObject(1).outputPDirXY();
+  auto iPDirYZ2 = pIons->getRealOrDummyObject(1).outputPDirYZ();
+  auto iPDirZX2 = pIons->getRealOrDummyObject(1).outputPDirZX();
+  auto iCosPDirX2 = pIons->getRealOrDummyObject(1).outputCosPDirX();
+  auto iCosPDirY2 = pIons->getRealOrDummyObject(1).outputCosPDirY();
+  auto iCosPDirZ2 = pIons->getRealOrDummyObject(1).outputCosPDirZ();
   const bool iPDirX2Is90 = iPDirX2 ? (85 <= *iPDirX2 && *iPDirX2 <= 95) : false;
   const bool iPDirY2Is90 = iPDirY2 ? (85 <= *iPDirY2 && *iPDirY2 <= 95) : false;
   const bool iPDirZ2Is90 = iPDirZ2 ? (85 <= *iPDirZ2 && *iPDirZ2 <= 95) : false;
 
-  const double *iPX3 = pIons->getRealOrDummyObject(2).outputPX();
-  const double *iPY3 = pIons->getRealOrDummyObject(2).outputPY();
-  const double *iPZ3 = pIons->getRealOrDummyObject(2).outputPZ();
-  const double *iPXY3 = pIons->getRealOrDummyObject(2).outputPXY();
-  const double *iPYZ3 = pIons->getRealOrDummyObject(2).outputPYZ();
-  const double *iPZX3 = pIons->getRealOrDummyObject(2).outputPZX();
-  const double *iP3 = pIons->getRealOrDummyObject(2).outputP();
-  const double *iPDirX3 = pIons->getRealOrDummyObject(2).outputPDirX();
-  const double *iPDirY3 = pIons->getRealOrDummyObject(2).outputPDirY();
-  const double *iPDirZ3 = pIons->getRealOrDummyObject(2).outputPDirZ();
-  const double *iPDirXY3 = pIons->getRealOrDummyObject(2).outputPDirXY();
-  const double *iPDirYZ3 = pIons->getRealOrDummyObject(2).outputPDirYZ();
-  const double *iPDirZX3 = pIons->getRealOrDummyObject(2).outputPDirZX();
-  const double *iCosPDirX3 = pIons->getRealOrDummyObject(2).outputCosPDirX();
-  const double *iCosPDirY3 = pIons->getRealOrDummyObject(2).outputCosPDirY();
-  const double *iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
+  auto iPX3 = pIons->getRealOrDummyObject(2).outputPX();
+  auto iPY3 = pIons->getRealOrDummyObject(2).outputPY();
+  auto iPZ3 = pIons->getRealOrDummyObject(2).outputPZ();
+  auto iPXY3 = pIons->getRealOrDummyObject(2).outputPXY();
+  auto iPYZ3 = pIons->getRealOrDummyObject(2).outputPYZ();
+  auto iPZX3 = pIons->getRealOrDummyObject(2).outputPZX();
+  auto iP3 = pIons->getRealOrDummyObject(2).outputP();
+  auto iPDirX3 = pIons->getRealOrDummyObject(2).outputPDirX();
+  auto iPDirY3 = pIons->getRealOrDummyObject(2).outputPDirY();
+  auto iPDirZ3 = pIons->getRealOrDummyObject(2).outputPDirZ();
+  auto iPDirXY3 = pIons->getRealOrDummyObject(2).outputPDirXY();
+  auto iPDirYZ3 = pIons->getRealOrDummyObject(2).outputPDirYZ();
+  auto iPDirZX3 = pIons->getRealOrDummyObject(2).outputPDirZX();
+  auto iCosPDirX3 = pIons->getRealOrDummyObject(2).outputCosPDirX();
+  auto iCosPDirY3 = pIons->getRealOrDummyObject(2).outputCosPDirY();
+  auto iCosPDirZ3 = pIons->getRealOrDummyObject(2).outputCosPDirZ();
   const bool iPDirX3Is90 = iPDirX3 ? (85 <= *iPDirX3 && *iPDirX3 <= 95) : false;
   const bool iPDirY3Is90 = iPDirY3 ? (85 <= *iPDirY3 && *iPDirY3 <= 95) : false;
   const bool iPDirZ3Is90 = iPDirZ3 ? (85 <= *iPDirZ3 && *iPDirZ3 <= 95) : false;
 
-  const double *iPX4 = pIons->getRealOrDummyObject(3).outputPX();
-  const double *iPY4 = pIons->getRealOrDummyObject(3).outputPY();
-  const double *iPZ4 = pIons->getRealOrDummyObject(3).outputPZ();
-  const double *iPXY4 = pIons->getRealOrDummyObject(3).outputPXY();
-  const double *iPYZ4 = pIons->getRealOrDummyObject(3).outputPYZ();
-  const double *iPZX4 = pIons->getRealOrDummyObject(3).outputPZX();
-  const double *iP4 = pIons->getRealOrDummyObject(3).outputP();
-  const double *iPDirX4 = pIons->getRealOrDummyObject(3).outputPDirX();
-  const double *iPDirY4 = pIons->getRealOrDummyObject(3).outputPDirY();
-  const double *iPDirZ4 = pIons->getRealOrDummyObject(3).outputPDirZ();
-  const double *iPDirXY4 = pIons->getRealOrDummyObject(3).outputPDirXY();
-  const double *iPDirYZ4 = pIons->getRealOrDummyObject(3).outputPDirYZ();
-  const double *iPDirZX4 = pIons->getRealOrDummyObject(3).outputPDirZX();
-  const double *iCosPDirX4 = pIons->getRealOrDummyObject(3).outputCosPDirX();
-  const double *iCosPDirY4 = pIons->getRealOrDummyObject(3).outputCosPDirY();
-  const double *iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
+  auto iPX4 = pIons->getRealOrDummyObject(3).outputPX();
+  auto iPY4 = pIons->getRealOrDummyObject(3).outputPY();
+  auto iPZ4 = pIons->getRealOrDummyObject(3).outputPZ();
+  auto iPXY4 = pIons->getRealOrDummyObject(3).outputPXY();
+  auto iPYZ4 = pIons->getRealOrDummyObject(3).outputPYZ();
+  auto iPZX4 = pIons->getRealOrDummyObject(3).outputPZX();
+  auto iP4 = pIons->getRealOrDummyObject(3).outputP();
+  auto iPDirX4 = pIons->getRealOrDummyObject(3).outputPDirX();
+  auto iPDirY4 = pIons->getRealOrDummyObject(3).outputPDirY();
+  auto iPDirZ4 = pIons->getRealOrDummyObject(3).outputPDirZ();
+  auto iPDirXY4 = pIons->getRealOrDummyObject(3).outputPDirXY();
+  auto iPDirYZ4 = pIons->getRealOrDummyObject(3).outputPDirYZ();
+  auto iPDirZX4 = pIons->getRealOrDummyObject(3).outputPDirZX();
+  auto iCosPDirX4 = pIons->getRealOrDummyObject(3).outputCosPDirX();
+  auto iCosPDirY4 = pIons->getRealOrDummyObject(3).outputCosPDirY();
+  auto iCosPDirZ4 = pIons->getRealOrDummyObject(3).outputCosPDirZ();
   const bool iPDirX4Is90 = iPDirX4 ? (85 <= *iPDirX4 && *iPDirX4 <= 95) : false;
   const bool iPDirY4Is90 = iPDirY4 ? (85 <= *iPDirY4 && *iPDirY4 <= 95) : false;
   const bool iPDirZ4Is90 = iPDirZ4 ? (85 <= *iPDirZ4 && *iPDirZ4 <= 95) : false;
 
-  const double *iPXTotal = pIons->outputPX();
-  const double *iPYTotal = pIons->outputPY();
-  const double *iPZTotal = pIons->outputPZ();
-  const double *iPXYTotal = pIons->outputPXY();
-  const double *iPYZTotal = pIons->outputPYZ();
-  const double *iPZXTotal = pIons->outputPZX();
-  const double *iPTotal = pIons->outputP();
-  const double *iPDirXTotal = pIons->outputPDirX();
-  const double *iPDirYTotal = pIons->outputPDirY();
-  const double *iPDirZTotal = pIons->outputPDirZ();
-  const double *iPDirXYTotal = pIons->outputPDirXY();
-  const double *iPDirYZTotal = pIons->outputPDirYZ();
-  const double *iPDirZXTotal = pIons->outputPDirZX();
-  const double *iCosPDirXTotal = pIons->outputCosPDirX();
-  const double *iCosPDirYTotal = pIons->outputCosPDirY();
-  const double *iCosPDirZTotal = pIons->outputCosPDirZ();
+  auto iPXTotal = pIons->outputPX();
+  auto iPYTotal = pIons->outputPY();
+  auto iPZTotal = pIons->outputPZ();
+  auto iPXYTotal = pIons->outputPXY();
+  auto iPYZTotal = pIons->outputPYZ();
+  auto iPZXTotal = pIons->outputPZX();
+  auto iPTotal = pIons->outputP();
+  auto iPDirXTotal = pIons->outputPDirX();
+  auto iPDirYTotal = pIons->outputPDirY();
+  auto iPDirZTotal = pIons->outputPDirZ();
+  auto iPDirXYTotal = pIons->outputPDirXY();
+  auto iPDirYZTotal = pIons->outputPDirYZ();
+  auto iPDirZXTotal = pIons->outputPDirZX();
+  auto iCosPDirXTotal = pIons->outputCosPDirX();
+  auto iCosPDirYTotal = pIons->outputCosPDirY();
+  auto iCosPDirZTotal = pIons->outputCosPDirZ();
   const bool iPDirXTotalIs90 = iPDirXTotal ? (85 <= *iPDirXTotal && *iPDirXTotal <= 95) : false;
   const bool iPDirYTotalIs90 = iPDirYTotal ? (85 <= *iPDirYTotal && *iPDirYTotal <= 95) : false;
   const bool iPDirZTotalIs90 = iPDirZTotal ? (85 <= *iPDirZTotal && *iPDirZTotal <= 95) : false;
 
-  const double *ePX1 = pElectrons->getRealOrDummyObject(0).outputPX();
-  const double *ePY1 = pElectrons->getRealOrDummyObject(0).outputPY();
-  const double *ePZ1 = pElectrons->getRealOrDummyObject(0).outputPZ();
-  const double *ePXY1 = pElectrons->getRealOrDummyObject(0).outputPXY();
-  const double *ePYZ1 = pElectrons->getRealOrDummyObject(0).outputPYZ();
-  const double *ePZX1 = pElectrons->getRealOrDummyObject(0).outputPZX();
-  const double *eP1 = pElectrons->getRealOrDummyObject(0).outputP();
-  const double *ePDirX1 = pElectrons->getRealOrDummyObject(0).outputPDirX();
-  const double *ePDirY1 = pElectrons->getRealOrDummyObject(0).outputPDirY();
-  const double *ePDirZ1 = pElectrons->getRealOrDummyObject(0).outputPDirZ();
-  const double *ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirXY();
-  const double *ePDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
-  const double *ePDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
-  const double *eCosPDirX1 = pElectrons->getRealOrDummyObject(0).outputCosPDirX();
-  const double *eCosPDirY1 = pElectrons->getRealOrDummyObject(0).outputCosPDirY();
-  const double *eCosPDirZ1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
+  auto ePX1 = pElectrons->getRealOrDummyObject(0).outputPX();
+  auto ePY1 = pElectrons->getRealOrDummyObject(0).outputPY();
+  auto ePZ1 = pElectrons->getRealOrDummyObject(0).outputPZ();
+  auto ePXY1 = pElectrons->getRealOrDummyObject(0).outputPXY();
+  auto ePYZ1 = pElectrons->getRealOrDummyObject(0).outputPYZ();
+  auto ePZX1 = pElectrons->getRealOrDummyObject(0).outputPZX();
+  auto eP1 = pElectrons->getRealOrDummyObject(0).outputP();
+  auto ePDirX1 = pElectrons->getRealOrDummyObject(0).outputPDirX();
+  auto ePDirY1 = pElectrons->getRealOrDummyObject(0).outputPDirY();
+  auto ePDirZ1 = pElectrons->getRealOrDummyObject(0).outputPDirZ();
+  auto ePDirXY1 = pElectrons->getRealOrDummyObject(0).outputPDirXY();
+  auto ePDirYZ1 = pElectrons->getRealOrDummyObject(0).outputPDirYZ();
+  auto ePDirZX1 = pElectrons->getRealOrDummyObject(0).outputPDirZX();
+  auto eCosPDirX1 = pElectrons->getRealOrDummyObject(0).outputCosPDirX();
+  auto eCosPDirY1 = pElectrons->getRealOrDummyObject(0).outputCosPDirY();
+  auto eCosPDirZ1 = pElectrons->getRealOrDummyObject(0).outputCosPDirZ();
   const bool ePDirX1Is90 = ePDirX1 ? (85 <= *ePDirX1 && *ePDirX1 <= 95) : false;
   const bool ePDirY1Is90 = ePDirY1 ? (85 <= *ePDirY1 && *ePDirY1 <= 95) : false;
   const bool ePDirZ1Is90 = ePDirZ1 ? (85 <= *ePDirZ1 && *ePDirZ1 <= 95) : false;
 
-  const double *ePX2 = pElectrons->getRealOrDummyObject(1).outputPX();
-  const double *ePY2 = pElectrons->getRealOrDummyObject(1).outputPY();
-  const double *ePZ2 = pElectrons->getRealOrDummyObject(1).outputPZ();
-  const double *ePDirX2 = pElectrons->getRealOrDummyObject(1).outputPDirX();
-  const double *ePDirY2 = pElectrons->getRealOrDummyObject(1).outputPDirY();
-  const double *ePDirZ2 = pElectrons->getRealOrDummyObject(1).outputPDirZ();
-  const double *ePXY2 = pElectrons->getRealOrDummyObject(1).outputPXY();
-  const double *ePYZ2 = pElectrons->getRealOrDummyObject(1).outputPYZ();
-  const double *ePZX2 = pElectrons->getRealOrDummyObject(1).outputPZX();
-  const double *eP2 = pElectrons->getRealOrDummyObject(1).outputP();
-  const double *ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirXY();
-  const double *ePDirYZ2 = pElectrons->getRealOrDummyObject(1).outputPDirYZ();
-  const double *ePDirZX2 = pElectrons->getRealOrDummyObject(1).outputPDirZX();
-  const double *eCosPDirX2 = pElectrons->getRealOrDummyObject(1).outputCosPDirX();
-  const double *eCosPDirY2 = pElectrons->getRealOrDummyObject(1).outputCosPDirY();
-  const double *eCosPDirZ2 = pElectrons->getRealOrDummyObject(1).outputCosPDirZ();
+  auto ePX2 = pElectrons->getRealOrDummyObject(1).outputPX();
+  auto ePY2 = pElectrons->getRealOrDummyObject(1).outputPY();
+  auto ePZ2 = pElectrons->getRealOrDummyObject(1).outputPZ();
+  auto ePDirX2 = pElectrons->getRealOrDummyObject(1).outputPDirX();
+  auto ePDirY2 = pElectrons->getRealOrDummyObject(1).outputPDirY();
+  auto ePDirZ2 = pElectrons->getRealOrDummyObject(1).outputPDirZ();
+  auto ePXY2 = pElectrons->getRealOrDummyObject(1).outputPXY();
+  auto ePYZ2 = pElectrons->getRealOrDummyObject(1).outputPYZ();
+  auto ePZX2 = pElectrons->getRealOrDummyObject(1).outputPZX();
+  auto eP2 = pElectrons->getRealOrDummyObject(1).outputP();
+  auto ePDirXY2 = pElectrons->getRealOrDummyObject(1).outputPDirXY();
+  auto ePDirYZ2 = pElectrons->getRealOrDummyObject(1).outputPDirYZ();
+  auto ePDirZX2 = pElectrons->getRealOrDummyObject(1).outputPDirZX();
+  auto eCosPDirX2 = pElectrons->getRealOrDummyObject(1).outputCosPDirX();
+  auto eCosPDirY2 = pElectrons->getRealOrDummyObject(1).outputCosPDirY();
+  auto eCosPDirZ2 = pElectrons->getRealOrDummyObject(1).outputCosPDirZ();
   const bool ePDirX2Is90 = ePDirX2 ? (85 <= *ePDirX2 && *ePDirX2 <= 95) : false;
   const bool ePDirY2Is90 = ePDirY2 ? (85 <= *ePDirY2 && *ePDirY2 <= 95) : false;
   const bool ePDirZ2Is90 = ePDirZ2 ? (85 <= *ePDirZ2 && *ePDirZ2 <= 95) : false;
 
-  const double *ePX3 = pElectrons->getRealOrDummyObject(2).outputPX();
-  const double *ePY3 = pElectrons->getRealOrDummyObject(2).outputPY();
-  const double *ePZ3 = pElectrons->getRealOrDummyObject(2).outputPZ();
-  const double *ePXY3 = pElectrons->getRealOrDummyObject(2).outputPXY();
-  const double *ePYZ3 = pElectrons->getRealOrDummyObject(2).outputPYZ();
-  const double *ePZX3 = pElectrons->getRealOrDummyObject(2).outputPZX();
-  const double *eP3 = pElectrons->getRealOrDummyObject(2).outputP();
-  const double *ePDirX3 = pElectrons->getRealOrDummyObject(2).outputPDirX();
-  const double *ePDirY3 = pElectrons->getRealOrDummyObject(2).outputPDirY();
-  const double *ePDirZ3 = pElectrons->getRealOrDummyObject(2).outputPDirZ();
-  const double *ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirXY();
-  const double *ePDirYZ3 = pElectrons->getRealOrDummyObject(2).outputPDirYZ();
-  const double *ePDirZX3 = pElectrons->getRealOrDummyObject(2).outputPDirZX();
-  const double *eCosPDirX3 = pElectrons->getRealOrDummyObject(2).outputCosPDirX();
-  const double *eCosPDirY3 = pElectrons->getRealOrDummyObject(2).outputCosPDirY();
-  const double *eCosPDirZ3 = pElectrons->getRealOrDummyObject(2).outputCosPDirZ();
+  auto ePX3 = pElectrons->getRealOrDummyObject(2).outputPX();
+  auto ePY3 = pElectrons->getRealOrDummyObject(2).outputPY();
+  auto ePZ3 = pElectrons->getRealOrDummyObject(2).outputPZ();
+  auto ePXY3 = pElectrons->getRealOrDummyObject(2).outputPXY();
+  auto ePYZ3 = pElectrons->getRealOrDummyObject(2).outputPYZ();
+  auto ePZX3 = pElectrons->getRealOrDummyObject(2).outputPZX();
+  auto eP3 = pElectrons->getRealOrDummyObject(2).outputP();
+  auto ePDirX3 = pElectrons->getRealOrDummyObject(2).outputPDirX();
+  auto ePDirY3 = pElectrons->getRealOrDummyObject(2).outputPDirY();
+  auto ePDirZ3 = pElectrons->getRealOrDummyObject(2).outputPDirZ();
+  auto ePDirXY3 = pElectrons->getRealOrDummyObject(2).outputPDirXY();
+  auto ePDirYZ3 = pElectrons->getRealOrDummyObject(2).outputPDirYZ();
+  auto ePDirZX3 = pElectrons->getRealOrDummyObject(2).outputPDirZX();
+  auto eCosPDirX3 = pElectrons->getRealOrDummyObject(2).outputCosPDirX();
+  auto eCosPDirY3 = pElectrons->getRealOrDummyObject(2).outputCosPDirY();
+  auto eCosPDirZ3 = pElectrons->getRealOrDummyObject(2).outputCosPDirZ();
   const bool ePDirX3Is90 = ePDirX3 ? (85 <= *ePDirX3 && *ePDirX3 <= 95) : false;
   const bool ePDirY3Is90 = ePDirY3 ? (85 <= *ePDirY3 && *ePDirY3 <= 95) : false;
   const bool ePDirZ3Is90 = ePDirZ3 ? (85 <= *ePDirZ3 && *ePDirZ3 <= 95) : false;
 
-  const double *ePX4 = pElectrons->getRealOrDummyObject(3).outputPX();
-  const double *ePY4 = pElectrons->getRealOrDummyObject(3).outputPY();
-  const double *ePZ4 = pElectrons->getRealOrDummyObject(3).outputPZ();
-  const double *ePXY4 = pElectrons->getRealOrDummyObject(3).outputPXY();
-  const double *ePYZ4 = pElectrons->getRealOrDummyObject(3).outputPYZ();
-  const double *ePZX4 = pElectrons->getRealOrDummyObject(3).outputPZX();
-  const double *eP4 = pElectrons->getRealOrDummyObject(3).outputP();
-  const double *ePDirX4 = pElectrons->getRealOrDummyObject(3).outputPDirX();
-  const double *ePDirY4 = pElectrons->getRealOrDummyObject(3).outputPDirY();
-  const double *ePDirZ4 = pElectrons->getRealOrDummyObject(3).outputPDirZ();
-  const double *ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirXY();
-  const double *ePDirYZ4 = pElectrons->getRealOrDummyObject(3).outputPDirYZ();
-  const double *ePDirZX4 = pElectrons->getRealOrDummyObject(3).outputPDirZX();
-  const double *eCosPDirX4 = pElectrons->getRealOrDummyObject(3).outputCosPDirX();
-  const double *eCosPDirY4 = pElectrons->getRealOrDummyObject(3).outputCosPDirY();
-  const double *eCosPDirZ4 = pElectrons->getRealOrDummyObject(3).outputCosPDirZ();
+  auto ePX4 = pElectrons->getRealOrDummyObject(3).outputPX();
+  auto ePY4 = pElectrons->getRealOrDummyObject(3).outputPY();
+  auto ePZ4 = pElectrons->getRealOrDummyObject(3).outputPZ();
+  auto ePXY4 = pElectrons->getRealOrDummyObject(3).outputPXY();
+  auto ePYZ4 = pElectrons->getRealOrDummyObject(3).outputPYZ();
+  auto ePZX4 = pElectrons->getRealOrDummyObject(3).outputPZX();
+  auto eP4 = pElectrons->getRealOrDummyObject(3).outputP();
+  auto ePDirX4 = pElectrons->getRealOrDummyObject(3).outputPDirX();
+  auto ePDirY4 = pElectrons->getRealOrDummyObject(3).outputPDirY();
+  auto ePDirZ4 = pElectrons->getRealOrDummyObject(3).outputPDirZ();
+  auto ePDirXY4 = pElectrons->getRealOrDummyObject(3).outputPDirXY();
+  auto ePDirYZ4 = pElectrons->getRealOrDummyObject(3).outputPDirYZ();
+  auto ePDirZX4 = pElectrons->getRealOrDummyObject(3).outputPDirZX();
+  auto eCosPDirX4 = pElectrons->getRealOrDummyObject(3).outputCosPDirX();
+  auto eCosPDirY4 = pElectrons->getRealOrDummyObject(3).outputCosPDirY();
+  auto eCosPDirZ4 = pElectrons->getRealOrDummyObject(3).outputCosPDirZ();
   const bool ePDirX4Is90 = ePDirX4 ? (85 <= *ePDirX4 && *ePDirX4 <= 95) : false;
   const bool ePDirY4Is90 = ePDirY4 ? (85 <= *ePDirY4 && *ePDirY4 <= 95) : false;
   const bool ePDirZ4Is90 = ePDirZ4 ? (85 <= *ePDirZ4 && *ePDirZ4 <= 95) : false;
 
-  const double *iE1 = pIons->getRealOrDummyObject(0).outputE();
-  const double *iE2 = pIons->getRealOrDummyObject(1).outputE();
-  const double *iE3 = pIons->getRealOrDummyObject(2).outputE();
-  const double *iE4 = pIons->getRealOrDummyObject(3).outputE();
-  const double *iETotal = pIons->outputE();
+  auto iE1 = pIons->getRealOrDummyObject(0).outputE();
+  auto iE2 = pIons->getRealOrDummyObject(1).outputE();
+  auto iE3 = pIons->getRealOrDummyObject(2).outputE();
+  auto iE4 = pIons->getRealOrDummyObject(3).outputE();
+  auto iETotal = pIons->outputE();
 
-  const double *eE1 = pElectrons->getRealOrDummyObject(0).outputE();
-  const double *eE2 = pElectrons->getRealOrDummyObject(1).outputE();
-  const double *eE3 = pElectrons->getRealOrDummyObject(2).outputE();
-  const double *eE4 = pElectrons->getRealOrDummyObject(3).outputE();
-  const double *eETotal = pElectrons->outputE();
+  auto eE1 = pElectrons->getRealOrDummyObject(0).outputE();
+  auto eE2 = pElectrons->getRealOrDummyObject(1).outputE();
+  auto eE3 = pElectrons->getRealOrDummyObject(2).outputE();
+  auto eE4 = pElectrons->getRealOrDummyObject(3).outputE();
+  auto eETotal = pElectrons->outputE();
 
   // functions
-  auto sum2doubles = [](const double *const d0, const double *const d1)->double * {
-    if(d0 && d1) return new double(*d0 + *d1);
+  auto sum2doubles = [](const auto d0, const auto d1)->std::shared_ptr<double> {
+    if(d0 && d1) return std::make_shared<double>(*d0 + *d1);
     else return nullptr;
   };
-  auto sumDoubles = [=](const int n, const double *const ds[])->double *{
-    return std::accumulate(ds, ds+n, new double(0), sum2doubles);
+  auto sumDoubles = [=](const int n, auto const ds[])->std::shared_ptr<double> {
+    return std::accumulate(ds, ds+n, std::make_shared<double>(0), sum2doubles);
   };
 
   // IonImage
@@ -855,9 +855,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT12, iTDiff12); \
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT23, iTDiff23); \
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT34, iTDiff34); \
-  const double *iT12[] = {iT1, iT2}; \
-  const double *iT23[] = {iT2, iT3}; \
-  const double *iT123[] = {iT1, iT2, iT3}; \
+  std::shared_ptr<double> iT12[] = {iT1, iT2}; \
+  std::shared_ptr<double> iT23[] = {iT2, iT3}; \
+  std::shared_ptr<double> iT123[] = {iT1, iT2, iT3}; \
   fill2d(h2_i1h2h3h3PICO_ ## X, sumDoubles(2, iT12), iT3); \
   fill2d(h2_i2h3h4h3PICO_ ## X, sumDoubles(2, iT23), iT4); \
   fill2d(h2_i1h2h3h4h4PICO_ ## X, sumDoubles(3, iT123), iT4); \
@@ -1184,38 +1184,4 @@ void Analysis::AnalysisRun::fillHists() {
   if (master) {
     fill2d(h2_e1hE_iTotalTOF_master, eE1, iTTotal);
   }
-
-  // delete
-  delete
-          iX1, iY1, iR1, iDir1, iT1,
-          iX2, iY2, iR2, iDir2, iT2,
-          iX3, iY3, iR3, iDir3, iT3,
-          iX4, iY4, iR4, iDir4, iT4,
-          iCOMX, iCOMY, iCOMR, iCOMDir, iTTotal, iT12, iT23, iT34, iTDiff12, iTDiff23, iTDiff34,
-          eX1, eY1, eR1, eDir1, eT1,
-          eX2, eY2, eR2, eDir2, eT2,
-          eX3, eY3, eR3, eDir3, eT3,
-          eX4, eY4, eR4, eDir4, eT4,
-          eCOMX, eCOMY, eT12, eT23, eT34, eTDiff12, eTDiff23, eTDiff34,
-          iPX1, iPY1, iPZ1, iPXY1, iPYZ1, iPZX1, iP1,
-          iPX2, iPY2, iPZ2, iPXY2, iPYZ2, iPZX2, iP2,
-          iPX3, iPY3, iPZ3, iPXY3, iPYZ3, iPZX3, iP3,
-          iPX4, iPY4, iPZ4, iPXY4, iPYZ4, iPZX4, iP4,
-          iPXTotal, iPYTotal, iPZTotal, iPXYTotal, iPYZTotal, iPZXTotal, iPTotal,
-          iPDirX1, iPDirY1, iPDirZ1, iPDirXY1, iPDirYZ1, iPDirZX1, iCosPDirX1, iCosPDirY1, iCosPDirZ1,
-          iPDirX2, iPDirY2, iPDirZ2, iPDirXY2, iPDirYZ2, iPDirZX2, iCosPDirX2, iCosPDirY2, iCosPDirZ2,
-          iPDirX3, iPDirY3, iPDirZ3, iPDirXY3, iPDirYZ3, iPDirZX3, iCosPDirX3, iCosPDirY3, iCosPDirZ3,
-          iPDirX4, iPDirY4, iPDirZ4, iPDirXY4, iPDirYZ4, iPDirZX4, iCosPDirX4, iCosPDirY4, iCosPDirZ4,
-          iPDirXTotal, iPDirYTotal, iPDirZTotal, iPDirXYTotal, iPDirYZTotal,
-          iPDirZXTotal, iCosPDirXTotal, iCosPDirYTotal, iCosPDirZTotal,
-          ePX1, ePY1, ePZ1, ePXY1, ePYZ1, ePZX1, eP1,
-          ePX2, ePY2, ePZ2, ePXY2, ePYZ2, ePZX2, eP2,
-          ePX3, ePY3, ePZ3, ePXY3, ePYZ3, ePZX3, eP3,
-          ePX4, ePY4, ePZ4, ePXY4, ePYZ4, ePZX4, eP4,
-          ePDirX1, ePDirY1, ePDirZ1, ePDirXY1, ePDirYZ1, ePDirZX1, eCosPDirX1, eCosPDirY1, eCosPDirZ1,
-          ePDirX2, ePDirY2, ePDirZ2, ePDirXY2, ePDirYZ2, ePDirZX2, eCosPDirX2, eCosPDirY2, eCosPDirZ2,
-          ePDirX3, ePDirY3, ePDirZ3, ePDirXY3, ePDirYZ3, ePDirZX3, eCosPDirX3, eCosPDirY3, eCosPDirZ3,
-          ePDirX4, ePDirY4, ePDirZ4, ePDirXY4, ePDirYZ4, ePDirZX4, eCosPDirX4, eCosPDirY4, eCosPDirZ4,
-          iE1, iE2, iE3, iE4, iETotal,
-          eE1, eE2, eE3, eE4, eETotal;
 }

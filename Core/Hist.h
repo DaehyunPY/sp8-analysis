@@ -47,6 +47,9 @@ class Hist {
   void fill1d(const int id,
               const double *pX,
               const double weight = 1);
+    void fill1d(const int id,
+                std::shared_ptr<double> pX,
+                const double weight=1);
   void plot1d(int id, int binX, double content);
   TH1 *getHist1d(int id) const;
 
@@ -63,6 +66,10 @@ class Hist {
   void fill2d(const int id,
               const double *pX, const double *pY,
               const double weight = 1);
+    void fill2d(const int id,
+                std::shared_ptr<double> pX,
+                std::shared_ptr<double> pY,
+                const double weight=1);
   void plot2d(int id, int binX, int binY, double content);
   TH2 *getHist2d(int id) const;
 
@@ -80,6 +87,11 @@ class Hist {
   void fill3d(const int id,
               const double *pX, const double *pY, const double *pZ,
               const double weight = 1);
+    void fill3d(const int id,
+                std::shared_ptr<double> pX,
+                std::shared_ptr<double> pY,
+                std::shared_ptr<double> pZ,
+                const double weight=1);
   void plot3d(int id, int binX, int binY, int binZ, double content);
   TH3 *getHist3d(int id) const;
 };

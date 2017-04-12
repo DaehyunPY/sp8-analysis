@@ -2,6 +2,7 @@
 #define ANALYSIS_OBJECT_H
 
 
+#include <memory>
 #include <assert.h>
 #include "../Core/Unit.h"
 #include "ObjectFlag.h"
@@ -77,32 +78,31 @@ class Object: public ObjectFlag {
 
   // output
 public:
-    // **caution! these methods return pointer which ref dyn value
-  double * const outputLocX() const;
-  double * const outputLocY() const;
-  double * const outputLocR() const;
-  double * const outputLocDir() const;
-  double * const outputTOF() const;
-  double * const outputPX() const;
-  double * const outputPY() const;
-  double * const outputPZ() const;
-  double * const outputPXY() const;
-  double * const outputPYZ() const;
-  double * const outputPZX() const; 
-  double * const outputP() const;
-  double * const outputPDirX() const;
-  double * const outputPDirY() const;
-  double * const outputPDirZ() const;
-  double * const outputPDirXY() const;
-  double * const outputPDirXZ() const;
-  double * const outputPDirYX() const;
-  double * const outputPDirYZ() const;
-  double * const outputPDirZX() const;
-  double * const outputPDirZY() const;
-  double * const outputCosPDirX() const;
-  double * const outputCosPDirY() const;
-  double * const outputCosPDirZ() const;
-  double * const outputE() const;
+  std::shared_ptr<double> outputLocX() const;
+  std::shared_ptr<double> outputLocY() const;
+  std::shared_ptr<double> outputLocR() const;
+  std::shared_ptr<double> outputLocDir() const;
+  std::shared_ptr<double> outputTOF() const;
+  std::shared_ptr<double> outputPX() const;
+  std::shared_ptr<double> outputPY() const;
+  std::shared_ptr<double> outputPZ() const;
+  std::shared_ptr<double> outputPXY() const;
+  std::shared_ptr<double> outputPYZ() const;
+  std::shared_ptr<double> outputPZX() const;
+  std::shared_ptr<double> outputP() const;
+  std::shared_ptr<double> outputPDirX() const;
+  std::shared_ptr<double> outputPDirY() const;
+  std::shared_ptr<double> outputPDirZ() const;
+  std::shared_ptr<double> outputPDirXY() const;
+  std::shared_ptr<double> outputPDirXZ() const;
+  std::shared_ptr<double> outputPDirYX() const;
+  std::shared_ptr<double> outputPDirYZ() const;
+  std::shared_ptr<double> outputPDirZX() const;
+  std::shared_ptr<double> outputPDirZY() const;
+  std::shared_ptr<double> outputCosPDirX() const;
+  std::shared_ptr<double> outputCosPDirY() const;
+  std::shared_ptr<double> outputCosPDirZ() const;
+  std::shared_ptr<double> outputE() const;
 };
 }
 

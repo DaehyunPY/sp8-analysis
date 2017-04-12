@@ -303,7 +303,7 @@ void Analysis::Hist::fill2d(const int id,
                             const double *pX,
                             const double *pY,
                             const double weight) {
-  if (pX != nullptr && pY != nullptr) {
+  if (pX && pY) {
     fill2d(id, *pX, *pY, weight);
   }
 }
@@ -313,6 +313,26 @@ void Analysis::Hist::fill3d(const int id,
                             const double *pZ,
                             const double weight) {
   if (pX != nullptr && pY != nullptr && pZ != nullptr) {
+    fill3d(id, *pX, *pY, *pZ, weight);
+  }
+}
+
+void Analysis::Hist::fill2d(const int id, std::shared_ptr<double> pX, std::shared_ptr<double> pY, const double weight) {
+  if (pX && pY) {
+    fill2d(id, *pX, *pY, weight);
+  }
+}
+
+void Analysis::Hist::fill1d(const int id, std::shared_ptr<double> pX, const double weight) {
+  if (pX) {
+    fill1d(id, *pX, weight);
+  }
+}
+
+void
+Analysis::Hist::fill3d(const int id, std::shared_ptr<double> pX, std::shared_ptr<double> pY, std::shared_ptr<double> pZ,
+                       const double weight) {
+  if (pX && pY && pZ) {
     fill3d(id, *pX, *pY, *pZ, weight);
   }
 }
