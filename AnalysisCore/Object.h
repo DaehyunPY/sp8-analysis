@@ -77,6 +77,7 @@ class Object: public ObjectFlag {
 
   // output
 public:
+    // **caution! these methods return pointer which ref dyn value
   double * const outputLocX() const;
   double * const outputLocY() const;
   double * const outputLocR() const;

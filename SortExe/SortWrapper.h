@@ -78,12 +78,14 @@ class SortWrapper {
   bool isFull() const;
   int getNumHits() const;
   hit_class **getOutputArr() const;
+    // **caution! these methods return pointer which ref dyn value
   const double *getNthX(const int i) const;
   const double *getNthY(const int i) const;
   const double *getNthT(const int i) const;
   const int *getNthMethod(const int i) const;
 
  public:
+    // **caution! these methods return pointer which ref dyn value
   const double *getMCP() const;
   const double *getXDev() const;
   const double *getYDev() const;

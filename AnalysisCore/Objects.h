@@ -84,6 +84,7 @@ public:
 
   // output 
  public:
+    // **caution! these methods return pointer which ref dyn value
   double *const outputCOMLocX() const;
   double *const outputCOMLocY() const;
   double *const outputCOMLocR() const;
