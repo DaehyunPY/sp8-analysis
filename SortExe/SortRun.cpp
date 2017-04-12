@@ -6,7 +6,7 @@ Analysis::Regions<double> Analysis::readBunchMaskRm(const Analysis::JSONReader &
     {
       auto pFr = reader.getOpt<double>(prefix + ".0");
       auto pTo = reader.getOpt<double>(prefix + ".1");
-      if (pFr != nullptr && pTo != nullptr) {
+      if (pFr && pTo) {
         mask.regions.push_back({*pFr, *pTo});
         return mask;
       }

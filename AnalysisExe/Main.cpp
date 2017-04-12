@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
   }
   { // read base config file
     const auto base = pReader->getOpt<const char *>("base_config_file");
-    if (base != nullptr) pReader->appendDoc(Analysis::JSONReader::fromFile, *base);
+    if (base) pReader->appendDoc(Analysis::JSONReader::fromFile, *base);
   }
 
   // divid output files

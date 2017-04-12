@@ -483,12 +483,12 @@ std::shared_ptr<int> Analysis::SortWrapper::getNthMethod(const int i) const {
 }
 bool Analysis::LMFWrapper::readConfig(const Analysis::JSONReader &reader) {
     auto pStr = reader.getOpt<const char *>("LMF_files");
-    if (pStr != nullptr) {
+    if (pStr) {
       filenames.push_back(std::string(*pStr));
       return true;
     } else {
       auto pArr = reader.getOptArr<const char *>("LMF_files");
-      if (pArr == nullptr) return false;
+      if (!pArr) return false;
       for (auto str: *pArr) filenames.push_back(std::string(str));
       return true;
     }

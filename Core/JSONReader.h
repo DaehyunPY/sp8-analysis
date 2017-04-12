@@ -1,6 +1,7 @@
 #ifndef ANALYSIS_JSONREADER_H
 #define ANALYSIS_JSONREADER_H
 
+#include <memory>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -46,26 +47,26 @@ class JSONReader {
     return is<T>(str, pV);
   }
   template <typename T>
-  const T *getOpt(const std::string str) const {
+  std::shared_ptr<T> getOpt(const std::string str) const {
     const rapidjson::Value *pV;
     const bool isT = is<T>(str, pV);
     if (!isT) return nullptr;
-    return new T(pV->Get<T>());
+    return std::make_shared<T>(T(pV->Get<T>()));
   }
   template <typename T>
   T get(const std::string str) const {
     auto pT = getOpt<T>(str);
-    if (pT == nullptr) throw std::invalid_argument("Invalid member!");
+    if (!pT) throw std::invalid_argument("Invalid member!");
     return *pT;
   }
   const std::vector<std::string> getMapKeys(std::string str) const;
   template <typename T>
-  const std::map<std::string, T> *getOptMap(std::string str) const {
+  std::shared_ptr<std::map<std::string, T>>getOptMap(std::string str) const {
     const rapidjson::Value *pV;
     const bool hasMem = hasMember(str, pV);
     if (!hasMem) return nullptr;
     if (!pV->IsObject()) return nullptr;
-    auto *pMap = new std::map<std::string, T>;
+    auto pMap = std::make_shared<std::map<std::string, T>>(std::map<std::string, T>());
     for (auto &v: pV->GetObject()) (*pMap)[v.name.GetString()] = v.value.Get<T>();
     return pMap;
   };
@@ -77,12 +78,12 @@ class JSONReader {
   }
   const int getArrSize(std::string str) const;
   template <typename T>
-  const std::vector<T> *getOptArr(std::string str) const {
+  std::shared_ptr<std::vector<T>>getOptArr(std::string str) const {
     const rapidjson::Value *pV;
     const bool hasMem = hasMember(str, pV);
     if (!hasMem) return nullptr;
     if (!pV->IsArray()) return nullptr;
-    auto *pArr = new std::vector<T>;
+    auto pArr = std::make_shared<std::vector<T>>(std::vector<T>());
     for (auto &v: pV->GetArray()) pArr->push_back(v.Get<T>());
     return pArr;
   }
