@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(SP8-Analysis VERSION 3.0.0)
+project(SP8-Analysis VERSION 3.0.1)
 
 ### link ROOT
 execute_process(COMMAND root-config --incdir OUTPUT_VARIABLE INCDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
