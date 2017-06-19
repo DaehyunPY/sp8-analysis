@@ -261,7 +261,10 @@ int main(int argc, char *argv[]) {
         }
         pRun->fill1d(Analysis::SortRun::h1_bunchMarker, pBunchMarker);
       }
-      if (!bunchMaskRm.isIn(pBunchMarker)) {
+
+      // fill events
+      if (!bunchMaskRm.isIn(pBunchMarker) // ignore events which bunch marker in certain region
+          && numHitElecs > 0 && numHitIons > 0) { // ignore zero hit events
         pRun->fill1d(Analysis::SortRun::h1_bunchMarkerAfterRm, pBunchMarker);
         { // ion
           const auto &wrapper = iSortWrapper;
