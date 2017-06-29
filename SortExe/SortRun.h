@@ -6,6 +6,7 @@
 #include <map>
 #include <fstream>
 #include <ctime>
+#include <math.h>
 #include <TROOT.h>
 #include <TFile.h>
 #include <TTree.h>
@@ -86,33 +87,51 @@ class SortRun: public Hist {
   struct DataSet { double x, y, t; int flag; } *pIonDataSet, *pElecDataSet;
   void fillTree(const int ionHitNum, const DataSet *pIon,
                 const int elecHitNum, const DataSet *pElec);
+ private:
+  const DataSet dumpData = { NAN, NAN, NAN, -1 };
 
  private:
   void createHists();
  public:
   enum HistList {
-    h1_ionTimesumU, h1_ionTimediffU, h2_ionTimesumDiffU,
-    h1_ionTimesumV, h1_ionTimediffV, h2_ionTimesumDiffV,
-    h1_ionTimesumW, h1_ionTimediffW, h2_ionTimesumDiffW,
-    h2_ionXYRaw, h2_ionXY, h2_ionXYDev,
-    h1_elecTimesumU, h1_elecTimediffU, h2_elecTimesumDiffU,
-    h1_elecTimesumV, h1_elecTimediffV, h2_elecTimesumDiffV,
-    h1_elecTimesumW, h1_elecTimediffW, h2_elecTimesumDiffW,
-    h2_elecXYRaw, h2_elecXY, h2_elecXYDev,
     h1_timestamp,
     h1_TDC01, h1_TDC02, h1_TDC03, h1_TDC04, h1_TDC05, h1_TDC06, h1_TDC07, h1_TDC08,
     h1_TDC09, h1_TDC10, h1_TDC11, h1_TDC12, h1_TDC13, h1_TDC14, h1_TDC15, h1_TDC16,
-    h1_bunchMarker, h1_bunchMarkerAfterRm,
+    h1_ionTimesumU_beforeSort, h1_ionTimediffU_beforeSort, h2_ionTimesumDiffU_beforeSort,
+    h1_ionTimesumV_beforeSort, h1_ionTimediffV_beforeSort, h2_ionTimesumDiffV_beforeSort,
+    h1_ionTimesumW_beforeSort, h1_ionTimediffW_beforeSort, h2_ionTimesumDiffW_beforeSort,
+    h1_ionTimesumU_afterSort, h1_ionTimediffU_afterSort, h2_ionTimesumDiffU_afterSort,
+    h1_ionTimesumV_afterSort, h1_ionTimediffV_afterSort, h2_ionTimesumDiffV_afterSort,
+    h1_ionTimesumW_afterSort, h1_ionTimediffW_afterSort, h2_ionTimesumDiffW_afterSort,
+    h2_ionXYRaw, h2_ionXY, h2_ionXYDev,
+    h1_elecTimesumU_beforeSort, h1_elecTimediffU_beforeSort, h2_elecTimesumDiffU_beforeSort,
+    h1_elecTimesumV_beforeSort, h1_elecTimediffV_beforeSort, h2_elecTimesumDiffV_beforeSort,
+    h1_elecTimesumW_beforeSort, h1_elecTimediffW_beforeSort, h2_elecTimesumDiffW_beforeSort,
+    h1_elecTimesumU_afterSort, h1_elecTimediffU_afterSort, h2_elecTimesumDiffU_afterSort,
+    h1_elecTimesumV_afterSort, h1_elecTimediffV_afterSort, h2_elecTimesumDiffV_afterSort,
+    h1_elecTimesumW_afterSort, h1_elecTimediffW_afterSort, h2_elecTimesumDiffW_afterSort,
+    h2_elecXYRaw, h2_elecXY, h2_elecXYDev,
+    h1_bunchMarker_beforeRm, h1_bunchMarker_afterRm,
     h2_ion1hitXFish, h2_ion1hitYFish, h2_ion1hitXY,
     h2_ion2hitXFish, h2_ion2hitYFish, h2_ion2hitXY,
     h2_ion3hitXFish, h2_ion3hitYFish, h2_ion3hitXY,
     h2_ion4hitXFish, h2_ion4hitYFish, h2_ion4hitXY,
+    h2_ion5hitXFish, h2_ion5hitYFish, h2_ion5hitXY,
+    h2_ion6hitXFish, h2_ion6hitYFish, h2_ion6hitXY,
+    h2_ion7hitXFish, h2_ion7hitYFish, h2_ion7hitXY,
+    h2_ion8hitXFish, h2_ion8hitYFish, h2_ion8hitXY,
     h2_ion1hit2hitPIPICO, h2_ion2hit3hitPIPICO, h2_ion3hit4hitPIPICO,
+    h2_ion4hit5hitPIPICO, h2_ion5hit6hitPIPICO, h2_ion6hit7hitPIPICO, h2_ion7hit8hitPIPICO,
     h2_elec1hitXFish, h2_elec1hitYFish, h2_elec1hitXY,
     h2_elec2hitXFish, h2_elec2hitYFish, h2_elec2hitXY,
     h2_elec3hitXFish, h2_elec3hitYFish, h2_elec3hitXY,
     h2_elec4hitXFish, h2_elec4hitYFish, h2_elec4hitXY,
+    h2_elec5hitXFish, h2_elec5hitYFish, h2_elec5hitXY,
+    h2_elec6hitXFish, h2_elec6hitYFish, h2_elec6hitXY,
+    h2_elec7hitXFish, h2_elec7hitYFish, h2_elec7hitXY,
+    h2_elec8hitXFish, h2_elec8hitYFish, h2_elec8hitXY,
     h2_elec1hit2hitPEPECO, h2_elec2hit3hitPEPECO, h2_elec3hit4hitPEPECO,
+    h2_elec4hit5hitPEPECO, h2_elec5hit6hitPEPECO, h2_elec6hit7hitPEPECO, h2_elec7hit8hitPEPECO,
     numHists
   };
 };

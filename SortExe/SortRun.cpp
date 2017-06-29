@@ -63,13 +63,12 @@ Analysis::SortRun::SortRun(const std::string prfx, const int iNum, const int eNu
 
 void Analysis::SortRun::fillTree(const int ionHitNum, const DataSet *pIons,
                                  const int elecHitNum, const DataSet *pElecs) {
-  DataSet emptySet = {0, 0, 0, 0};
   numOfIons = ionHitNum < maxNumOfIons ? ionHitNum : maxNumOfIons;
   for (int i = 0; i < numOfIons; i++) pIonDataSet[i] = pIons[i];
-  for (int i = numOfIons; i < maxNumOfIons; i++) pIonDataSet[i] = emptySet;
+  for (int i = numOfIons; i < maxNumOfIons; i++) pIonDataSet[i] = dumpData;
   numOfElecs = elecHitNum < maxNumOfElecs ? elecHitNum : maxNumOfElecs;
   for (int i = 0; i < numOfElecs; i++) pElecDataSet[i] = pElecs[i];
-  for (int i = numOfElecs; i < maxNumOfElecs; i++) pElecDataSet[i] = emptySet;
+  for (int i = numOfElecs; i < maxNumOfElecs; i++) pElecDataSet[i] = dumpData;
   if (existTree()) pRootTree->Fill();
 }
 const bool Analysis::SortRun::existTree() const {
@@ -119,27 +118,45 @@ void Analysis::SortRun::createHists() {
 #define __TIMEDELAY_TITLE_BIN_REGION__ "Time [ns]", 1000, -250, 250, "timesum"
 #define __TIMESUMDIFF_TITLE_BIN_REGION__ "Time diff [ns]", "Time sum [ns]", 500, -250, 250, 500, -25, 25, "timesum"
 #define __AFTERCALIB_TITLE_BIN_REGION__(X) "Time1 [ns]", "Time2 [ns]", X*2, -X, X, X*2, -X, X, "timesum"
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumU), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumV), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumW), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffU), __TIMEDELAY_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffV), __TIMEDELAY_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffW), __TIMEDELAY_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffU), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffV), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffW), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumU_beforeSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumV_beforeSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumW_beforeSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffU_beforeSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffV_beforeSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffW_beforeSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffU_beforeSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffV_beforeSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffW_beforeSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumU_afterSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumV_afterSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimesumW_afterSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffU_afterSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffV_afterSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_ionTimediffW_afterSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffU_afterSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffV_afterSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ionTimesumDiffW_afterSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYRaw), __AFTERCALIB_TITLE_BIN_REGION__(60));
   create2d(SAME_TITLE_WITH_VALNAME(h2_ionXY), __AFTERCALIB_TITLE_BIN_REGION__(60));
   create2d(SAME_TITLE_WITH_VALNAME(h2_ionXYDev), __AFTERCALIB_TITLE_BIN_REGION__(100));
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumU), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumV), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumW), __TIMESUM_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffU), __TIMEDELAY_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffV), __TIMEDELAY_TITLE_BIN_REGION__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffW), __TIMEDELAY_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffU), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffV), __TIMESUMDIFF_TITLE_BIN_REGION__);
-  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffW), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumU_beforeSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumV_beforeSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumW_beforeSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffU_beforeSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffV_beforeSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffW_beforeSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffU_beforeSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffV_beforeSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffW_beforeSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumU_afterSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumV_afterSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimesumW_afterSort), __TIMESUM_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffU_afterSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffV_afterSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_elecTimediffW_afterSort), __TIMEDELAY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffU_afterSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffV_afterSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elecTimesumDiffW_afterSort), __TIMESUMDIFF_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYRaw), __AFTERCALIB_TITLE_BIN_REGION__(60));
   create2d(SAME_TITLE_WITH_VALNAME(h2_elecXY), __AFTERCALIB_TITLE_BIN_REGION__(60));
   create2d(SAME_TITLE_WITH_VALNAME(h2_elecXYDev), __AFTERCALIB_TITLE_BIN_REGION__(100));
@@ -165,8 +182,8 @@ void Analysis::SortRun::createHists() {
   create1d(SAME_TITLE_WITH_VALNAME(h1_TDC14), __TDC_NS__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_TDC15), __TDC_NS__);
   create1d(SAME_TITLE_WITH_VALNAME(h1_TDC16), __TDC_NS__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_bunchMarker), __BUNCHMARKER__);
-  create1d(SAME_TITLE_WITH_VALNAME(h1_bunchMarkerAfterRm), __BUNCHMARKER__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_bunchMarker_beforeRm), __BUNCHMARKER__);
+  create1d(SAME_TITLE_WITH_VALNAME(h1_bunchMarker_afterRm), __BUNCHMARKER__);
 
 #define __ION_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 500, -3000, 12000, 200, -100, 100, "ion"
 #define __ION_XY_TITLE_BIN_REGION__ "Location X [mm]", "Location Y [mm]", 200, -100, 100, 200, -100, 100, "ion"
@@ -183,9 +200,25 @@ void Analysis::SortRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion4hitXFish), __ION_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion4hitYFish), __ION_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion4hitXY), __ION_XY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion5hitXFish), __ION_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion5hitYFish), __ION_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion5hitXY), __ION_XY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion6hitXFish), __ION_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion6hitYFish), __ION_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion6hitXY), __ION_XY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion7hitXFish), __ION_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion7hitYFish), __ION_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion7hitXY), __ION_XY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion8hitXFish), __ION_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion8hitYFish), __ION_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion8hitXY), __ION_XY_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion1hit2hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion2hit3hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_ion3hit4hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion4hit5hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion5hit6hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion6hit7hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_ion7hit8hitPIPICO), __ION_PIPICO_TITLE_BIN_REGION__);
 
 #define __ELEC_FISH_TITLE_BIN_REGION__ "TIME [ns]", "Location [mm]", 1500, -1000, 500, 200, -100, 100, "electron"
 #define __ELEC_XY_TITLE_BIN_REGION__ "Location X [mm]", "Location Y [mm]", 200, -100, 100, 200, -100, 100, "electron"
@@ -202,26 +235,42 @@ void Analysis::SortRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec4hitXFish), __ELEC_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec4hitYFish), __ELEC_FISH_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec4hitXY), __ELEC_XY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec5hitXFish), __ELEC_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec5hitYFish), __ELEC_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec5hitXY), __ELEC_XY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec6hitXFish), __ELEC_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec6hitYFish), __ELEC_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec6hitXY), __ELEC_XY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec7hitXFish), __ELEC_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec7hitYFish), __ELEC_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec7hitXY), __ELEC_XY_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec8hitXFish), __ELEC_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec8hitYFish), __ELEC_FISH_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec8hitXY), __ELEC_XY_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec1hit2hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec2hit3hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
   create2d(SAME_TITLE_WITH_VALNAME(h2_elec3hit4hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec4hit5hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec5hit6hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec6hit7hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_elec7hit8hitPEPECO), __ELEC_PIPICO_TITLE_BIN_REGION__);
 }
 void Analysis::SortRun::createC1() {
   closeC1();
   pC1 = createCanvas("ion_canvas", "ion_canvas", 10, 10, 910, 910);
   pC1->Divide(3, 3);
   pC1->cd(1);
-  getHist1d(h1_ionTimesumU)->Draw();
+  getHist1d(h1_ionTimesumU_afterSort)->Draw();
   pC1->cd(2);
-  getHist1d(h1_ionTimesumV)->Draw();
+  getHist1d(h1_ionTimesumV_afterSort)->Draw();
   pC1->cd(3);
-  getHist1d(h1_ionTimesumW)->Draw();
+  getHist1d(h1_ionTimesumW_afterSort)->Draw();
   pC1->cd(4);
-  getHist1d(h1_ionTimediffU)->Draw();
+  getHist1d(h1_ionTimediffU_afterSort)->Draw();
   pC1->cd(5);
-  getHist1d(h1_ionTimediffV)->Draw();
+  getHist1d(h1_ionTimediffV_afterSort)->Draw();
   pC1->cd(6);
-  getHist1d(h1_ionTimediffW)->Draw();
+  getHist1d(h1_ionTimediffW_afterSort)->Draw();
   pC1->cd(7);
   getHist2d(h2_ionXYRaw)->Draw();
   pC1->cd(8);
@@ -234,17 +283,17 @@ void Analysis::SortRun::createC2() {
   pC1 = createCanvas("elec_canvas", "elec_canvas", 10, 10, 910, 910);
   pC1->Divide(3, 3);
   pC1->cd(1);
-  getHist1d(h1_elecTimesumU)->Draw();
+  getHist1d(h1_elecTimesumU_afterSort)->Draw();
   pC1->cd(2);
-  getHist1d(h1_elecTimesumV)->Draw();
+  getHist1d(h1_elecTimesumV_afterSort)->Draw();
   pC1->cd(3);
-  getHist1d(h1_elecTimesumW)->Draw();
+  getHist1d(h1_elecTimesumW_afterSort)->Draw();
   pC1->cd(4);
-  getHist1d(h1_elecTimediffU)->Draw();
+  getHist1d(h1_elecTimediffU_afterSort)->Draw();
   pC1->cd(5);
-  getHist1d(h1_elecTimediffV)->Draw();
+  getHist1d(h1_elecTimediffV_afterSort)->Draw();
   pC1->cd(6);
-  getHist1d(h1_elecTimediffW)->Draw();
+  getHist1d(h1_elecTimediffW_afterSort)->Draw();
   pC1->cd(7);
   getHist2d(h2_elecXYRaw)->Draw();
   pC1->cd(8);
