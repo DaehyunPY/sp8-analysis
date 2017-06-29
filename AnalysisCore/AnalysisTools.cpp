@@ -174,12 +174,13 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
                                                    const double &y1,
                                                    const double &t1,
                                                    const int &f1) const {
-  // par
+  // set par
   const ObjectParameters *par = nullptr;
   if (obj.isFlag(ObjectFlag::IonObject)) par = &getIonParameters();
   else if (obj.isFlag(ObjectFlag::ElecObject)) par = &getElectronParameters();
   else assert(false);
 
+  // read par
   const double &theta = par->getAngleOfDetector();
   const double &dx = par->getPixelSizeOfX();
   const double &dy = par->getPixelSizeOfY();
@@ -189,8 +190,8 @@ void Analysis::AnalysisTools::loadEventDataInputer(Analysis::Object &obj,
   const double &t0 = par->getTimeZeroOfTOF();
 
   const XY xy = calculateRotation({x1, y1}, theta);
-  const double x = xy.x * dx - x0;
-  const double y = xy.y * dy - y0;
+  const double x = dx * (xy.x-x0);
+  const double y = dy * (xy.y-y0);
   const double t = t1 - t0;
   obj.setLocationX(x);
   obj.setLocationY(y);

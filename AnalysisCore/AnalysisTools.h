@@ -42,7 +42,7 @@ class AnalysisTools {
   const double calculateFrequencyOfCycle(const Object &) const;
   const double calculatePeriodOfCycle(const double &m, const double &q, const double &B) const;
   const double calculatePeriodOfCycle(const Object &) const;
-  const double calculateMomentumZ(const Object &obj, bool &info) const; // todo: find better way to calculate
+  const double calculateMomentumZ(const Object &obj, bool &info) const; // todo: use precalculated table
 
  private:
   void loadEventDataInputer(Object &, const double &, const double &, const double &, const int &) const;

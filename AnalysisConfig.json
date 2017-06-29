@@ -22,6 +22,9 @@
     "magnetic_filed": 6.843 // [Gauss] parameter 217
   },
   "ion_parameters": {
+    // display x = dx*(x-x0), x: raw data, dx: pixel size, x0: x zero
+    // display y = dy*(y-y0), y: raw data, dy: pixel size, y0: y zero
+    // display t = t-t0, t: raw data, t0: t zero
     "angle_of_detector": 0.0,     // [degree]
     "dead_time"        : 13000.0, // [ns]
     "pixel_size_of_x"  : 0.93,    // [1] parameter 147
@@ -98,7 +101,9 @@
     }
   },
   "electron_parameters": {
-    // "type": 0, // comment out or 0=default type, 2=legacy electron type
+    // display x = dx*(x-x0), x: raw data, dx: pixel size, x0: x zero
+    // display y = dy*(y-y0), y: raw data, dy: pixel size, y0: y zero
+    // display t = t-t0, t: raw data, t0: t zero
     "angle_of_detector": -30.0, // [dgree]
     "dead_time"        : 60.0,  // [ns]
     "pixel_size_of_x"  : 0.93,  // [1] parameter 226

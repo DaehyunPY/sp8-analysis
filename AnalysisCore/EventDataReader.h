@@ -8,13 +8,14 @@
 #include <assert.h>
 #include <string>
 #include <vector>
+#include <math.h>
 
 namespace Analysis {
 class EventDataReader {
  private:
   const int maxIons, maxElecs;
   const int intDum=-1;
-  const double doubleDum=-1e9;
+  const double doubleDum=NAN;
   int numIons, numElecs;
   std::vector<double> eventData;
   std::vector<int> flagData;
