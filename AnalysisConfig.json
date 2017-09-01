@@ -41,7 +41,7 @@
 //      "y": [0.0, 0.0], // [au] comment out=all region
 //      "z": [0.0, 0.0], // [au] comment out=all region
 //      "r": [0.0, 0.0], // [au] comment out=all region
-//      "e": [0.0, 0.0]  // [au] comment out=all region
+//      "e": [0.0, 0.0]  // [eV] comment out=all region
 //    },
     "1st_hit": {
 //      "mass"  : 20.1797,       // parameter 186, comment out or 0=dummy object
@@ -54,7 +54,7 @@
 //        "y": [0.0, 0.0], // [au] comment out=all region
 //        "z": [0.0, 0.0], // [au] comment out=all region
 //        "r": [0.0, 0.0], // [au] comment out=all region
-//        "e": [0.0, 0.0]  // [au] comment out=all region
+//        "e": [0.0, 0.0]  // [eV] comment out=all region
 //      }
     },
     "2nd_hit": {
@@ -68,7 +68,7 @@
 //        "y": [0.0, 0.0], // [au] comment out=all region
 //        "z": [0.0, 0.0], // [au] comment out=all region
 //        "r": [0.0, 0.0], // [au] comment out=all region
-//        "e": [0.0, 0.0]  // [au] comment out=all region
+//        "e": [0.0, 0.0]  // [eV] comment out=all region
 //      }
     },
     "3rd_hit": {
@@ -82,7 +82,7 @@
 //        "y": [0.0, 0.0], // [au] comment out=all region
 //        "z": [0.0, 0.0], // [au] comment out=all region
 //        "r": [0.0, 0.0], // [au] comment out=all region
-//        "e": [0.0, 0.0]  // [au] comment out=all region
+//        "e": [0.0, 0.0]  // [eV] comment out=all region
 //      }
     },
     "4th_hit": {
@@ -96,7 +96,7 @@
 //        "y": [0.0, 0.0], // [au] comment out=all region
 //        "z": [0.0, 0.0], // [au] comment out=all region
 //        "r": [0.0, 0.0], // [au] comment out=all region
-//        "e": [0.0, 0.0]  // [au] comment out=all region
+//        "e": [0.0, 0.0]  // [eV] comment out=all region
 //      }
     }
   },
@@ -122,7 +122,7 @@
 //      "y": [0.0, 0.0], // [au] comment out=all region
 //      "z": [0.0, 0.0], // [au] comment out=all region
 //      "r": [0.0, 0.0], // [au] comment out=all region
-//      "e": [0.0, 0.0]  // [au] comment out=all region
+//      "e": [0.0, 0.0]  // [eV] comment out=all region
 //    }
   }
 }

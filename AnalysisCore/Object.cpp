@@ -43,14 +43,21 @@ Analysis::Object::Object(const FlagName f,
     };
   };
   auto readAt = read2DoublesIfItIs(reader, [&](double v)->double{ return kUnit.readAuMomentum(v); });
-  readAt(prefix + "dx_and_dy", dx, dy);
-  readAt(prefix + "phi", frPhi, toPhi);
+  double fr, to;
+  readAt(prefix + "dx_and_dy", fr, to);
+  dx = kUnit.readMilliMeter(fr);
+  dy = kUnit.readMilliMeter(to);
+  readAt(prefix + "phi", fr, to);
+  frPhi = kUnit.readDegree(fr);
+  toPhi = kUnit.readDegree(to);
   const auto str = "conservation_raw.";
   readAt(prefix + str + "x", frPx, toPx);
   readAt(prefix + str + "y", frPy, toPy);
   readAt(prefix + str + "z", frPz, toPz);
   readAt(prefix + str + "r", frPr, toPr);
-  readAt(prefix + str + "e", frE, toE);
+  readAt(prefix + str + "e", fr, to);
+  frE = fr;
+  toE = to;
   resetEventData();
   return;
 }

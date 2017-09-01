@@ -902,7 +902,7 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i2hImageDirDist_ ## X, iDir2, iR2); \
   fill2d(h2_i3hImageDirDist_ ## X, iDir3, iR3); \
   fill2d(h2_i4hImageDirDist_ ## X, iDir4, iR4); \
-  fill2d(h2_i4hImageDirDist_ ## X, iDir5, iR5); \
+  fill2d(h2_i5hImageDirDist_ ## X, iDir5, iR5); \
   fill2d(h2_iCOMImageDirDist_ ## X, iCOMDir, iCOMR); \
 }
   __FILLIONIMAGE__(always)
@@ -923,9 +923,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i3h4hPIPICO_ ## X, iT3, iT4); \
   fill2d(h2_i4h5hPIPICO_ ## X, iT4, iT5); \
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT12, iTDiff12); \
-  fill2d(h2_i1h2hRotPIPICO_ ## X, iT23, iTDiff23); \
-  fill2d(h2_i1h2hRotPIPICO_ ## X, iT34, iTDiff34); \
-  fill2d(h2_i1h2hRotPIPICO_ ## X, iT45, iTDiff45); \
+  fill2d(h2_i2h3hRotPIPICO_ ## X, iT23, iTDiff23); \
+  fill2d(h2_i3h4hRotPIPICO_ ## X, iT34, iTDiff34); \
+  fill2d(h2_i4h5hRotPIPICO_ ## X, iT45, iTDiff45); \
   std::shared_ptr<double> iT12[] = {iT1, iT2}; \
   std::shared_ptr<double> iT23[] = {iT2, iT3}; \
   std::shared_ptr<double> iT34[] = {iT3, iT4}; \
