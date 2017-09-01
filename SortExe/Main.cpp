@@ -174,7 +174,7 @@ int main(int argc, char *argv[]) {
       iSortWrapper.convertTDC();
       eSortWrapper.convertTDC();
 
-      // fill
+      // fill raw data
       pRun->fill1d(Analysis::SortRun::h1_timestamp, aLMFWrapper.timestamp);
       { // TDC ns
         auto &tdc_ns = aLMFWrapper.TDCns;
@@ -184,6 +184,51 @@ int main(int argc, char *argv[]) {
           pRun->fill1d(idxhist+i, tdc_ns[i][0]);
         }
       }
+
+      // fill timesums before sort
+      if (!iSortWrapper.isNull()) { // ion
+        const auto &wrapper = iSortWrapper;
+        const auto u_timesum = wrapper.getUTimesum();
+        const auto u_timediff = wrapper.getUTimediff();
+        const auto v_timesum = wrapper.getVTimesum();
+        const auto v_timediff = wrapper.getVTimediff();
+        const auto w_timesum = wrapper.getWTimesum();
+        const auto w_timediff = wrapper.getWTimediff();
+
+        pRun->fill1d(Analysis::SortRun::h1_ionTimesumU_beforeSort, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimediffU_beforeSort, u_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffU_beforeSort, u_timediff, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimesumV_beforeSort, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimediffV_beforeSort, v_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffV_beforeSort, v_timediff, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimesumW_beforeSort, w_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimediffW_beforeSort, w_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffW_beforeSort, w_timediff, w_timesum);
+      }
+      if (!eSortWrapper.isNull()) { // electron
+        const auto &wrapper = eSortWrapper;
+        const auto u_timesum = wrapper.getUTimesum();
+        const auto u_timediff = wrapper.getUTimediff();
+        const auto v_timesum = wrapper.getVTimesum();
+        const auto v_timediff = wrapper.getVTimediff();
+        const auto w_timesum = wrapper.getWTimesum();
+        const auto w_timediff = wrapper.getWTimediff();
+
+        pRun->fill1d(Analysis::SortRun::h1_elecTimesumU_beforeSort, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimediffU_beforeSort, u_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffU_beforeSort, u_timediff, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimesumV_beforeSort, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimediffV_beforeSort, v_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffV_beforeSort, v_timediff, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimesumW_beforeSort, w_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimediffW_beforeSort, w_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffW_beforeSort, w_timediff, w_timesum);
+      }
+      // sort
+      iSortWrapper.sort();
+      eSortWrapper.sort();
+
+      // fill timesums after sort
       if (!iSortWrapper.isNull()) { // ion
         const auto &wrapper = iSortWrapper;
         const auto x_dev = wrapper.getXDev();
@@ -200,15 +245,15 @@ int main(int argc, char *argv[]) {
 
         pRun->fill2d(Analysis::SortRun::h2_ionXYDev, x_dev, y_dev, *weight_dev);
         pRun->fill2d(Analysis::SortRun::h2_ionXYRaw, x_raw, y_raw);
-        pRun->fill1d(Analysis::SortRun::h1_ionTimesumU, u_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_ionTimediffU, u_timediff);
-        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffU, u_timediff, u_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_ionTimesumV, v_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_ionTimediffV, v_timediff);
-        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffV, v_timediff, v_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_ionTimesumW, w_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_ionTimediffW, w_timediff);
-        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffW, w_timediff, w_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimesumU_afterSort, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimediffU_afterSort, u_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffU_afterSort, u_timediff, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimesumV_afterSort, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimediffV_afterSort, v_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffV_afterSort, v_timediff, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimesumW_afterSort, w_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_ionTimediffW_afterSort, w_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_ionTimesumDiffW_afterSort, w_timediff, w_timesum);
       }
       if (!eSortWrapper.isNull()) { // electron
         const auto &wrapper = eSortWrapper;
@@ -226,19 +271,18 @@ int main(int argc, char *argv[]) {
 
         pRun->fill2d(Analysis::SortRun::h2_elecXYDev, x_dev, y_dev, *weight_dev);
         pRun->fill2d(Analysis::SortRun::h2_elecXYRaw, x_raw, y_raw);
-        pRun->fill1d(Analysis::SortRun::h1_elecTimesumU, u_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_elecTimediffU, u_timediff);
-        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffU, u_timediff, u_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_elecTimesumV, v_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_elecTimediffV, v_timediff);
-        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffV, v_timediff, v_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_elecTimesumW, w_timesum);
-        pRun->fill1d(Analysis::SortRun::h1_elecTimediffW, w_timediff);
-        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffW, w_timediff, w_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimesumU_afterSort, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimediffU_afterSort, u_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffU_afterSort, u_timediff, u_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimesumV_afterSort, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimediffV_afterSort, v_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffV_afterSort, v_timediff, v_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimesumW_afterSort, w_timesum);
+        pRun->fill1d(Analysis::SortRun::h1_elecTimediffW_afterSort, w_timediff);
+        pRun->fill2d(Analysis::SortRun::h2_elecTimesumDiffW_afterSort, w_timediff, w_timesum);
       }
 
-      iSortWrapper.sort();
-      eSortWrapper.sort();
+      // fill images
       const int numHitIons = iSortWrapper.getNumHits();
       const int numHitElecs = eSortWrapper.getNumHits();
       for (int i=0; i<numHitIons; i++)
@@ -259,13 +303,13 @@ int main(int argc, char *argv[]) {
           const auto TDCRes = aLMFWrapper.TDCRes;
           pBunchMarker = new auto(*mcp - TDC[bunchCh][0] * TDCRes);
         }
-        pRun->fill1d(Analysis::SortRun::h1_bunchMarker, pBunchMarker);
+        pRun->fill1d(Analysis::SortRun::h1_bunchMarker_beforeRm, pBunchMarker);
       }
 
       // fill events
       if (!bunchMaskRm.isIn(pBunchMarker) // ignore events which bunch marker in certain region
           && numHitElecs > 0 && numHitIons > 0) { // ignore zero hit events
-        pRun->fill1d(Analysis::SortRun::h1_bunchMarkerAfterRm, pBunchMarker);
+        pRun->fill1d(Analysis::SortRun::h1_bunchMarker_afterRm, pBunchMarker);
         { // ion
           const auto &wrapper = iSortWrapper;
           const auto x1 = wrapper.getNthX(0);
@@ -280,6 +324,18 @@ int main(int argc, char *argv[]) {
           const auto x4 = wrapper.getNthX(3);
           const auto y4 = wrapper.getNthY(3);
           const auto t4 = wrapper.getNthT(3);
+          const auto x5 = wrapper.getNthX(4);
+          const auto y5 = wrapper.getNthY(4);
+          const auto t5 = wrapper.getNthT(4);
+          const auto x6 = wrapper.getNthX(5);
+          const auto y6 = wrapper.getNthY(5);
+          const auto t6 = wrapper.getNthT(5);
+          const auto x7 = wrapper.getNthX(6);
+          const auto y7 = wrapper.getNthY(6);
+          const auto t7 = wrapper.getNthT(6);
+          const auto x8 = wrapper.getNthX(7);
+          const auto y8 = wrapper.getNthY(7);
+          const auto t8 = wrapper.getNthT(7);
           pRun->fill2d(Analysis::SortRun::h2_ion1hitXFish, t1, x1);
           pRun->fill2d(Analysis::SortRun::h2_ion1hitYFish, t1, y1);
           pRun->fill2d(Analysis::SortRun::h2_ion1hitXY, x1, y1);
@@ -292,9 +348,25 @@ int main(int argc, char *argv[]) {
           pRun->fill2d(Analysis::SortRun::h2_ion4hitXFish, t4, x4);
           pRun->fill2d(Analysis::SortRun::h2_ion4hitYFish, t4, y4);
           pRun->fill2d(Analysis::SortRun::h2_ion4hitXY, x4, y4);
+          pRun->fill2d(Analysis::SortRun::h2_ion5hitXFish, t5, x5);
+          pRun->fill2d(Analysis::SortRun::h2_ion5hitYFish, t5, y5);
+          pRun->fill2d(Analysis::SortRun::h2_ion5hitXY, x5, y5);
+          pRun->fill2d(Analysis::SortRun::h2_ion6hitXFish, t6, x6);
+          pRun->fill2d(Analysis::SortRun::h2_ion6hitYFish, t6, y6);
+          pRun->fill2d(Analysis::SortRun::h2_ion6hitXY, x6, y6);
+          pRun->fill2d(Analysis::SortRun::h2_ion7hitXFish, t7, x7);
+          pRun->fill2d(Analysis::SortRun::h2_ion7hitYFish, t7, y7);
+          pRun->fill2d(Analysis::SortRun::h2_ion7hitXY, x7, y7);
+          pRun->fill2d(Analysis::SortRun::h2_ion8hitXFish, t8, x8);
+          pRun->fill2d(Analysis::SortRun::h2_ion8hitYFish, t8, y8);
+          pRun->fill2d(Analysis::SortRun::h2_ion8hitXY, x8, y8);
           pRun->fill2d(Analysis::SortRun::h2_ion1hit2hitPIPICO, t1, t2);
           pRun->fill2d(Analysis::SortRun::h2_ion2hit3hitPIPICO, t2, t3);
           pRun->fill2d(Analysis::SortRun::h2_ion3hit4hitPIPICO, t3, t4);
+          pRun->fill2d(Analysis::SortRun::h2_ion4hit5hitPIPICO, t4, t5);
+          pRun->fill2d(Analysis::SortRun::h2_ion5hit6hitPIPICO, t5, t6);
+          pRun->fill2d(Analysis::SortRun::h2_ion6hit7hitPIPICO, t6, t7);
+          pRun->fill2d(Analysis::SortRun::h2_ion7hit8hitPIPICO, t7, t8);
         }
         { // electron
           const auto &wrapper = eSortWrapper;
@@ -310,6 +382,18 @@ int main(int argc, char *argv[]) {
           const auto x4 = wrapper.getNthX(3);
           const auto y4 = wrapper.getNthY(3);
           const auto t4 = wrapper.getNthT(3);
+          const auto x5 = wrapper.getNthX(4);
+          const auto y5 = wrapper.getNthY(4);
+          const auto t5 = wrapper.getNthT(4);
+          const auto x6 = wrapper.getNthX(5);
+          const auto y6 = wrapper.getNthY(5);
+          const auto t6 = wrapper.getNthT(5);
+          const auto x7 = wrapper.getNthX(6);
+          const auto y7 = wrapper.getNthY(6);
+          const auto t7 = wrapper.getNthT(6);
+          const auto x8 = wrapper.getNthX(7);
+          const auto y8 = wrapper.getNthY(7);
+          const auto t8 = wrapper.getNthT(7);
           pRun->fill2d(Analysis::SortRun::h2_elec1hitXFish, t1, x1);
           pRun->fill2d(Analysis::SortRun::h2_elec1hitYFish, t1, y1);
           pRun->fill2d(Analysis::SortRun::h2_elec1hitXY, x1, y1);
@@ -322,9 +406,25 @@ int main(int argc, char *argv[]) {
           pRun->fill2d(Analysis::SortRun::h2_elec4hitXFish, t4, x4);
           pRun->fill2d(Analysis::SortRun::h2_elec4hitYFish, t4, y4);
           pRun->fill2d(Analysis::SortRun::h2_elec4hitXY, x4, y4);
+          pRun->fill2d(Analysis::SortRun::h2_elec5hitXFish, t5, x5);
+          pRun->fill2d(Analysis::SortRun::h2_elec5hitYFish, t5, y5);
+          pRun->fill2d(Analysis::SortRun::h2_elec5hitXY, x5, y5);
+          pRun->fill2d(Analysis::SortRun::h2_elec6hitXFish, t6, x6);
+          pRun->fill2d(Analysis::SortRun::h2_elec6hitYFish, t6, y6);
+          pRun->fill2d(Analysis::SortRun::h2_elec6hitXY, x6, y6);
+          pRun->fill2d(Analysis::SortRun::h2_elec7hitXFish, t7, x7);
+          pRun->fill2d(Analysis::SortRun::h2_elec7hitYFish, t7, y7);
+          pRun->fill2d(Analysis::SortRun::h2_elec7hitXY, x7, y7);
+          pRun->fill2d(Analysis::SortRun::h2_elec8hitXFish, t8, x8);
+          pRun->fill2d(Analysis::SortRun::h2_elec8hitYFish, t8, y8);
+          pRun->fill2d(Analysis::SortRun::h2_elec8hitXY, x8, y8);
           pRun->fill2d(Analysis::SortRun::h2_elec1hit2hitPEPECO, t1, t2);
           pRun->fill2d(Analysis::SortRun::h2_elec2hit3hitPEPECO, t2, t3);
           pRun->fill2d(Analysis::SortRun::h2_elec3hit4hitPEPECO, t3, t4);
+          pRun->fill2d(Analysis::SortRun::h2_elec4hit5hitPEPECO, t4, t5);
+          pRun->fill2d(Analysis::SortRun::h2_elec5hit6hitPEPECO, t5, t6);
+          pRun->fill2d(Analysis::SortRun::h2_elec6hit7hitPEPECO, t6, t7);
+          pRun->fill2d(Analysis::SortRun::h2_elec7hit8hitPEPECO, t7, t8);
         }
         { // fill tree
           Analysis::SortRun::DataSet *pIons, *pElecs;
