@@ -162,11 +162,13 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImage_ ## X), __IONIMAGE1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImage_ ## X), __IONIMAGE1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImage_ ## X), __IONIMAGE1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hImage_ ## X), __IONIMAGE1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImage_ ## X), __IONIMAGE1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1hImageDirDist_ ## X), __IONIMAGE2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2hImageDirDist_ ## X), __IONIMAGE2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hImageDirDist_ ## X), __IONIMAGE2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hImageDirDist_ ## X), __IONIMAGE2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hImageDirDist_ ## X), __IONIMAGE2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_iCOMImageDirDist_ ## X), __IONIMAGE2__);
   __CREATEIONIMAGE__(always)
   __CREATEIONIMAGE__(iMaster)
@@ -185,16 +187,22 @@ void Analysis::AnalysisRun::createHists() {
   create1d(SAME_TITLE_WITH_VALNAME(h1_i2hTOF_ ## X), __IONTOF1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i3hTOF_ ## X), __IONTOF1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i4hTOF_ ## X), __IONTOF1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i5hTOF_ ## X), __IONTOF1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalTOF_ ## X), __IONTOF2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hPIPICO_ ## X), __IONTOF3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hPIPICO_ ## X), __IONTOF3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPIPICO_ ## X), __IONTOF3__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4h5hPIPICO_ ## X), __IONTOF3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hRotPIPICO_ ## X), __IONTOF4__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hRotPIPICO_ ## X), __IONTOF4__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hRotPIPICO_ ## X), __IONTOF4__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4h5hRotPIPICO_ ## X), __IONTOF4__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h3PICO_ ## X), __IONTOF5__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h3PICO_ ## X), __IONTOF5__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO_ ## X), __IONTOF5__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4h5h3PICO_ ## X), __IONTOF5__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h4PICO_ ## X), __IONTOF5__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3h4h5h4PICO_ ## X), __IONTOF5__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2h3h4h5h5PICO_ ## X), __IONTOF5__);
   __CREATEIONTOF__(always)
   __CREATEIONTOF__(iMaster)
   __CREATEIONTOF__(master)
@@ -215,7 +223,10 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3hRFish_ ## X), __IONFISH2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hXFish_ ## X), __IONFISH1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hYFish_ ## X), __IONFISH1__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_ ## X), __IONFISH2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4hRFish_ ## X), __IONFISH2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hXFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hYFish_ ## X), __IONFISH1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hRFish_ ## X), __IONFISH2__);
   __CREATEIONFISH__(always)
   __CREATEIONFISH__(iMaster)
   __CREATEIONFISH__(master)
@@ -255,6 +266,13 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPYZ_ ## X), __IONMOMENTUM2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPZX_ ## X), __IONMOMENTUM2__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i4hP_ ## X), __IONMOMENTUM3__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i5hPX_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i5hPY_ ## X), __IONMOMENTUM1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i5hPZ_ ## X), __IONMOMENTUM1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPXY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPYZ_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPZX_ ## X), __IONMOMENTUM2__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i5hP_ ## X), __IONMOMENTUM3__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPX_ ## X), __IONMOMENTUM1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPY_ ## X), __IONMOMENTUM1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalPZ_ ## X), __IONMOMENTUM1__); \
@@ -273,7 +291,11 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPX_ ## X), __IONMOMENTUM2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPY_ ## X), __IONMOMENTUM2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hPZ_ ## X), __IONMOMENTUM2__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP_ ## X), __IONMOMENTUM4__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hP_ ## X), __IONMOMENTUM4__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4h5hPX_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4h5hPY_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4h5hPZ_ ## X), __IONMOMENTUM2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4h5hP_ ## X), __IONMOMENTUM4__);
   __CREATEIONMOMENTUM__(always)
   __CREATEIONMOMENTUM__(iMaster)
   __CREATEIONMOMENTUM__(master)
@@ -324,6 +346,16 @@ void Analysis::AnalysisRun::createHists() {
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i4hPDirDist_ ## X), __IONMOMENTUMANGDIST3__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDistXY_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDistYZ_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDistZX_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDistXY_PDirZIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDistYZ_PDirXIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDistZX_PDirYIs90_ ## X), __IONMOMENTUMANGDIST2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i5hPDirDist_ ## X), __IONMOMENTUMANGDIST3__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistX_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistY_ ## X), __IONMOMENTUMANGDIST1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_iTotalPDirDistZ_ ## X), __IONMOMENTUMANGDIST1__); \
@@ -347,10 +379,12 @@ void Analysis::AnalysisRun::createHists() {
   create1d(SAME_TITLE_WITH_VALNAME(h1_i2hE_ ## X), __IONENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i3hE_ ## X), __IONENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_i4hE_ ## X), __IONENERGY1__); \
+  create1d(SAME_TITLE_WITH_VALNAME(h1_i5hE_ ## X), __IONENERGY1__); \
   create1d(SAME_TITLE_WITH_VALNAME(h1_iTotalE_ ## X), __IONENERGY1__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i1h2hE_ ## X), __IONENERGY2__); \
   create2d(SAME_TITLE_WITH_VALNAME(h2_i2h3hE_ ## X), __IONENERGY2__); \
-  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE_ ## X), __IONENERGY2__);
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i3h4hE_ ## X), __IONENERGY2__); \
+  create2d(SAME_TITLE_WITH_VALNAME(h2_i4h5hE_ ## X), __IONENERGY2__);
   __CREATEIONENERGY__(always)
   __CREATEIONENERGY__(iMaster)
   __CREATEIONENERGY__(master)
@@ -542,6 +576,7 @@ void Analysis::AnalysisRun::fillHists() {
   const bool iDead2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
   const bool iDead3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
   const bool iDead4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::Dead);
+  const bool iDead5 = pIons->getRealOrDummyObject(4).isFlag(ObjectFlag::Dead);
   const bool eDead1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::Dead);
   const bool eDead2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::Dead);
   const bool eDead3 = pElectrons->getRealOrDummyObject(2).isFlag(ObjectFlag::Dead);
@@ -551,6 +586,7 @@ void Analysis::AnalysisRun::fillHists() {
   const bool iMaster2 = pIons->getRealOrDummyObject(1).isFlag(ObjectFlag::WithinMasterRegion);
   const bool iMaster3 = pIons->getRealOrDummyObject(2).isFlag(ObjectFlag::WithinMasterRegion);
   const bool iMaster4 = pIons->getRealOrDummyObject(3).isFlag(ObjectFlag::WithinMasterRegion);
+  const bool iMaster5 = pIons->getRealOrDummyObject(4).isFlag(ObjectFlag::WithinMasterRegion);
   const bool iMaster = pIons->areAllFlag(ObjectFlag::WithinMasterRegion);
   const bool eMaster1 = pElectrons->getRealOrDummyObject(0).isFlag(ObjectFlag::WithinMasterRegion);
   const bool eMaster2 = pElectrons->getRealOrDummyObject(1).isFlag(ObjectFlag::WithinMasterRegion);
@@ -579,6 +615,11 @@ void Analysis::AnalysisRun::fillHists() {
   auto iDir4 = pIons->getRealOrDummyObject(3).outputLocDir();
   auto iR4 = pIons->getRealOrDummyObject(3).outputLocR();
   auto iT4 = pIons->getRealOrDummyObject(3).outputTOF();
+  auto iX5 = pIons->getRealOrDummyObject(4).outputLocX();
+  auto iY5 = pIons->getRealOrDummyObject(4).outputLocY();
+  auto iDir5 = pIons->getRealOrDummyObject(4).outputLocDir();
+  auto iR5 = pIons->getRealOrDummyObject(4).outputLocR();
+  auto iT5 = pIons->getRealOrDummyObject(4).outputTOF();
 
   auto iCOMX = pIons->outputCOMLocX();
   auto iCOMY = pIons->outputCOMLocY();
@@ -588,9 +629,11 @@ void Analysis::AnalysisRun::fillHists() {
   auto iT12 = pIons->outputSumOf2TOFs(0, 1);
   auto iT23 = pIons->outputSumOf2TOFs(1, 2);
   auto iT34 = pIons->outputSumOf2TOFs(2, 3);
+  auto iT45 = pIons->outputSumOf2TOFs(3, 4);
   auto iTDiff12 = pIons->outputDiffOfTOFs(0, 1);
   auto iTDiff23 = pIons->outputDiffOfTOFs(1, 2);
   auto iTDiff34 = pIons->outputDiffOfTOFs(2, 3);
+  auto iTDiff45 = pIons->outputDiffOfTOFs(3, 4);
 
   auto eX1 = pElectrons->getRealOrDummyObject(0).outputLocX();
   auto eY1 = pElectrons->getRealOrDummyObject(0).outputLocY();
@@ -618,9 +661,11 @@ void Analysis::AnalysisRun::fillHists() {
   auto eT12 = pElectrons->outputSumOf2TOFs(0, 1);
   auto eT23 = pElectrons->outputSumOf2TOFs(1, 2);
   auto eT34 = pElectrons->outputSumOf2TOFs(2, 3);
+  auto eT45 = pElectrons->outputSumOf2TOFs(3, 4);
   auto eTDiff12 = pElectrons->outputDiffOfTOFs(0, 1);
   auto eTDiff23 = pElectrons->outputDiffOfTOFs(1, 2);
   auto eTDiff34 = pElectrons->outputDiffOfTOFs(2, 3);
+  auto eTDiff45 = pElectrons->outputDiffOfTOFs(3, 4);
 
   auto iPX1 = pIons->getRealOrDummyObject(0).outputPX();
   auto iPY1 = pIons->getRealOrDummyObject(0).outputPY();
@@ -701,6 +746,26 @@ void Analysis::AnalysisRun::fillHists() {
   const bool iPDirX4Is90 = iPDirX4 ? (85 <= *iPDirX4 && *iPDirX4 <= 95) : false;
   const bool iPDirY4Is90 = iPDirY4 ? (85 <= *iPDirY4 && *iPDirY4 <= 95) : false;
   const bool iPDirZ4Is90 = iPDirZ4 ? (85 <= *iPDirZ4 && *iPDirZ4 <= 95) : false;
+
+  auto iPX5 = pIons->getRealOrDummyObject(4).outputPX();
+  auto iPY5 = pIons->getRealOrDummyObject(4).outputPY();
+  auto iPZ5 = pIons->getRealOrDummyObject(4).outputPZ();
+  auto iPXY5 = pIons->getRealOrDummyObject(4).outputPXY();
+  auto iPYZ5 = pIons->getRealOrDummyObject(4).outputPYZ();
+  auto iPZX5 = pIons->getRealOrDummyObject(4).outputPZX();
+  auto iP5 = pIons->getRealOrDummyObject(4).outputP();
+  auto iPDirX5 = pIons->getRealOrDummyObject(4).outputPDirX();
+  auto iPDirY5 = pIons->getRealOrDummyObject(4).outputPDirY();
+  auto iPDirZ5 = pIons->getRealOrDummyObject(4).outputPDirZ();
+  auto iPDirXY5 = pIons->getRealOrDummyObject(4).outputPDirXY();
+  auto iPDirYZ5 = pIons->getRealOrDummyObject(4).outputPDirYZ();
+  auto iPDirZX5 = pIons->getRealOrDummyObject(4).outputPDirZX();
+  auto iCosPDirX5 = pIons->getRealOrDummyObject(4).outputCosPDirX();
+  auto iCosPDirY5 = pIons->getRealOrDummyObject(4).outputCosPDirY();
+  auto iCosPDirZ5 = pIons->getRealOrDummyObject(4).outputCosPDirZ();
+  const bool iPDirX5Is90 = iPDirX5 ? (85 <= *iPDirX5 && *iPDirX5 <= 95) : false;
+  const bool iPDirY5Is90 = iPDirY5 ? (85 <= *iPDirY5 && *iPDirY5 <= 95) : false;
+  const bool iPDirZ5Is90 = iPDirZ5 ? (85 <= *iPDirZ5 && *iPDirZ5 <= 95) : false;
 
   auto iPXTotal = pIons->outputPX();
   auto iPYTotal = pIons->outputPY();
@@ -806,6 +871,7 @@ void Analysis::AnalysisRun::fillHists() {
   auto iE2 = pIons->getRealOrDummyObject(1).outputE();
   auto iE3 = pIons->getRealOrDummyObject(2).outputE();
   auto iE4 = pIons->getRealOrDummyObject(3).outputE();
+  auto iE5 = pIons->getRealOrDummyObject(4).outputE();
   auto iETotal = pIons->outputE();
 
   auto eE1 = pElectrons->getRealOrDummyObject(0).outputE();
@@ -830,11 +896,13 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i2hImage_ ## X, iX2, iY2); \
   fill2d(h2_i3hImage_ ## X, iX3, iY3); \
   fill2d(h2_i4hImage_ ## X, iX4, iY4); \
+  fill2d(h2_i5hImage_ ## X, iX5, iY5); \
   fill2d(h2_iCOMImage_ ## X, iCOMX, iCOMY); \
   fill2d(h2_i1hImageDirDist_ ## X, iDir1, iR1); \
   fill2d(h2_i2hImageDirDist_ ## X, iDir2, iR2); \
   fill2d(h2_i3hImageDirDist_ ## X, iDir3, iR3); \
   fill2d(h2_i4hImageDirDist_ ## X, iDir4, iR4); \
+  fill2d(h2_i4hImageDirDist_ ## X, iDir5, iR5); \
   fill2d(h2_iCOMImageDirDist_ ## X, iCOMDir, iCOMR); \
 }
   __FILLIONIMAGE__(always)
@@ -848,19 +916,28 @@ void Analysis::AnalysisRun::fillHists() {
   fill1d(h1_i2hTOF_ ## X, iT2); \
   fill1d(h1_i3hTOF_ ## X, iT3); \
   fill1d(h1_i4hTOF_ ## X, iT4); \
+  fill1d(h1_i5hTOF_ ## X, iT5); \
   fill1d(h1_iTotalTOF_ ## X, iTTotal); \
   fill2d(h2_i1h2hPIPICO_ ## X, iT1, iT2); \
   fill2d(h2_i2h3hPIPICO_ ## X, iT2, iT3); \
   fill2d(h2_i3h4hPIPICO_ ## X, iT3, iT4); \
+  fill2d(h2_i4h5hPIPICO_ ## X, iT4, iT5); \
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT12, iTDiff12); \
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT23, iTDiff23); \
   fill2d(h2_i1h2hRotPIPICO_ ## X, iT34, iTDiff34); \
+  fill2d(h2_i1h2hRotPIPICO_ ## X, iT45, iTDiff45); \
   std::shared_ptr<double> iT12[] = {iT1, iT2}; \
   std::shared_ptr<double> iT23[] = {iT2, iT3}; \
+  std::shared_ptr<double> iT34[] = {iT3, iT4}; \
   std::shared_ptr<double> iT123[] = {iT1, iT2, iT3}; \
+  std::shared_ptr<double> iT234[] = {iT2, iT3, iT4}; \
+  std::shared_ptr<double> iT1234[] = {iT1, iT2, iT3, iT4}; \
   fill2d(h2_i1h2h3h3PICO_ ## X, sumDoubles(2, iT12), iT3); \
   fill2d(h2_i2h3h4h3PICO_ ## X, sumDoubles(2, iT23), iT4); \
+  fill2d(h2_i3h4h5h3PICO_ ## X, sumDoubles(2, iT34), iT5); \
   fill2d(h2_i1h2h3h4h4PICO_ ## X, sumDoubles(3, iT123), iT4); \
+  fill2d(h2_i2h3h4h5h4PICO_ ## X, sumDoubles(3, iT234), iT5); \
+  fill2d(h2_i1h2h3h4h5h5PICO_ ## X, sumDoubles(4, iT1234), iT5); \
 }
   __FILLIONTOF__(always)
   __FILLIONTOF__(iMaster)
@@ -881,6 +958,9 @@ void Analysis::AnalysisRun::fillHists() {
   fill2d(h2_i4hXFish_ ## X, iT4, iX4); \
   fill2d(h2_i4hYFish_ ## X, iT4, iY4); \
   fill2d(h2_i4hRFish_ ## X, iT4, iR4); \
+  fill2d(h2_i5hXFish_ ## X, iT5, iX5); \
+  fill2d(h2_i5hYFish_ ## X, iT5, iY5); \
+  fill2d(h2_i5hRFish_ ## X, iT5, iR5); \
 }
   __FILLIONFISH__(always)
   __FILLIONFISH__(iMaster)
@@ -917,6 +997,13 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_i4hPYZ_ ## X, iPY4, iPZ4); \
     fill2d(h2_i4hPZX_ ## X, iPZ4, iPX4); \
     fill1d(h1_i4hP_ ## X, iP4); \
+    fill1d(h1_i5hPX_ ## X, iPX5); \
+    fill1d(h1_i5hPY_ ## X, iPY5); \
+    fill1d(h1_i5hPZ_ ## X, iPZ5); \
+    fill2d(h2_i5hPXY_ ## X, iPX5, iPY5); \
+    fill2d(h2_i5hPYZ_ ## X, iPY5, iPZ5); \
+    fill2d(h2_i5hPZX_ ## X, iPZ5, iPX5); \
+    fill1d(h1_i5hP_ ## X, iP5); \
     fill1d(h1_iTotalPX_ ## X, iPXTotal); \
     fill1d(h1_iTotalPY_ ## X, iPYTotal); \
     fill1d(h1_iTotalPZ_ ## X, iPZTotal); \
@@ -936,6 +1023,10 @@ void Analysis::AnalysisRun::fillHists() {
     fill2d(h2_i3h4hPY_ ## X, iPY3, iPY4); \
     fill2d(h2_i3h4hPZ_ ## X, iPZ3, iPZ4); \
     fill2d(h2_i3h4hP_ ## X, iP3, iP4); \
+    fill2d(h2_i4h5hPX_ ## X, iPX4, iPX5); \
+    fill2d(h2_i4h5hPY_ ## X, iPY4, iPY5); \
+    fill2d(h2_i4h5hPZ_ ## X, iPZ4, iPZ5); \
+    fill2d(h2_i4h5hP_ ## X, iP4, iP5); \
   }
   __FILLIONMOMENTUM__(always)
   __FILLIONMOMENTUM__(iMaster)
@@ -984,6 +1075,16 @@ void Analysis::AnalysisRun::fillHists() {
     if (iPDirX4Is90) fill2d(h2_i4hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ4, iPYZ4); \
     if (iPDirY4Is90) fill2d(h2_i4hPDirDistZX_PDirYIs90_ ## X, iPDirZX4, iPZX4); \
     fill2d(h2_i4hPDirDist_ ## X, iPDirXY4, iCosPDirZ4); \
+    fill2d(h2_i5hPDirDistX_ ## X, iCosPDirX5, iP5); \
+    fill2d(h2_i5hPDirDistY_ ## X, iCosPDirY5, iP5); \
+    fill2d(h2_i5hPDirDistZ_ ## X, iCosPDirZ5, iP5); \
+    fill2d(h2_i5hPDirDistXY_ ## X, iPDirXY5, iPXY5); \
+    fill2d(h2_i5hPDirDistYZ_ ## X, iPDirYZ5, iPYZ5); \
+    fill2d(h2_i5hPDirDistZX_ ## X, iPDirZX5, iPZX5); \
+    if (iPDirZ5Is90) fill2d(h2_i5hPDirDistXY_PDirZIs90_ ## X, iPDirXY5, iPXY5); \
+    if (iPDirX5Is90) fill2d(h2_i5hPDirDistYZ_PDirXIs90_ ## X, iPDirYZ5, iPYZ5); \
+    if (iPDirY5Is90) fill2d(h2_i5hPDirDistZX_PDirYIs90_ ## X, iPDirZX5, iPZX5); \
+    fill2d(h2_i5hPDirDist_ ## X, iPDirXY5, iCosPDirZ5); \
     fill2d(h2_iTotalPDirDistX_ ## X, iCosPDirXTotal, iPTotal); \
     fill2d(h2_iTotalPDirDistY_ ## X, iCosPDirYTotal, iPTotal); \
     fill2d(h2_iTotalPDirDistZ_ ## X, iCosPDirZTotal, iPTotal); \
@@ -1006,10 +1107,12 @@ void Analysis::AnalysisRun::fillHists() {
     fill1d(h1_i2hE_ ## X, iE2); \
     fill1d(h1_i3hE_ ## X, iE3); \
     fill1d(h1_i4hE_ ## X, iE4); \
+    fill1d(h1_i5hE_ ## X, iE5); \
     fill1d(h1_iTotalE_ ## X, iETotal); \
     fill2d(h2_i1h2hE_ ## X, iE1, iE2); \
     fill2d(h2_i2h3hE_ ## X, iE2, iE3); \
     fill2d(h2_i3h4hE_ ## X, iE3, iE4); \
+    fill2d(h2_i4h5hE_ ## X, iE4, iE5); \
   }
   __FILLIONENERGY__(always)
   __FILLIONENERGY__(iMaster)
